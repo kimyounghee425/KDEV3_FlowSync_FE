@@ -28,7 +28,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
               </Link>
               <Link href="/login/password-reset">
                 <Button>비밀번호 재설정</Button>
-              </Link>
+              </Link>z``
               <Link href="/projects">
                 <Button>프로젝트 종합 대시보드</Button>
               </Link>
