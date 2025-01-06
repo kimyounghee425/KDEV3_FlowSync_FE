@@ -1,8 +1,7 @@
 "use client";
 
-import { HStack, Stack, Table } from "@chakra-ui/react";
+import { Stack, Table } from "@chakra-ui/react";
 import { Children, ReactNode, useState } from "react";
-import { ProjectsProps } from "../types";
 import Pagination from "./Pagination";
 
 interface BasicTableProps {

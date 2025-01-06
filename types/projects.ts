@@ -8,10 +8,3 @@ export interface ProjectsProps {
   startDate: string;
   endDate: string;
 }
-
-export interface PaginationProps {
-  currentPage: number;
-  totalCount: number;
-  pageSize: number;
-  onPageChange: (page: number) => void;
-}

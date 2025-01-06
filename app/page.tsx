@@ -1,9 +1,8 @@
 import { Box, Flex, Table } from "@chakra-ui/react";
-import BasicTable from "./components/BasicTable";
-import SearchSection from "./components/SearchSection";
-import StatusCards from "./components/StatusCards";
-import data from "./data/projects_mock_data.json";
-
+import BasicTable from "../components/common/BasicTable";
+import SearchSection from "../components/common/SearchSection";
+import StatusCards from "../components/common/StatusCards";
+import data from "../data/projects_mock_data.json";
 export default function Home() {
   return (
     <Flex
