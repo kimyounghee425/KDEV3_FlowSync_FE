@@ -3,11 +3,11 @@ import { PaginationProps } from "../../types";
 
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
-  totalCount,
   pageSize,
+  totalCount,
   onPageChange,
 }) => {
-  const totalPages = Math.ceil(totalCount / pageSize);
+  const totalPages = Math.ceil(totalCount / pageSize); // 총 페이지 수 계산
   const maxVisibleButtons = 10; // 한 번에 보여줄 페이지 번호 개수
 
   // 현재 페이지 그룹 계산
@@ -23,9 +23,9 @@ const Pagination: React.FC<PaginationProps> = ({
       <Button
         size="sm"
         onClick={() => {
-          if (currentGroup !== 1) onPageChange(startPage - 1);
+          if (currentGroup !== 1) onPageChange(startPage - 1); // 이전 그룹의 마지막 페이지로 이동
         }}
-        isDisabled={currentGroup === 1} // 첫 그룹에서는 비활성화
+        disabled={currentGroup === 1} // 첫 그룹일 때 비활성화
         bg={currentGroup === 1 ? "gray.400" : "blue.600"} // 비활성화 상태 배경색
         color={currentGroup === 1 ? "gray.600" : "white"} // 비활성화 상태 텍스트 색상
         _hover={currentGroup === 1 ? {} : { bg: "blue.700" }} // 비활성화 시 호버 제거
@@ -42,7 +42,7 @@ const Pagination: React.FC<PaginationProps> = ({
             size="sm"
             key={page}
             onClick={() => onPageChange(page)}
-            bg={page === currentPage ? "blue.600" : "gray.200"} // 현재 페이지와 일반 페이지 색상
+            bg={page === currentPage ? "blue.600" : "gray.200"} // 현재 페이지 강조
             color={page === currentPage ? "white" : "gray.800"} // 현재 페이지와 일반 페이지 텍스트 색상
             _hover={
               page === currentPage
@@ -60,9 +60,9 @@ const Pagination: React.FC<PaginationProps> = ({
       <Button
         size="sm"
         onClick={() => {
-          if (endPage !== totalPages) onPageChange(endPage + 1);
+          if (endPage !== totalPages) onPageChange(endPage + 1); // 다음 그룹의 첫 페이지로 이동
         }}
-        isDisabled={endPage === totalPages} // 마지막 그룹에서는 비활성화
+        disabled={endPage === totalPages} // 마지막 그룹일 때 비활성화
         bg={endPage === totalPages ? "gray.400" : "blue.600"} // 비활성화 상태 배경색
         color={endPage === totalPages ? "gray.600" : "white"} // 비활성화 상태 텍스트 색상
         _hover={endPage === totalPages ? {} : { bg: "blue.700" }} // 비활성화 시 호버 제거

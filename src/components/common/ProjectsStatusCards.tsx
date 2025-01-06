@@ -1,5 +1,5 @@
 import { Box, Flex, Heading } from "@chakra-ui/react";
-import StatusCard from "./StatusCard";
+import StatusCard from "./ProjectsStatusCard";
 
 interface StatusCardsProps {
   title: string;
