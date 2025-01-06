@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Provider } from "@/components/ui/provider";
-import { Button, Container, Flex } from "@chakra-ui/react";
+import { Box, Button, Container, Flex } from "@chakra-ui/react";
 import Link from "next/link";
+import Header from "@/components/layouts/Header";
+import Sidebar from "@/components/layouts/Sidebar";
+import StatusCards from "@/components/common/StatusCards";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,54 +18,14 @@ const RootLayout = (props: { children: React.ReactNode }) => {
     <html suppressHydrationWarning>
       <body>
         <Provider>
-          <Container
-            maxWidth={"100%"}
-            display="flex"
-            flexDirection="row"
-            margin={0}
-            padding={0}
-          >
-            <Flex
-              width="240px"
-              height="100vh"
-              flexDirection="column"
-              gap="1"
-              backgroundColor="gray.500"
-            >
-              <Link href="/">
-                <Button>메인 홈 화면</Button>
-              </Link>
-              <Link href="/login">
-                <Button>로그인 화면</Button>
-              </Link>
-              <Link href="/logout">
-                <Button>로그아웃 화면</Button>
-              </Link>
-              <Link href="/login/password-reset">
-                <Button>비밀번호 재설정</Button>
-              </Link>
-              <Link href="/projects">
-                <Button>프로젝트 종합 대시보드</Button>
-              </Link>
-              <Link href="/projects/project">
-                <Button>프로젝트 개별 대시보드</Button>
-              </Link>
-
-              <Link href="/projects/project/tasks">
-                <Button>업무관리 게시판</Button>
-              </Link>
-
-              <Link href="/projects/project/tasks/task">
-                <Button>업무관리 게시글</Button>
-              </Link>
-              <Link href="/projects/project/approvals">
-                <Button>프로젝트 결재 대시보드</Button>
-              </Link>
-              <Link href="/projects/project/approvals/approval">
-                <Button>프로젝트 결재 게시글</Button>
-              </Link>
+          <Header />
+          <Container maxWidth={"100%"} display="flex" flexDirection="row" margin={0} padding={0}>
+            <Sidebar />
+            <Flex width="100%" height="100%" align="center" justify="center" bg="gray.50" p={6}>
+              <Box maxW="container.xl" width="100%" bg="white" borderRadius="lg" p={8}>
+                {children}
+              </Box>
             </Flex>
-            {children}
           </Container>
         </Provider>
       </body>
