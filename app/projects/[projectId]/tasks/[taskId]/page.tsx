@@ -1,3 +1,3 @@
-import ProjectTaskPage from "@/components/pages/ProjectTaskPage";
+import ProjectTaskPage from "@/src/components/pages/ProjectTaskPage";
 
 export default ProjectTaskPage;
