@@ -1,46 +1,47 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Stack, Table } from "@chakra-ui/react";
 import Pagination from "./Pagination";
 import { fetchProjects } from "@/src/api/projects";
-import { ProjectProps, BoardResponse } from "@/src/types";
+import { ProjectProps, BoardResponse, PaginationMeta } from "@/src/types";
 
 interface BasicTableProps {
   headerTitle: React.ReactNode;
 }
 
 const BasicTable: React.FC<BasicTableProps> = ({ headerTitle }) => {
-  const [data, setData] = useState<ProjectProps[]>([]); // 프로젝트 데이터 타입 지정
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const [totalCount, setTotalCount] = useState(0); // 전체 데이터 개수
-  const [pageSize] = useState(10); // 한 페이지당 데이터 개수
-  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [data, setData] = useState<ProjectProps[]>([]);
+  const [meta, setMeta] = useState<PaginationMeta | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const fetchData = async (page: number) => {
-    setLoading(true);
-    try {
-      // API 호출 및 데이터 업데이트
-      const response: BoardResponse<ProjectProps> = await fetchProjects(
-        page - 1, // 0-indexed
-        pageSize
-      );
-      setData(response.data);
-      setCurrentPage(response.meta.currentPage + 1); // 1-indexed
-      setTotalCount(response.meta.totalElements);
-    } catch (error) {
-      console.error("Failed to fetch data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const fetchData = useCallback(
+    async (page: number) => {
+      setLoading(true);
+      try {
+        const response: BoardResponse<ProjectProps> = await fetchProjects(
+          page - 1, // 서버에서 0-indexed 페이지를 사용
+          meta?.pageSize || 10
+        );
+        setData(response.data);
+        setMeta(response.meta);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [meta?.pageSize]
+  );
 
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
+    fetchData(meta?.currentPage ? meta.currentPage + 1 : 1); // 초기 로드 또는 페이지 변경 시 데이터 가져오기
+  }, [meta?.currentPage, fetchData]);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page); // 페이지 변경 처리
+    if (meta) {
+      setMeta({ ...meta, currentPage: page - 1 }); // 페이지 변경
+    }
   };
 
   return (
@@ -70,12 +71,15 @@ const BasicTable: React.FC<BasicTableProps> = ({ headerTitle }) => {
         </Table.Body>
       </Table.Root>
 
-      <Pagination
-        currentPage={currentPage}
-        totalCount={totalCount}
-        pageSize={pageSize}
-        onPageChange={handlePageChange}
-      />
+      {meta && (
+        <Pagination
+          meta={{
+            ...meta,
+            currentPage: meta.currentPage + 1, // 1-indexed로 변환
+          }}
+          onPageChange={handlePageChange}
+        />
+      )}
     </Stack>
   );
 };

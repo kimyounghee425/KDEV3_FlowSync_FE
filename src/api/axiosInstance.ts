@@ -5,8 +5,7 @@ const axiosInstance = axios.create({
   timeout: 10000, // 요청 타임아웃 설정 (10초)
   headers: {
     "Content-Type": "application/json",
-  },
-  withCredentials: true, // 쿠키 기반 인증 활성화
+  }
 });
 
 // 응답 인터셉터 추가

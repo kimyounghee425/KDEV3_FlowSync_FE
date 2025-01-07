@@ -1,4 +1,4 @@
-import { Box, Card, For, Stack } from "@chakra-ui/react";
+import { Card } from "@chakra-ui/react";
 import Data from "@/src/data/projects_mock_data.json";
 import Link from "next/link";
 

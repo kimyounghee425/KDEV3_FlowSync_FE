@@ -2,11 +2,13 @@ import axiosInstance from "./axiosInstance";
 import { BoardResponse, ProjectProps } from "@/src/types";
 
 export const fetchProjects = async (
-  page: number, 
+  currentPage: number, 
   pageSize: number
 ): Promise<BoardResponse<ProjectProps>> => {
+  console.log("Fetching projects with params:", { currentPage, pageSize });
+  
   const response = await axiosInstance.get("/projects", {
-     params: { page, pageSize } 
+     params: { currentPage, pageSize }
   });
   return response.data;
 };

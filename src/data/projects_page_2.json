@@ -1,0 +1,62 @@
+{
+  "data": [
+    {
+      "id": 6,
+      "projectName": "AI 챗봇 개발",
+      "client": "AIWorks",
+      "developer": "BotBuilders",
+      "projectStatus": "완료",
+      "progressStepName": "검수",
+      "startAt": "2022-11-01",
+      "closeAt": "2023-05-20"
+    },
+    {
+      "id": 7,
+      "projectName": "CRM 시스템 구축",
+      "client": "CustomerCare",
+      "developer": "SystemExperts",
+      "projectStatus": "진행중",
+      "progressStepName": "디자인",
+      "startAt": "2023-04-01",
+      "closeAt": "2024-01-15"
+    },
+    {
+      "id": 8,
+      "projectName": "AR/VR 플랫폼 개발",
+      "client": "VirtualReality",
+      "developer": "ARVRDevelopers",
+      "projectStatus": "진행중",
+      "progressStepName": "퍼블리싱",
+      "startAt": "2024-02-01",
+      "closeAt": "2024-10-30"
+    },
+    {
+      "id": 9,
+      "projectName": "HR 시스템 구축",
+      "client": "HRPlus",
+      "developer": "HRTech",
+      "projectStatus": "일시중단",
+      "progressStepName": "화면설계",
+      "startAt": "2023-03-01",
+      "closeAt": "2023-12-15"
+    },
+    {
+      "id": 10,
+      "projectName": "소셜미디어 플랫폼 개발",
+      "client": "SocialHub",
+      "developer": "MediaTech",
+      "projectStatus": "진행중",
+      "progressStepName": "요구사항 정의",
+      "startAt": "2023-08-01",
+      "closeAt": "2024-05-30"
+    }
+  ],
+  "meta": {
+    "currentPage": 2,
+    "totalPages": 3,
+    "pageSize": 5,
+    "totalElements": 13,
+    "isFirstPage": false,
+    "isLastPage": false
+  }
+}
