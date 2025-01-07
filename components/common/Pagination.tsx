@@ -1,12 +1,7 @@
 import { HStack, Button } from "@chakra-ui/react";
 import { PaginationProps } from "../../types";
 
-const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalCount,
-  pageSize,
-  onPageChange,
-}) => {
+const Pagination: React.FC<PaginationProps> = ({ currentPage, totalCount, pageSize, onPageChange }) => {
   const totalPages = Math.ceil(totalCount / pageSize);
   const maxVisibleButtons = 10; // 한 번에 보여줄 페이지 번호 개수
 
@@ -25,7 +20,7 @@ const Pagination: React.FC<PaginationProps> = ({
         onClick={() => {
           if (currentGroup !== 1) onPageChange(startPage - 1);
         }}
-        isDisabled={currentGroup === 1} // 첫 그룹에서는 비활성화
+        disabled={currentGroup === 1} // 첫 그룹에서는 비활성화
         bg={currentGroup === 1 ? "gray.400" : "blue.600"} // 비활성화 상태 배경색
         color={currentGroup === 1 ? "gray.600" : "white"} // 비활성화 상태 텍스트 색상
         _hover={currentGroup === 1 ? {} : { bg: "blue.700" }} // 비활성화 시 호버 제거
@@ -62,7 +57,7 @@ const Pagination: React.FC<PaginationProps> = ({
         onClick={() => {
           if (endPage !== totalPages) onPageChange(endPage + 1);
         }}
-        isDisabled={endPage === totalPages} // 마지막 그룹에서는 비활성화
+        disabled={endPage === totalPages} // 마지막 그룹에서는 비활성화
         bg={endPage === totalPages ? "gray.400" : "blue.600"} // 비활성화 상태 배경색
         color={endPage === totalPages ? "gray.600" : "white"} // 비활성화 상태 텍스트 색상
         _hover={endPage === totalPages ? {} : { bg: "blue.700" }} // 비활성화 시 호버 제거
