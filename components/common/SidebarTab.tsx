@@ -2,8 +2,8 @@ import { Box, Card, For, Stack } from "@chakra-ui/react";
 import Data from "@/data/projects_mock_data.json";
 import Link from "next/link";
 
-export default function SidebarTab({ props }) {
-  const list = Data.filter(Data => (props === "완료 프로젝트" ? Data.progressStage === "완료" : Data.progressStage === "진행 중"))
+export default function SidebarTab({ projectStatus }: { projectStatus: string }) {
+  const list = Data.filter(Data => (projectStatus === "완료 프로젝트" ? Data.progressStage === "완료" : Data.progressStage === "진행 중"))
     .slice(0, 5)
     .map(item => {
       return (
