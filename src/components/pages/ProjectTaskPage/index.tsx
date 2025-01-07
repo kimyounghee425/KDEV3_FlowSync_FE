@@ -1,5 +1,5 @@
 function ProjectTaskPage() {
-  return <div>Hi, i`m Project-Task-Page.</div>;
+  return <h1>업무관리 게시글</h1>;
 }
 
 export default ProjectTaskPage;

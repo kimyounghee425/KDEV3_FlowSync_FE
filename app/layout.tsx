@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+
 import { Provider } from "@/src/components/ui/provider";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import Header from "@/src/components/layouts/Header";
