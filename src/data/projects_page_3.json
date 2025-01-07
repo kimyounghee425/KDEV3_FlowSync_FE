@@ -1,0 +1,42 @@
+{
+  "data": [
+    {
+      "id": 11,
+      "projectName": "블록체인 플랫폼 개발",
+      "client": "CryptoWorld",
+      "developer": "ChainExperts",
+      "projectStatus": "진행중",
+      "progressStepName": "검수",
+      "startAt": "2024-01-01",
+      "closeAt": "2024-09-30"
+    },
+    {
+      "id": 12,
+      "projectName": "마케팅 자동화 도구 개발",
+      "client": "AdPro",
+      "developer": "MarketingTools",
+      "projectStatus": "완료",
+      "progressStepName": "개발",
+      "startAt": "2023-02-01",
+      "closeAt": "2023-10-15"
+    },
+    {
+      "id": 13,
+      "projectName": "클라우드 백업 솔루션",
+      "client": "CloudBackup",
+      "developer": "CloudTech",
+      "projectStatus": "삭제",
+      "progressStepName": "화면설계",
+      "startAt": "2023-01-01",
+      "closeAt": "2023-06-30"
+    }
+  ],
+  "meta": {
+    "currentPage": 3,
+    "totalPages": 3,
+    "pageSize": 5,
+    "totalElements": 13,
+    "isFirstPage": false,
+    "isLastPage": true
+  }
+}

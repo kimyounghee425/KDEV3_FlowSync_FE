@@ -1,0 +1,62 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "projectName": "ERP 시스템 구축 #1",
+      "client": "DataCloud",
+      "developer": "InfraBuilders",
+      "projectStatus": "진행중",
+      "progressStepName": "요구사항 정의",
+      "startAt": "2024-01-01",
+      "closeAt": "2024-12-31"
+    },
+    {
+      "id": 2,
+      "projectName": "모바일 앱 개발 #1",
+      "client": "CloudWorks",
+      "developer": "AppMasters",
+      "projectStatus": "완료",
+      "progressStepName": "화면설계",
+      "startAt": "2023-06-01",
+      "closeAt": "2023-12-15"
+    },
+    {
+      "id": 3,
+      "projectName": "E-commerce 플랫폼 개발",
+      "client": "RetailPlus",
+      "developer": "CommerceExperts",
+      "projectStatus": "진행중",
+      "progressStepName": "디자인",
+      "startAt": "2024-03-01",
+      "closeAt": "2024-11-30"
+    },
+    {
+      "id": 4,
+      "projectName": "IoT 시스템 개발",
+      "client": "SmartTech",
+      "developer": "IoTBuilders",
+      "projectStatus": "일시중단",
+      "progressStepName": "퍼블리싱",
+      "startAt": "2023-02-01",
+      "closeAt": "2023-08-30"
+    },
+    {
+      "id": 5,
+      "projectName": "빅데이터 분석 도구 개발",
+      "client": "DataWorld",
+      "developer": "AnalyticsPro",
+      "projectStatus": "삭제",
+      "progressStepName": "개발",
+      "startAt": "2023-09-01",
+      "closeAt": "2024-03-15"
+    }
+  ],
+  "meta": {
+    "currentPage": 1,
+    "totalPages": 3,
+    "pageSize": 5,
+    "totalElements": 13,
+    "isFirstPage": true,
+    "isLastPage": false
+  }
+}

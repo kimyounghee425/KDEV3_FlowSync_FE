@@ -1,10 +1,11 @@
 "use client";
 
+
 import { Box, Text } from "@chakra-ui/react";
 import { mockData } from "./data/mockData";
 import { mockComments } from "./data/mockComments";
-import TaskContent from "@/components/common/TaskContents";
-import TaskComments from "@/components/common/TaskComments";
+import TaskContent from "@/src/components/common/TaskContents";
+import TaskComments from "@/src/components/common/TaskComments";
 import { useParams } from "next/navigation";
 
 export default function ProjectTaskPage() {
