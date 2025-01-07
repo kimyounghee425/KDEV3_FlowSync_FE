@@ -5,6 +5,7 @@ type Comment = {
   createdDate: string;
 };
 
+
 export const mockComments = {
   data: [
     {

@@ -1,6 +1,13 @@
 import { Box, Text } from "@chakra-ui/react";
 
-const TaskComments = ({ comments }: { comments: any[] }) => {
+interface Comment {
+  id: string;
+  author: string;
+  createdDate: string;
+  content: string;
+}
+
+const TaskComments = ({ comments }: { comments: Comment[] }) => {
   return (
     <Box>
       <Box

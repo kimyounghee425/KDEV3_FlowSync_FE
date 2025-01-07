@@ -6,7 +6,17 @@ const isImageFile = (file: string) => {
   return imageExtensions.includes(extension || "");
 };
 
-const TaskContent = ({ task }: { task: any }) => {
+interface Task {
+  title: string;
+  author: string;
+  createdDate: string;
+  content: string;
+  summary: string;
+  link: string;
+  file: string;
+}
+
+const TaskContent = ({ task }: { task: Task }) => {
   return (
     <Box mb={4}>
       {/* 제목 */}

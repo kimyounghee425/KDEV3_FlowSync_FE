@@ -3,8 +3,8 @@
 import { mockData } from "./data/mockData";
 import { useState, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
-import BackButton from "@/components/common/backButton";
-import Form from "@/components/common/Form";
+import BackButton from "@/src/components/common/backButton";
+import Form from "@/src/components/common/Form";
 
 export default function New() {
   const [author, setAuthor] = useState<string>("");
