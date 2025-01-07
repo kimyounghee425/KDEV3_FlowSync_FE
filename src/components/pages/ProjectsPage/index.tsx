@@ -1,0 +1,28 @@
+import { Box, Flex, Table } from "@chakra-ui/react";
+import BasicTable from "@/src/components/common/BasicTable";
+import SearchSection from "@/src/components/common/SearchSection";
+import StatusCards from "@/src/components/common/ProjectsStatusCards";
+
+export default function Home() {
+  return (
+    <>
+      <StatusCards title={"프로젝트 현황"} />
+      <SearchSection />
+      <BasicTable
+        headerTitle={
+          <Table.Row backgroundColor={"#bebaba"}>
+            <Table.ColumnHeader>프로젝트명</Table.ColumnHeader>
+            <Table.ColumnHeader>고객사</Table.ColumnHeader>
+            <Table.ColumnHeader>개발사</Table.ColumnHeader>
+            <Table.ColumnHeader>계약 단계</Table.ColumnHeader>
+            <Table.ColumnHeader>진행 단계</Table.ColumnHeader>
+            <Table.ColumnHeader>프로젝트 시작일</Table.ColumnHeader>
+            <Table.ColumnHeader textAlign="end">
+              프로젝트 종료일
+            </Table.ColumnHeader>
+          </Table.Row>
+        }
+      />
+    </>
+  );
+}
