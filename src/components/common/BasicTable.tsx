@@ -21,7 +21,7 @@ const BasicTable: React.FC<BasicTableProps> = ({ headerTitle }) => {
       try {
         const response: BoardResponse<ProjectProps> = await fetchProjects(
           page - 1, // 서버에서 0-indexed 페이지를 사용
-          meta?.pageSize || 10
+          meta?.pageSize || 5
         );
         setData(response.data);
         setMeta(response.meta);

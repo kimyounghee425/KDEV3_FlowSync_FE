@@ -5,7 +5,6 @@ import { Provider } from "@/src/components/ui/provider";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import Header from "@/src/components/layouts/Header";
 import Sidebar from "@/src/components/layouts/Sidebar";
-import { MSWComponent } from "@/src/components/common/MSWComponent";
 
 export const metadata: Metadata = {
   title: "FlowSync",
@@ -42,7 +41,7 @@ const RootLayout = (props: { children: React.ReactNode }) => {
                 borderRadius="lg"
                 p={8}
               >
-                <MSWComponent>{children}</MSWComponent>
+                {children}
               </Box>
             </Flex>
           </Container>
