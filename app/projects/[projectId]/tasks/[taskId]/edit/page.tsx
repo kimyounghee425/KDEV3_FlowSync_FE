@@ -1,6 +1,6 @@
 "use client";
 
-import { mockData } from "../data/mockData";
+import { mockData } from "../../../../../../src/data/task_data";
 import { useState, useEffect } from "react";
 import {
   Box,

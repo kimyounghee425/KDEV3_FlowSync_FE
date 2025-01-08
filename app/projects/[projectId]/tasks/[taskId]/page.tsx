@@ -1,12 +1,13 @@
 "use client";
 
 import { Box, Text } from "@chakra-ui/react";
-import { mockData } from "./data/mockData";
-import { mockComments } from "./data/mockComments";
+import { mockData } from "../../../../../src/data/task_data";
+import { mockComments } from "../../../../../src/data/task_comments_data";
 import TaskContent from "@/src/components/common/TaskContents";
 import TaskComments from "@/src/components/common/TaskComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import { useParams } from "next/navigation";
+import BackButton from "@/src/components/common/backButton";
 
 export default function ProjectTaskPage() {
   const taskId = useParams().taskId as string;
@@ -15,13 +16,13 @@ export default function ProjectTaskPage() {
     (task) => task.id === Number(taskId)
   );
 
-  const comments = mockComments.data.find(
-    (item) => item.taskId === Number(taskId)
-  )?.comments.map(comment => ({
-    ...comment,
-    id: comment.id.toString()
-  })) || []; // 댓글이 없으면 빈 배열
-
+  const comments =
+    mockComments.data
+      .find((item) => item.taskId === Number(taskId))
+      ?.comments.map((comment) => ({
+        ...comment,
+        id: comment.id.toString(),
+      })) || []; // 댓글이 없으면 빈 배열
 
   if (!task) {
     return <Text>페이지를 찾을 수 없습니다.</Text>;
@@ -38,6 +39,7 @@ export default function ProjectTaskPage() {
       borderRadius="lg"
       boxShadow="md"
     >
+      <BackButton />
       {/* 글 컴포넌트 */}
       <TaskContent task={task} />
 

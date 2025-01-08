@@ -7,7 +7,11 @@ interface Comment {
   content: string;
 }
 
-const TaskComments = ({ comments }: { comments: Comment[] }) => {
+interface TaskCommentsProps {
+  comments: Comment[];
+}
+
+const TaskComments = ({ comments }: TaskCommentsProps) => {
   return (
     <Box>
       <Box
