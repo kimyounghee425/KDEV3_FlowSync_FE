@@ -14,13 +14,13 @@ export const fetchProjects = async (
 };
 
 // 추후 개별 프로젝트 글 속성 타입 업데이트
-export const fetchProjectById = async (
-  id: string,
-  page: number,
-  pageSize: number
-): Promise<any> => {
-  const response = await axiosInstance.get(`/projects/${id}`, {
-    params: { page, pageSize }
-  });
-  return response.data;
-};
+// export const fetchProjectById = async (
+//   id: string,
+//   page: number,
+//   pageSize: number
+// ): Promise<any> => {
+//   const response = await axiosInstance.get(`/projects/${id}`, {
+//     params: { page, pageSize }
+//   });
+//   return response.data;
+// };
