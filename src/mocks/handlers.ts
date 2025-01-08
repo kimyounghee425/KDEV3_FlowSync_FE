@@ -1,43 +1,71 @@
 import { HttpResponse, http } from "msw";
-import page1 from "@/src/data/projects_page_1.json";
-import page2 from "@/src/data/projects_page_2.json";
-import page3 from "@/src/data/projects_page_3.json";
+import projectsData from "@/src/data/projects_mock_data.json";
 
-const allPages = [page1, page2, page3];
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const handlers = [
-  http.get("http://api.example.com/projects", ({ request }) => {
-    console.log("Request received:", request.url);
-    const url = new URL(request.url)
+  http.get(`${apiBaseUrl}/projects`, ({ request }) => {
+    const url = new URL(request.url);
 
-    // URL 쿼리 파라미터에서 currentPage와 pageSize를 추출
+    // Extract query parameters
     const currentPage = parseInt(url.searchParams.get("currentPage") || "0", 10);
     const pageSize = parseInt(url.searchParams.get("pageSize") || "5", 10);
+    const query = url.searchParams.get("query") || "";
+    const filter = url.searchParams.get("filter") || "all";
 
-    // 요청에 해당하는 페이지 데이터 추출
-    const response = allPages.find(
-      (page) => page.meta.currentPage === currentPage && page.meta.pageSize === pageSize
-    );
+    // All data
+    const allData = projectsData.data;
 
-    // 데이터가 존재하지 않을 경우 기본 응답
-    if (!response) {
-      return HttpResponse.json(
-        {
-          data: [],
-          meta: {
-            currentPage,
-            pageSize,
-            totalPages: 0,
-            totalElements: 0,
-            isFirstPage: true,
-            isLastPage: true,
-          },
-        },
-        { status: 200 }
-      );
-    }
+    // Filter logic
+    const filteredData = allData.filter((item) => {
+      const matchesQuery =
+        query === "" || query === null || item.projectName.toLowerCase().includes(query.toLowerCase());
+      const matchesFilter =
+        filter === "all" || filter === null || item.projectStatus.toLowerCase().includes(filter.toLowerCase());
+      return matchesQuery && matchesFilter;
+    });
 
-    // 요청된 데이터 반환
+    // Pagination logic
+    const start = currentPage * pageSize;
+    const pagedData = filteredData.slice(start, start + pageSize);
+
+    // Meta information
+    const totalElements = filteredData.length;
+    const totalPages = Math.ceil(totalElements / pageSize);
+
+    const response = {
+      data: pagedData,
+      meta: {
+        currentPage,
+        pageSize,
+        totalPages,
+        totalElements,
+        isFirstPage: currentPage === 0,
+        isLastPage: currentPage === totalPages - 1,
+      },
+    };
+
+    // Return the response
+    return HttpResponse.json(response, { status: 200 });
+  }),
+  http.get(`${apiBaseUrl}/projects/status-summary`, () => {
+    // 모든 데이터 가져오기
+    const allData = projectsData.data;
+
+    // 상태별 개수 집계
+    const statusSummary = allData.reduce((summary, project) => {
+      const status = project.projectStatus;
+      summary[status] = (summary[status] || 0) + 1;
+      return summary;
+    }, {} as Record<string, number>);
+
+    // 응답 데이터 생성
+    const response = {
+      statusSummary,
+      total: allData.length,
+    };
+
+    // 응답 반환
     return HttpResponse.json(response, { status: 200 });
   }),
 ];
