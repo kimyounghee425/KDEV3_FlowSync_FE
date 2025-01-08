@@ -12,7 +12,7 @@ const StatusCard: React.FC<StatusCardProps> = ({ count, label, iconSrc }) => {
   return (
     <Box
       background="white"
-      width={340}
+      width={300}
       height={170}
       border="1px solid #E2E8F0"
       borderRadius="lg"

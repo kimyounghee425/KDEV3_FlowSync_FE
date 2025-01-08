@@ -8,8 +8,7 @@ interface PaginationProps {
 
 const Pagination: React.FC<PaginationProps> = ({ meta, onPageChange }) => {
   const { currentPage, totalPages, isFirstPage, isLastPage } = meta; // 필요한 데이터만 추출
-  const maxVisibleButtons = 10; // 한 번에 보여줄 페이지 번호 개수
-
+  const maxVisibleButtons = 5; // 한 번에 보여줄 페이지 번호 개수
   // 현재 페이지 그룹 계산
   const currentGroup = Math.ceil(currentPage / maxVisibleButtons);
   const startPage = (currentGroup - 1) * maxVisibleButtons + 1;

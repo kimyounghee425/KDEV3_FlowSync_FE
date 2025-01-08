@@ -7,16 +7,17 @@ export default function SidebarTab({
 }: {
   projectStatus: string;
 }) {
-  const list = Data.filter((Data) =>
-    projectStatus === "완료 프로젝트"
-      ? Data.progressStage === "완료"
-      : Data.progressStage === "진행 중"
-  )
+  const list = Data.data
+    .filter((item) =>
+      projectStatus === "완료 프로젝트"
+        ? item.projectStatus === "completed"
+        : item.projectStatus === "inProgress"
+    )
     .slice(0, 5)
     .map((item) => {
       return (
         <Card.Title mb="2" key={item.id}>
-          <Link href="/projects/project">{item.projectName}</Link>
+          <Link href={`/projects/${item.id}`}>{item.projectName}</Link>
           <hr />
         </Card.Title>
       );

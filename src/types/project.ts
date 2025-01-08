@@ -3,8 +3,8 @@ export interface ProjectProps {
   projectName: string;     // 프로젝트 이름
   client: string;          // 고객사 이름
   developer: string;       // 개발사 이름
-  contractStage: string;   // 계약 단계
-  progressStage: string;   // 진행 단계
-  startDate: string;       // 시작일
-  endDate: string;         // 종료일
+  projectStatus: string;   // 계약 단계
+  progressStepName: string;   // 진행 단계
+  startAt: string;       // 시작일
+  closeAt: string;         // 종료일
 }
