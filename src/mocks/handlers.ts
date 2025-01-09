@@ -12,16 +12,14 @@ export const handlers = [
     const filter = url.searchParams.get("filter") || "all";
     const currentPage = parseInt(url.searchParams.get("currentPage") || "0", 10);
     const pageSize = parseInt(url.searchParams.get("pageSize") || "5", 10);
-    
+
     // All data
     const allData = projectsData.data;
 
     // Filter logic
-    const filteredData = allData.filter((item) => {
-      const matchesQuery =
-        query === "" || query === null || item.projectName.toLowerCase().includes(query.toLowerCase());
-      const matchesFilter =
-        filter === "all" || filter === null || item.projectStatus.toLowerCase().includes(filter.toLowerCase());
+    const filteredData = allData.filter(item => {
+      const matchesQuery = query === "" || query === null || item.projectName.toLowerCase().includes(query.toLowerCase());
+      const matchesFilter = filter === "all" || filter === null || item.projectStatus.toLowerCase().includes(filter.toLowerCase());
       return matchesQuery && matchesFilter;
     });
 
