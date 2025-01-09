@@ -33,10 +33,9 @@ const Pagination: React.FC<PaginationProps> = ({ meta, onPageChange }) => {
           <Button
             size="sm"
             key={page}
+            disabled={page === currentPage}
             onClick={() => onPageChange(page)}
             variant={page === currentPage ? "surface" : "outline"}
-            // bg={page === currentPage ? "gray.400" : "gray.200"}
-            // color={page === currentPage ? "white" : "gray.600"}
           >
             {page}
           </Button>

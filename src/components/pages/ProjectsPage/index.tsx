@@ -34,9 +34,7 @@ export default function Home() {
             <Table.ColumnHeader>프로젝트 상태</Table.ColumnHeader>
             <Table.ColumnHeader>진행 단계</Table.ColumnHeader>
             <Table.ColumnHeader>프로젝트 시작일</Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="end">
-              프로젝트 종료일
-            </Table.ColumnHeader>
+            <Table.ColumnHeader>프로젝트 종료일</Table.ColumnHeader>
           </Table.Row>
         }
       />
