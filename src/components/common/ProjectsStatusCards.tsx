@@ -2,9 +2,10 @@
 
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import StatusCard from "./ProjectsStatusCard";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import axios from "axios";
 import { Loading } from "./Loading";
+import { Folder, Signature, Skull, Swords, Wrench } from "lucide-react";
 
 interface StatusCardsProps {
   title: string;
@@ -12,7 +13,7 @@ interface StatusCardsProps {
 
 const StatusCards: React.FC<StatusCardsProps> = ({ title }) => {
   const [data, setData] = useState<
-    { count: number; label: string; iconSrc: string }[]
+    { count: number; label: string; icon: ReactNode }[]
   >([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,28 +28,37 @@ const StatusCards: React.FC<StatusCardsProps> = ({ title }) => {
 
         const { statusSummary, total } = response.data;
 
+        // 아이콘 배열 정의
+        const icons = [
+          <Folder key="1" size={40} color="gray" />,
+          <Signature key="2" size={40} color="gray" />,
+          <Swords key="3" size={40} color="gray" />,
+          <Skull key="4" size={40} color="gray" />,
+          <Wrench key="5" size={40} color="gray" />,
+        ];
+
         // 데이터 매핑
         const mappedData = [
-          { count: total, label: "전체", iconSrc: "/contract.png" },
+          { count: total || 0, label: "전체", icon: icons[0] },
           {
             count: statusSummary["contract"] || 0,
             label: "계약",
-            iconSrc: "/contract.png",
+            icon: icons[1],
           },
           {
             count: statusSummary["inProgress"] || 0,
             label: "진행 중",
-            iconSrc: "/running.png",
+            icon: icons[2],
           },
           {
             count: statusSummary["completed"] || 0,
             label: "납품 완료",
-            iconSrc: "/complete.png",
+            icon: icons[3],
           },
           {
             count: statusSummary["maintenance"] || 0,
             label: "하자 보수",
-            iconSrc: "/support.png",
+            icon: icons[4],
           },
         ];
 
@@ -68,17 +78,29 @@ const StatusCards: React.FC<StatusCardsProps> = ({ title }) => {
   }
 
   return (
-    <Box mb={8}>
-      <Heading size="2xl" mb={6} color="gray.700">
+    <Box mb="50px">
+      <Heading size="2xl" color="gray.700" mb="10px">
         {title}
       </Heading>
-      <Flex wrap="wrap" gap={6} justify="center" bg="gray.50" p={8}>
+      <Flex
+        wrap="wrap"
+        justifyContent="center"
+        alignItems="center"
+        gap={8}
+        justify="center"
+        bg="gray.50"
+        p={8}
+        border="1px solid"
+        borderColor="gray.200"
+        borderRadius="lg"
+        boxShadow="md"
+      >
         {data.map((item, index) => (
           <StatusCard
             key={index}
             count={item.count}
             label={item.label}
-            iconSrc={item.iconSrc}
+            icon={item.icon}
           />
         ))}
       </Flex>

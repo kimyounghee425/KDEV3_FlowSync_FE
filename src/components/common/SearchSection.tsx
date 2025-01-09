@@ -1,69 +1,59 @@
-"use client";
-
+import { createListCollection } from "@chakra-ui/react";
 import { HStack, Input, Button, Box, Flex } from "@chakra-ui/react";
 import { ChangeEvent, KeyboardEvent } from "react";
 import { SelectBox } from "./SelectBox";
+import { SearchSectionProps } from "@/src/types/search";
 
-interface SearchSectionProps {
-  query: string;
-  filter: string;
-  onQueryChange: (value: string) => void;
-  onFilterChange: (value: string) => void;
-  onSearch: (query: string, filter: string) => void;
-}
+const frameworks = createListCollection<{ label: string; value: string }>({
+  items: [
+    { label: "전체", value: "all" },
+    { label: "계약", value: "contract" },
+    { label: "진행중", value: "inProgress" },
+    { label: "납품완료", value: "completed" },
+    { label: "하자보수", value: "maintenance" },
+    { label: "일시중단", value: "paused" },
+    { label: "삭제(관리자용)", value: "deleted" },
+  ],
+});
 
 const SearchSection: React.FC<SearchSectionProps> = ({
   query,
-  filter,
-  onQueryChange,
-  onFilterChange,
-  onSearch,
+  setQuery,
+  onSubmit,
+  reset,
 }) => {
+  // 사용자가 input 태그에 이력하는 값을 실시간으로 query state에 보관
+  const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
+
   // Enter 키 입력 처리 함수
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      onSearch(query, filter);
+      onSubmit();
     }
   };
+
   return (
     <Box>
-      <Flex gap={4} alignItems="center" justifyContent="space-between">
+      <Flex gap={4} alignItems="center" justifyContent="end">
         <HStack>
+          <SelectBox frameworks={frameworks} />
           <Input
             placeholder="프로젝트명 검색"
             size="md"
             value={query}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onQueryChange(e.target.value)
-            }
-            onKeyDown={handleKeyPress}
-            width="400px"
+            onChange={onChangeSearch}
+            onKeyDown={onKeyDown}
+            width="300px"
           />
-          <Button colorPalette="blue" onClick={() => onSearch(query, filter)}>
+          <Button variant={"surface"} onClick={onSubmit}>
             검색
           </Button>
-          <Button
-            colorPalette="gray"
-            onClick={() => {
-              onQueryChange("");
-            }}
-          >
+          <Button variant={"outline"} onClick={reset}>
             초기화
           </Button>
         </HStack>
-        <SelectBox
-          placeholder="프로젝트 상태 필터링"
-          value={filter}
-          onChange={(value) => onFilterChange(value)}
-        >
-          <option value="all">전체</option>
-          <option value="contract">계약</option>
-          <option value="inProgress">진행중</option>
-          <option value="completed">납품완료</option>
-          <option value="maintenance">하자보수</option>
-          <option value="paused">일시중단</option>
-          <option value="deleted">삭제(관리자용)</option>
-        </SelectBox>
       </Flex>
     </Box>
   );

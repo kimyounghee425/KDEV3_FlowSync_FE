@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import "./globals.css";
 
 import { Provider } from "@/src/components/ui/provider";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import Header from "@/src/components/layouts/Header";
 import Sidebar from "@/src/components/layouts/Sidebar";
 import { MSWComponent } from "@/src/components/common/MSWComponent";
+import { SidebarProvider } from "@/src/context/SidebarContext";
 
 export const metadata: Metadata = {
   title: "FlowSync",
@@ -26,17 +26,12 @@ const RootLayout = (props: { children: React.ReactNode }) => {
             flexDirection="row"
             margin={0}
             padding={0}
-            bg="gray.50"
           >
-            <Sidebar />
-            <Flex
-              width="100%"
-              height="100%"
-              align="center"
-              justify="center"
-              p={6}
-            >
-              <Box maxW="container.xl" width="100%" borderRadius="lg" p={8}>
+            <SidebarProvider>
+              <Sidebar />
+            </SidebarProvider>
+            <Flex width="100%" height="100%" align="center" justify="center">
+              <Box maxW="container.xl" width="100%" height="100%" p={10}>
                 {useMsw ? <MSWComponent>{children}</MSWComponent> : children}
               </Box>
             </Flex>

@@ -1,37 +1,45 @@
 import {
-  NativeSelectField,
-  NativeSelectRoot,
-} from "@/src/components/ui/native-select";
-import { ChangeEvent, ReactNode } from "react";
+  SelectContent,
+  SelectItem,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from "@/src/components/ui/select";
+import { useFilter } from "@/src/context/ProjectsFilterContext";
+import { ListCollection } from "@chakra-ui/react";
 
 interface SelectBoxProps {
-  children: ReactNode;
-  placeholder: string;
-  value: string;
-  onChange?: (value: string) => void;
+  frameworks: ListCollection<{ label: string; value: string }>;
 }
 
-export const SelectBox: React.FC<SelectBoxProps> = ({
-  children,
-  placeholder,
-  value,
-  onChange,
-}) => {
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    if (onChange) {
-      onChange(selectedValue); // 부모 컴포넌트로 선택된 값 전달
+export const SelectBox: React.FC<SelectBoxProps> = ({ frameworks }) => {
+  const { filter, setFilter } = useFilter();
+
+  const handleValueChange = (details: { value: string[] }) => {
+    const selectedValue = details.value[0]; // 선택된 첫 번째 값
+    if (setFilter && selectedValue) {
+      setFilter(selectedValue);
     }
   };
 
   return (
-    <NativeSelectRoot size="md" width="240px">
-      <NativeSelectField value={value} onChange={handleChange}>
-        <option value="" disabled>
-          {placeholder}
-        </option>
-        {children}
-      </NativeSelectField>
-    </NativeSelectRoot>
+    <SelectRoot
+      collection={frameworks}
+      size="md"
+      width="110px"
+      value={[filter]}
+      onValueChange={handleValueChange}
+    >
+      <SelectTrigger>
+        <SelectValueText></SelectValueText>
+      </SelectTrigger>
+      <SelectContent>
+        {frameworks.items.map((status) => (
+          <SelectItem item={status} key={status.value}>
+            {status.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </SelectRoot>
   );
 };

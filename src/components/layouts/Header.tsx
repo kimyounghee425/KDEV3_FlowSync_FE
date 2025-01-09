@@ -15,8 +15,8 @@ function Header() {
       justify="space-between"
       wrap="wrap"
       padding="1rem"
-      bg="gray.500"
-      color="white"
+      backgroundColor="gray.200"
+      boxShadow="md"
     >
       <Flex align="center" mr={5}>
         <Link href="/">

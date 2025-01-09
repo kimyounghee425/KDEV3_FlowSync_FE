@@ -18,6 +18,7 @@ const Pagination: React.FC<PaginationProps> = ({ meta, onPageChange }) => {
     <HStack wrap="wrap" justify="center" mt={4}>
       {/* 이전 버튼 */}
       <Button
+        variant={"surface"}
         size="sm"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={isFirstPage}
@@ -33,8 +34,9 @@ const Pagination: React.FC<PaginationProps> = ({ meta, onPageChange }) => {
             size="sm"
             key={page}
             onClick={() => onPageChange(page)}
-            bg={page === currentPage ? "blue.600" : "gray.200"}
-            color={page === currentPage ? "white" : "gray.800"}
+            variant={page === currentPage ? "surface" : "outline"}
+            // bg={page === currentPage ? "gray.400" : "gray.200"}
+            // color={page === currentPage ? "white" : "gray.600"}
           >
             {page}
           </Button>
@@ -43,6 +45,7 @@ const Pagination: React.FC<PaginationProps> = ({ meta, onPageChange }) => {
 
       {/* 다음 버튼 */}
       <Button
+        variant={"surface"}
         size="sm"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={isLastPage}

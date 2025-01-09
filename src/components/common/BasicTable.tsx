@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { Box, Heading, Stack, Table } from "@chakra-ui/react";
+import { useEffect, useState, ReactNode } from "react";
+import { Heading, Stack, Table } from "@chakra-ui/react";
 import Pagination from "./Pagination";
 import { fetchProjects } from "@/src/api/projects";
 import { ProjectProps, BoardResponse, PaginationMeta } from "@/src/types";
@@ -10,9 +10,10 @@ import { CustomBox } from "./CustomBox";
 import { useRouter } from "next/navigation";
 import SearchSection from "./SearchSection";
 import { getTranslatedStatus } from "@/src/utils/getTranslatedStatus";
+import { useFilter } from "@/src/context/ProjectsFilterContext";
 
 interface BasicTableProps {
-  headerTitle: React.ReactNode;
+  headerTitle: ReactNode;
 }
 
 const BasicTable: React.FC<BasicTableProps> = ({ headerTitle }) => {
@@ -21,31 +22,23 @@ const BasicTable: React.FC<BasicTableProps> = ({ headerTitle }) => {
   const [loading, setLoading] = useState(true);
 
   const [query, setQuery] = useState<string>(""); // 검색어 상태
-  const [filter, setFilter] = useState<string>(""); // 필터링 상태
 
-  // 최신 상태 값을 참조하기 위한 useRef
-  const queryRef = useRef(query);
-  const filterRef = useRef(filter);
-
-  // query와 filter가 변경될 때 useRef 업데이트
-  useEffect(() => {
-    queryRef.current = query;
-  }, [query]);
-
-  useEffect(() => {
-    filterRef.current = filter;
-  }, [filter]);
+  const { filter, setFilter } = useFilter();
 
   const router = useRouter();
 
-  const fetchData = useCallback(async (page: number, pageSize: number) => {
+  const fetchData = async (
+    queryValue: string,
+    page: number = 1,
+    pageSize: number = 5
+  ) => {
     setLoading(true);
     try {
       const response: BoardResponse<ProjectProps> = await fetchProjects(
+        queryValue,
+        filter,
         page - 1, // 서버에서 0-indexed 페이지를 사용
-        pageSize,
-        queryRef.current,
-        filterRef.current
+        pageSize
       );
       setData(response.data);
       setMeta(response.meta);
@@ -54,31 +47,27 @@ const BasicTable: React.FC<BasicTableProps> = ({ headerTitle }) => {
     } finally {
       setLoading(false);
     }
-  }, []);
-
-  useEffect(() => {
-    if (!meta) {
-      // 초기 로드 시 데이터 가져오기
-      fetchData(1, 5);
-    }
-  }, [meta, fetchData]);
-
-  const handlePageChange = (page: number) => {
-    if (meta) {
-      // 페이지 변경 시 새로운 데이터를 가져오기
-      fetchData(page, meta.pageSize || 5);
-      setMeta((prev) => ({ ...prev!, currentPage: page - 1 }));
-    }
   };
 
-  const handleSearch = (newQuery: string, newFilter: string) => {
-    if (newQuery !== query) {
-      setQuery(newQuery);
-    }
-    if (newFilter !== filter) {
-      setFilter(newFilter);
-    }
-    fetchData(1, 5);
+  // 초기 데이터 로드
+  useEffect(() => {
+    fetchData(query);
+  }, [filter]);
+
+  const handlePageChange = (page: number) => {
+    // 페이지 변경 시 새로운 데이터를 가져오기
+    fetchData(query, page, meta?.pageSize || 5);
+  };
+
+  // 검색어와 필터 상태값 초기화 함수
+  const reset = () => {
+    setQuery("");
+    setFilter("all");
+  };
+
+  // 최신 query 값을 매개변수로 받아 사용
+  const onSubmit = () => {
+    fetchData(query);
   };
 
   const handleRowClick = (id: number) => {
@@ -86,16 +75,15 @@ const BasicTable: React.FC<BasicTableProps> = ({ headerTitle }) => {
   };
 
   return (
-    <Stack width="full" gap="5">
-      <Heading size="2xl" color="gray.700">
+    <Stack width="full">
+      <Heading size="2xl" color="gray.600">
         프로젝트 목록
       </Heading>
       <SearchSection
         query={query}
-        filter={filter}
-        onQueryChange={setQuery}
-        onFilterChange={setFilter}
-        onSearch={handleSearch}
+        setQuery={setQuery}
+        onSubmit={onSubmit}
+        reset={reset}
       />
       <Table.Root size="sm" interactive>
         <Table.Header>{headerTitle}</Table.Header>
@@ -114,6 +102,8 @@ const BasicTable: React.FC<BasicTableProps> = ({ headerTitle }) => {
                 css={{
                   "& > td": {
                     textAlign: "center",
+                    height: "55px",
+                    fontSize: "md",
                   },
                 }}
               >
@@ -121,24 +111,12 @@ const BasicTable: React.FC<BasicTableProps> = ({ headerTitle }) => {
                 <Table.Cell>{item.client}</Table.Cell>
                 <Table.Cell>{item.developer}</Table.Cell>
                 <Table.Cell>
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <CustomBox>
-                      {getTranslatedStatus(item.projectStatus)}
-                    </CustomBox>
-                  </Box>
+                  <CustomBox>
+                    {getTranslatedStatus(item.projectStatus)}
+                  </CustomBox>
                 </Table.Cell>
                 <Table.Cell>
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <CustomBox>{item.progressStepName}</CustomBox>
-                  </Box>
+                  <CustomBox>{item.progressStepName}</CustomBox>
                 </Table.Cell>
                 <Table.Cell>{item.startAt}</Table.Cell>
                 <Table.Cell textAlign="end">{item.closeAt}</Table.Cell>
