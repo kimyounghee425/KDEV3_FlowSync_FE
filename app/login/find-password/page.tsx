@@ -1,3 +1,3 @@
-import findPasswordPage from "@/src/components/pages/FindPasswordPage";
+import FindPasswordPage from "@/src/components/pages/FindPasswordPage";
 
-export default findPasswordPage;
+export default FindPasswordPage;
