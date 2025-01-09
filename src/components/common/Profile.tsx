@@ -13,15 +13,13 @@ const Profile: React.FC<ProfileProps> = ({
   const direction = isSidebar ? "column" : "row";
   const marginBottom = isSidebar ? "15px" : "0px";
   return (
-    <Box marginBottom={marginBottom}>
-      <Stack gap="8">
-        <HStack key={id} gap="4">
+    <Box margin={marginBottom}>
+      <Stack>
+        <HStack key={id}>
           <Avatar name={userName} size="lg" src={avatar} />
-          <Stack gap="0" direction={direction}>
-            <Text color="white" fontWeight="medium">
-              {userName}
-            </Text>
-            <Text color="gray.300" textStyle="sm">
+          <Stack gap="1" direction={direction}>
+            <Text fontWeight="medium">{userName}</Text>
+            <Text color="gray.600" textStyle="sm">
               {orgName} · {jobRole}
             </Text>
           </Stack>

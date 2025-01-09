@@ -1,37 +1,36 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import Image from "next/image";
-import React from "react";
+import { ReactNode } from "react";
 
 interface StatusCardProps {
   count: number;
   label: string;
-  iconSrc: string;
+  icon: ReactNode;
 }
 
-const StatusCard: React.FC<StatusCardProps> = ({ count, label, iconSrc }) => {
+const StatusCard: React.FC<StatusCardProps> = ({ count, label, icon }) => {
   return (
     <Box
       background="white"
-      width={300}
-      height={170}
+      width="250px"
+      height="170px"
       border="1px solid #E2E8F0"
       borderRadius="lg"
       boxShadow="sm"
       padding={4}
     >
-      <Flex alignItems="center" gap={4}>
+      <Flex alignItems="center" height="100%" gap={6}>
         <Flex
+          border="1px solid #E2E8F0"
           borderRadius="full"
           overflow="hidden"
           alignItems="center"
           justifyContent="center"
-          bg="green.50"
           w="85px"
           h="85px"
         >
-          <Image src={iconSrc} alt={label} width={50} height={50} />
+          {icon}
         </Flex>
-        <Flex flexDirection={"column"}>
+        <Flex flexDirection={"column"} alignItems={"center"}>
           <Text fontSize={46} fontWeight={700} color="gray.700">
             {count}
           </Text>

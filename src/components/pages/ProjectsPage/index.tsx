@@ -1,15 +1,16 @@
 import { Table } from "@chakra-ui/react";
 import BasicTable from "@/src/components/common/BasicTable";
 import ProjectStatusCards from "@/src/components/common/ProjectsStatusCards";
+import { ProjectsFilterProvider } from "@/src/context/ProjectsFilterContext";
 
 export default function Home() {
   return (
-    <>
+    <ProjectsFilterProvider>
       <ProjectStatusCards title={"프로젝트 현황"} />
       <BasicTable
         headerTitle={
           <Table.Row
-            backgroundColor={"#bebaba"}
+            backgroundColor={"#eee"}
             css={{
               "& > th": {
                 // 모든 자식 `th` 태그에 스타일 적용
@@ -29,6 +30,6 @@ export default function Home() {
           </Table.Row>
         }
       />
-    </>
+    </ProjectsFilterProvider>
   );
 }

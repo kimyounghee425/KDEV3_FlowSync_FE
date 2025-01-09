@@ -8,11 +8,11 @@ export const handlers = [
     const url = new URL(request.url);
 
     // Extract query parameters
-    const currentPage = parseInt(url.searchParams.get("currentPage") || "0", 10);
-    const pageSize = parseInt(url.searchParams.get("pageSize") || "5", 10);
     const query = url.searchParams.get("query") || "";
     const filter = url.searchParams.get("filter") || "all";
-
+    const currentPage = parseInt(url.searchParams.get("currentPage") || "0", 10);
+    const pageSize = parseInt(url.searchParams.get("pageSize") || "5", 10);
+    
     // All data
     const allData = projectsData.data;
 
