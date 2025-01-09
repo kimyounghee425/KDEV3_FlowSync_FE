@@ -1,11 +1,21 @@
 import { Table } from "@chakra-ui/react";
 import BasicTable from "@/src/components/common/BasicTable";
 import ProjectStatusCards from "@/src/components/common/ProjectsStatusCards";
+import Head from "next/head";
 import { ProjectsFilterProvider } from "@/src/context/ProjectsFilterContext";
 
 export default function Home() {
   return (
     <ProjectsFilterProvider>
+      <Head>
+        <title>FlowSync</title>
+        <meta property="og:image" content="@/public/FlowSyncLogo.jpg" />
+        <meta property="og:title" content="FlowSync" />
+        <meta
+          property="og:description"
+          content="FlowSync로 프로젝트 관리를 한번에"
+        />
+      </Head>
       <ProjectStatusCards title={"프로젝트 현황"} />
       <BasicTable
         headerTitle={
