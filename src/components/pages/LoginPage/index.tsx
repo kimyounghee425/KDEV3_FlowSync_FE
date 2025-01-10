@@ -16,7 +16,6 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const route = useRouter();
 
   const handleChange = (field: string, value: string) => {
@@ -27,11 +26,9 @@ export default function LoginPage() {
     e.preventDefault();
     if (!formData.email || !formData.password) {
       setError("이메일과 비밀번호를 모두 입력하세요.");
-      setIsSubmitting(false);
       return;
     }
 
-    setIsSubmitting(true);
     setError(null); // 에러 메시지 초기화
     startTransition(async () => {
       try {
@@ -44,7 +41,6 @@ export default function LoginPage() {
       } catch (err: any) {
         setError(err.message || "로그인 실패");
       } finally {
-        setIsSubmitting(false);
       }
     });
   };
@@ -71,7 +67,7 @@ export default function LoginPage() {
 
             {error && <span style={{ color: "red" }}>{error}</span>}
 
-            <Button type="submit" backgroundColor="#00a8ff" color="white" fontSize="lg" fontWeight="medium" width="100%" disabled={isPending || isSubmitting} _hover={{ backgroundColor: "#007acc" }}>
+            <Button type="submit" backgroundColor="#00a8ff" color="white" fontSize="lg" fontWeight="medium" width="100%" disabled={isPending} _hover={{ backgroundColor: "#007acc" }}>
               로그인
             </Button>
           </Flex>
