@@ -27,8 +27,10 @@ export const SidebarProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     // 상태 변경 시 LocalStorage에 저장
+    // TODO 다른 방법 찾아보기
     localStorage.setItem("projectStatus", projectStatus);
   }, [projectStatus]);
+
 
   return (
     <SidebarContext.Provider value={{ projectStatus, setProjectStatus }}>

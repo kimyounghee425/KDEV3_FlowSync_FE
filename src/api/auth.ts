@@ -10,14 +10,14 @@ export const fetchUserPermissions = async (): Promise<PermissionsResponse> => {
   return response.data;
 };
 
-// 로그인 API 호출
-export const login = async (email: string, password: string): Promise<void> => {
-  const response = await axiosInstance.post("/auth/login", { email, password });
-  console.log(response.data.message); // 성공 메시지 출력
+// 로그인 API 호출 ()
+export const login = async (email: string, password: string): Promise<{ token: string; user: { id: string; name: string } }> => {
+  const response = await axiosInstance.post("/login", { email, password });
+  return response.data; // { token, user }
 };
 
 // 로그아웃 API 호출
 export const logout = async (): Promise<void> => {
-  await axiosInstance.post("/auth/logout");
+  await axiosInstance.post("/logout");
   console.log("로그아웃 성공!");
 };
