@@ -1,22 +1,23 @@
 "use client";
 
-import LoginInputForm from "../../common/LoginInputForm";
-<<<<<<< HEAD
 import { Box, Button, Flex, Heading, HStack, Separator, Span, Text } from "@chakra-ui/react";
 import React, { useState, useTransition } from "react";
-import { processLogin } from "@/src/types/loginActions";
+import { login } from "@/src/api/auth";
+import LoginInputForm from "../../common/LoginInputForm";
 import Link from "next/link";
-=======
-import { Box, Button, Flex, Heading, Span } from "@chakra-ui/react";
-import React, { useState, useTransition } from "react";
-import { processLogin } from "@/src/types/loginActions";
->>>>>>> a191cc5464d68313ca32c3f4fe55ca9733c8cf26
+import { useRouter } from "next/navigation";
+
+interface User {
+  id: string;
+  name: string;
+}
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const route = useRouter();
 
   const handleChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
@@ -24,12 +25,24 @@ export default function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.email || !formData.password) {
+      setError("이메일과 비밀번호를 모두 입력하세요.");
+      setIsSubmitting(false);
+      return;
+    }
+
     setIsSubmitting(true);
+    setError(null); // 에러 메시지 초기화
     startTransition(async () => {
       try {
-        await processLogin(formData);
+        const response: { token: string; user: { id: string; name: string } } = await login(formData.email, formData.password);
+        localStorage.setItem("authToken", response.token);
+        localStorage.setItem("user", JSON.stringify(response.user));
+        // window.location.href = "/";
+        // TODO 홈화면 프리패칭 적용하기
+        route.push("/"); // 홈(종합 대시보드)로 리다이렉트
       } catch (err: any) {
-        setError(err.message); // 서버에서 처리되지 않은 오류 메시지를 표시
+        setError(err.message || "로그인 실패");
       } finally {
         setIsSubmitting(false);
       }
