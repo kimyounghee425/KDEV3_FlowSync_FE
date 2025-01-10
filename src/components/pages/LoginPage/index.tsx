@@ -1,10 +1,16 @@
 "use client";
 
 import LoginInputForm from "../../common/LoginInputForm";
+<<<<<<< HEAD
 import { Box, Button, Flex, Heading, HStack, Separator, Span, Text } from "@chakra-ui/react";
 import React, { useState, useTransition } from "react";
 import { processLogin } from "@/src/types/loginActions";
 import Link from "next/link";
+=======
+import { Box, Button, Flex, Heading, Span } from "@chakra-ui/react";
+import React, { useState, useTransition } from "react";
+import { processLogin } from "@/src/types/loginActions";
+>>>>>>> a191cc5464d68313ca32c3f4fe55ca9733c8cf26
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
