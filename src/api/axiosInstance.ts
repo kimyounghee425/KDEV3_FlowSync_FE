@@ -5,14 +5,14 @@ const axiosInstance = axios.create({
   timeout: 10000, // 요청 타임아웃 설정 (10초)
   headers: {
     "Content-Type": "application/json",
-  }
+  },
+  // withCredentials: true,
 });
 
 // 응답 인터셉터 추가
 axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    
+  response => response,
+  error => {
     // 개발 단계에서 에러를 중앙관리하기위한 구문
     // 추후 중앙화된 로깅 도구를 사용하거나 제거
     // 에러 처리는 개별 컴포넌트에서 진행

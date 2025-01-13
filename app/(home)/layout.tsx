@@ -14,11 +14,20 @@ export const metadata: Metadata = {
 
 const RootLayout = (props: { children: React.ReactNode }) => {
   const { children } = props;
-  const useMsw = process.env.USE_MSW === "true";
   return (
-    <html suppressHydrationWarning>
-      <body>{useMsw ? <MSWComponent>{children}</MSWComponent> : children}</body>
-    </html>
+    <Provider>
+      <Header />
+      <Container maxWidth={"100%"} display="flex" flexDirection="row" margin={0} padding={0}>
+        <SidebarProvider>
+          <Sidebar />
+        </SidebarProvider>
+        <Flex width="100%" height="100%" align="center" justify="center">
+          <Box maxW="container.xl" width="100%" height="100%" p={10}>
+            {children}
+          </Box>
+        </Flex>
+      </Container>
+    </Provider>
   );
 };
 
