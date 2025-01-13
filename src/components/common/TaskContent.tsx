@@ -104,27 +104,3 @@ const TaskContent = ({ task }: { task: Task }) => {
 };
 
 export default TaskContent;
-
-
-
-
-
-
-{/* 요약 */}
-{/* <Box mb={4}>
-  <Text fontWeight="bold">질문 요약:</Text>
-  <Text>{task.summary}</Text>
-</Box> */}
-
-{/* 링크 */}
-{/* <Box mb={4}>
-  <Text fontWeight="bold">링크 첨부:</Text>
-  <a
-    href={task.link}
-    target="_blank"
-    rel="noopener noreferrer"
-    style={{ color: "blue" }}
-  >
-    {task.link}
-  </a>
-</Box> */}

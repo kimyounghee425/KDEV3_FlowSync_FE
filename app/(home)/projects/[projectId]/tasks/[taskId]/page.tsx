@@ -1,16 +1,20 @@
+// TODO 1. axios 사용해 json 받아오기
+// TODO 2. JSON 파일 data 안으로 옮기기
+// TODO 3. 잘 리팩토링하기.
+
 "use client";
 
 import { Box, VStack } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import TaskContent from "@/src/components/common/TaskContents";
+import TaskContent from "@/src/components/common/TaskContent";
 import TaskComments from "@/src/components/common/TaskComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/backButton";
+import axiosInstance from "@/src/api/axiosInstance";
 
 export default function ProjectTaskPage() {
   const { taskId } = useParams();
-  console.log(taskId);
 
   interface Reply {
     id: number;
@@ -48,35 +52,35 @@ export default function ProjectTaskPage() {
 
   const [task, setTask] = useState<Task | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTaskData = async () => {
       try {
-        const response = await fetch(`/task_mock_datas/${taskId}.json`);
-        if (!response.ok) {
-          throw new Error("JSON 파일을 가져오는데 실패했습니다.");
-        }
-        const data: Task = await response.json();
-        setTask(data);
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("An unknown error occurred");
-        }
+        const response = await axiosInstance.get<Task>(`/projects/1/tasks/${taskId}`);
+        setTask(response.data); // JSON 데이터를 상태로 저장
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "데이터를 가져오는데 실패했습니다."
+        );
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchData();
+    fetchTaskData();
   }, [taskId]);
 
   if (error) {
     return <Box>에러 발생: {error}</Box>;
   }
 
-  if (!task) {
+  if (loading) {
     return <Box>로딩 중...</Box>;
   }
+
 
   return (
     <Box
@@ -92,11 +96,11 @@ export default function ProjectTaskPage() {
       <BackButton />
 
       {/* 게시글 내용 */}
-      <TaskContent task={task} />
+      {task && <TaskContent task={task} />}
 
       {/* 댓글 섹션 */}
       <VStack align="stretch" gap={8} mt={10}>
-        <TaskComments comments={task.commentList} />
+        {task && <TaskComments comments={task.commentList} />}
         <CommentBox />
       </VStack>
     </Box>

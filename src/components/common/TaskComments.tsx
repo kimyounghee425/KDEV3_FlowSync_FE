@@ -8,7 +8,6 @@ interface Comment {
   content: string;
   replies?: Comment[];
 }
-
 interface TaskCommentsProps {
   comments: Comment[];
 }
@@ -18,7 +17,41 @@ const TaskComments = ({ comments }: TaskCommentsProps) => {
   const [replyContent, setReplyContent] = useState<string>("");
 
   const handleReplyClick = (commentId: number) => {
-    setReplyingTo(commentId === replyingTo ? null : commentId);
+    if (
+      replyingTo !== null &&
+      replyContent.trim() !== "" &&
+      replyingTo !== commentId
+    ) {
+      // 이미 입력된 내용 있으면 알림창 띄움
+      const confirmCancel = window.confirm(
+        "이미 입력된 답글 내용을 취소 하겠습니까?"
+      );
+      if (!confirmCancel) {
+        return;
+      }
+    }
+
+    if (commentId === replyingTo) {
+      // 동일 답글 버튼 다시 클릭 시 답글 상태 취소
+      setReplyingTo(null);
+    } else {
+      // 다른 댓글의 답글 버튼 누를 시 이전 답글 내용 초기화
+      setReplyContent("");
+      setReplyingTo(commentId);
+    }
+  };
+
+  const handleCancelReply = () => {
+    if (replyContent.trim() !== "") {
+      const confirmCancel = window.confirm(
+        "이미 입력된 답글 내용을 취소 하겠습니까?"
+      );
+      if (!confirmCancel) {
+        return;
+      }
+    }
+    setReplyContent("");
+    setReplyingTo(null);
   };
 
   const handleReplySubmit = (commentId: number) => {
@@ -84,7 +117,7 @@ const TaskComments = ({ comments }: TaskCommentsProps) => {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => setReplyingTo(null)}
+                    onClick={handleCancelReply}
                   >
                     취소
                   </Button>

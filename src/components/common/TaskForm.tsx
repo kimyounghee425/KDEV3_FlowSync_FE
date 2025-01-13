@@ -1,9 +1,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
-import Header from "@editorjs/header";
 import ImageTool from "@editorjs/image";
-import List from "@editorjs/list";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 
 const Form = ({
@@ -40,57 +38,40 @@ const Form = ({
     setFiles(newFiles);
   };
 
-  useEffect(() => {
-    if (!editorRef.current) {
-      editorRef.current = new EditorJS({
-        holder: "editorjs",
-        tools: {
-          // header: Header,
-          // list: List,
-          image: {
-            class: ImageTool,
-            config: {
-              endpoints: {
-                byFile: "/uploadFile", // Replace with your API endpoint for file upload
-                byUrl: "/fetchUrl", // Replace with your API endpoint for URL fetch
-              },
-              field: "image",
-              types: "image/*",
-              additionalRequestHeaders: {
-                Authorization: "Bearer <your-token>", // 이거 뭔뜻이지
-              }
-            },
+  // API 엔드포인트 상수로 분리
+  const API_ENDPOINTS = {
+    uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT,
+    fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT,
+  };
+  
+  // API 헤더 상수로 분리
+  const AUTH_HEADER = {
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+  };
+
+useEffect(() => {
+  if (!editorRef.current) {
+    editorRef.current = new EditorJS({
+      holder: "editorjs",
+      tools: {
+        image: {
+          class: ImageTool,
+          config: {
+            endpoints: API_ENDPOINTS,
+            field: "image",
+            types: "image/*",
+            additionalRequestHeaders: AUTH_HEADER,
           },
         },
-        placeholder: "내용을 작성하세요",
-        data: {
-          time: new Date().getTime(),
-          blocks: [
-            // {
-            //   type: "header",
-            //   data: {
-            //     text: "",
-            //     level: 2,
-            //   },
-            // },
-            // {
-            //   type: "paragraph",
-            //   data: {
-            //     text: "",
-            //   },
-            // },
-          ],
-        },
-      });
-    }
-
-    return () => {
-      if (editorRef.current) {
-        editorRef.current.destroy();
-        editorRef.current = null;
-      }
-    };
-  }, []);
+      },
+      placeholder: "내용을 작성하세요",
+    });
+  }
+  return () => {
+    editorRef.current?.destroy();
+    editorRef.current = null;
+  };
+}, []);
 
   const handleSave = async () => {
     if (editorRef.current) {
