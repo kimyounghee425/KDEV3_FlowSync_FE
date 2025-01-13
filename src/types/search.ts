@@ -1,6 +1,7 @@
 export interface SearchSectionProps {
-  query: string;
+  input: string;
   setQuery: (value: string) => void;
+  setInput: (value: string) => void;
   onSubmit: () => void;
   reset: () => void;
 }

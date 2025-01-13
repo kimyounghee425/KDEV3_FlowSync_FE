@@ -12,7 +12,7 @@ interface SelectBoxProps {
   frameworks: ListCollection<{ label: string; value: string }>;
 }
 
-export const SelectBox: React.FC<SelectBoxProps> = ({ frameworks }) => {
+const SelectBox: React.FC<SelectBoxProps> = ({ frameworks }) => {
   const { filter, setFilter } = useFilter();
 
   const handleValueChange = (details: { value: string[] }) => {
@@ -43,3 +43,5 @@ export const SelectBox: React.FC<SelectBoxProps> = ({ frameworks }) => {
     </SelectRoot>
   );
 };
+
+export default SelectBox;

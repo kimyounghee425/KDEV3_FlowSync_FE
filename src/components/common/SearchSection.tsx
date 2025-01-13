@@ -1,8 +1,8 @@
 import { createListCollection } from "@chakra-ui/react";
 import { HStack, Input, Button, Box, Flex } from "@chakra-ui/react";
-import { ChangeEvent, KeyboardEvent } from "react";
-import { SelectBox } from "./SelectBox";
+import { ChangeEvent, KeyboardEvent, memo, useEffect, useState } from "react";
 import { SearchSectionProps } from "@/src/types/search";
+import SelectBox from "./SelectBox";
 
 const frameworks = createListCollection<{ label: string; value: string }>({
   items: [
@@ -17,19 +17,21 @@ const frameworks = createListCollection<{ label: string; value: string }>({
 });
 
 const SearchSection: React.FC<SearchSectionProps> = ({
-  query,
+  input,
   setQuery,
+  setInput,
   onSubmit,
   reset,
 }) => {
   // 사용자가 input 태그에 이력하는 값을 실시간으로 query state에 보관
   const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
+    setInput(e.target.value);
   };
 
   // Enter 키 입력 처리 함수
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      setQuery(input);
       onSubmit();
     }
   };
@@ -42,7 +44,7 @@ const SearchSection: React.FC<SearchSectionProps> = ({
           <Input
             placeholder="프로젝트명 검색"
             size="md"
-            value={query}
+            value={input}
             onChange={onChangeSearch}
             onKeyDown={onKeyDown}
             width="300px"
@@ -59,4 +61,4 @@ const SearchSection: React.FC<SearchSectionProps> = ({
   );
 };
 
-export default SearchSection;
+export default memo(SearchSection);
