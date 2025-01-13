@@ -1,4 +1,5 @@
 import { Box, Text, Image, Link, VStack } from "@chakra-ui/react";
+import { Task, ContentBlock, Comment, Reply } from "@/src/types/taskTypes";
 
 const isImageFile = (file: string) => {
   const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
@@ -6,17 +7,6 @@ const isImageFile = (file: string) => {
   return imageExtensions.includes(extension || "");
 };
 
-interface ContentBlock {
-  type: "text" | "image";
-  data: string | { src: string };
-}
-
-interface Task {
-  title: string;
-  regAt: string;
-  content: ContentBlock[];
-  file: string[];
-}
 
 const TaskContent = ({ task }: { task: Task }) => {
   const renderContent = (content: ContentBlock[]) => {
