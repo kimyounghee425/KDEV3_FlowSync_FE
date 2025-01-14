@@ -3,6 +3,6 @@ export interface ProfileProps {
   userName: string;
   orgName: string;
   jobRole: string;
-  avatar: string;
-  isSidebar: boolean;
+  profile_image_url: string;
+  // isSidebar: boolean;
 }

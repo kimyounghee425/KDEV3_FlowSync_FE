@@ -1,9 +1,31 @@
 {
   "data": [
     {
+      "id": 0,
+      "org_id": 1,
+      "role": "ADMIN",
+      "status": "ACTIVE",
+      "email": "admin@example.com",
+      "pw": "1234",
+      "name": "김용희",
+      "phone_num": "010-4951-6441",
+      "job_role": "관리자",
+      "job_title": "Senior",
+      "reg_at": "2023-07-08",
+      "introduction": "This is user 1's introduction.",
+      "login_fail_count": 0,
+      "is_login_locked_yn": "N",
+      "last_login_at": "2024-12-30",
+      "delete_account_at": null,
+      "reason_for_delete_account": null,
+      "pw_change_at": "2024-01-27",
+      "profile_image_url": "https://img.icons8.com/?size=100&id=108295&format=png&color=000000",
+      "remark": "Remark for user 1"
+    },
+    {
       "id": 1,
       "org_id": 15,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user1@example.com",
       "pw": "password1",
@@ -25,7 +47,7 @@
     {
       "id": 2,
       "org_id": 16,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user2@example.com",
       "pw": "password2",
@@ -47,7 +69,7 @@
     {
       "id": 3,
       "org_id": 3,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user3@example.com",
       "pw": "password3",
@@ -69,7 +91,7 @@
     {
       "id": 4,
       "org_id": 5,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user4@example.com",
       "pw": "password4",
@@ -91,7 +113,7 @@
     {
       "id": 5,
       "org_id": 20,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user5@example.com",
       "pw": "password5",
@@ -113,7 +135,7 @@
     {
       "id": 6,
       "org_id": 9,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user6@example.com",
       "pw": "password6",
@@ -135,7 +157,7 @@
     {
       "id": 7,
       "org_id": 18,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user7@example.com",
       "pw": "password7",
@@ -157,7 +179,7 @@
     {
       "id": 8,
       "org_id": 8,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user8@example.com",
       "pw": "password8",
@@ -179,7 +201,7 @@
     {
       "id": 9,
       "org_id": 8,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user9@example.com",
       "pw": "password9",
@@ -201,7 +223,7 @@
     {
       "id": 10,
       "org_id": 13,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user10@example.com",
       "pw": "password10",
@@ -223,7 +245,7 @@
     {
       "id": 11,
       "org_id": 14,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user11@example.com",
       "pw": "password11",
@@ -245,7 +267,7 @@
     {
       "id": 12,
       "org_id": 14,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user12@example.com",
       "pw": "password12",
@@ -267,7 +289,7 @@
     {
       "id": 13,
       "org_id": 17,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user13@example.com",
       "pw": "password13",
@@ -289,7 +311,7 @@
     {
       "id": 14,
       "org_id": 7,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user14@example.com",
       "pw": "password14",
@@ -311,7 +333,7 @@
     {
       "id": 15,
       "org_id": 5,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user15@example.com",
       "pw": "password15",
@@ -333,7 +355,7 @@
     {
       "id": 16,
       "org_id": 1,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user16@example.com",
       "pw": "password16",
@@ -355,7 +377,7 @@
     {
       "id": 17,
       "org_id": 14,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user17@example.com",
       "pw": "password17",
@@ -377,7 +399,7 @@
     {
       "id": 18,
       "org_id": 2,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user18@example.com",
       "pw": "password18",
@@ -399,7 +421,7 @@
     {
       "id": 19,
       "org_id": 1,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user19@example.com",
       "pw": "password19",
@@ -421,7 +443,7 @@
     {
       "id": 20,
       "org_id": 12,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user20@example.com",
       "pw": "password20",
@@ -443,7 +465,7 @@
     {
       "id": 21,
       "org_id": 5,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user21@example.com",
       "pw": "password21",
@@ -465,7 +487,7 @@
     {
       "id": 22,
       "org_id": 7,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user22@example.com",
       "pw": "password22",
@@ -487,7 +509,7 @@
     {
       "id": 23,
       "org_id": 6,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user23@example.com",
       "pw": "password23",
@@ -509,7 +531,7 @@
     {
       "id": 24,
       "org_id": 7,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user24@example.com",
       "pw": "password24",
@@ -531,7 +553,7 @@
     {
       "id": 25,
       "org_id": 5,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user25@example.com",
       "pw": "password25",
@@ -553,7 +575,7 @@
     {
       "id": 26,
       "org_id": 2,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user26@example.com",
       "pw": "password26",
@@ -575,7 +597,7 @@
     {
       "id": 27,
       "org_id": 9,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user27@example.com",
       "pw": "password27",
@@ -597,7 +619,7 @@
     {
       "id": 28,
       "org_id": 20,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user28@example.com",
       "pw": "password28",
@@ -619,7 +641,7 @@
     {
       "id": 29,
       "org_id": 7,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user29@example.com",
       "pw": "password29",
@@ -641,7 +663,7 @@
     {
       "id": 30,
       "org_id": 19,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user30@example.com",
       "pw": "password30",
@@ -663,7 +685,7 @@
     {
       "id": 31,
       "org_id": 8,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user31@example.com",
       "pw": "password31",
@@ -685,7 +707,7 @@
     {
       "id": 32,
       "org_id": 5,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user32@example.com",
       "pw": "password32",
@@ -707,7 +729,7 @@
     {
       "id": 33,
       "org_id": 9,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user33@example.com",
       "pw": "password33",
@@ -729,7 +751,7 @@
     {
       "id": 34,
       "org_id": 11,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user34@example.com",
       "pw": "password34",
@@ -751,7 +773,7 @@
     {
       "id": 35,
       "org_id": 2,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user35@example.com",
       "pw": "password35",
@@ -773,7 +795,7 @@
     {
       "id": 36,
       "org_id": 18,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user36@example.com",
       "pw": "password36",
@@ -795,7 +817,7 @@
     {
       "id": 37,
       "org_id": 18,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user37@example.com",
       "pw": "password37",
@@ -817,7 +839,7 @@
     {
       "id": 38,
       "org_id": 8,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user38@example.com",
       "pw": "password38",
@@ -839,7 +861,7 @@
     {
       "id": 39,
       "org_id": 5,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user39@example.com",
       "pw": "password39",
@@ -861,7 +883,7 @@
     {
       "id": 40,
       "org_id": 2,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user40@example.com",
       "pw": "password40",
@@ -883,7 +905,7 @@
     {
       "id": 41,
       "org_id": 1,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user41@example.com",
       "pw": "password41",
@@ -905,7 +927,7 @@
     {
       "id": 42,
       "org_id": 1,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user42@example.com",
       "pw": "password42",
@@ -927,7 +949,7 @@
     {
       "id": 43,
       "org_id": 20,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user43@example.com",
       "pw": "password43",
@@ -949,7 +971,7 @@
     {
       "id": 44,
       "org_id": 3,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user44@example.com",
       "pw": "password44",
@@ -971,7 +993,7 @@
     {
       "id": 45,
       "org_id": 6,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user45@example.com",
       "pw": "password45",
@@ -993,7 +1015,7 @@
     {
       "id": 46,
       "org_id": 17,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user46@example.com",
       "pw": "password46",
@@ -1015,7 +1037,7 @@
     {
       "id": 47,
       "org_id": 11,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user47@example.com",
       "pw": "password47",
@@ -1037,7 +1059,7 @@
     {
       "id": 48,
       "org_id": 17,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user48@example.com",
       "pw": "password48",
@@ -1059,7 +1081,7 @@
     {
       "id": 49,
       "org_id": 8,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user49@example.com",
       "pw": "password49",
@@ -1081,7 +1103,7 @@
     {
       "id": 50,
       "org_id": 13,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user50@example.com",
       "pw": "password50",
@@ -1103,7 +1125,7 @@
     {
       "id": 51,
       "org_id": 8,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user51@example.com",
       "pw": "password51",
@@ -1125,7 +1147,7 @@
     {
       "id": 52,
       "org_id": 10,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user52@example.com",
       "pw": "password52",
@@ -1147,7 +1169,7 @@
     {
       "id": 53,
       "org_id": 4,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user53@example.com",
       "pw": "password53",
@@ -1169,7 +1191,7 @@
     {
       "id": 54,
       "org_id": 17,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user54@example.com",
       "pw": "password54",
@@ -1191,7 +1213,7 @@
     {
       "id": 55,
       "org_id": 15,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user55@example.com",
       "pw": "password55",
@@ -1213,7 +1235,7 @@
     {
       "id": 56,
       "org_id": 5,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user56@example.com",
       "pw": "password56",
@@ -1235,7 +1257,7 @@
     {
       "id": 57,
       "org_id": 10,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user57@example.com",
       "pw": "password57",
@@ -1257,7 +1279,7 @@
     {
       "id": 58,
       "org_id": 5,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user58@example.com",
       "pw": "password58",
@@ -1279,7 +1301,7 @@
     {
       "id": 59,
       "org_id": 19,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user59@example.com",
       "pw": "password59",
@@ -1301,7 +1323,7 @@
     {
       "id": 60,
       "org_id": 2,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user60@example.com",
       "pw": "password60",
@@ -1323,7 +1345,7 @@
     {
       "id": 61,
       "org_id": 19,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user61@example.com",
       "pw": "password61",
@@ -1345,7 +1367,7 @@
     {
       "id": 62,
       "org_id": 9,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user62@example.com",
       "pw": "password62",
@@ -1367,7 +1389,7 @@
     {
       "id": 63,
       "org_id": 13,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user63@example.com",
       "pw": "password63",
@@ -1389,7 +1411,7 @@
     {
       "id": 64,
       "org_id": 2,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user64@example.com",
       "pw": "password64",
@@ -1411,7 +1433,7 @@
     {
       "id": 65,
       "org_id": 7,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user65@example.com",
       "pw": "password65",
@@ -1433,7 +1455,7 @@
     {
       "id": 66,
       "org_id": 15,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user66@example.com",
       "pw": "password66",
@@ -1455,7 +1477,7 @@
     {
       "id": 67,
       "org_id": 14,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user67@example.com",
       "pw": "password67",
@@ -1477,7 +1499,7 @@
     {
       "id": 68,
       "org_id": 8,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user68@example.com",
       "pw": "password68",
@@ -1499,7 +1521,7 @@
     {
       "id": 69,
       "org_id": 8,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user69@example.com",
       "pw": "password69",
@@ -1521,7 +1543,7 @@
     {
       "id": 70,
       "org_id": 17,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user70@example.com",
       "pw": "password70",
@@ -1543,7 +1565,7 @@
     {
       "id": 71,
       "org_id": 9,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user71@example.com",
       "pw": "password71",
@@ -1565,7 +1587,7 @@
     {
       "id": 72,
       "org_id": 11,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user72@example.com",
       "pw": "password72",
@@ -1587,7 +1609,7 @@
     {
       "id": 73,
       "org_id": 18,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user73@example.com",
       "pw": "password73",
@@ -1609,7 +1631,7 @@
     {
       "id": 74,
       "org_id": 20,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user74@example.com",
       "pw": "password74",
@@ -1631,7 +1653,7 @@
     {
       "id": 75,
       "org_id": 17,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user75@example.com",
       "pw": "password75",
@@ -1653,7 +1675,7 @@
     {
       "id": 76,
       "org_id": 19,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user76@example.com",
       "pw": "password76",
@@ -1675,7 +1697,7 @@
     {
       "id": 77,
       "org_id": 14,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user77@example.com",
       "pw": "password77",
@@ -1697,7 +1719,7 @@
     {
       "id": 78,
       "org_id": 12,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user78@example.com",
       "pw": "password78",
@@ -1719,7 +1741,7 @@
     {
       "id": 79,
       "org_id": 20,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user79@example.com",
       "pw": "password79",
@@ -1741,7 +1763,7 @@
     {
       "id": 80,
       "org_id": 9,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user80@example.com",
       "pw": "password80",
@@ -1763,7 +1785,7 @@
     {
       "id": 81,
       "org_id": 20,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user81@example.com",
       "pw": "password81",
@@ -1785,7 +1807,7 @@
     {
       "id": 82,
       "org_id": 14,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user82@example.com",
       "pw": "password82",
@@ -1807,7 +1829,7 @@
     {
       "id": 83,
       "org_id": 7,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user83@example.com",
       "pw": "password83",
@@ -1829,7 +1851,7 @@
     {
       "id": 84,
       "org_id": 9,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user84@example.com",
       "pw": "password84",
@@ -1851,7 +1873,7 @@
     {
       "id": 85,
       "org_id": 8,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user85@example.com",
       "pw": "password85",
@@ -1873,7 +1895,7 @@
     {
       "id": 86,
       "org_id": 5,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user86@example.com",
       "pw": "password86",
@@ -1895,7 +1917,7 @@
     {
       "id": 87,
       "org_id": 2,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user87@example.com",
       "pw": "password87",
@@ -1917,7 +1939,7 @@
     {
       "id": 88,
       "org_id": 14,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user88@example.com",
       "pw": "password88",
@@ -1939,7 +1961,7 @@
     {
       "id": 89,
       "org_id": 19,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user89@example.com",
       "pw": "password89",
@@ -1961,7 +1983,7 @@
     {
       "id": 90,
       "org_id": 17,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user90@example.com",
       "pw": "password90",
@@ -1983,7 +2005,7 @@
     {
       "id": 91,
       "org_id": 12,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user91@example.com",
       "pw": "password91",
@@ -2005,7 +2027,7 @@
     {
       "id": 92,
       "org_id": 19,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user92@example.com",
       "pw": "password92",
@@ -2027,7 +2049,7 @@
     {
       "id": 93,
       "org_id": 6,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user93@example.com",
       "pw": "password93",
@@ -2049,7 +2071,7 @@
     {
       "id": 94,
       "org_id": 15,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user94@example.com",
       "pw": "password94",
@@ -2071,7 +2093,7 @@
     {
       "id": 95,
       "org_id": 14,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user95@example.com",
       "pw": "password95",
@@ -2093,7 +2115,7 @@
     {
       "id": 96,
       "org_id": 4,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user96@example.com",
       "pw": "password96",
@@ -2115,7 +2137,7 @@
     {
       "id": 97,
       "org_id": 13,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user97@example.com",
       "pw": "password97",
@@ -2137,7 +2159,7 @@
     {
       "id": 98,
       "org_id": 6,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user98@example.com",
       "pw": "password98",
@@ -2159,7 +2181,7 @@
     {
       "id": 99,
       "org_id": 10,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user99@example.com",
       "pw": "password99",
@@ -2181,7 +2203,7 @@
     {
       "id": 100,
       "org_id": 6,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user100@example.com",
       "pw": "password100",
@@ -2203,7 +2225,7 @@
     {
       "id": 101,
       "org_id": 5,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user101@example.com",
       "pw": "password101",
@@ -2225,7 +2247,7 @@
     {
       "id": 102,
       "org_id": 4,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user102@example.com",
       "pw": "password102",
@@ -2247,7 +2269,7 @@
     {
       "id": 103,
       "org_id": 13,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user103@example.com",
       "pw": "password103",
@@ -2269,7 +2291,7 @@
     {
       "id": 104,
       "org_id": 15,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user104@example.com",
       "pw": "password104",
@@ -2291,7 +2313,7 @@
     {
       "id": 105,
       "org_id": 7,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user105@example.com",
       "pw": "password105",
@@ -2313,7 +2335,7 @@
     {
       "id": 106,
       "org_id": 7,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user106@example.com",
       "pw": "password106",
@@ -2335,7 +2357,7 @@
     {
       "id": 107,
       "org_id": 9,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user107@example.com",
       "pw": "password107",
@@ -2357,7 +2379,7 @@
     {
       "id": 108,
       "org_id": 20,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user108@example.com",
       "pw": "password108",
@@ -2379,7 +2401,7 @@
     {
       "id": 109,
       "org_id": 17,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user109@example.com",
       "pw": "password109",
@@ -2401,7 +2423,7 @@
     {
       "id": 110,
       "org_id": 14,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user110@example.com",
       "pw": "password110",
@@ -2423,7 +2445,7 @@
     {
       "id": 111,
       "org_id": 1,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user111@example.com",
       "pw": "password111",
@@ -2445,7 +2467,7 @@
     {
       "id": 112,
       "org_id": 16,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user112@example.com",
       "pw": "password112",
@@ -2467,7 +2489,7 @@
     {
       "id": 113,
       "org_id": 3,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user113@example.com",
       "pw": "password113",
@@ -2489,7 +2511,7 @@
     {
       "id": 114,
       "org_id": 13,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user114@example.com",
       "pw": "password114",
@@ -2511,7 +2533,7 @@
     {
       "id": 115,
       "org_id": 10,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user115@example.com",
       "pw": "password115",
@@ -2533,7 +2555,7 @@
     {
       "id": 116,
       "org_id": 20,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user116@example.com",
       "pw": "password116",
@@ -2555,7 +2577,7 @@
     {
       "id": 117,
       "org_id": 7,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user117@example.com",
       "pw": "password117",
@@ -2577,7 +2599,7 @@
     {
       "id": 118,
       "org_id": 17,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user118@example.com",
       "pw": "password118",
@@ -2599,7 +2621,7 @@
     {
       "id": 119,
       "org_id": 9,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user119@example.com",
       "pw": "password119",
@@ -2621,7 +2643,7 @@
     {
       "id": 120,
       "org_id": 5,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user120@example.com",
       "pw": "password120",
@@ -2643,7 +2665,7 @@
     {
       "id": 121,
       "org_id": 4,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user121@example.com",
       "pw": "password121",
@@ -2665,7 +2687,7 @@
     {
       "id": 122,
       "org_id": 16,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user122@example.com",
       "pw": "password122",
@@ -2687,7 +2709,7 @@
     {
       "id": 123,
       "org_id": 9,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user123@example.com",
       "pw": "password123",
@@ -2709,7 +2731,7 @@
     {
       "id": 124,
       "org_id": 6,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user124@example.com",
       "pw": "password124",
@@ -2731,7 +2753,7 @@
     {
       "id": 125,
       "org_id": 14,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user125@example.com",
       "pw": "password125",
@@ -2753,7 +2775,7 @@
     {
       "id": 126,
       "org_id": 16,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user126@example.com",
       "pw": "password126",
@@ -2775,7 +2797,7 @@
     {
       "id": 127,
       "org_id": 12,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user127@example.com",
       "pw": "password127",
@@ -2797,7 +2819,7 @@
     {
       "id": 128,
       "org_id": 20,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user128@example.com",
       "pw": "password128",
@@ -2819,7 +2841,7 @@
     {
       "id": 129,
       "org_id": 9,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user129@example.com",
       "pw": "password129",
@@ -2841,7 +2863,7 @@
     {
       "id": 130,
       "org_id": 15,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user130@example.com",
       "pw": "password130",
@@ -2863,7 +2885,7 @@
     {
       "id": 131,
       "org_id": 10,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user131@example.com",
       "pw": "password131",
@@ -2885,7 +2907,7 @@
     {
       "id": 132,
       "org_id": 20,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user132@example.com",
       "pw": "password132",
@@ -2907,7 +2929,7 @@
     {
       "id": 133,
       "org_id": 14,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user133@example.com",
       "pw": "password133",
@@ -2929,7 +2951,7 @@
     {
       "id": 134,
       "org_id": 15,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user134@example.com",
       "pw": "password134",
@@ -2951,7 +2973,7 @@
     {
       "id": 135,
       "org_id": 16,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user135@example.com",
       "pw": "password135",
@@ -2973,7 +2995,7 @@
     {
       "id": 136,
       "org_id": 10,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user136@example.com",
       "pw": "password136",
@@ -2995,7 +3017,7 @@
     {
       "id": 137,
       "org_id": 16,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user137@example.com",
       "pw": "password137",
@@ -3017,7 +3039,7 @@
     {
       "id": 138,
       "org_id": 8,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user138@example.com",
       "pw": "password138",
@@ -3039,7 +3061,7 @@
     {
       "id": 139,
       "org_id": 13,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user139@example.com",
       "pw": "password139",
@@ -3061,7 +3083,7 @@
     {
       "id": 140,
       "org_id": 15,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user140@example.com",
       "pw": "password140",
@@ -3083,7 +3105,7 @@
     {
       "id": 141,
       "org_id": 5,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user141@example.com",
       "pw": "password141",
@@ -3105,7 +3127,7 @@
     {
       "id": 142,
       "org_id": 13,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user142@example.com",
       "pw": "password142",
@@ -3127,7 +3149,7 @@
     {
       "id": 143,
       "org_id": 15,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user143@example.com",
       "pw": "password143",
@@ -3149,7 +3171,7 @@
     {
       "id": 144,
       "org_id": 17,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user144@example.com",
       "pw": "password144",
@@ -3171,7 +3193,7 @@
     {
       "id": 145,
       "org_id": 14,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user145@example.com",
       "pw": "password145",
@@ -3193,7 +3215,7 @@
     {
       "id": 146,
       "org_id": 18,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user146@example.com",
       "pw": "password146",
@@ -3215,7 +3237,7 @@
     {
       "id": 147,
       "org_id": 14,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user147@example.com",
       "pw": "password147",
@@ -3237,7 +3259,7 @@
     {
       "id": 148,
       "org_id": 1,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user148@example.com",
       "pw": "password148",
@@ -3259,7 +3281,7 @@
     {
       "id": 149,
       "org_id": 19,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user149@example.com",
       "pw": "password149",
@@ -3281,7 +3303,7 @@
     {
       "id": 150,
       "org_id": 1,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user150@example.com",
       "pw": "password150",
@@ -3303,7 +3325,7 @@
     {
       "id": 151,
       "org_id": 13,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user151@example.com",
       "pw": "password151",
@@ -3325,7 +3347,7 @@
     {
       "id": 152,
       "org_id": 11,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user152@example.com",
       "pw": "password152",
@@ -3347,7 +3369,7 @@
     {
       "id": 153,
       "org_id": 16,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user153@example.com",
       "pw": "password153",
@@ -3369,7 +3391,7 @@
     {
       "id": 154,
       "org_id": 10,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user154@example.com",
       "pw": "password154",
@@ -3391,7 +3413,7 @@
     {
       "id": 155,
       "org_id": 4,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user155@example.com",
       "pw": "password155",
@@ -3413,7 +3435,7 @@
     {
       "id": 156,
       "org_id": 17,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user156@example.com",
       "pw": "password156",
@@ -3435,7 +3457,7 @@
     {
       "id": 157,
       "org_id": 1,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user157@example.com",
       "pw": "password157",
@@ -3457,7 +3479,7 @@
     {
       "id": 158,
       "org_id": 14,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user158@example.com",
       "pw": "password158",
@@ -3479,7 +3501,7 @@
     {
       "id": 159,
       "org_id": 15,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user159@example.com",
       "pw": "password159",
@@ -3501,7 +3523,7 @@
     {
       "id": 160,
       "org_id": 16,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user160@example.com",
       "pw": "password160",
@@ -3523,7 +3545,7 @@
     {
       "id": 161,
       "org_id": 1,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user161@example.com",
       "pw": "password161",
@@ -3545,7 +3567,7 @@
     {
       "id": 162,
       "org_id": 5,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user162@example.com",
       "pw": "password162",
@@ -3567,7 +3589,7 @@
     {
       "id": 163,
       "org_id": 17,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user163@example.com",
       "pw": "password163",
@@ -3589,7 +3611,7 @@
     {
       "id": 164,
       "org_id": 18,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user164@example.com",
       "pw": "password164",
@@ -3611,7 +3633,7 @@
     {
       "id": 165,
       "org_id": 2,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user165@example.com",
       "pw": "password165",
@@ -3633,7 +3655,7 @@
     {
       "id": 166,
       "org_id": 20,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user166@example.com",
       "pw": "password166",
@@ -3655,7 +3677,7 @@
     {
       "id": 167,
       "org_id": 9,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user167@example.com",
       "pw": "password167",
@@ -3677,7 +3699,7 @@
     {
       "id": 168,
       "org_id": 18,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user168@example.com",
       "pw": "password168",
@@ -3699,7 +3721,7 @@
     {
       "id": 169,
       "org_id": 7,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user169@example.com",
       "pw": "password169",
@@ -3721,7 +3743,7 @@
     {
       "id": 170,
       "org_id": 18,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user170@example.com",
       "pw": "password170",
@@ -3743,7 +3765,7 @@
     {
       "id": 171,
       "org_id": 14,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user171@example.com",
       "pw": "password171",
@@ -3765,7 +3787,7 @@
     {
       "id": 172,
       "org_id": 20,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user172@example.com",
       "pw": "password172",
@@ -3787,7 +3809,7 @@
     {
       "id": 173,
       "org_id": 14,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user173@example.com",
       "pw": "password173",
@@ -3809,7 +3831,7 @@
     {
       "id": 174,
       "org_id": 17,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user174@example.com",
       "pw": "password174",
@@ -3831,7 +3853,7 @@
     {
       "id": 175,
       "org_id": 8,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user175@example.com",
       "pw": "password175",
@@ -3853,7 +3875,7 @@
     {
       "id": 176,
       "org_id": 19,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user176@example.com",
       "pw": "password176",
@@ -3875,7 +3897,7 @@
     {
       "id": 177,
       "org_id": 6,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user177@example.com",
       "pw": "password177",
@@ -3897,7 +3919,7 @@
     {
       "id": 178,
       "org_id": 5,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user178@example.com",
       "pw": "password178",
@@ -3919,7 +3941,7 @@
     {
       "id": 179,
       "org_id": 14,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user179@example.com",
       "pw": "password179",
@@ -3941,7 +3963,7 @@
     {
       "id": 180,
       "org_id": 8,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user180@example.com",
       "pw": "password180",
@@ -3963,7 +3985,7 @@
     {
       "id": 181,
       "org_id": 4,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user181@example.com",
       "pw": "password181",
@@ -3985,7 +4007,7 @@
     {
       "id": 182,
       "org_id": 13,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user182@example.com",
       "pw": "password182",
@@ -4007,7 +4029,7 @@
     {
       "id": 183,
       "org_id": 2,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user183@example.com",
       "pw": "password183",
@@ -4029,7 +4051,7 @@
     {
       "id": 184,
       "org_id": 20,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user184@example.com",
       "pw": "password184",
@@ -4051,7 +4073,7 @@
     {
       "id": 185,
       "org_id": 4,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user185@example.com",
       "pw": "password185",
@@ -4073,7 +4095,7 @@
     {
       "id": 186,
       "org_id": 5,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user186@example.com",
       "pw": "password186",
@@ -4095,7 +4117,7 @@
     {
       "id": 187,
       "org_id": 20,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user187@example.com",
       "pw": "password187",
@@ -4117,7 +4139,7 @@
     {
       "id": 188,
       "org_id": 5,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user188@example.com",
       "pw": "password188",
@@ -4139,7 +4161,7 @@
     {
       "id": 189,
       "org_id": 1,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user189@example.com",
       "pw": "password189",
@@ -4161,7 +4183,7 @@
     {
       "id": 190,
       "org_id": 7,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user190@example.com",
       "pw": "password190",
@@ -4183,7 +4205,7 @@
     {
       "id": 191,
       "org_id": 4,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user191@example.com",
       "pw": "password191",
@@ -4205,7 +4227,7 @@
     {
       "id": 192,
       "org_id": 7,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user192@example.com",
       "pw": "password192",
@@ -4227,7 +4249,7 @@
     {
       "id": 193,
       "org_id": 16,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user193@example.com",
       "pw": "password193",
@@ -4249,7 +4271,7 @@
     {
       "id": 194,
       "org_id": 1,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user194@example.com",
       "pw": "password194",
@@ -4271,7 +4293,7 @@
     {
       "id": 195,
       "org_id": 8,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user195@example.com",
       "pw": "password195",
@@ -4293,7 +4315,7 @@
     {
       "id": 196,
       "org_id": 16,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "ACTIVE",
       "email": "user196@example.com",
       "pw": "password196",
@@ -4315,7 +4337,7 @@
     {
       "id": 197,
       "org_id": 3,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "INACTIVE",
       "email": "user197@example.com",
       "pw": "password197",
@@ -4337,7 +4359,7 @@
     {
       "id": 198,
       "org_id": 16,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user198@example.com",
       "pw": "password198",
@@ -4359,7 +4381,7 @@
     {
       "id": 199,
       "org_id": 11,
-      "type": "MEMBER",
+      "role": "MEMBER",
       "status": "INACTIVE",
       "email": "user199@example.com",
       "pw": "password199",
@@ -4381,7 +4403,7 @@
     {
       "id": 200,
       "org_id": 12,
-      "type": "ADMIN",
+      "role": "ADMIN",
       "status": "ACTIVE",
       "email": "user200@example.com",
       "pw": "password200",
