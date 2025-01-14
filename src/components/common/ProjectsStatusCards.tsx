@@ -3,9 +3,9 @@
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import StatusCard from "./ProjectsStatusCard";
 import { ReactNode, useEffect, useState } from "react";
-import axios from "axios";
 import { Loading } from "./Loading";
 import { Folder, PackageCheck, Signature, Swords, Wrench } from "lucide-react";
+import { fetchProjectsStatusCount } from "@/src/api/projects";
 
 interface StatusCardsProps {
   title: string;
@@ -21,11 +21,8 @@ const StatusCards: React.FC<StatusCardsProps> = ({ title }) => {
     const fetchStatusSummary = async () => {
       try {
         setLoading(true);
-        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await axios.get(
-          `${apiBaseUrl}/projects/status-summary`
-        );
 
+        const response = await fetchProjectsStatusCount();
         const { statusSummary, total } = response.data;
 
         // 아이콘 배열 정의
@@ -41,23 +38,23 @@ const StatusCards: React.FC<StatusCardsProps> = ({ title }) => {
         const mappedData = [
           { count: total || 0, label: "전체", icon: icons[0] },
           {
-            count: statusSummary["contract"] || 0,
+            count: statusSummary["계약"] || 0,
             label: "계약",
             icon: icons[1],
           },
           {
-            count: statusSummary["inProgress"] || 0,
-            label: "진행 중",
+            count: statusSummary["진행중"] || 0,
+            label: "진행중",
             icon: icons[2],
           },
           {
-            count: statusSummary["completed"] || 0,
-            label: "납품 완료",
+            count: statusSummary["납품완료"] || 0,
+            label: "납품완료",
             icon: icons[3],
           },
           {
-            count: statusSummary["maintenance"] || 0,
-            label: "하자 보수",
+            count: statusSummary["하자보수"] || 0,
+            label: "하자보수",
             icon: icons[4],
           },
         ];
@@ -88,7 +85,6 @@ const StatusCards: React.FC<StatusCardsProps> = ({ title }) => {
         alignItems="center"
         gap={8}
         justify="center"
-        bg="gray.50"
         p={8}
         border="1px solid"
         borderColor="gray.200"

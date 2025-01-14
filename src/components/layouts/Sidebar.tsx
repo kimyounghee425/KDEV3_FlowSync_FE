@@ -27,8 +27,7 @@ function Sidebar() {
       flexDirection="column"
       gap="1"
       backgroundColor="gray.200"
-      boxShadow="md"
-    >
+      boxShadow="md">
       <Box width="100%" height="100vh" p={1}>
         {/* Avatar */}
         <Profile

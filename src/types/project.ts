@@ -7,3 +7,14 @@ export interface ProjectProps {
   startAt: string;       // 시작일
   closeAt: string;         // 종료일
 }
+
+export interface ProjectInfoDataType {
+  projectTitle: string; // 프로젝트명
+  jobRole: string; // 직무
+  profileImageUrl: string; // 프로필 이미지 URL
+  name: string; // 담당자 이름
+  jobTitle: string; // 직급
+  phoneNum: string; // 담당자 연락처
+  projectStartAt: string; // 프로젝트 시작일
+  projectCloseAt: string; // 프로젝트 종료일
+}

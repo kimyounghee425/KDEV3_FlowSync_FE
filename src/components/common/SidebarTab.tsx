@@ -10,8 +10,8 @@ export default function SidebarTab() {
   const list = Data.data
     .filter((item) =>
       projectStatus === "완료 프로젝트"
-        ? item.projectStatus === "completed"
-        : item.projectStatus === "inProgress"
+        ? item.projectStatus === "납품완료"
+        : item.projectStatus === "진행중"
     )
     .slice(0, 5)
     .map((item) => {
