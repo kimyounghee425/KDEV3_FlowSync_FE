@@ -5,36 +5,38 @@ import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import SidebarTab from "@/src/components/common/SidebarTab";
 import { useSidebar } from "@/src/context/SidebarContext";
 import { useEffect, useState } from "react";
-import { Loading } from "../common/Loading";
 import User from "@/src/data/members_mock_data.json";
 
 const ADMIN_USER_ID = User.data[0].id; // 관리자 계정 ID (value: 숫자 0)
+async function isAdminCheck() {
+  // 관리자 계정이면 true 반환, 일반 user 이면 false 반환
+  try {
+    // 로컬스토리지에서 'user' 값을 가져오기
+    const userData = localStorage.getItem("user");
+    if (!userData) {
+      throw new Error("User 정보가 로컬스토리지에 없습니다.");
+    }
+    // JSON 문자열을 객체로 변환
+    const userObject = JSON.parse(userData);
+    return userObject.id === ADMIN_USER_ID; // true: admin 계정, false: 일반 user 계정
+  } catch (err: any) {
+    console.log(err.message || "An unknown error occurred");
+    return false; // 기본적으로 관리자 아님
+  }
+}
 
-function Sidebar() {
+export default function Sidebar() {
   const { projectStatus, setProjectStatus } = useSidebar();
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // 사용자 Role 정보 확인 (관리자 계정 여부 체크)
   useEffect(() => {
-    const checkUserRole = async () => {
-      try {
-        // 로컬스토리지에서 'user' 값을 가져오기
-        const userData = localStorage.getItem("user");
-        if (!userData) {
-          throw new Error("User 정보가 로컬스토리지에 없습니다.");
-        }
-        // JSON 문자열을 객체로 변환
-        const userObject = JSON.parse(userData);
-        setIsAdmin(userObject.id === ADMIN_USER_ID); // true: admin 계정, false: 일반 user 계정
-      } catch (err: any) {
-        setError(err.message || "An unknown error occurred");
-      } finally {
-        setError(null); // 에러 메시지 초기화
-      }
+    const checkAdminStatus = async () => {
+      const adminStatus = await isAdminCheck();
+      setIsAdmin(adminStatus);
     };
-    checkUserRole();
+    checkAdminStatus();
   }, []);
 
   // 사이드바 "프로젝트 진행 중 vs 완료" 탭
@@ -80,5 +82,3 @@ function Sidebar() {
     </Flex>
   );
 }
-
-export default Sidebar;
