@@ -1,8 +1,8 @@
-
 import { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
+import axiosInstance from "@/src/api/axiosInstance";
 
 const Form = ({
   author,
@@ -15,7 +15,7 @@ const Form = ({
 
   // 첨부파일
   const [files, setFiles] = useState<(File | null)[]>([]);
-  
+
   // 새 파일 입력 추가
   const handleAddFile = () => {
     setFiles([...files, null]);
@@ -43,40 +43,75 @@ const Form = ({
     uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT,
     fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT,
   };
-  
+
   // API 헤더 상수로 분리
   const AUTH_HEADER = {
     Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
   };
 
-useEffect(() => {
-  if (!editorRef.current) {
-    editorRef.current = new EditorJS({
-      holder: "editorjs",
-      tools: {
-        image: {
-          class: ImageTool,
-          config: {
-            endpoints: API_ENDPOINTS,
-            field: "image",
-            types: "image/*",
-            additionalRequestHeaders: AUTH_HEADER,
+  const uploadFile = async (file: File) => {
+    const previewUrl = URL.createObjectURL(file);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axiosInstance.post("/upload", formData);
+      return response.data.url || previewUrl; // 서버 응답 URL 또는 미리보기 URL
+    } catch (error) {
+      console.error("File upload failed:", error);
+      return previewUrl; // 실패 시 미리보기 URL 유지
+    }
+  };
+
+  useEffect(() => {
+    if (!editorRef.current) {
+      editorRef.current = new EditorJS({
+        holder: "editorjs",
+        tools: {
+          image: {
+            class: ImageTool,
+            config: {
+              endpoints: API_ENDPOINTS,
+              field: "image",
+              types: "image/*",
+              additionalRequestHeaders: AUTH_HEADER,
+              uploader: {
+                async uploadByFile(file: File) {
+                  const url = await uploadFile(file);
+                  return {
+                    success: 1,
+                    file: { url },
+                  };
+                },
+              },
+            },
           },
         },
-      },
-      placeholder: "내용을 작성하세요",
-    });
-  }
-  return () => {
-    editorRef.current?.destroy();
-    editorRef.current = null;
-  };
-}, []);
+        placeholder: "내용을 작성하세요",
+      });
+    }
+    return () => {
+      editorRef.current?.destroy();
+      editorRef.current = null;
+    };
+  }, []);
 
   const handleSave = async () => {
     if (editorRef.current) {
-      const savedData = await editorRef.current.save();
-      console.log("Saved data:", savedData);
+      try {
+        const savedData = await editorRef.current.save();
+
+        await axiosInstance.post("/save-text", {
+          content: savedData.blocks,
+          author,
+          createdDate,
+        });
+        alert("저장이 완료되었습니다.");
+      } catch (error) {
+        console.error("저장 실패:", error);
+        alert("저장 중 문제가 발생했습니다.");
+      }
     }
   };
 
@@ -119,7 +154,7 @@ useEffect(() => {
         ></Box>
       </Box>
 
-      <Box>
+      {/* <Box>
         <Text mb={2}>질문 요약</Text>
         <Input placeholder="질문을 입력하세요." height={"50px"} />
       </Box>
@@ -127,7 +162,7 @@ useEffect(() => {
       <Box>
         <Text mb={2}>링크 첨부</Text>
         <Input type="url" placeholder="링크(URL)를 입력하세요" />
-      </Box>
+      </Box> */}
 
       <Box mt={6}>
         <Text fontWeight="bold" mb={2}>
