@@ -49,6 +49,21 @@ const Form = ({
     Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
   };
 
+  const uploadFile = async (file: File) => {
+    const previewUrl = URL.createObjectURL(file);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axiosInstance.post("/upload", formData);
+      return response.data.url || previewUrl; // 서버 응답 URL 또는 미리보기 URL
+    } catch (error) {
+      console.error("File upload failed:", error);
+      return previewUrl; // 실패 시 미리보기 URL 유지
+    }
+  };
+
   useEffect(() => {
     if (!editorRef.current) {
       editorRef.current = new EditorJS({
@@ -63,32 +78,11 @@ const Form = ({
               additionalRequestHeaders: AUTH_HEADER,
               uploader: {
                 async uploadByFile(file: File) {
-                  const previewUrl = URL.createObjectURL(file);
-
-                  // 즉시 반환 (미리보기 URL)
-                  const uploadResult = {
+                  const url = await uploadFile(file);
+                  return {
                     success: 1,
-                    file: {
-                      url: previewUrl,
-                    },
+                    file: { url },
                   };
-
-                  // 서버 업로드 시도
-                  try {
-                    const formData = new FormData();
-                    formData.append("file", file);
-
-                    const response = await axiosInstance.post(
-                      "/upload",
-                      formData
-                    );
-
-                    // 서버 업로드 성공: 반환된 URL로 교체
-                    uploadResult.file.url = response.data.url;
-                  } catch (error) {
-                    console.error("File upload failed:", error);
-                  }
-                  return uploadResult;
                 },
               },
             },

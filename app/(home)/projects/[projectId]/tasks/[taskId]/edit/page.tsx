@@ -49,13 +49,13 @@ export default function EditPage() {
 
   // API 엔드포인트 상수로 분리
   const API_ENDPOINTS = {
-    uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT,
-    fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT,
+    uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT || "",
+    fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT || "",
   };
 
   // API 헤더 상수로 분리
   const AUTH_HEADER = {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ""}`,
   };
 
   // --- 2) EditorJS 초기화 ---
