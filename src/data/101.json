@@ -4,7 +4,7 @@
   "title": "101번째 글입니다. 체크핑",
   "content": [
     {
-      "type": "text",
+      "type": "paragraph",
       "data": "여러 핑들을 소개합니다"
     },
     {
@@ -14,7 +14,7 @@
       }
     },
     {
-      "type": "text",
+      "type": "paragraph",
       "data": "시진핑입니다"
     },
     {
@@ -24,7 +24,7 @@
       }
     },
     {
-      "type": "text",
+      "type": "paragraph",
       "data": "파산핑입니다"
     },
     {
@@ -34,7 +34,7 @@
       }
     },
     {
-      "type": "text",
+      "type": "paragraph",
       "data": "핑핑이입니다"
     },
     {
@@ -44,13 +44,13 @@
       }
     },
     {
-      "type": "text",
+      "type": "paragraph",
       "data": "징징입니다"
     }
   ],
   "regAt": "2025-01-08T11:34:56",
   "editAt": "2025-01-09T07:45:12",
-  "approverAt": "2025-01-09T09:00:00", 
+  "approverAt": "2025-01-09T09:00:00",
   "boardCategory": "QUESTION",
   "boardStatus": "PROGRESS",
   "deletedYn": "N",

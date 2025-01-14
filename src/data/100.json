@@ -4,8 +4,8 @@
   "title": "체크핑",
   "content": [
     {
-      "type": "text",
-      "data": "여기는 텍스트 내용입니다."
+      "type": "paragraph",
+      "data": "텍스트 1111111"
     },
     {
       "type": "image",
@@ -14,8 +14,8 @@
       }
     },
     {
-      "type": "text",
-      "data": "여기는 텍스트 내용입니다."
+      "type": "paragraph",
+      "data": "여기는 텍스트 내용입니다.22222"
     },
     {
       "type": "image",
@@ -24,8 +24,8 @@
       }
     },
     {
-      "type": "text",
-      "data": "여기는 텍스트 내용입니다."
+      "type": "paragraph",
+      "data": "여기는 33333텍스트 내용입니다."
     },
     {
       "type": "image",
@@ -34,8 +34,8 @@
       }
     },
     {
-      "type": "text",
-      "data": "여기는 텍스트 내용입니다."
+      "type": "paragraph",
+      "data": "여기는 텍스트 44444내용입니다."
     },
     {
       "type": "image",
