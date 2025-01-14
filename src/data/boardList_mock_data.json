@@ -1,0 +1,34 @@
+{
+    "boardList": [
+      {
+        "id": 100,
+        "number": 100,
+        "title": "부모 게시글 제목",
+        "content": "게시글 본문 내용",
+        "regAt": "2025-01-08T12:30:56",
+        "editAt": "2025-01-09T08:40:12",
+        "approverAt": "2025-01-09T09:00:00",
+        "boardCategory": "QUESTION",
+        "boardStatus": "PROGRESS",
+        "deletedYn": "N",
+        "parent": null
+      },
+      {
+        "id": 101,
+        "number": 101,
+        "title": "게시글 제목",
+        "content": "게시글 본문 내용",
+        "regAt": "2025-01-08T12:34:56",
+        "editAt": "2025-01-09T08:45:12",
+        "approverAt": "2025-01-09T09:00:00",
+        "boardCategory": "QUESTION",
+        "boardStatus": "PROGRESS",
+        "deletedYn": "N",
+        "parent": {
+          "id": 100,
+          "title": "부모 게시글 제목"
+        }
+      }
+    ]
+  }
+  

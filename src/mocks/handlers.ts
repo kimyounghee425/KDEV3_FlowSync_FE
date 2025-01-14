@@ -2,29 +2,64 @@ import { HttpResponse, http } from "msw";
 import projectsData from "@/src/data/projects_mock_data.json";
 import membersData from "@/src/data/members_mock_data.json";
 
+import task100 from "@/src/data/100.json";
+import task101 from "@/src/data/101.json";
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 interface LoginRequest {
   email: string;
   password: string;
 }
 
+// JSON 파일 매핑
+const taskDataMap: Record<string, any> = {
+  "100": task100,
+  "101": task101,
+};
+
 export const handlers = [
+  // 특정 TaskId 에 맞는 JSON 데이터 반환
+  http.get(`${apiBaseUrl}/projects/:projectId/tasks/:taskId`, ({ params }) => {
+    const { taskId } = params;
+
+    // taskId 에 해당하는 데이터 찾기
+    const taskData = taskDataMap[taskId as string];
+
+    if (!taskData) {
+      return HttpResponse.json(
+        { error: `Task ${taskId} not found.` },
+        { status: 404 }
+      );
+    }
+
+    // 성공적으로 JSON 데이터 반환
+    return HttpResponse.json(taskData, { status: 200 });
+  }),
+
   http.get(`${apiBaseUrl}/projects`, ({ request }) => {
     const url = new URL(request.url);
 
     // Extract query parameters
     const query = url.searchParams.get("query") || "";
     const filter = url.searchParams.get("filter") || "all";
-    const currentPage = parseInt(url.searchParams.get("currentPage") || "0", 10);
+    const currentPage = parseInt(
+      url.searchParams.get("currentPage") || "0",
+      10
+    );
     const pageSize = parseInt(url.searchParams.get("pageSize") || "5", 10);
 
     // All data
     const allData = projectsData.data;
 
     // Filter logic
-    const filteredData = allData.filter(item => {
-      const matchesQuery = query === "" || query === null || item.projectName.toLowerCase().includes(query.toLowerCase());
-      const matchesFilter = filter === "all" || filter === null || item.projectStatus.toLowerCase().includes(filter.toLowerCase());
+    const filteredData = allData.filter((item) => {
+      const matchesQuery =
+        query === "" ||
+        query === null ||
+        item.projectName.toLowerCase().includes(query.toLowerCase());
+      const matchesFilter =
+        filter === "all" ||
+        filter === null ||
+        item.projectStatus.toLowerCase().includes(filter.toLowerCase());
       return matchesQuery && matchesFilter;
     });
 
@@ -81,16 +116,24 @@ export const handlers = [
     // 명시적 타입 선언: request.json()의 결과를 as LoginRequest로 선언
 
     // 사용자 검증 (Mock Data)
-    const user = membersData.data.find(member => member.email === email && member.pw === password);
+    const user = membersData.data.find(
+      (member) => member.email === email && member.pw === password
+    );
 
     if (!user) {
-      return HttpResponse.json({ error: "잘못된 이메일 또는 비밀번호입니다." }, { status: 400 }); // 400 Bad Request :: 클라이언트가 잘못된 요청 데이터를 보냈음
+      return HttpResponse.json(
+        { error: "잘못된 이메일 또는 비밀번호입니다." },
+        { status: 400 }
+      ); // 400 Bad Request :: 클라이언트가 잘못된 요청 데이터를 보냈음
     }
 
     // 이메일 형식 검사 (정규식 이용)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(user.email)) {
-      return HttpResponse.json({ error: "유효한 이메일 주소를 입력하세요." }, { status: 400 }); // 400 Bad Request :: 클라이언트가 잘못된 요청 데이터를 보냈음
+      return HttpResponse.json(
+        { error: "유효한 이메일 주소를 입력하세요." },
+        { status: 400 }
+      ); // 400 Bad Request :: 클라이언트가 잘못된 요청 데이터를 보냈음
     }
 
     // 로그인 성공 - 응답 데이터 생성

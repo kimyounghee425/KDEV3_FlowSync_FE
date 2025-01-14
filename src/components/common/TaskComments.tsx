@@ -1,15 +1,7 @@
-import { Box, Text } from "@chakra-ui/react";
-
-interface Comment {
-  id: string;
-  author: string;
-  createdDate: string;
-  content: string;
-}
-
-interface TaskCommentsProps {
-  comments: Comment[];
-}
+import { useState } from "react";
+import { Box, Text, VStack, StackProps } from "@chakra-ui/react";
+import Comments from "./Comments";
+import { TaskCommentsProps } from "@/src/types/taskTypes";
 
 const TaskComments = ({ comments }: TaskCommentsProps) => {
   return (
@@ -24,15 +16,7 @@ const TaskComments = ({ comments }: TaskCommentsProps) => {
         댓글
       </Text>
       {comments.length > 0 ? (
-        comments.map((comment) => (
-          <Box key={comment.id} mb={4} p={4} borderWidth={1} borderRadius="md">
-            <Text fontWeight="bold">{comment.author}</Text>
-            <Text fontSize="sm" color="gray.500">
-              {comment.createdDate}
-            </Text>
-            <Text mt={2}>{comment.content}</Text>
-          </Box>
-        ))
+        <Comments comments={comments} />
       ) : (
         <Text>댓글이 없습니다.</Text>
       )}
