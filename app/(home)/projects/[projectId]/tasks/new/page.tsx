@@ -7,16 +7,18 @@ import { useState, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/backButton";
 import Form from "@/src/components/common/TaskForm";
-
+import "./edit.css"
 export default function New() {
   const [author, setAuthor] = useState<string>("");
   const [createdDate, setCreatedDate] = useState<string>("");
 
+  
   useEffect(() => {
     setAuthor(new_task_data.userName);
     const currentDate = new Date().toISOString().slice(0, 10);
     setCreatedDate(currentDate);
   }, []);
+  
 
   return (
     <Box
