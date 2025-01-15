@@ -1,5 +1,5 @@
 import { Box, Text, Image, Link, VStack } from "@chakra-ui/react";
-import { Task, ContentBlock, Comment, Reply } from "@/src/types/taskTypes";
+import { Task, ContentBlock } from "@/src/types/taskTypes";
 
 const isImageFile = (file: string) => {
   const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
@@ -7,11 +7,10 @@ const isImageFile = (file: string) => {
   return imageExtensions.includes(extension || "");
 };
 
-
 const TaskContent = ({ task }: { task: Task }) => {
   const renderContent = (content: ContentBlock[]) => {
     return content.map((block, index) => {
-      if (block.type === "text" && typeof block.data === "string") {
+      if (block.type === "paragraph" && typeof block.data === "string") {
         return (
           <Text key={index} mb={4} whiteSpace="pre-line">
             {block.data}
@@ -31,12 +30,12 @@ const TaskContent = ({ task }: { task: Task }) => {
     });
   };
 
-  const renderFiles = (files: any) => {
+  const renderFiles = (files: string[]) => {
     if (!Array.isArray(files)) {
       console.error("files is not an array:", files);
       return null;
     }
-  
+
     return files.map((file: string, index: number) => {
       return (
         <Box key={index} mb={4}>
@@ -50,20 +49,18 @@ const TaskContent = ({ task }: { task: Task }) => {
 
   // regAt 날짜 예쁘게 변환
   function formatDateString(dateString: string) {
-    const date = new Date(task.regAt); // Date 객체 생성
-  
+    const date = new Date(dateString); // Date 객체 생성
+
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-  
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-  
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
     // "2025.01.08 11:34" 형태로 변환
     return `${year}.${month}.${day} ${hours}:${minutes}`;
   }
-
-  
 
   return (
     <Box mb={4}>
@@ -78,9 +75,7 @@ const TaskContent = ({ task }: { task: Task }) => {
       </Box>
 
       {/* 본문 내용 */}
-      <Box mb={4}>
-        {renderContent(task.content)}
-      </Box>
+      <Box mb={4}>{renderContent(task.content)}</Box>
 
       {/* 첨부 파일 */}
       <Box mb={4}>

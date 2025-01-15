@@ -8,16 +8,27 @@ import TaskComments from "@/src/components/common/TaskComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/backButton";
 import axiosInstance from "@/src/api/axiosInstance";
-import { Task, ContentBlock, Comment, Reply } from "@/src/types/taskTypes";
+import { Task, ApiResponse } from "@/src/types/taskTypes";
 
-// fetchTaskData 분리
-const fetchTaskData = async (taskId: string): Promise<Task> => {
-  const response = await axiosInstance.get<Task>(`/projects/1/tasks/${taskId}`);
-  return response.data;
-}
+// fetchTaskData 함수
+const fetchTaskData = async (
+  projectId: string,
+  taskId: string
+): Promise<Task | null> => {
+  const response = await axiosInstance.get<{ code: number; data: Task }>(
+    `/projects/${projectId}/tasks/${taskId}`
+  );
+  if (response.data.code === 200) {
+    return response.data.data;
+  }
+  return null;
+};
 
 export default function ProjectTaskPage() {
-  const { taskId } = useParams() as { taskId: string };
+  const { projectId, taskId } = useParams() as {
+    projectId: string;
+    taskId: string;
+  };
 
   const [task, setTask] = useState<Task | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +37,19 @@ export default function ProjectTaskPage() {
   useEffect(() => {
     const loadTask = async () => {
       try {
-        const data = await fetchTaskData(taskId);
-        setTask(data); // JSON 데이터를 상태로 저장
+        const data = await fetchTaskData(projectId, taskId);
+
+        // 받아온 json 의 projectid, id 가 주소창 값과 일치하는지 확인.
+        if (data &&
+          data.projectid.toString() === projectId &&
+          data.id.toString() === taskId
+        ) {
+          setTask(data); // JSON 데이터를 상태로 저장
+        } else {
+          throw new Error(
+            "요청한 projectId, taskId 와 불러온 데이터가 다릅니다."
+          );
+        }
       } catch (err) {
         setError(
           err instanceof Error
@@ -40,7 +62,7 @@ export default function ProjectTaskPage() {
     };
 
     loadTask();
-  }, [taskId]);
+  }, [projectId, taskId]);
 
   if (error) {
     return <Box>에러 발생: {error}</Box>;

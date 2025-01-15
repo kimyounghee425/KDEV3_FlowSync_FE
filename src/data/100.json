@@ -1,88 +1,109 @@
 {
-  "id": 100,
-  "number": 100,
-  "title": "체크핑",
-  "content": [
-    {
-      "type": "paragraph",
-      "data": "텍스트 1111111"
-    },
-    {
-      "type": "image",
-      "data": {
-        "src": "https://i.ytimg.com/vi/UR-boFmvXkg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB3EjzNOfh9LKVev2GmkwkF1mzRJw"
-      }
-    },
-    {
-      "type": "paragraph",
-      "data": "여기는 텍스트 내용입니다.22222"
-    },
-    {
-      "type": "image",
-      "data": {
-        "src": "https://i.ytimg.com/vi/gxu48dRn1oU/maxresdefault.jpg"
-      }
-    },
-    {
-      "type": "paragraph",
-      "data": "여기는 33333텍스트 내용입니다."
-    },
-    {
-      "type": "image",
-      "data": {
-        "src": "https://i.ytimg.com/vi/Jl1-tvzBXKY/maxresdefault.jpg"
-      }
-    },
-    {
-      "type": "paragraph",
-      "data": "여기는 텍스트 44444내용입니다."
-    },
-    {
-      "type": "image",
-      "data": {
-        "src": "https://pbs.twimg.com/profile_images/1319886484086747136/RoX_VvWa_400x400.jpg"
-      }
-    }
-  ],
-  "regAt": "2025-01-08T11:34:56",
-  "editAt": "2025-01-09T07:45:12",
-  "approverAt": "2025-01-09T09:00:00",
-  "boardCategory": "QUESTION",
-  "boardStatus": "PROGRESS",
-  "deletedYn": "N",
-  "file": [
-    "https://pbs.twimg.com/profile_images/1319886484086747136/RoX_VvWa_400x400.jpg",
-    "https://pbs.twimg.com/profile_images/1319886484086747136/RoX_VvWa_400x400.jpg",
-    "https://pbs.twimg.com/profile_images/1319886484086747136/RoX_VvWa_400x400.jpg"
-  ],
-  "parent": null,
-  "commentList": [
-    {
-      "id": 1,
-      "content": "댓글댓글1",
-      "regAt": "2025-01-08T12:10:00",
-      "editAt": "2025-01-08T12:15:00",
-      "deletedYn": "N",
-      "parentId": null,
-      "replies": []
-    },
-    {
-      "id": 2,
-      "content": "가짜댓글입니다",
-      "regAt": "2025-01-08T12:00:00",
-      "editAt": "2025-01-08T12:10:00",
-      "deletedYn": "Y",
-      "parentId": null,
-      "replies": [
-        {
-          "id": 3,
-          "content": "가짜 대댓글 입니다.",
-          "regAt": "2025-01-08T12:20:00",
-          "editAt": "2025-01-08T12:25:00",
-          "deletedYn": "N",
-          "parentId": 1
+  "code": 200,
+  "result": "SUCCESS",
+  "message": "성공했습니다.",
+  "data": {
+    "id": 100,
+    "projectid": 1,
+    "number": 100,
+    "parent": null,
+    "title": "체크핑",
+    "content": [
+      {
+        "type": "paragraph",
+        "data": "텍스트 1111111"
+      },
+      {
+        "type": "image",
+        "data": {
+          "src": "https://i.ytimg.com/vi/UR-boFmvXkg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB3EjzNOfh9LKVev2GmkwkF1mzRJw"
         }
-      ]
-    }
-  ]
+      },
+      {
+        "type": "paragraph",
+        "data": "여기는 텍스트 내용입니다.22222"
+      },
+      {
+        "type": "image",
+        "data": {
+          "src": "https://i.ytimg.com/vi/gxu48dRn1oU/maxresdefault.jpg"
+        }
+      },
+      {
+        "type": "paragraph",
+        "data": "여기는 33333텍스트 내용입니다."
+      },
+      {
+        "type": "image",
+        "data": {
+          "src": "https://i.ytimg.com/vi/Jl1-tvzBXKY/maxresdefault.jpg"
+        }
+      },
+      {
+        "type": "paragraph",
+        "data": "여기는 텍스트 44444내용입니다."
+      },
+      {
+        "type": "image",
+        "data": {
+          "src": "https://pbs.twimg.com/profile_images/1319886484086747136/RoX_VvWa_400x400.jpg"
+        }
+      }
+    ],
+    "regAt": "2025-01-08T11:34:56",
+    "editAt": "2025-01-09T07:45:12",
+    "approverAt": "2025-01-09T09:00:00",
+    "boardCategory": "QUESTION",
+    "boardStatus": "PROGRESS",
+    "deletedYn": "N",
+    "taskBoardLinkList": [
+      {
+        "id": 199,
+        "name": "업무 관리 첨부 링크 1",
+        "url": "https://www.naver.com"
+      },
+      {
+        "id": 200,
+        "name": "업무 관리 첨부 링크 22",
+        "url": "https://www.youtube.com/"
+      }
+    ],
+    "file": [
+      "https://pbs.twimg.com/profile_images/1319886484086747136/RoX_VvWa_400x400.jpg",
+      "https://pbs.twimg.com/profile_images/1319886484086747136/RoX_VvWa_400x400.jpg",
+      "https://pbs.twimg.com/profile_images/1319886484086747136/RoX_VvWa_400x400.jpg"
+    ],
+    "commentList": [
+      {
+        "id": 1,
+        "author": "김철수",
+        "content": "댓글댓글1",
+        "regAt": "2025-01-08T12:10:00",
+        "editAt": "2025-01-08T12:15:00",
+        "deletedYn": "N",
+        "parentId": null,
+        "replies": []
+      },
+      {
+        "id": 2,
+        "author": "김맹구",
+        "content": "가짜댓글입니다",
+        "regAt": "2025-01-08T12:00:00",
+        "editAt": "2025-01-08T12:00:00",
+        "deletedYn": "Y",
+        "parentId": null,
+        "replies": [
+          {
+            "id": 3,
+            "author": "나미리",
+            "content": "가짜 대댓글 입니다.",
+            "regAt": "2025-01-08T12:20:00",
+            "editAt": "2025-01-08T12:25:00",
+            "deletedYn": "N",
+            "parentId": 2
+          }
+        ]
+      }
+    ]
+  }
 }
