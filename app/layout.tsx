@@ -9,10 +9,11 @@ export const metadata: Metadata = {
 
 const RootLayout = (props: { children: React.ReactNode }) => {
   const { children } = props;
-  const useMsw = process.env.USE_MSW === "true";
+  const useMsw = process.env.USE_MSW === "false";
   return (
     <html suppressHydrationWarning>
       <body>{useMsw ? <MSWComponent>{children}</MSWComponent> : children}</body>
+      {/* <body>{children}</body> */}
     </html>
   );
 };

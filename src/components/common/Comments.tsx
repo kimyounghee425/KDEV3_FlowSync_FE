@@ -1,12 +1,10 @@
+// 댓글 목록을 렌더링하는 중간 레이어 컴포넌트
+
 import { Box } from "@chakra-ui/react";
-import CommentItem from "./CommentItem"; // 개별 댓글 컴포넌트
-import { Comment as CommentType } from "@/src/types/taskTypes";
+import CommentItem from "./CommentItem";
+import { TaskCommentsProps } from "@/src/types/taskTypes";
 
-interface CommentsProps {
-  comments: CommentType[];
-}
-
-const Comments = ({ comments }: CommentsProps) => {
+const Comments = ({ comments }: TaskCommentsProps) => {
   return (
     <Box>
       {comments.map((comment) => (
