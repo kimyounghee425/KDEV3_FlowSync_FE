@@ -1,8 +1,10 @@
+"use client";
+
 import { HStack, Input, Button, Box, Flex, createListCollection } from "@chakra-ui/react";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useMemberList } from "@/src/hook/useMemberList";
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from "@/src/components/ui/select";
+import { useRouter } from "next/navigation";
 
 const frameworks = createListCollection<{ label: string; value: string }>({
   items: [
@@ -83,8 +85,16 @@ export default function MembersSearchSection() {
     }
   };
 
+  // 회원 생성 버튼 클릭 시 회원 생성 페이지로 이동
+  const goToCreateMemberPage = () => {
+    router.push("/admin/members/create"); // 회원 생성 페이지로 이동
+  };
+
   return (
-    <Box>
+    <Box display="flex" justifyContent="space-between">
+      <Button variant={"surface"} _hover={{ backgroundColor: "#00a8ff", color: "white" }} onClick={goToCreateMemberPage}>
+        회원 생성
+      </Button>
       <Flex gap={4} alignItems="center" justifyContent="end">
         <HStack>
           <SelectMemberBox />
