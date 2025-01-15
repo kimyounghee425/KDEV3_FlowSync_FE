@@ -1,9 +1,17 @@
-import { useState } from "react";
-import { Box, Text, VStack, StackProps } from "@chakra-ui/react";
+// 댓글 섹션의 최상위 컴포넌트
+
+import { Box, Text } from "@chakra-ui/react";
 import Comments from "./Comments";
 import { TaskCommentsProps } from "@/src/types/taskTypes";
 
 const TaskComments = ({ comments }: TaskCommentsProps) => {
+  // 삭제된 댓글을 제외한 목록 생성
+  const filteredComments = comments.filter(
+    (comment) =>
+      comment.deletedYn === "N" ||
+      comment.replies.some((reply) => reply.deletedYn === "N")
+  );
+
   return (
     <Box>
       <Box
@@ -16,7 +24,7 @@ const TaskComments = ({ comments }: TaskCommentsProps) => {
         댓글
       </Text>
       {comments.length > 0 ? (
-        <Comments comments={comments} />
+        <Comments comments={filteredComments} />
       ) : (
         <Text>댓글이 없습니다.</Text>
       )}
