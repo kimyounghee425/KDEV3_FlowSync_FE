@@ -4,7 +4,6 @@ import { Provider } from "@/src/components/ui/provider";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import Header from "@/src/components/layouts/Header";
 import Sidebar from "@/src/components/layouts/Sidebar";
-import { MSWComponent } from "@/src/components/common/MSWComponent";
 import { SidebarProvider } from "@/src/context/SidebarContext";
 
 export const metadata: Metadata = {
@@ -17,7 +16,12 @@ const RootLayout = (props: { children: React.ReactNode }) => {
   return (
     <Provider>
       <Header />
-      <Container maxWidth={"100%"} display="flex" flexDirection="row" margin={0} padding={0}>
+      <Container
+        maxWidth={"100%"}
+        display="flex"
+        flexDirection="row"
+        margin={0}
+        padding={0}>
         <SidebarProvider>
           <Sidebar />
         </SidebarProvider>

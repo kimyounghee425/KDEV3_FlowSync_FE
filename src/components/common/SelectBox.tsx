@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "@/src/components/ui/select";
-import { useFilter } from "@/src/context/ProjectsFilterContext";
+import { useProjectsData } from "@/src/context/ProjectsContext";
 import { ListCollection } from "@chakra-ui/react";
 
 interface SelectBoxProps {
@@ -13,7 +13,7 @@ interface SelectBoxProps {
 }
 
 const SelectBox: React.FC<SelectBoxProps> = ({ frameworks }) => {
-  const { filter, setFilter } = useFilter();
+  const { filter, setFilter } = useProjectsData();
 
   const handleValueChange = (details: { value: string[] }) => {
     const selectedValue = details.value[0]; // 선택된 첫 번째 값
@@ -28,8 +28,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ frameworks }) => {
       size="md"
       width="110px"
       value={[filter]}
-      onValueChange={handleValueChange}
-    >
+      onValueChange={handleValueChange}>
       <SelectTrigger>
         <SelectValueText></SelectValueText>
       </SelectTrigger>

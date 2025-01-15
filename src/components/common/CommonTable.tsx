@@ -1,23 +1,25 @@
+"use client";
+
+import { ReactNode } from "react";
 import { Table } from "@chakra-ui/react";
-import { Loading } from "./Loading";
-import { CustomBox } from "./CustomBox";
-import { getTranslatedStatus } from "@/src/utils/getTranslatedStatus";
-import { memo, ReactNode } from "react";
-import { ProjectProps } from "@/src/types";
+import { SkeletonText } from "@/src/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 
-interface CustomTalbleProps {
+interface CommonTableProps<T> {
   headerTitle: ReactNode;
+  data: T[];
   loading: boolean;
-  data: ProjectProps[];
+  renderRow: (item: T) => ReactNode;
 }
 
-const CustomTable: React.FC<CustomTalbleProps> = ({
+const CommonTable = <T extends { id: number }>({
   headerTitle,
-  loading,
   data,
-}) => {
+  loading,
+  renderRow,
+}: CommonTableProps<T>) => {
   const router = useRouter();
+
   const handleRowClick = (id: number) => {
     router.push(`/projects/${id}`);
   };
@@ -25,11 +27,12 @@ const CustomTable: React.FC<CustomTalbleProps> = ({
   return (
     <Table.Root size="sm" interactive>
       <Table.Header>{headerTitle}</Table.Header>
+
       <Table.Body>
         {loading ? (
           <Table.Row>
             <Table.Cell colSpan={7} textAlign="center">
-              <Loading />
+              <SkeletonText noOfLines={5} gap="4" />
             </Table.Cell>
           </Table.Row>
         ) : (
@@ -45,14 +48,7 @@ const CustomTable: React.FC<CustomTalbleProps> = ({
                   cursor: "pointer",
                 },
               }}>
-              <Table.Cell>{item.projectName}</Table.Cell>
-              <Table.Cell>{item.client}</Table.Cell>
-              <Table.Cell>{item.developer}</Table.Cell>
-              <Table.Cell>
-                <CustomBox>{getTranslatedStatus(item.projectStatus)}</CustomBox>
-              </Table.Cell>
-              <Table.Cell>{item.startAt}</Table.Cell>
-              <Table.Cell textAlign="end">{item.closeAt}</Table.Cell>
+              {renderRow(item)}
             </Table.Row>
           ))
         )}
@@ -61,4 +57,4 @@ const CustomTable: React.FC<CustomTalbleProps> = ({
   );
 };
 
-export default memo(CustomTable);
+export default CommonTable;

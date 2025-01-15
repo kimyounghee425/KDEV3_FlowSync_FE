@@ -50,7 +50,11 @@ export default function Sidebar() {
   }, [projectStatus]);
 
   return (
-    <Flex flexDirection="column" gap="1" backgroundColor="gray.200" boxShadow="md">
+    <Flex
+      flexDirection="column"
+      gap="1"
+      backgroundColor="gray.200"
+      boxShadow="md">
       <Box width="270px" height="100vh" p={1} marginTop="3">
         <CardRoot width="100%">
           {isAdmin ? (
@@ -67,7 +71,7 @@ export default function Sidebar() {
               {/* Segmented Control */}
               <SegmentedControl
                 value={projectStatus}
-                onValueChange={e => {
+                onValueChange={(e) => {
                   setProjectStatus(e.value);
                 }}
                 items={["진행중 프로젝트", "완료 프로젝트"]}

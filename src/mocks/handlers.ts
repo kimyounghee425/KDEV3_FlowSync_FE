@@ -17,6 +17,8 @@ const taskDataMap: Record<string, any> = {
 };
 
 export const handlers = [
+
+  // 프로젝트 목록 조회
   // 특정 TaskId 에 맞는 JSON 데이터 반환
   http.get(`${apiBaseUrl}/projects/:projectId/tasks/:taskId`, ({ params }) => {
     const { taskId } = params;
@@ -40,26 +42,20 @@ export const handlers = [
 
     // Extract query parameters
     const query = url.searchParams.get("query") || "";
-    const filter = url.searchParams.get("filter") || "all";
-    const currentPage = parseInt(
-      url.searchParams.get("currentPage") || "0",
-      10
-    );
+    const filter = url.searchParams.get("filter") || "전체";
+    const currentPage = parseInt(url.searchParams.get("currentPage") || "0", 10);
+
     const pageSize = parseInt(url.searchParams.get("pageSize") || "5", 10);
 
     // All data
     const allData = projectsData.data;
 
     // Filter logic
-    const filteredData = allData.filter((item) => {
-      const matchesQuery =
-        query === "" ||
-        query === null ||
-        item.projectName.toLowerCase().includes(query.toLowerCase());
-      const matchesFilter =
-        filter === "all" ||
-        filter === null ||
-        item.projectStatus.toLowerCase().includes(filter.toLowerCase());
+
+    const filteredData = allData.filter(item => {
+      const matchesQuery = query === "" || query === null || item.projectName.toLowerCase().includes(query.toLowerCase());
+      const matchesFilter = filter === "전체" || filter === null || item.projectStatus.toLowerCase().includes(filter.toLowerCase());
+
       return matchesQuery && matchesFilter;
     });
 
@@ -86,6 +82,8 @@ export const handlers = [
     // Return the response
     return HttpResponse.json(response, { status: 200 });
   }),
+
+  // 프로젝트 상태별 개수 집계
   http.get(`${apiBaseUrl}/projects/status-summary`, () => {
     // 모든 데이터 가져오기
     const allData = projectsData.data;
@@ -106,6 +104,55 @@ export const handlers = [
     // 응답 반환
     return HttpResponse.json(response, { status: 200 });
   }),
+
+  // 프로젝트 진행단계별 글 건수 조회 핸들러
+  http.get(`${apiBaseUrl}/projects/:projectId/progressCount`, ({params}) => {
+    const { projectId } = params; // 연동 전이라 아직 안씀
+    
+    // 동적 파라미터 확인
+    if (!projectId) {
+      return HttpResponse.json({ error: "Project ID is required." }, { status: 400 });
+    }
+
+    // 동일한 데이터를 반환
+    const response = [ // 진행단계별 글 건수
+      { id: 1, title: "전체", count: 28 }, // 전체
+      { id: 2, title: "요구사항정의", count: 6 }, // 요구사항정의
+      { id: 3, title: "화면설계", count: 6 }, // 화면설계
+      { id: 4, title: "디자인", count: 8 }, // 디자인
+      { id: 5, title: "퍼블리싱", count: 6 }, // 퍼블리싱
+      { id: 6, title: "개발", count: 6 }, // 개발
+      { id: 7, title: "검수", count: 0 } // 검수
+    ];
+
+    return HttpResponse.json(response , { status: 200 });
+  }),
+  // 프로젝트 정보 조회 핸들러
+  http.get(`${apiBaseUrl}/projects/:projectId/projectInfo`, ({ params }) => {
+    const { projectId } = params;
+
+    if (!projectId) {
+      return HttpResponse.json({ error: "Project ID is required." }, { status: 400 });
+    }
+
+    // Mock 데이터 생성
+    const response = {
+      data: {
+        projectTitle: "커넥티드 에듀", // 프로젝트명
+        jobRole: "비엔시스템PM", // 직무
+        profileImageUrl: "https://i.pravatar.cc/300?u=iu", // 프로필 이미지 URL
+        name: "이태영", // 담당자 이름
+        jobTitle: "본부장", // 직급
+        phoneNum: "010-1234-5678", // 담당자 연락처
+        projectStartAt: "2024년 9월 1일", // 프로젝트 시작일
+        projectCloseAt: "2024년 12월 31일", // 프로젝트 종료일
+      },
+    };
+
+    // 응답 반환
+    return HttpResponse.json(response, { status: 200 });
+  }),
+
 
   // 로그인 Handlers
   http.post(`${apiBaseUrl}/login`, async ({ request }) => {

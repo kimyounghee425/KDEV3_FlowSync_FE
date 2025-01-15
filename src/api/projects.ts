@@ -12,3 +12,19 @@ export const fetchProjects = async (
   });
   return response.data;
 };
+
+export const fetchProjectInfo = async (projectId: string) => {
+  const response = await axiosInstance.get(`/projects/${projectId}/projectInfo`);
+  return response.data;
+}
+
+export const fetchProjectProgressCount = async (projectId: string) => {
+  const url = `/projects/${projectId}/progressCount`;
+  const response = await axiosInstance.get(url);
+  return response;
+}
+
+export const fetchProjectsStatusCount = async () => {
+  const response = await axiosInstance.get("/projects/status-summary");
+  return response;
+}
