@@ -1,9 +1,10 @@
 "use client";
 
 import { Box, Flex } from "@chakra-ui/react";
-import ProgressBox from "./ProgressStepBox";
 import { Loading } from "./Loading";
 import { useProgressData } from "@/src/hook/useProgressData";
+import ProgressStepButton from "./ProgressStepButton";
+import { useEffect, useState } from "react";
 
 interface ProgressStepSectionProps {
   projectId: string;
@@ -12,15 +13,38 @@ interface ProgressStepSectionProps {
 const ProgressStepSection: React.FC<ProgressStepSectionProps> = ({
   projectId,
 }) => {
-  const { data, loading, error } = useProgressData(projectId);
+  const progressData = [
+    // 진행단계별 글 건수
+    { id: 1, title: "전체", count: 32 },
+    { id: 2, title: "요구사항정의", count: 6 },
+    { id: 3, title: "화면설계", count: 6 },
+    { id: 4, title: "디자인", count: 8 },
+    { id: 5, title: "퍼블리싱", count: 6 },
+    { id: 6, title: "개발", count: 6 },
+    { id: 7, title: "검수", count: 0 },
+  ];
 
-  if (loading) {
-    return <Loading />; // 로딩 중 표시
-  }
+  const [selectedButtonId, setSelectedButtonId] = useState<number>();
 
-  if (error) {
-    return <Box>Error: {error}</Box>; // 에러 메시지 표시
-  }
+  const handleStatusChange = (id: number) => {
+    setSelectedButtonId(id); // 클릭된 버튼으로 상태 변경
+  };
+
+  // const { progressData, loading, error } = useProgressData(projectId);
+
+  // useEffect(() => {
+  //   if (progressData && progressData.length > 0) {
+  //     setSelectedButtonId(progressData[0].id);
+  //   }
+  // }, [progressData]);
+
+  // if (loading) {
+  //   return <Loading />; // 로딩 중 표시
+  // }
+
+  // if (error) {
+  //   return <Box>Error: {error}</Box>; // 에러 메시지 표시
+  // }
 
   return (
     <Flex
@@ -33,8 +57,14 @@ const ProgressStepSection: React.FC<ProgressStepSectionProps> = ({
       borderRadius="lg"
       boxShadow="md"
       mb="30px">
-      {data.map((item) => (
-        <ProgressBox key={item.id} text={item.title} count={item.count} />
+      {progressData.map((button) => (
+        <ProgressStepButton
+          key={button.id}
+          text={button.title}
+          count={button.count} // 서버에서 받아온 개수 표시
+          isSelected={selectedButtonId === button.id} // 선택 상태 전달
+          onClick={() => handleStatusChange(button.id)} // 클릭 핸들러 전달
+        />
       ))}
     </Flex>
   );

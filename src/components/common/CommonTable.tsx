@@ -7,14 +7,14 @@ import { useRouter } from "next/navigation";
 
 interface CommonTableProps<T> {
   headerTitle: ReactNode;
-  data: T[];
+  projectList: T[];
   loading: boolean;
   renderRow: (item: T) => ReactNode;
 }
 
 const CommonTable = <T extends { id: number }>({
   headerTitle,
-  data,
+  projectList,
   loading,
   renderRow,
 }: CommonTableProps<T>) => {
@@ -36,10 +36,10 @@ const CommonTable = <T extends { id: number }>({
             </Table.Cell>
           </Table.Row>
         ) : (
-          data.map((item) => (
+          projectList.map((project) => (
             <Table.Row
-              key={item.id}
-              onClick={() => handleRowClick(item.id)}
+              key={project.id}
+              onClick={() => handleRowClick(project.id)}
               css={{
                 "& > td": {
                   textAlign: "center",
@@ -48,7 +48,7 @@ const CommonTable = <T extends { id: number }>({
                   cursor: "pointer",
                 },
               }}>
-              {renderRow(item)}
+              {renderRow(project)}
             </Table.Row>
           ))
         )}

@@ -1,29 +1,45 @@
 "use client";
 
-import { Box, Flex, Heading, HStack, Table } from "@chakra-ui/react";
+import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { SegmentedControl } from "../../ui/segmented-control";
 import { Layers, List } from "lucide-react";
 import ProjectInfo from "../../common/ProjectInfo";
-import ProgressSection from "../../common/ProgressStepSection";
-import { Loading } from "../../common/Loading";
-import { ProjectsProvider } from "@/src/context/ProjectsContext";
-import { useProjectData } from "@/src/hook/useProjectData";
-import SearchSection from "../../common/SearchSection";
-import CommonTable from "../../common/CommonTable";
+import ProgressStepSection from "../../common/ProgressStepSection";
+import { useEffect, useState } from "react";
+import BoardSearchSection from "../../common/BoardSearchSection";
 
-type ProjectPageProps = {
+interface ProjectPageProps {
   params: Promise<{ projectId: string }>;
-};
+}
 
 export default function ProjectPage({ params }: ProjectPageProps) {
-  const { projectId, data, loading, error } = useProjectData(params);
+  // const { projectId, projectInfo, loading } = useProjectInfo(params);
 
-  if (loading) return <Loading />;
-  if (error || !data || !projectId)
-    return <Box>Error: {error || "No data found"}</Box>;
+  // if (loading || !projectInfo) return <Loading />;
+
+  const [projectId, setProjectId] = useState<string>();
+
+  const getProjectId = async () => {
+    setProjectId((await params).projectId);
+  };
+  useEffect(() => {
+    getProjectId();
+  }, []);
+
+  const projectInfo = {
+    projectTitle: "커넥티드에듀",
+    description: "웹 랜딩페이지 개발 건",
+    jobRole: "비엔시스템PM",
+    profileImageUrl: "https://i.pravatar.cc/300?u=iu",
+    name: "이태영",
+    jobTitle: "본부장",
+    phoneNum: "010-1234-1324",
+    projectStartAt: "2024년 9월 1일",
+    projectCloseAt: "2024년 12월 31일",
+  };
 
   return (
-    <ProjectsProvider>
+    <>
       <Flex
         direction="column"
         padding="30px 23px"
@@ -34,7 +50,12 @@ export default function ProjectPage({ params }: ProjectPageProps) {
         boxShadow="md"
         mb="30px">
         <Flex justifyContent={"space-between"}>
-          <Heading size={"4xl"}>{data.projectTitle}</Heading>
+          <Flex gap="10px">
+            <Heading size={"4xl"}>{projectInfo.projectTitle}</Heading>
+            <Text fontWeight="500" color="#BBB" fontSize="20px">
+              {projectInfo.description}
+            </Text>
+          </Flex>
           <SegmentedControl
             defaultValue="task"
             items={[
@@ -59,9 +80,9 @@ export default function ProjectPage({ params }: ProjectPageProps) {
             ]}
           />
         </Flex>
-        <ProjectInfo data={data} />
+        <ProjectInfo projectInfo={projectInfo} />
       </Flex>
-      <ProgressSection projectId={projectId} />
+      <ProgressStepSection projectId={projectId as string} />
       <Box
         direction="column"
         padding="30px 23px"
@@ -71,7 +92,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
         borderRadius="lg"
         boxShadow="md"
         mb="30px">
-        <SearchSection />
+        <BoardSearchSection />
         {/* <CommonTable
           headerTitle={
             <Table.Row
@@ -103,6 +124,6 @@ export default function ProjectPage({ params }: ProjectPageProps) {
           )}
         /> */}
       </Box>
-    </ProjectsProvider>
+    </>
   );
 }

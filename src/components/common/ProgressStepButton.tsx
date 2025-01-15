@@ -1,21 +1,22 @@
 import { Button, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
-interface ProgressStepProps {
+interface ProgressStepButtonProps {
   text: string;
   count: number;
+  isSelected: boolean; // 선택 상태
+  onClick: () => void; // 클릭 핸들러
 }
 
-export default function ProgressStepBox({ text, count }: ProgressStepProps) {
-  const [isSelected, setIsSelected] = useState(false);
-
-  const handleClick = () => {
-    setIsSelected((prev) => !prev); // 클릭 시 상태를 토글
-  };
-
+export default function ProgressStepButton({
+  text,
+  count,
+  isSelected,
+  onClick,
+}: ProgressStepButtonProps) {
   return (
     <Button
-      onClick={handleClick}
+      onClick={onClick}
       width="164px"
       height="48px"
       padding="14px 16px"
