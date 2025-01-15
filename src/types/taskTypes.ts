@@ -47,7 +47,7 @@ export interface Comment {
   content: string;
   regAt: string;
   editAt: string;
-  deletedYn: "N";
+  deletedYn: string;
   parentId: number | null;
   replies: Reply[];
 }
