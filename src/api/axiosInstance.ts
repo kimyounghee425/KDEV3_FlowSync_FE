@@ -1,12 +1,14 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // 환경 변수로 기본 URL 설정
+  // baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // MSW용 환경 변수로 기본 URL 설정
+  // baseURL: "http://15.164.86.69:8080", // 로컬 서버주소 (IP)
+  baseURL: "http://api.flowssync.com:8080", // 로컬 서버주소 (도메인)
   timeout: 10000, // 요청 타임아웃 설정 (10초)
   headers: {
     "Content-Type": "application/json",
   },
-  // withCredentials: true,
+  withCredentials: true,
 });
 
 // 응답 인터셉터 추가

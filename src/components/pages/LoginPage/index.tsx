@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Button, Flex, Heading, HStack, Separator, Span, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { login } from "@/src/api/auth";
 import LoginInputForm from "../../common/LoginInputForm";
 import Link from "next/link";
@@ -28,10 +28,10 @@ export default function LoginPage() {
     setIsLoading(true); // 로딩 상태 활성화
 
     try {
-      const response: { token: string; user: { id: string; name: string } } = await login(formData.email, formData.password);
-      localStorage.setItem("authToken", response.token);
-      localStorage.setItem("user", JSON.stringify(response.user));
-      route.push("/"); // 홈(대시보드)으로 리다이렉트
+      const { token, user } = await login(formData.email, formData.password);
+      localStorage.setItem("accessToken", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      route.push("/"); // 대시보드 리다이렉트
     } catch (err: any) {
       setError(err.message || "로그인 실패");
     } finally {
