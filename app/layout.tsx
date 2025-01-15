@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 
-import { Provider } from "@/src/components/ui/provider";
-import { Box, Container, Flex } from "@chakra-ui/react";
-import Header from "@/src/components/layouts/Header";
-import Sidebar from "@/src/components/layouts/Sidebar";
 import { MSWComponent } from "@/src/components/common/MSWComponent";
-import { SidebarProvider } from "@/src/context/SidebarContext";
 
 export const metadata: Metadata = {
   title: "FlowSync",

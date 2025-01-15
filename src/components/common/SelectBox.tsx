@@ -5,21 +5,38 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "@/src/components/ui/select";
-import { useProjectsData } from "@/src/context/ProjectsContext";
-import { ListCollection } from "@chakra-ui/react";
+import { useProjectList } from "@/src/hook/useProjectList";
+import { createListCollection, ListCollection } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
-interface SelectBoxProps {
-  frameworks: ListCollection<{ label: string; value: string }>;
-}
+const frameworks = createListCollection<{ label: string; value: string }>({
+  items: [
+    { label: "전체", value: "" },
+    // { label: "계약", value: "계약" },
+    { label: "진행중", value: "IN_PROGRESS" },
+    { label: "납품완료", value: "COMPLETED" },
+    // { label: "하자보수", value: "하자보수" },
+    { label: "일시중단", value: "PAUSED" },
+    // { label: "삭제(관리자용)", value: "삭제(관리자용)" },
+  ],
+});
 
-const SelectBox: React.FC<SelectBoxProps> = ({ frameworks }) => {
-  const { filter, setFilter } = useProjectsData();
+export default function SelectBox() {
+  const router = useRouter();
+
+  const { filter } = useProjectList();
 
   const handleValueChange = (details: { value: string[] }) => {
     const selectedValue = details.value[0]; // 선택된 첫 번째 값
-    if (setFilter && selectedValue) {
-      setFilter(selectedValue);
+    const params = new URLSearchParams(window.location.search);
+
+    if (selectedValue) {
+      params.set("filter", selectedValue); // 필터값 설정
+    } else {
+      params.delete("filter"); // 필터값 제거
     }
+
+    router.push(`?${params.toString()}`); // URL 업데이트
   };
 
   return (
@@ -41,6 +58,4 @@ const SelectBox: React.FC<SelectBoxProps> = ({ frameworks }) => {
       </SelectContent>
     </SelectRoot>
   );
-};
-
-export default SelectBox;
+}

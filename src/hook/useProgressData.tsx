@@ -8,7 +8,7 @@ interface ProgressDataType {
 }
 
 export function useProgressData(projectId: string) {
-  const [data, setData] = useState<ProgressDataType[]>([]);
+  const [progressData, setProgressData] = useState<ProgressDataType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,9 +20,7 @@ export function useProgressData(projectId: string) {
 
         // 데이터 가져오기
         const response = await fetchProjectProgressCount(projectId);
-        const progressData = response.data;
-
-        setData(progressData);
+        setProgressData(response);
       } catch (err) {
         console.error("Failed to fetch progress data:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -34,5 +32,5 @@ export function useProgressData(projectId: string) {
     fetchProgressData();
   }, [projectId]);
 
-  return { data, loading, error };
+  return { progressData, loading, error };
 }

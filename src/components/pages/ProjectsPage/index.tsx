@@ -3,36 +3,33 @@
 import { Heading, Stack, Table } from "@chakra-ui/react";
 import ProjectStatusCards from "@/src/components/common/ProjectsStatusCards";
 import Head from "next/head";
-import {
-  ProjectsProvider,
-  useProjectsData,
-} from "@/src/context/ProjectsContext";
 import CommonTable from "../../common/CommonTable";
-import SearchSection from "../../common/SearchSection";
+import ProjectsSearchSection from "../../common/ProjectsSearchSection";
 import { CustomBox } from "../../common/CustomBox";
-import { useEffect } from "react";
 import Pagination from "../../common/Pagination";
+import { useProjectList } from "@/src/hook/useProjectList";
+import { useRouter } from "next/navigation";
 
-export default function ProjectsPage() {
-  return (
-    <ProjectsProvider>
-      <ProjectsPageContent />
-    </ProjectsProvider>
-  );
-}
+const STATUS_LABELS: Record<string, string> = {
+  IN_PROGRESS: "진행중",
+  PAUSED: "일시 중단",
+  COMPLETED: "완료",
+};
 
-const ProjectsPageContent = () => {
-  const { query, projectList, loading, paginationInfo, fetchData, filter } =
-    useProjectsData();
-
-  // 초기 데이터 로드
-  useEffect(() => {
-    fetchData();
-  }, [query, filter]);
+export default function ProjectsPageC() {
+  const { projectList, paginationInfo, loading, fetchProjectList } =
+    useProjectList();
+  const router = useRouter();
 
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
   const handlePageChange = (page: number) => {
-    fetchData(page, paginationInfo?.pageSize || 5);
+    const params = new URLSearchParams(window.location.search);
+    // 쿼리스트링 업데이트
+    params.set("page", page.toString());
+    // URL 업데이트
+    router.push(`?${params.toString()}`);
+    // 데이터를 다시 가져오기
+    fetchProjectList(page, paginationInfo?.pageSize || 5);
   };
 
   return (
@@ -51,7 +48,7 @@ const ProjectsPageContent = () => {
         <Heading size="2xl" color="gray.600">
           프로젝트 목록
         </Heading>
-        <SearchSection />
+        <ProjectsSearchSection />
         <CommonTable
           headerTitle={
             <Table.Row
@@ -67,18 +64,20 @@ const ProjectsPageContent = () => {
               <Table.ColumnHeader>프로젝트 종료일</Table.ColumnHeader>
             </Table.Row>
           }
-          data={projectList}
+          projectList={projectList}
           loading={loading}
-          renderRow={(item) => (
+          renderRow={(project) => (
             <>
-              <Table.Cell>{item.projectName}</Table.Cell>
-              <Table.Cell>{item.client}</Table.Cell>
-              <Table.Cell>{item.developer}</Table.Cell>
+              <Table.Cell>{project.name}</Table.Cell>
+              <Table.Cell>{project.customerName}</Table.Cell>
+              <Table.Cell>{project.developerName}</Table.Cell>
               <Table.Cell>
-                <CustomBox>{item.projectStatus}</CustomBox>
+                <CustomBox>
+                  {STATUS_LABELS[project.status] || "알 수 없음"}
+                </CustomBox>
               </Table.Cell>
-              <Table.Cell>{item.startAt}</Table.Cell>
-              <Table.Cell>{item.closeAt}</Table.Cell>
+              <Table.Cell>{project.startAt}</Table.Cell>
+              <Table.Cell>{project.closeAt}</Table.Cell>
             </>
           )}
         />
@@ -94,4 +93,4 @@ const ProjectsPageContent = () => {
       </Stack>
     </>
   );
-};
+}

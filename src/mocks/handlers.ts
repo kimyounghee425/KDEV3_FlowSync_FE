@@ -37,21 +37,20 @@ export const handlers = [
     return HttpResponse.json(taskData, { status: 200 });
   }),
 
+  // 프로젝트 목록 조회
   http.get(`${apiBaseUrl}/projects`, ({ request }) => {
     const url = new URL(request.url);
 
-    // Extract query parameters
+    // 쿼리 파라미터 추출
     const query = url.searchParams.get("query") || "";
     const filter = url.searchParams.get("filter") || "전체";
     const currentPage = parseInt(url.searchParams.get("currentPage") || "0", 10);
 
     const pageSize = parseInt(url.searchParams.get("pageSize") || "5", 10);
 
-    // All data
     const allData = projectsData.data;
 
-    // Filter logic
-
+    // 필터 로직
     const filteredData = allData.filter(item => {
       const matchesQuery = query === "" || query === null || item.projectName.toLowerCase().includes(query.toLowerCase());
       const matchesFilter = filter === "전체" || filter === null || item.projectStatus.toLowerCase().includes(filter.toLowerCase());
@@ -59,11 +58,11 @@ export const handlers = [
       return matchesQuery && matchesFilter;
     });
 
-    // Pagination logic
+    // 페이지네이션 로직
     const start = currentPage * pageSize;
     const pagedData = filteredData.slice(start, start + pageSize);
 
-    // Meta information
+    // 메타 정보
     const totalElements = filteredData.length;
     const totalPages = Math.ceil(totalElements / pageSize);
 
@@ -79,7 +78,6 @@ export const handlers = [
       },
     };
 
-    // Return the response
     return HttpResponse.json(response, { status: 200 });
   }),
 
@@ -146,13 +144,17 @@ export const handlers = [
         phoneNum: "010-1234-5678", // 담당자 연락처
         projectStartAt: "2024년 9월 1일", // 프로젝트 시작일
         projectCloseAt: "2024년 12월 31일", // 프로젝트 종료일
-      },
+      }
     };
 
     // 응답 반환
     return HttpResponse.json(response, { status: 200 });
   }),
 
+  // 프로젝트별 글 목록 조회
+  http.get(`${apiBaseUrl}/projects/:projectId/tasks`, ({ params }) => {
+    const { projectId } = params;
+  }),
 
   // 로그인 Handlers
   http.post(`${apiBaseUrl}/login`, async ({ request }) => {
