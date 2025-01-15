@@ -1,5 +1,5 @@
 import { Box, Text, Image, Link, VStack } from "@chakra-ui/react";
-import { Task, ContentBlock } from "@/src/types/taskTypes";
+import { Task, ContentBlock, TaskBoardLink } from "@/src/types/taskTypes";
 
 const isImageFile = (file: string) => {
   const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
@@ -30,6 +30,25 @@ const TaskContent = ({ task }: { task: Task }) => {
     });
   };
 
+  const renderLinks = (links: Task["taskBoardLinkList"]) => {
+    if (!Array.isArray(links)) {
+      console.error("taskBoardLinkList is not an array:", links);
+      return null;
+    }
+    return links.map((link, index) => (
+      <Box
+        key={index}
+        mb={2}
+        cursor="pointer"
+        color={"blue"}
+        onClick={() => window.open(link.url, "_blank")}
+        _hover={{ textDecoration: "underline" }}
+      >
+        <Text fontWeight="normal">{link.name}</Text>
+      </Box>
+    ));
+  };
+
   const renderFiles = (files: string[]) => {
     if (!Array.isArray(files)) {
       console.error("files is not an array:", files);
@@ -37,11 +56,28 @@ const TaskContent = ({ task }: { task: Task }) => {
     }
 
     return files.map((file: string, index: number) => {
+      const fileName = file.split("/").pop(); // 파일 이름 추출
       return (
         <Box key={index} mb={4}>
-          <Link href={file} download color="blue.500">
-            {file.split("/").pop()}
-          </Link>
+          <a
+            href={file} // download 속성만 있어도 되는데 그냥 썼음.
+            target="blank"
+            download={fileName}
+            style={{
+              color: "blue",
+              textDecoration: "none",
+              cursor: "pointer",
+              fontWeight: "normal",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.textDecoration = "underline")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.textDecoration = "none")
+            }
+          >
+            {fileName}
+          </a>
         </Box>
       );
     });
@@ -77,10 +113,18 @@ const TaskContent = ({ task }: { task: Task }) => {
       {/* 본문 내용 */}
       <Box mb={4}>{renderContent(task.content)}</Box>
 
+      {/* 첨부 링크 */}
+      <Box>
+        <Text fontWeight="bold" mb={2}>
+          첨부 링크
+          <VStack align="start">{renderLinks(task.taskBoardLinkList)}</VStack>
+        </Text>
+      </Box>
+
       {/* 첨부 파일 */}
       <Box mb={4}>
         <Text fontWeight="bold" mb={2}>
-          첨부 파일:
+          첨부 파일
         </Text>
         <VStack align="start">{renderFiles(task.file)}</VStack>
       </Box>
