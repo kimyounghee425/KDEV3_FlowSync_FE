@@ -105,14 +105,19 @@ const TaskContent = ({ task }: { task: Task }) => {
         {task.title}
       </Text>
 
-      {/* 작성 일시 */}
+
+      {/* 작성자, 작성 일시 */}
       <Box mb={4}>
+      <Text>
+          작성자: {task.author}
+        </Text>
         <Text>{formatDateString(task.regAt)}</Text>
       </Box>
 
       {/* 본문 내용 */}
       <Box mb={4}>{renderContent(task.content)}</Box>
-
+      <br/>
+      <br/>
       {/* 첨부 링크 */}
       <Box>
         <Text fontWeight="bold" mb={2}>
@@ -120,7 +125,8 @@ const TaskContent = ({ task }: { task: Task }) => {
           <VStack align="start">{renderLinks(task.taskBoardLinkList)}</VStack>
         </Text>
       </Box>
-
+      <br/>
+      <br/>
       {/* 첨부 파일 */}
       <Box mb={4}>
         <Text fontWeight="bold" mb={2}>

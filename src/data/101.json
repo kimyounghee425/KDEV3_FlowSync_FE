@@ -8,6 +8,7 @@
     "number": 101,
     "parent": null,
     "title": "101번째 글입니다. 체크핑",
+    "author": "집가고싶은사람",
     "content": [
       {
         "type": "paragraph",

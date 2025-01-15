@@ -8,6 +8,7 @@
     "number": 100,
     "parent": null,
     "title": "체크핑",
+    "author": "핑구",
     "content": [
       {
         "type": "paragraph",
@@ -80,7 +81,7 @@
         "content": "댓글댓글1",
         "regAt": "2025-01-08T12:10:00",
         "editAt": "2025-01-08T12:15:00",
-        "deletedYn": "N",
+        "deletedYn": "Y",
         "parentId": null,
         "replies": []
       },
@@ -103,6 +104,36 @@
             "parentId": 2
           }
         ]
+      },
+      {
+        "id": 4,
+        "author": "김철수",
+        "content": "댓글댓글1",
+        "regAt": "2025-01-08T13:10:00",
+        "editAt": "2025-01-08T13:15:00",
+        "deletedYn": "N",
+        "parentId": null,
+        "replies": [
+          {
+            "id": 6,
+            "author": "신형만",
+            "content": "가짜 대댓글 입니다.",
+            "regAt": "2025-01-09T12:20:00",
+            "editAt": "2025-01-09T12:25:00",
+            "deletedYn": "N",
+            "parentId": 4
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "author": "맹구",
+        "content": "댓글댓글1",
+        "regAt": "2025-01-08T14:10:00",
+        "editAt": "2025-01-08T14:15:00",
+        "deletedYn": "N",
+        "parentId": null,
+        "replies": []
       }
     ]
   }
