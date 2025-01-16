@@ -1,24 +1,27 @@
+"useClient";
+
 import { HStack, Input, Button, Box, Flex } from "@chakra-ui/react";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
-import SelectBox from "./SelectBox";
-import { useProjectList } from "@/src/hook/useProjectList";
 import { useRouter } from "next/navigation";
+import { useProjectBoard } from "@/src/hook/useProjectBoard";
+import BoardCategorySelectBox from "./BoardCategorySelectBox";
+import BoardStatusSelectBox from "./BoardStatusSelectBox";
 
 export default function ProjectsSearchSection() {
   const [input, setInput] = useState<string>();
-  const { query, fetchProjectList } = useProjectList();
+  const { keyword, fetchBoardList } = useProjectBoard();
   const router = useRouter();
 
   // 검색 버튼을 클릭하거나 엔터 입력시 데이터를 가져오는 함수
   const onSubmit = () => {
-    if (!input || query === input) return;
+    if (!input || keyword === input) return;
     // URL 업데이트
     const params = new URLSearchParams(window.location.search);
     params.set("query", input); // 검색어 추가
     router.push(`?${params.toString()}`);
 
     // 데이터 다시 가져오기
-    fetchProjectList(1, 5); // 첫 페이지 데이터 로드
+    fetchBoardList(1, 5); // 첫 페이지 데이터 로드
   };
 
   // 검색어와 필터 상태값 초기화 함수
@@ -26,7 +29,7 @@ export default function ProjectsSearchSection() {
     // URL 쿼리스트링 초기화
     router.push("?");
     setInput("");
-    fetchProjectList(1, 5); // 첫 페이지로 리셋
+    fetchBoardList(1, 5); // 첫 페이지로 리셋
   };
 
   // 사용자가 input 태그에 이력하는 값을 실시간으로 query state에 보관
@@ -42,10 +45,11 @@ export default function ProjectsSearchSection() {
   };
 
   return (
-    <Box>
+    <Box mb="10px">
       <Flex gap={4} alignItems="center" justifyContent="end">
         <HStack>
-          <SelectBox />
+          <BoardStatusSelectBox />
+          <BoardCategorySelectBox />
           <Input
             placeholder="프로젝트명 검색"
             size="md"

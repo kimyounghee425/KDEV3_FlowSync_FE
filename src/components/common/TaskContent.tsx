@@ -21,7 +21,12 @@ const TaskContent = ({ task }: { task: Task }) => {
       if (block.type === "image" && typeof block.data === "object") {
         return (
           <Box key={index} mb={4}>
-            <Image src={block.data.src} borderRadius="md" mb={2} />
+            <Image
+              src={block.data.src}
+              alt="대체 텍스트"
+              borderRadius="md"
+              mb={2}
+            />
           </Box>
         );
       }
@@ -42,8 +47,7 @@ const TaskContent = ({ task }: { task: Task }) => {
         cursor="pointer"
         color={"blue"}
         onClick={() => window.open(link.url, "_blank")}
-        _hover={{ textDecoration: "underline" }}
-      >
+        _hover={{ textDecoration: "underline" }}>
         <Text fontWeight="normal">{link.name}</Text>
       </Box>
     ));
@@ -74,8 +78,7 @@ const TaskContent = ({ task }: { task: Task }) => {
             }
             onMouseLeave={(e) =>
               (e.currentTarget.style.textDecoration = "none")
-            }
-          >
+            }>
             {fileName}
           </a>
         </Box>
@@ -105,19 +108,16 @@ const TaskContent = ({ task }: { task: Task }) => {
         {task.title}
       </Text>
 
-
       {/* 작성자, 작성 일시 */}
       <Box mb={4}>
-      <Text>
-          작성자: {task.author}
-        </Text>
+        <Text>작성자: {task.author}</Text>
         <Text>{formatDateString(task.regAt)}</Text>
       </Box>
 
       {/* 본문 내용 */}
       <Box mb={4}>{renderContent(task.content)}</Box>
-      <br/>
-      <br/>
+      <br />
+      <br />
       {/* 첨부 링크 */}
       <Box>
         <Text fontWeight="bold" mb={2}>
@@ -125,8 +125,8 @@ const TaskContent = ({ task }: { task: Task }) => {
           <VStack align="start">{renderLinks(task.taskBoardLinkList)}</VStack>
         </Text>
       </Box>
-      <br/>
-      <br/>
+      <br />
+      <br />
       {/* 첨부 파일 */}
       <Box mb={4}>
         <Text fontWeight="bold" mb={2}>

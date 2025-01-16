@@ -5,26 +5,26 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "@/src/components/ui/select";
-import { useProjectList } from "@/src/hook/useProjectList";
-import { createListCollection, ListCollection } from "@chakra-ui/react";
+import { useProjectBoard } from "@/src/hook/useProjectBoard";
+import { createListCollection } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 
-const frameworks = createListCollection<{ label: string; value: string }>({
+const boardStatusFramework = createListCollection<{
+  label: string;
+  value: string;
+}>({
   items: [
     { label: "전체", value: "" },
-    // { label: "계약", value: "계약" },
-    { label: "진행중", value: "IN_PROGRESS" },
-    { label: "납품완료", value: "COMPLETED" },
-    // { label: "하자보수", value: "하자보수" },
-    { label: "일시중단", value: "PAUSED" },
-    // { label: "삭제(관리자용)", value: "삭제(관리자용)" },
+    { label: "진행중", value: "PROGRESS" },
+    { label: "완료", value: "COMPLETED" },
+    { label: "보류", value: "SUSPENSION" },
+    { label: "승인요청", value: "PERMISSION_REQUEST" },
   ],
 });
 
-export default function SelectBox() {
+export default function BoardStatusSelectBox() {
   const router = useRouter();
-
-  const { filter } = useProjectList();
+  const { boardStatus } = useProjectBoard();
 
   const handleValueChange = (details: { value: string[] }) => {
     const selectedValue = details.value[0]; // 선택된 첫 번째 값
@@ -41,16 +41,16 @@ export default function SelectBox() {
 
   return (
     <SelectRoot
-      collection={frameworks}
+      collection={boardStatusFramework}
       size="md"
       width="110px"
-      value={[filter]}
+      value={[boardStatus]}
       onValueChange={handleValueChange}>
       <SelectTrigger>
         <SelectValueText></SelectValueText>
       </SelectTrigger>
       <SelectContent>
-        {frameworks.items.map((status) => (
+        {boardStatusFramework.items.map((status) => (
           <SelectItem item={status} key={status.value}>
             {status.label}
           </SelectItem>

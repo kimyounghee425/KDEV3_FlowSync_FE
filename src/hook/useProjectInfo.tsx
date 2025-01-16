@@ -37,7 +37,7 @@ export function useProjectInfo(params: Promise<{ projectId: string }>) {
     };
 
     fetchProjectData();
-  }, []);
+  }, [params]);
 
   return { projectId, projectInfo, loading };
 }

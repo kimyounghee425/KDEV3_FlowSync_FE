@@ -1,8 +1,8 @@
 import { HStack, Button } from "@chakra-ui/react";
-import { PaginationInfo } from "@/src/types";
+import { PaginationInfoType } from "@/src/types";
 
 interface PaginationProps {
-  paginationInfo?: PaginationInfo; // PaginationMeta 전체를 전달받음
+  paginationInfo?: PaginationInfoType; // PaginationMeta 전체를 전달받음
   handlePageChange: (page: number) => void; // 페이지 변경 핸들러
 }
 
