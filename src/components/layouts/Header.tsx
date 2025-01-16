@@ -22,24 +22,13 @@ function Header() {
           throw new Error("User 정보가 로컬스토리지에 없습니다.");
         }
         const userObject = JSON.parse(userData);
-        const foundMember = membersData.data.find(
-          (member) => member.id === userObject.id
-        );
-        const foundOrg = orgsData.data.find(
-          (org) => org.id === foundMember?.org_id
-        );
-        if (foundMember && foundOrg) {
-          setUser({
-            id: foundMember.id,
-            userName: foundMember.name,
-            orgName: foundOrg.name,
-            jobRole: foundMember.job_role,
-            profile_image_url: foundMember.profile_image_url, // 기본값 제공
-            // isSidebar: false,
-          });
-        } else {
-          console.error("회원 또는 업체 not found.");
-        }
+        setUser({
+          id: userObject.id,
+          userName: userObject.name,
+          orgId: userObject.org_id,
+          jobRole: userObject.job_role,
+          profile_image_url: userObject.profile_image_url, // 기본값 제공
+        });
       } catch (err: any) {
         setError(err.message || "An unknown error occurred");
       } finally {
@@ -50,14 +39,7 @@ function Header() {
   }, []);
 
   return (
-    <Flex
-      as="nav"
-      align="center"
-      justify="space-between"
-      wrap="wrap"
-      padding="1rem"
-      backgroundColor="gray.200"
-      boxShadow="md">
+    <Flex as="nav" align="center" justify="space-between" wrap="wrap" padding="1rem" backgroundColor="gray.200" boxShadow="md">
       <Flex align="center" mr={5}>
         <Link href="/">
           <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
@@ -69,15 +51,7 @@ function Header() {
       <Drawer />
 
       {/* Avatar */}
-      {user && (
-        <Profile
-          id={user.id}
-          userName={user.userName}
-          orgName={user.orgName}
-          jobRole={user.jobRole}
-          profile_image_url={user.profile_image_url}
-        />
-      )}
+      <Profile id={user?.id} userName={user?.userName} orgName={user?.orgName} jobRole={user?.jobRole} profile_image_url={user?.profile_image_url} />
     </Flex>
   );
 }

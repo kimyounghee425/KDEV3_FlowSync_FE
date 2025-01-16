@@ -26,8 +26,7 @@ export default function projectsPage() {
 }
 
 function ProjectsPageContent() {
-  const { projectList, paginationInfo, loading, fetchProjectList } =
-    useProjectList();
+  const { projectList, paginationInfo, loading, fetchProjectList } = useProjectList();
   const router = useRouter();
 
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
@@ -47,10 +46,7 @@ function ProjectsPageContent() {
         <title>FlowSync</title>
         <meta property="og:image" content="@/public/FlowSyncLogo.jpg" />
         <meta property="og:title" content="FlowSync" />
-        <meta
-          property="og:description"
-          content="FlowSync로 프로젝트 관리를 한번에"
-        />
+        <meta property="og:description" content="FlowSync로 프로젝트 관리를 한번에" />
       </Head>
       <ProjectStatusCards title={"프로젝트 현황"} />
       <Stack width="full">
@@ -64,7 +60,8 @@ function ProjectsPageContent() {
               backgroundColor={"#eee"}
               css={{
                 "& > th": { textAlign: "center" },
-              }}>
+              }}
+            >
               <Table.ColumnHeader>프로젝트명</Table.ColumnHeader>
               <Table.ColumnHeader>고객사</Table.ColumnHeader>
               <Table.ColumnHeader>개발사</Table.ColumnHeader>
@@ -75,15 +72,13 @@ function ProjectsPageContent() {
           }
           data={projectList}
           loading={loading}
-          renderRow={(project) => (
+          renderRow={project => (
             <>
               <Table.Cell>{project.name}</Table.Cell>
               <Table.Cell>{project.customerName}</Table.Cell>
               <Table.Cell>{project.developerName}</Table.Cell>
               <Table.Cell>
-                <CustomBox>
-                  {STATUS_LABELS[project.status] || "알 수 없음"}
-                </CustomBox>
+                <CustomBox>{STATUS_LABELS[project.status] || "알 수 없음"}</CustomBox>
               </Table.Cell>
               <Table.Cell>{project.startAt}</Table.Cell>
               <Table.Cell>{project.closeAt}</Table.Cell>

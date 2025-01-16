@@ -1,13 +1,13 @@
 import { useSearchParams } from "next/navigation";
-import { BoardResponse, PaginationInfo, ProjectProps } from "../types";
+import { PaginationInfoType } from "@/src/types";
 import { useCallback, useEffect, useState } from "react";
 import { MemberProps } from "../types/member";
 import { fetchMembers } from "../api/members";
+import { MemberResponseType } from "../types/api";
 
 export function useMemberList() {
   const searchParams = useSearchParams();
   const [memberList, setMemberList] = useState<MemberProps[]>([]);
-  const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>();
   const [loading, setLoading] = useState(false);
   const query = searchParams.get("query") || "";
   const filter = searchParams.get("filter") || "";
@@ -16,9 +16,8 @@ export function useMemberList() {
     async (currentPage: number = 1, pageSize: number = 5) => {
       setLoading(true);
       try {
-        const response: BoardResponse<MemberProps> = await fetchMembers(query, filter, currentPage - 1, pageSize);
-        setMemberList(response.data);
-        setPaginationInfo(response.meta);
+        const response: MemberResponseType<{ members: MemberProps[] }> = await fetchMembers(query, filter, currentPage - 1, pageSize);
+        setMemberList(response.data.members);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -30,13 +29,14 @@ export function useMemberList() {
 
   useEffect(() => {
     fetchMemberList();
+    console.log("시작할 때 딱 1번만 실행");
   }, [fetchMemberList]);
 
+  console.log("memberList: ", memberList);
   return {
     query,
     filter,
     memberList,
-    paginationInfo,
     loading,
     fetchMemberList,
   };
