@@ -15,7 +15,7 @@ const boardStatusFramework = createListCollection<{
 }>({
   items: [
     { label: "전체", value: "" },
-    { label: "진행중", value: "PROGRESS" },
+    { label: "진행중", value: "INPROGRESS" },
     { label: "완료", value: "COMPLETED" },
     { label: "보류", value: "SUSPENSION" },
     { label: "승인요청", value: "PERMISSION_REQUEST" },
@@ -31,9 +31,9 @@ export default function BoardStatusSelectBox() {
     const params = new URLSearchParams(window.location.search);
 
     if (selectedValue) {
-      params.set("filter", selectedValue); // 필터값 설정
+      params.set("boardStatus", selectedValue); // 필터값 설정
     } else {
-      params.delete("filter"); // 필터값 제거
+      params.delete("boardStatus"); // 필터값 제거
     }
 
     router.push(`?${params.toString()}`); // URL 업데이트

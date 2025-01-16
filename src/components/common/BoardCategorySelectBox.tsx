@@ -30,9 +30,9 @@ export default function BoardCategorySelectBox() {
     const params = new URLSearchParams(window.location.search);
 
     if (selectedValue) {
-      params.set("filter", selectedValue); // 필터값 설정
+      params.set("boardCategory", selectedValue); // 필터값 설정
     } else {
-      params.delete("filter"); // 필터값 제거
+      params.delete("boardCategory"); // 필터값 제거
     }
 
     router.push(`?${params.toString()}`); // URL 업데이트

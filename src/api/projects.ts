@@ -31,13 +31,15 @@ export const fetchProjectsStatusCount = async () => {
 export const fetchProjectBoard = async (
   projectId: string,
   keyword: string = "",
-  boardCategory:string = "", // 게시글 유형
+  progressStep: string = "",
   boardStatus:string = "", // 게시글 상태
+  boardCategory:string = "", // 게시글 유형
   currentPage: number, // 현재 페이지
   pageSize: number, // 페이지 크기
 ) => {
-  const response = await axiosInstance.get(`/projects/${projectId}/tasks`, {
-    params: {keyword, boardStatus, boardCategory, currentPage, pageSize},
+  // const response = await axiosInstance.get(`/projects/${projectId}/tasks`, {
+  const response = await axiosInstance.get(`/posts`, {
+    params: {keyword, progressStep, boardStatus, boardCategory, currentPage, pageSize},
   });
   return response.data;
 }

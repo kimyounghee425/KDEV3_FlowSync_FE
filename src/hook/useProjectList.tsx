@@ -13,14 +13,19 @@ export function useProjectList() {
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfoType>();
   const [loading, setLoading] = useState(false);
   const keyword = searchParams.get("keyword") || "";
-  const filter = searchParams.get("filter") || "";
+  const projectStatus = searchParams.get("projectStatus") || "";
 
   const fetchProjectList = useCallback(
     async (currentPage: number = 1, pageSize: number = 5) => {
       setLoading(true);
       try {
         const response: BoardResponseType<ProjectPropsType> =
-          await fetchProjects(keyword, filter, currentPage - 1, pageSize);
+          await fetchProjects(
+            keyword,
+            projectStatus,
+            currentPage - 1,
+            pageSize
+          );
         setProjectList(response.data);
         setPaginationInfo(response.meta);
       } catch (error) {
@@ -29,7 +34,7 @@ export function useProjectList() {
         setLoading(false);
       }
     },
-    [keyword, filter]
+    [keyword, projectStatus]
   );
 
   useEffect(() => {
@@ -38,7 +43,7 @@ export function useProjectList() {
 
   return {
     keyword,
-    filter,
+    projectStatus,
     projectList,
     paginationInfo,
     loading,
