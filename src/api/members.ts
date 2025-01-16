@@ -1,5 +1,5 @@
 import axiosInstance from "./axiosInstance";
-import { BoardResponse } from "@/src/types";
+import { BoardResponseType } from "@/src/types";
 import { MemberProps } from "@/src/types/member";
 
 export const fetchMembers = async (
@@ -7,7 +7,7 @@ export const fetchMembers = async (
   filter: string = "", // 필터링 값
   currentPage: number,
   pageSize: number
-): Promise<BoardResponse<MemberProps>> => {
+): Promise<BoardResponseType<MemberProps>> => {
   const response = await axiosInstance.get("/admin/members", {
     params: { query, filter, currentPage, pageSize },
   });

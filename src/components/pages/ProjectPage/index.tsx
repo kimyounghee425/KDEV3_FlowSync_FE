@@ -10,6 +10,7 @@ import BoardSearchSection from "../../common/BoardSearchSection";
 import CommonTable from "../../common/CommonTable";
 import { useProjectBoard } from "@/src/hook/useProjectBoard";
 import { CustomBox } from "../../common/CustomBox";
+import { useRouter } from "next/navigation";
 
 interface ProjectPageProps {
   params: Promise<{ projectId: string }>;
@@ -22,7 +23,9 @@ export default function ProjectPage({ params }: ProjectPageProps) {
 
   const [projectId, setProjectId] = useState<string>();
 
-  const { boardList, loading } = useProjectBoard();
+  const { boardList, taskId, loading } = useProjectBoard();
+
+  const router = useRouter();
 
   const getProjectId = useCallback(async () => {
     setProjectId((await params).projectId);
@@ -41,6 +44,10 @@ export default function ProjectPage({ params }: ProjectPageProps) {
     phoneNum: "010-1234-1324",
     projectStartAt: "2024년 9월 1일",
     projectCloseAt: "2024년 12월 31일",
+  };
+
+  const handleRowClick = (id: number) => {
+    router.push(`/projects/${taskId}/tasks/${id}`);
   };
 
   return (
@@ -125,6 +132,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
               </Table.Cell>
             </>
           )}
+          handleRowClick={handleRowClick}
         />
       </Box>
     </>
