@@ -36,7 +36,7 @@ const CommonTable = <T extends { id: number }>({
             </Table.Cell>
           </Table.Row>
         ) : (
-          data.map((item) => (
+          data?.map((item) => (
             <Table.Row
               key={item.id}
               onClick={() => handleRowClick(item.id)}
