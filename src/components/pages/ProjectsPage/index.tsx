@@ -42,7 +42,7 @@ function ProjectsPageContent() {
   };
 
   const handleRowClick = (id: number) => {
-    router.push(`/projects/${id}`);
+    router.push(`/projects/${id}/tasks`);
   };
 
   return (
