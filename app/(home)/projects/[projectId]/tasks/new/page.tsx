@@ -15,7 +15,7 @@ export default function New() {
   
   useEffect(() => {
     setAuthor(new_task_data.userName);
-    const currentDate = new Date().toISOString().split(".")[0].replace("Z", "");
+    const currentDate = new Date().toISOString();
     setCreatedDate(currentDate);
   }, []);
   // console.log(createdDate)

@@ -111,7 +111,7 @@ const TaskContent = ({ task }: { task: Task }) => {
       {/* 작성자, 작성 일시 */}
       <Box mb={4}>
         <Text>작성자: {task.author}</Text>
-        <Text>{formatDateString(task.regAt)}</Text>
+        <Text>{task.regAt.split(".")[0].replace("Z", "").slice(0, 10)}</Text>
       </Box>
 
       {/* 본문 내용 */}

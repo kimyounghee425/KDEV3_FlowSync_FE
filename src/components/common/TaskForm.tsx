@@ -26,15 +26,15 @@ const Form = ({
   };
 
   // 파일 업데이트
-  const handleFileChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newFiles = [...files];
-    const file = event.target.files ? event.target.files[0] : null;
-    newFiles[index] = file;
-    setFiles(newFiles);
-  };
+  // const handleFileChange = (
+  //   index: number,
+  //   event: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const newFiles = [...files];
+  //   const file = event.target.files ? event.target.files[0] : null;
+  //   newFiles[index] = file;
+  //   setFiles(newFiles);
+  // };
 
   // 특정 파일 제거
   const handleRemoveFile = (index: number) => {
@@ -73,7 +73,7 @@ const Form = ({
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("fileList", file);
 
       const response = await axiosInstance.post("/upload", formData);
       return response.data.url || previewUrl; // 서버 응답 URL 또는 미리보기 URL
@@ -122,15 +122,80 @@ const Form = ({
       try {
         const savedData = await editorRef.current.save();
 
-        await axiosInstance.post("/post", {
-          content: savedData.blocks,
-          author,
-          createdDate,
-        });
+        // const uploadedFiles = await Promise.all(
+        //   files.map(async (file) => {
+        //     if (file) {
+        //       return await uploadFile(file);
+        //     }
+        //     return null;
+        //   })
+        // );
+        const requestData = {
+          title: "게시글 제목입니다.",
+          content: savedData.blocks.map((block) => {
+            if (block.type === "paragraph") {
+              return {
+                type: "paragraph",
+                text: block.data.text,
+              };
+            } else if (block.type === "image") {
+              return {
+                type: "image",
+                src: block.data.file.url,
+              };
+            }
+          }),
+          boardCategory: "QUESTION",
+          boardStatus: "PROGRESS",
+          taskBoardLinkList: links.map((link) => link.url),
+        };
+
+        await axiosInstance.post("/posts", requestData);
+
         alert("저장이 완료되었습니다.");
       } catch (error) {
         console.error("저장 실패:", error);
         alert("저장 중 문제가 발생했습니다.");
+      }
+    }
+  };
+
+  // 파일 저장하는 핸들러 따로 만들기
+  // 파일 업로드 핸들러
+  const handleFileUpload = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("fileList", file);
+      const response = await axiosInstance.post("/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const uploadedUrl = response.data.url;
+      console.log(file);
+      console.log([...formData.entries()]);
+      alert(`파일 업로드 성공: ${uploadedUrl}`);
+      return uploadedUrl; // 서버에서 반환된 URL
+    } catch (error) {
+      console.error("파일 업로드 실패:", error);
+      alert("파일 업로드 중 문제가 발생했습니다.");
+      return null;
+    }
+  };
+
+  // 파일 변경 핸들러
+  const handleFileChange = async (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files ? event.target.files[0] : null;
+
+    if (file) {
+      const uploadedUrl = await handleFileUpload(file);
+      if (uploadedUrl) {
+        const newFiles = [...files];
+        newFiles[index] = file;
+        setFiles(newFiles);
       }
     }
   };
@@ -159,7 +224,11 @@ const Form = ({
           flex={"1"}
         >
           <Text mb={2}>작성 일시</Text>
-          <Input type="date" value={createdDate.slice(0, 10)} readOnly />
+          <Input
+            type="date"
+            value={createdDate.split(".")[0].replace("Z", "").slice(0, 10)}
+            readOnly
+          />
         </Box>
       </Flex>
 
@@ -215,6 +284,7 @@ const Form = ({
         {files.map((file, index) => (
           <Box key={index} display="flex" alignItems="center" mb={4}>
             <Input type="file" onChange={(e) => handleFileChange(index, e)} />
+
             <Button
               ml={2}
               colorScheme="red"

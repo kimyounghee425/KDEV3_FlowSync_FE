@@ -16,12 +16,7 @@ const RootLayout = (props: { children: React.ReactNode }) => {
   return (
     <Provider>
       <Header />
-      <Container
-        maxWidth={"100%"}
-        display="flex"
-        flexDirection="row"
-        margin={0}
-        padding={0}>
+      <Container maxWidth={"100%"} display="flex" flexDirection="row" margin={0} padding={0}>
         <SidebarProvider>
           <Sidebar />
         </SidebarProvider>

@@ -86,7 +86,7 @@ const CommentItem = ({ comment }: CommentProps) => {
                     <Flex alignItems="center" justifyContent="space-between">
                       <Text fontWeight="bold">{reply.author}</Text>
                       <Text fontSize="sm" color="gray.500">
-                        {reply.regAt}
+                        {reply.regAt.split(".")[0].replace("Z", "").slice(0, 10)}
                       </Text>
                       <IconButton
                         aria-label="댓글 옵션"
@@ -145,7 +145,7 @@ const CommentItem = ({ comment }: CommentProps) => {
         <>
           <Text fontWeight="bold">{comment.author}</Text>
           <Text fontSize="sm" color="gray.500">
-            {comment.regAt}
+            {comment.regAt.split(".")[0].replace("Z", "").slice(0, 10)}
           </Text>
           <Text mt={2}>{comment.content}</Text>
           <IconButton
@@ -166,7 +166,7 @@ const CommentItem = ({ comment }: CommentProps) => {
               top="36px"
               right="4px"
               bg="white"
-              border="1px solid #ccc"
+              border="1px solid #ccc" 
               borderRadius="md"
               boxShadow="md"
               zIndex={10}
