@@ -38,7 +38,6 @@ export default function ProjectTaskPage() {
     const loadTask = async () => {
       try {
         const data = await fetchTaskData(projectId, taskId);
-
         // 검증. 받아온 json 의 projectid, id 가 주소창 값과 일치하는지 확인.
         if (data &&
           data.projectid.toString() === projectId &&
@@ -63,6 +62,7 @@ export default function ProjectTaskPage() {
 
     loadTask();
   }, [projectId, taskId]);
+  
 
   if (error) {
     return <Box>에러 발생: {error}</Box>;

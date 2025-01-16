@@ -9,7 +9,9 @@ export const metadata: Metadata = {
 
 const RootLayout = (props: { children: React.ReactNode }) => {
   const { children } = props;
-  const useMsw = process.env.USE_MSW === "true";
+  
+  const useMsw = process.env.USE_MSW === "true"; // 이거 껐다켰다 하는 식으로 사용해야..?
+
   return (
     <html suppressHydrationWarning>
       <body>{useMsw ? <MSWComponent>{children}</MSWComponent> : children}</body>

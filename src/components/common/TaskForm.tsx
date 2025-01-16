@@ -12,9 +12,13 @@ const Form = ({
   createdDate: string;
 }) => {
   const editorRef = useRef<EditorJS | null>(null);
-
   // 첨부파일
   const [files, setFiles] = useState<(File | null)[]>([]);
+
+  // 첨부 링크
+  const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
+  const [newLink, setNewLink] = useState("");
+  const [newLinkName, setNewLinkName] = useState("");
 
   // 새 파일 입력 추가
   const handleAddFile = () => {
@@ -36,6 +40,21 @@ const Form = ({
   const handleRemoveFile = (index: number) => {
     const newFiles = files.filter((_, i) => i !== index);
     setFiles(newFiles);
+  };
+
+  // 링크 추가
+  const handleAddLink = () => {
+    if (newLink && newLinkName) {
+      setLinks([...links, { url: newLink, name: newLinkName }]);
+      setNewLink("");
+      setNewLinkName("");
+    }
+  };
+
+  // 링크 제거
+  const handleRemoveLink = (index: number) => {
+    const updatedLinks = links.filter((_, i) => i !== index);
+    setLinks(updatedLinks);
   };
 
   // API 엔드포인트 상수로 분리
@@ -154,15 +173,39 @@ const Form = ({
         ></Box>
       </Box>
 
-      {/* <Box>
-        <Text mb={2}>질문 요약</Text>
-        <Input placeholder="질문을 입력하세요." height={"50px"} />
+      <Box mt={6}>
+        <Text>링크 입력</Text>
+        {links.map((link, index) => (
+          <Flex key={index} align="center" mb={2}>
+            <Text>
+              {link.name} ({link.url})
+            </Text>
+            <Button
+              ml={4}
+              colorScheme="red"
+              size="sm"
+              onClick={() => handleRemoveLink(index)}
+            >
+              제거
+            </Button>
+          </Flex>
+        ))}
+        <Flex gap={2} mt={4}>
+          <Input
+            placeholder="링크(URL)를 입력하세요"
+            value={newLink}
+            onChange={(e) => setNewLink(e.target.value)}
+          />
+          <Input
+            placeholder="링크 이름(별명)을 입력하세요"
+            value={newLinkName}
+            onChange={(e) => setNewLinkName(e.target.value)}
+          />
+          <Button colorScheme="blue" onClick={handleAddLink}>
+            추가
+          </Button>
+        </Flex>
       </Box>
-
-      <Box>
-        <Text mb={2}>링크 첨부</Text>
-        <Input type="url" placeholder="링크(URL)를 입력하세요" />
-      </Box> */}
 
       <Box mt={6}>
         <Text fontWeight="bold" mb={2}>
