@@ -41,6 +41,10 @@ function ProjectsPageContent() {
     fetchProjectList(page, paginationInfo?.pageSize || 5);
   };
 
+  const handleRowClick = (id: number) => {
+    router.push(`/projects/${id}`);
+  };
+
   return (
     <>
       <Head>
@@ -89,6 +93,7 @@ function ProjectsPageContent() {
               <Table.Cell>{project.closeAt}</Table.Cell>
             </>
           )}
+          handleRowClick={handleRowClick}
         />
         <Pagination
           paginationInfo={

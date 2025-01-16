@@ -3,29 +3,26 @@
 import { ReactNode } from "react";
 import { Table } from "@chakra-ui/react";
 import { SkeletonText } from "@/src/components/ui/skeleton";
-import { useRouter } from "next/navigation";
 
 interface CommonTableProps<T> {
   headerTitle: ReactNode;
   data: T[];
   loading: boolean;
   renderRow: (item: T) => ReactNode;
+  handleRowClick: (id: number) => void;
 }
 
-const CommonTable = <T extends {
-  name: ReactNode; id: number 
-}>({
+const CommonTable = <
+  T extends {
+    id: number;
+  }
+>({
   headerTitle,
   data,
   loading,
   renderRow,
+  handleRowClick,
 }: CommonTableProps<T>) => {
-  const router = useRouter();
-
-  const handleRowClick = (id: number) => {
-    router.push(`/projects/${id}`);
-  };
-
   return (
     <Table.Root size="sm" interactive>
       <Table.Header>{headerTitle}</Table.Header>

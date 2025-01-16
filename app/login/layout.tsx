@@ -2,7 +2,6 @@
 
 import { RedirectProvider } from "@/src/context/RedirectContext";
 // import type { Metadata } from "next";
-import { Provider } from "@/src/components/ui/provider";
 import { Box, Flex } from "@chakra-ui/react";
 
 // export const metadata: Metadata = {
@@ -12,7 +11,7 @@ import { Box, Flex } from "@chakra-ui/react";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Provider>
+    <>
       <RedirectProvider>
         {/* 로그인 페이지 중앙 정렬 레이아웃 */}
         <Flex
@@ -24,12 +23,18 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           padding="3"
           overflow="hidden" // 스크롤 제거
         >
-          <Box width="100%" maxW="500px" borderRadius="md" bg="white" boxShadow="lg" padding="1">
+          <Box
+            width="100%"
+            maxW="500px"
+            borderRadius="md"
+            bg="white"
+            boxShadow="lg"
+            padding="1">
             {children}
           </Box>
         </Flex>
       </RedirectProvider>
-    </Provider>
+    </>
   );
 };
 
