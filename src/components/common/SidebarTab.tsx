@@ -1,12 +1,4 @@
-import {
-  Box,
-  Card,
-  CardBody,
-  CardHeader,
-  CardRoot,
-  CardTitle,
-  Separator,
-} from "@chakra-ui/react";
+import { Box, CardBody, CardTitle } from "@chakra-ui/react";
 import Data from "@/src/data/projects_mock_data.json";
 import Link from "next/link";
 import { useSidebar } from "@/src/context/SidebarContext";

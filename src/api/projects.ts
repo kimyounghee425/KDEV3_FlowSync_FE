@@ -1,12 +1,12 @@
 import axiosInstance from "./axiosInstance";
-import { BoardResponse, ProjectProps } from "@/src/types";
+import { BoardResponseType, ProjectPropsType } from "@/src/types";
 
 export const fetchProjects = async (
   keyword: string = "", // 검색어
   filter: string = "", // 필터링 값
   currentPage: number,
   pageSize: number
-): Promise<BoardResponse<ProjectProps>> => {
+): Promise<BoardResponseType<ProjectPropsType>> => {
   const response = await axiosInstance.get("/projects", {
     params: { keyword, filter, currentPage, pageSize },
   });

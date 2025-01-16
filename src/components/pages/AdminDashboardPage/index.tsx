@@ -18,6 +18,14 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export default function ProjectsPage() {
+  return (
+    <Suspense>
+      <ProjectsPageContent />
+    </Suspense>
+  );
+}
+
+function ProjectsPageContent() {
   const { projectList, paginationInfo, loading, fetchProjectList } =
     useProjectList();
   const router = useRouter();
@@ -65,7 +73,7 @@ export default function ProjectsPage() {
               <Table.ColumnHeader>프로젝트 종료일</Table.ColumnHeader>
             </Table.Row>
           }
-          projectList={projectList}
+          data={projectList}
           loading={loading}
           renderRow={(project) => (
             <>

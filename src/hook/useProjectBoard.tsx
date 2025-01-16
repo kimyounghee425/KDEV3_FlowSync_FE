@@ -1,17 +1,17 @@
 "use client";
 
 import { useParams, useSearchParams } from "next/navigation";
-import { BoardResponse, PaginationInfo, ProjectProps } from "../types";
+import { BoardResponseType, PaginationInfoType } from "../types";
 import { useCallback, useEffect, useState } from "react";
 import { fetchProjectBoard } from "../api/projects";
-import { ProjectPost } from "../types";
+import { ProjectPostType } from "../types";
 
 export function useProjectBoard() {
   const searchParams = useSearchParams(); // URL 쿼리스트링 추출
   const { projectId } = useParams(); // 동적 경로 추출
 
-  const [boardList, setBoardList] = useState<ProjectPost[]>([]);
-  const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>();
+  const [boardList, setBoardList] = useState<ProjectPostType[]>([]);
+  const [paginationInfo, setPaginationInfo] = useState<PaginationInfoType>();
   const [loading, setLoading] = useState(false);
 
   const keyword = searchParams.get("keyword") || "";
@@ -22,14 +22,15 @@ export function useProjectBoard() {
     async (currentPage: number = 1, pageSize: number = 5) => {
       setLoading(true);
       try {
-        const response: BoardResponse<ProjectPost> = await fetchProjectBoard(
-          projectId as string,
-          keyword,
-          boardStatus,
-          boardCategory,
-          currentPage - 1,
-          pageSize
-        );
+        const response: BoardResponseType<ProjectPostType> =
+          await fetchProjectBoard(
+            projectId as string,
+            keyword,
+            boardStatus,
+            boardCategory,
+            currentPage - 1,
+            pageSize
+          );
         setBoardList(response.data);
         setPaginationInfo(response.meta);
       } catch (error) {

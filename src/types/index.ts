@@ -1,3 +1,3 @@
-export type { PaginationInfo } from './pagination';
-export type { ProjectProps, ProjectInfo, ProjectPost } from './project';
-export type { BoardResponse } from './api';
+export type { PaginationInfoType } from './pagination';
+export type { ProjectPropsType, ProjectInfoType, ProjectPostType } from './project';
+export type { BoardResponseType } from './api';

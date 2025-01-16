@@ -2,10 +2,7 @@
 
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import StatusCard from "./ProjectsStatusCard";
-import { ReactNode, useEffect, useState } from "react";
-import { Loading } from "./Loading";
 import { Folder, PackageCheck, Signature, Swords, Wrench } from "lucide-react";
-import { fetchProjectsStatusCount } from "@/src/api/projects";
 
 interface StatusCardsProps {
   title: string;
