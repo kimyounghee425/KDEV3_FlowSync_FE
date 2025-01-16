@@ -8,7 +8,7 @@ export interface ProjectProps {
   developerName: string; // 개발사 이름
 }
 
-export interface ProjectInfoType {
+export interface ProjectInfo {
   projectTitle: string; // 프로젝트명
   jobRole: string; // 직무
   profileImageUrl: string; // 프로필 이미지 URL
@@ -17,4 +17,19 @@ export interface ProjectInfoType {
   phoneNum: string; // 담당자 연락처
   projectStartAt: string; // 프로젝트 시작일
   projectCloseAt: string; // 프로젝트 종료일
+}
+
+export interface ProjectPost {
+  id: number, 
+  number:number, 
+  title: string,
+  content: string,
+  regAt: string,
+  editAt: string,
+  approveAt: string,
+  boardCategory:string, // 진행단계
+  boardStatus:string, // 게시글 유형
+  deletedYn: string,
+  currentPage: number, // 현재 페이지
+  pageSize: number, // 페이지 크기
 }

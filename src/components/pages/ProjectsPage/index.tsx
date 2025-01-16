@@ -16,7 +16,7 @@ const STATUS_LABELS: Record<string, string> = {
   COMPLETED: "완료",
 };
 
-export default function ProjectsPageC() {
+export default function ProjectsPage() {
   const { projectList, paginationInfo, loading, fetchProjectList } =
     useProjectList();
   const router = useRouter();

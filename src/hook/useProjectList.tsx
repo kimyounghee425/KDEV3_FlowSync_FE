@@ -8,7 +8,7 @@ export function useProjectList() {
   const [projectList, setProjectList] = useState<ProjectProps[]>([]);
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>();
   const [loading, setLoading] = useState(false);
-  const query = searchParams.get("query") || "";
+  const keyword = searchParams.get("keyword") || "";
   const filter = searchParams.get("filter") || "";
 
   const fetchProjectList = useCallback(
@@ -16,7 +16,7 @@ export function useProjectList() {
       setLoading(true);
       try {
         const response: BoardResponse<ProjectProps> = await fetchProjects(
-          query,
+          keyword,
           filter,
           currentPage - 1,
           pageSize
@@ -29,7 +29,7 @@ export function useProjectList() {
         setLoading(false);
       }
     },
-    [query, filter]
+    [keyword, filter]
   );
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export function useProjectList() {
   }, [fetchProjectList]);
 
   return {
-    query,
+    keyword,
     filter,
     projectList,
     paginationInfo,

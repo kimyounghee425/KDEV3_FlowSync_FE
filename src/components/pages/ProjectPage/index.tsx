@@ -1,12 +1,15 @@
 "use client";
 
-import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, HStack, Table, Text } from "@chakra-ui/react";
 import { SegmentedControl } from "../../ui/segmented-control";
 import { Layers, List } from "lucide-react";
 import ProjectInfo from "../../common/ProjectInfo";
 import ProgressStepSection from "../../common/ProgressStepSection";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import BoardSearchSection from "../../common/BoardSearchSection";
+import CommonTable from "../../common/CommonTable";
+import { useProjectBoard } from "@/src/hook/useProjectBoard";
+import { CustomBox } from "../../common/CustomBox";
 
 interface ProjectPageProps {
   params: Promise<{ projectId: string }>;
@@ -19,12 +22,14 @@ export default function ProjectPage({ params }: ProjectPageProps) {
 
   const [projectId, setProjectId] = useState<string>();
 
-  const getProjectId = async () => {
+  const { boardList, loading } = useProjectBoard();
+
+  const getProjectId = useCallback(async () => {
     setProjectId((await params).projectId);
-  };
+  }, [params]);
   useEffect(() => {
     getProjectId();
-  }, []);
+  }, [getProjectId]);
 
   const projectInfo = {
     projectTitle: "커넥티드에듀",
@@ -93,36 +98,34 @@ export default function ProjectPage({ params }: ProjectPageProps) {
         boxShadow="md"
         mb="30px">
         <BoardSearchSection />
-        {/* <CommonTable
+        <CommonTable
           headerTitle={
             <Table.Row
               backgroundColor={"#eee"}
               css={{
                 "& > th": { textAlign: "center" },
               }}>
-              <Table.ColumnHeader>프로젝트명</Table.ColumnHeader>
-              <Table.ColumnHeader>고객사</Table.ColumnHeader>
-              <Table.ColumnHeader>개발사</Table.ColumnHeader>
-              <Table.ColumnHeader>프로젝트 상태</Table.ColumnHeader>
-              <Table.ColumnHeader>프로젝트 시작일</Table.ColumnHeader>
-              <Table.ColumnHeader>프로젝트 종료일</Table.ColumnHeader>
+              <Table.ColumnHeader>제목</Table.ColumnHeader>
+              <Table.ColumnHeader>작성일</Table.ColumnHeader>
+              <Table.ColumnHeader>게시글 상태</Table.ColumnHeader>
+              <Table.ColumnHeader>게시글 유형</Table.ColumnHeader>
             </Table.Row>
           }
-          data={projectList}
+          data={boardList}
           loading={loading}
           renderRow={(item) => (
             <>
-              <Table.Cell>{item.projectName}</Table.Cell>
-              <Table.Cell>{item.client}</Table.Cell>
-              <Table.Cell>{item.developer}</Table.Cell>
+              <Table.Cell>{item.title}</Table.Cell>
+              <Table.Cell>{item.regAt}</Table.Cell>
               <Table.Cell>
-                <CustomBox>{item.projectStatus}</CustomBox>
+                <CustomBox>{item.boardStatus}</CustomBox>
               </Table.Cell>
-              <Table.Cell>{item.startAt}</Table.Cell>
-              <Table.Cell>{item.closeAt}</Table.Cell>
+              <Table.Cell>
+                <CustomBox>{item.boardCategory}</CustomBox>
+              </Table.Cell>
             </>
           )}
-        /> */}
+        />
       </Box>
     </>
   );

@@ -1,20 +1,20 @@
 import { HStack, Input, Button, Box, Flex } from "@chakra-ui/react";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
-import SelectBox from "./SelectBox";
+import ProjectStatusSelectBox from "./ProjectStatusSelectBox";
 import { useProjectList } from "@/src/hook/useProjectList";
 import { useRouter } from "next/navigation";
 
 export default function ProjectsSearchSection() {
-  const [input, setInput] = useState<string>();
-  const { query, fetchProjectList } = useProjectList();
+  const [input, setInput] = useState<string>("");
+  const { keyword, fetchProjectList } = useProjectList();
   const router = useRouter();
 
   // 검색 버튼을 클릭하거나 엔터 입력시 데이터를 가져오는 함수
   const onSubmit = () => {
-    if (!input || query === input) return;
+    if (!input || keyword === input) return;
     // URL 업데이트
     const params = new URLSearchParams(window.location.search);
-    params.set("query", input); // 검색어 추가
+    params.set("keyword", input); // 검색어 추가
     router.push(`?${params.toString()}`);
 
     // 데이터 다시 가져오기
@@ -45,7 +45,7 @@ export default function ProjectsSearchSection() {
     <Box>
       <Flex gap={4} alignItems="center" justifyContent="end">
         <HStack>
-          <SelectBox />
+          <ProjectStatusSelectBox />
           <Input
             placeholder="프로젝트명 검색"
             size="md"
