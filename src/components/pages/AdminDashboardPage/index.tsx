@@ -1,5 +1,4 @@
 "use client";
-
 import { Heading, Stack, Table } from "@chakra-ui/react";
 import ProjectStatusCards from "@/src/components/common/ProjectsStatusCards";
 import Head from "next/head";
@@ -9,6 +8,7 @@ import { CustomBox } from "../../common/CustomBox";
 import Pagination from "../../common/Pagination";
 import { useProjectList } from "@/src/hook/useProjectList";
 import { useRouter } from "next/navigation";
+import { Suspense } from "react";
 
 const STATUS_LABELS: Record<string, string> = {
   IN_PROGRESS: "진행중",
@@ -16,10 +16,17 @@ const STATUS_LABELS: Record<string, string> = {
   COMPLETED: "완료",
 };
 
-export default function ProjectsPageC() {
+export default function AdminDashboardPage() {
+  return (
+    <Suspense>
+      <ProjectsPageContent />
+    </Suspense>
+  );
+}
+
+function ProjectsPageContent() {
   const { projectList, paginationInfo, loading, fetchProjectList } = useProjectList();
   const router = useRouter();
-
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(window.location.search);
@@ -30,7 +37,6 @@ export default function ProjectsPageC() {
     // 데이터를 다시 가져오기
     fetchProjectList(page, paginationInfo?.pageSize || 5);
   };
-
   return (
     <>
       <Head>
@@ -61,7 +67,7 @@ export default function ProjectsPageC() {
               <Table.ColumnHeader>프로젝트 종료일</Table.ColumnHeader>
             </Table.Row>
           }
-          projectList={projectList}
+          data={projectList}
           loading={loading}
           renderRow={project => (
             <>

@@ -1,10 +1,8 @@
 "use client";
 
-import { Box, Flex } from "@chakra-ui/react";
-import { Loading } from "./Loading";
-import { useProgressData } from "@/src/hook/useProgressData";
+import { Flex } from "@chakra-ui/react";
 import ProgressStepButton from "./ProgressStepButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface ProgressStepSectionProps {
   projectId: string;

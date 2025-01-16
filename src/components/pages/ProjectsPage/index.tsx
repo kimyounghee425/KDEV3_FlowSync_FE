@@ -9,6 +9,7 @@ import { CustomBox } from "../../common/CustomBox";
 import Pagination from "../../common/Pagination";
 import { useProjectList } from "@/src/hook/useProjectList";
 import { useRouter } from "next/navigation";
+import { Suspense } from "react";
 
 const STATUS_LABELS: Record<string, string> = {
   IN_PROGRESS: "진행중",
@@ -16,7 +17,15 @@ const STATUS_LABELS: Record<string, string> = {
   COMPLETED: "완료",
 };
 
-export default function ProjectsPageC() {
+export default function projectsPage() {
+  return (
+    <Suspense>
+      <ProjectsPageContent />
+    </Suspense>
+  );
+}
+
+function ProjectsPageContent() {
   const { projectList, paginationInfo, loading, fetchProjectList } =
     useProjectList();
   const router = useRouter();
@@ -64,7 +73,7 @@ export default function ProjectsPageC() {
               <Table.ColumnHeader>프로젝트 종료일</Table.ColumnHeader>
             </Table.Row>
           }
-          projectList={projectList}
+          data={projectList}
           loading={loading}
           renderRow={(project) => (
             <>

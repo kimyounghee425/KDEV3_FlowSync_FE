@@ -22,8 +22,12 @@ function Header() {
           throw new Error("User 정보가 로컬스토리지에 없습니다.");
         }
         const userObject = JSON.parse(userData);
-        const foundMember = membersData.data.find(member => member.id === userObject.id);
-        const foundOrg = orgsData.data.find(org => org.id === foundMember?.org_id);
+        const foundMember = membersData.data.find(
+          (member) => member.id === userObject.id
+        );
+        const foundOrg = orgsData.data.find(
+          (org) => org.id === foundMember?.org_id
+        );
         if (foundMember && foundOrg) {
           setUser({
             id: foundMember.id,
@@ -46,7 +50,14 @@ function Header() {
   }, []);
 
   return (
-    <Flex as="nav" align="center" justify="space-between" wrap="wrap" padding="1rem" backgroundColor="gray.200" boxShadow="md">
+    <Flex
+      as="nav"
+      align="center"
+      justify="space-between"
+      wrap="wrap"
+      padding="1rem"
+      backgroundColor="gray.200"
+      boxShadow="md">
       <Flex align="center" mr={5}>
         <Link href="/">
           <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
@@ -58,7 +69,15 @@ function Header() {
       <Drawer />
 
       {/* Avatar */}
-      {user && <Profile id={user.id} userName={user.userName} orgName={user.orgName} jobRole={user.jobRole} profile_image_url={user.profile_image_url} isSidebar={false} isAdmin={user.isAdmin} />}
+      {user && (
+        <Profile
+          id={user.id}
+          userName={user.userName}
+          orgName={user.orgName}
+          jobRole={user.jobRole}
+          profile_image_url={user.profile_image_url}
+        />
+      )}
     </Flex>
   );
 }

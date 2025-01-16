@@ -1,26 +1,26 @@
 import { useSearchParams } from "next/navigation";
-import { BoardResponse, PaginationInfo, ProjectProps } from "../types";
+import {
+  BoardResponseType,
+  PaginationInfoType,
+  ProjectPropsType,
+} from "../types";
 import { useCallback, useEffect, useState } from "react";
 import { fetchProjects } from "../api/projects";
 
 export function useProjectList() {
   const searchParams = useSearchParams();
-  const [projectList, setProjectList] = useState<ProjectProps[]>([]);
-  const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>();
+  const [projectList, setProjectList] = useState<ProjectPropsType[]>([]);
+  const [paginationInfo, setPaginationInfo] = useState<PaginationInfoType>();
   const [loading, setLoading] = useState(false);
-  const query = searchParams.get("query") || "";
+  const keyword = searchParams.get("keyword") || "";
   const filter = searchParams.get("filter") || "";
 
   const fetchProjectList = useCallback(
     async (currentPage: number = 1, pageSize: number = 5) => {
       setLoading(true);
       try {
-        const response: BoardResponse<ProjectProps> = await fetchProjects(
-          query,
-          filter,
-          currentPage - 1,
-          pageSize
-        );
+        const response: BoardResponseType<ProjectPropsType> =
+          await fetchProjects(keyword, filter, currentPage - 1, pageSize);
         setProjectList(response.data);
         setPaginationInfo(response.meta);
       } catch (error) {
@@ -29,7 +29,7 @@ export function useProjectList() {
         setLoading(false);
       }
     },
-    [query, filter]
+    [keyword, filter]
   );
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export function useProjectList() {
   }, [fetchProjectList]);
 
   return {
-    query,
+    keyword,
     filter,
     projectList,
     paginationInfo,
