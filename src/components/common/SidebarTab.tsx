@@ -36,7 +36,7 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
   const userMenuRender = userMenuItems.map((item) => {
     return (
       <CardTitle key={item.id} mb="2" p="1">
-        <Link href={`/projects/${item.id}`}>{item.projectName}</Link>
+        <Link href={`/projects/${item.id}/tasks`}>{item.projectName}</Link>
       </CardTitle>
     );
   });
