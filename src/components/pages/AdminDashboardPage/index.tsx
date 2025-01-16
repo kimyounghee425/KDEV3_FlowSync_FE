@@ -1,5 +1,4 @@
 "use client";
-
 import { Heading, Stack, Table } from "@chakra-ui/react";
 import ProjectStatusCards from "@/src/components/common/ProjectsStatusCards";
 import Head from "next/head";
@@ -17,7 +16,7 @@ const STATUS_LABELS: Record<string, string> = {
   COMPLETED: "완료",
 };
 
-export default function ProjectsPage() {
+export default function AdminDashboardPage() {
   return (
     <Suspense>
       <ProjectsPageContent />
@@ -26,10 +25,8 @@ export default function ProjectsPage() {
 }
 
 function ProjectsPageContent() {
-  const { projectList, paginationInfo, loading, fetchProjectList } =
-    useProjectList();
+  const { projectList, paginationInfo, loading, fetchProjectList } = useProjectList();
   const router = useRouter();
-
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(window.location.search);
@@ -40,17 +37,13 @@ function ProjectsPageContent() {
     // 데이터를 다시 가져오기
     fetchProjectList(page, paginationInfo?.pageSize || 5);
   };
-
   return (
     <>
       <Head>
         <title>FlowSync</title>
         <meta property="og:image" content="@/public/FlowSyncLogo.jpg" />
         <meta property="og:title" content="FlowSync" />
-        <meta
-          property="og:description"
-          content="FlowSync로 프로젝트 관리를 한번에"
-        />
+        <meta property="og:description" content="FlowSync로 프로젝트 관리를 한번에" />
       </Head>
       <ProjectStatusCards title={"프로젝트 현황"} />
       <Stack width="full">
@@ -64,7 +57,8 @@ function ProjectsPageContent() {
               backgroundColor={"#eee"}
               css={{
                 "& > th": { textAlign: "center" },
-              }}>
+              }}
+            >
               <Table.ColumnHeader>프로젝트명</Table.ColumnHeader>
               <Table.ColumnHeader>고객사</Table.ColumnHeader>
               <Table.ColumnHeader>개발사</Table.ColumnHeader>
@@ -75,15 +69,13 @@ function ProjectsPageContent() {
           }
           data={projectList}
           loading={loading}
-          renderRow={(project) => (
+          renderRow={project => (
             <>
               <Table.Cell>{project.name}</Table.Cell>
               <Table.Cell>{project.customerName}</Table.Cell>
               <Table.Cell>{project.developerName}</Table.Cell>
               <Table.Cell>
-                <CustomBox>
-                  {STATUS_LABELS[project.status] || "알 수 없음"}
-                </CustomBox>
+                <CustomBox>{STATUS_LABELS[project.status] || "알 수 없음"}</CustomBox>
               </Table.Cell>
               <Table.Cell>{project.startAt}</Table.Cell>
               <Table.Cell>{project.closeAt}</Table.Cell>
