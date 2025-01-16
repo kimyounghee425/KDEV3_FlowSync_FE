@@ -116,12 +116,13 @@ const Form = ({
     };
   }, []);
 
+  // 서버에 저장
   const handleSave = async () => {
     if (editorRef.current) {
       try {
         const savedData = await editorRef.current.save();
 
-        await axiosInstance.post("/save-text", {
+        await axiosInstance.post("/post", {
           content: savedData.blocks,
           author,
           createdDate,
@@ -158,7 +159,7 @@ const Form = ({
           flex={"1"}
         >
           <Text mb={2}>작성 일시</Text>
-          <Input type="date" value={createdDate} readOnly />
+          <Input type="date" value={createdDate.slice(0, 10)} readOnly />
         </Box>
       </Flex>
 
