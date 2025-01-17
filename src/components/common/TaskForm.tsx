@@ -111,14 +111,6 @@ const Form = ({
       try {
         const savedData = await editorRef.current.save();
 
-        // const uploadedFiles = await Promise.all(
-        //   files.map(async (file) => {
-        //     if (file) {
-        //       return await uploadFile(file);
-        //     }
-        //     return null;
-        //   })
-        // );
         const requestData = {
           title: "게시글 제목입니다.",
           content: savedData.blocks.map((block) => {
