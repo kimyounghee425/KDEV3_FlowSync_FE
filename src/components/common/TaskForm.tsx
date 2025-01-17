@@ -25,17 +25,6 @@ const Form = ({
     setFiles([...files, null]);
   };
 
-  // 파일 업데이트
-  // const handleFileChange = (
-  //   index: number,
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   const newFiles = [...files];
-  //   const file = event.target.files ? event.target.files[0] : null;
-  //   newFiles[index] = file;
-  //   setFiles(newFiles);
-  // };
-
   // 특정 파일 제거
   const handleRemoveFile = (index: number) => {
     const newFiles = files.filter((_, i) => i !== index);
@@ -141,7 +130,7 @@ const Form = ({
             } else if (block.type === "image") {
               return {
                 type: "image",
-                src: block.data.file.url,
+                data: { src: block.data.file.url },
               };
             }
           }),
