@@ -1,14 +1,14 @@
 import axiosInstance from "./axiosInstance";
-import { BoardResponseType } from "@/src/types";
 import { MemberProps } from "@/src/types/member";
+import { MemberResponseType } from "../types/api";
 
 export const fetchMembers = async (
   query: string = "", // 검색어
   filter: string = "", // 필터링 값
   currentPage: number,
   pageSize: number
-): Promise<BoardResponseType<MemberProps>> => {
-  const response = await axiosInstance.get("/admin/members", {
+): Promise<MemberResponseType<{ members: MemberProps[] }>> => {
+  const response = await axiosInstance.get("/admins/members", {
     params: { query, filter, currentPage, pageSize },
   });
   return response.data;
@@ -40,5 +40,6 @@ export const fetchMemberList = async (
   const response = await axiosInstance.get(`/admin/members/${memberId}`, {
     params: { query, boardStatus, boardCategory, currentPage, pageSize },
   });
+
   return response.data;
 };

@@ -1,13 +1,14 @@
 export interface MemberProps {
-  id: string; // 회원 ID
-  organizationId: string; // 회원 ID
   email: string; // 회원 이메일
-  name: string; // 회원 이름
-  role: string; // Enum: [ ADMIN, MEMBER ]
-  phoneNum: string;
+  id: string; // 회원 ID
+  introduction: string;
   jobRole: string;
   jobTitle: string;
+  name: string; // 회원 이름
+  organizationId: string; // 회원 ID
+  phoneNum: string;
+  regAt: string;
+  remark: string;
+  role: string; // Enum: [ ADMIN, MEMBER ]
   status: string; // Enum: [ ACTIVE, INACTIVE ]
-  loginFailCount: number;
-  isLoginLockedYn: string;
 }
