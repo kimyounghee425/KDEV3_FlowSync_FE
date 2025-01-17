@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import MembersSearchSection from "../../common/MembersSearchSection";
 import { useMemberList } from "@/src/hook/useMemberList";
 import MemberTable from "../../common/MemberTable";
+import { Suspense } from "react";
 
 const STATUS_LABELS: Record<string, string> = {
   ING_WORK: "근무 O",
@@ -15,7 +16,16 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export default function AdminMembersPage() {
-  const { memberList, paginationInfo, loading, fetchMemberList } = useMemberList();
+  return (
+    <Suspense>
+      <AdminMembersPageContent />
+    </Suspense>
+  );
+}
+
+function AdminMembersPageContent() {
+  const { memberList, paginationInfo, loading, fetchMemberList } =
+    useMemberList();
   const router = useRouter();
 
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
@@ -42,8 +52,7 @@ export default function AdminMembersPage() {
               backgroundColor={"#eee"}
               css={{
                 "& > th": { textAlign: "center" },
-              }}
-            >
+              }}>
               <Table.ColumnHeader>회원명</Table.ColumnHeader>
               <Table.ColumnHeader>소속 업체명</Table.ColumnHeader>
               <Table.ColumnHeader>직무</Table.ColumnHeader>
@@ -54,7 +63,7 @@ export default function AdminMembersPage() {
           }
           memberList={memberList}
           loading={loading}
-          renderRow={member => (
+          renderRow={(member) => (
             <>
               <Table.Cell>{member.name}</Table.Cell>
               <Table.Cell>{member.organizationId}</Table.Cell>
@@ -62,7 +71,9 @@ export default function AdminMembersPage() {
               <Table.Cell>{member.email}</Table.Cell>
               <Table.Cell>{member.phoneNum}</Table.Cell>
               <Table.Cell>
-                <CustomBox>{STATUS_LABELS[member.status] || "알 수 없음"}</CustomBox>
+                <CustomBox>
+                  {STATUS_LABELS[member.status] || "알 수 없음"}
+                </CustomBox>
               </Table.Cell>
             </>
           )}

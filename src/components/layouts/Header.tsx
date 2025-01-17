@@ -22,17 +22,18 @@ function Header() {
           throw new Error("User 정보가 로컬스토리지에 없습니다.");
         }
         const userObject = JSON.parse(userData);
+        if (!userObject.id || !userObject.name || !userObject.org_name || !userObject.job_role || !userObject.profile_image_url) {
+          throw new Error("User 데이터 형식이 올바르지 않습니다.");
+        }
         setUser({
-          id: userObject.id,
-          userName: userObject.name,
-          orgId: userObject.org_id,
-          jobRole: userObject.job_role,
-          profile_image_url: userObject.profile_image_url, // 기본값 제공
+          id: userObject.id || null,
+          userName: userObject.name || null,
+          orgName: userObject.org_name || null,
+          jobRole: userObject.job_role || null,
+          profile_image_url: userObject.profile_image_url || null,
         });
       } catch (err: any) {
         setError(err.message || "An unknown error occurred");
-      } finally {
-        setError(null); // 에러 메시지 초기화
       }
     };
     getUserData();

@@ -9,20 +9,20 @@ interface ProgressStepSectionProps {
   projectId: string;
 }
 
+const progressData = [
+  { id: "1", title: "전체", value: "", count: 32 },
+  { id: "2", title: "요구사항정의", value: "CONTRACT", count: 6 },
+  { id: "3", title: "화면설계", value: "INPROGRESS", count: 6 },
+  { id: "4", title: "디자인", value: "COMPLETED", count: 8 },
+  { id: "5", title: "퍼블리싱", value: "MAINTENANCE", count: 6 },
+  { id: "6", title: "개발", value: "PAUSED", count: 6 },
+  { id: "7", title: "검수", value: "DELETED", count: 0 },
+];
+
 const ProgressStepSection: React.FC<ProgressStepSectionProps> = ({
   projectId,
 }) => {
   const { progressStep, fetchBoardList } = useProjectBoard();
-
-  const progressData = [
-    { id: "1", title: "전체", value: "", count: 32 },
-    { id: "2", title: "요구사항정의", value: "CONTRACT", count: 6 },
-    { id: "3", title: "화면설계", value: "INPROGRESS", count: 6 },
-    { id: "4", title: "디자인", value: "COMPLETED", count: 8 },
-    { id: "5", title: "퍼블리싱", value: "MAINTENANCE", count: 6 },
-    { id: "6", title: "개발", value: "PAUSED", count: 6 },
-    { id: "7", title: "검수", value: "DELETED", count: 0 },
-  ];
 
   const [selectedButtonId, setSelectedButtonId] = useState<string>(
     progressData[0].id

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { Provider } from "@/src/components/ui/provider";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import Header from "@/src/components/layouts/Header";
 import Sidebar from "@/src/components/layouts/Sidebar";
@@ -11,12 +10,17 @@ export const metadata: Metadata = {
   description: "The World Best PMS Service",
 };
 
-const RootLayout = (props: { children: React.ReactNode }) => {
+const HomeLayout = (props: { children: React.ReactNode }) => {
   const { children } = props;
   return (
-    <Provider>
+    <>
       <Header />
-      <Container maxWidth={"100%"} display="flex" flexDirection="row" margin={0} padding={0}>
+      <Container
+        maxWidth={"100%"}
+        display="flex"
+        flexDirection="row"
+        margin={0}
+        padding={0}>
         <SidebarProvider>
           <Sidebar />
         </SidebarProvider>
@@ -26,8 +30,8 @@ const RootLayout = (props: { children: React.ReactNode }) => {
           </Box>
         </Flex>
       </Container>
-    </Provider>
+    </>
   );
 };
 
-export default RootLayout;
+export default HomeLayout;

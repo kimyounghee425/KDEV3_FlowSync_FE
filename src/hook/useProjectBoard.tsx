@@ -8,7 +8,7 @@ import { ProjectPostType } from "../types";
 
 export function useProjectBoard() {
   const searchParams = useSearchParams(); // URL 쿼리스트링 추출
-  const { projectId } = useParams(); // 동적 경로 추출
+  const { projectId, taskId } = useParams(); // 동적 경로 추출
 
   const [boardList, setBoardList] = useState<ProjectPostType[]>([]);
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfoType>();
@@ -56,6 +56,7 @@ export function useProjectBoard() {
     boardList,
     paginationInfo,
     loading,
+    taskId,
     fetchBoardList,
   };
 }
