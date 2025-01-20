@@ -4,27 +4,27 @@ import { ReactNode } from "react";
 import { Table } from "@chakra-ui/react";
 import { SkeletonText } from "@/src/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import { MemberProps } from "@/src/types/member";
 
-interface Member {
-  name: string;
-  id: string;
-  [key: string]: any; // 추가 필드가 있을 경우를 위해 설정
-}
+// interface Member {
+//   [members: string]: MemberProps; // 추가 필드가 있을 경우를 위해 설정
+// }
 
 interface MemberTableProps {
   headerTitle: ReactNode;
-  memberList: Member[]; // `Member` 타입 사용
+  memberList: MemberProps[]; // `Member` 타입 사용
   loading: boolean;
-  renderRow: (item: Member) => ReactNode; // `Member` 타입 사용
+  renderRow: (item: MemberProps) => ReactNode; // `Member` 타입 사용
 }
 
 const MemberTable = ({ headerTitle, memberList, loading, renderRow }: MemberTableProps) => {
   const router = useRouter();
 
   const handleRowClick = (id: string) => {
-    router.push(`/members/${id}`);
+    router.push(`/admins/members/${id}`);
   };
 
+  console.log("memberList는 과연", memberList);
   return (
     <Table.Root size="sm" interactive>
       <Table.Header>{headerTitle}</Table.Header>
@@ -36,7 +36,7 @@ const MemberTable = ({ headerTitle, memberList, loading, renderRow }: MemberTabl
               <SkeletonText noOfLines={5} gap="4" />
             </Table.Cell>
           </Table.Row>
-        ) : Array.isArray(memberList) && memberList.length > 0 ? (
+        ) : (
           memberList.map(member => (
             <Table.Row
               key={member.id}
@@ -53,12 +53,6 @@ const MemberTable = ({ headerTitle, memberList, loading, renderRow }: MemberTabl
               {renderRow(member)}
             </Table.Row>
           ))
-        ) : (
-          <Table.Row>
-            <Table.Cell colSpan={7} textAlign="center">
-              데이터가 없습니다.
-            </Table.Cell>
-          </Table.Row>
         )}
       </Table.Body>
     </Table.Root>

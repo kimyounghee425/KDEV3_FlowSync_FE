@@ -132,7 +132,7 @@ const TaskContent = ({ task }: { task: Task }) => {
         <Text fontWeight="bold" mb={2}>
           첨부 파일
         </Text>
-        <VStack align="start">{renderFiles(task.file)}</VStack>
+        {/* <VStack align="start">{renderFiles(task.file)}</VStack> */}
       </Box>
     </Box>
   );

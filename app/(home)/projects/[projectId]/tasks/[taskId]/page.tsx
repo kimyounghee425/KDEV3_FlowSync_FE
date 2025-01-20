@@ -7,7 +7,7 @@ import TaskContent from "@/src/components/common/TaskContent";
 import TaskComments from "@/src/components/common/TaskComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/backButton";
-import axiosInstance from "@/src/api/axiosInstance";
+import axiosInstance from "@/src/api/axiosInstance"; 
 import { Task, ApiResponse } from "@/src/types/taskTypes";
 
 // fetchTaskData 함수
@@ -16,7 +16,7 @@ const fetchTaskData = async (
   taskId: string
 ): Promise<Task | null> => {
   const response = await axiosInstance.get<{ code: number; data: Task }>(
-    `/projects/${projectId}/tasks/${taskId}`
+    `/posts/${taskId}`
   );
   if (response.data.code === 200) {
     return response.data.data;
@@ -37,12 +37,21 @@ export default function ProjectTaskPage() {
   useEffect(() => {
     const loadTask = async () => {
       try {
-        const data = await fetchTaskData(projectId, taskId);
+        const data = await fetchTaskData(projectId, taskId)
         // 검증. 받아온 json 의 projectid, id 가 주소창 값과 일치하는지 확인.
-        if (data &&
-          data.projectid.toString() === projectId &&
+        if (
+          data &&
+          // data.projectid.toString() === projectId &&
           data.id.toString() === taskId
         ) {
+          data.content = [
+            {
+              type: "paragraph",
+              data: Array.isArray(data.content)
+                ? data.content.join(" ")
+                : data.content,
+            },
+          ];
           setTask(data); // JSON 데이터를 상태로 저장
         } else {
           throw new Error(
@@ -81,8 +90,7 @@ export default function ProjectTaskPage() {
       p={6}
       borderWidth={1}
       borderRadius="lg"
-      boxShadow="md"
-    >
+      boxShadow="md">
       <BackButton />
 
       {/* 게시글 내용 */}

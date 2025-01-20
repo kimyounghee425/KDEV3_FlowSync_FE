@@ -9,16 +9,6 @@ interface StatusCardsProps {
 }
 
 const StatusCards: React.FC<StatusCardsProps> = ({ title }) => {
-  const data = [
-    // 진행단계별 글 건수
-    { id: 1, title: "전체", count: 28 }, // 전체
-    { id: 2, title: "요구사항정의", count: 6 }, // 요구사항정의
-    { id: 3, title: "화면설계", count: 6 }, // 화면설계
-    { id: 4, title: "디자인", count: 8 }, // 디자인
-    { id: 5, title: "퍼블리싱", count: 6 }, // 퍼블리싱
-    { id: 6, title: "개발", count: 6 }, // 개발
-    { id: 7, title: "검수", count: 0 }, // 검수
-  ];
   // 아이콘 배열 정의
   const icons = [
     <Folder key="1" size={40} color="gray" />,
@@ -30,27 +20,11 @@ const StatusCards: React.FC<StatusCardsProps> = ({ title }) => {
 
   // 데이터 매핑
   const mappedData = [
-    { count: 28, label: "전체", icon: icons[0] },
-    {
-      count: 6,
-      label: "계약",
-      icon: icons[1],
-    },
-    {
-      count: 6,
-      label: "진행중",
-      icon: icons[2],
-    },
-    {
-      count: 8,
-      label: "납품완료",
-      icon: icons[3],
-    },
-    {
-      count: 6,
-      label: "하자보수",
-      icon: icons[4],
-    },
+    { id: 1, count: 28, label: "전체", icon: icons[0] },
+    { id: 2, count: 6, label: "계약", icon: icons[1] },
+    { id: 3, count: 8, label: "진행중", icon: icons[2] },
+    { id: 4, count: 8, label: "납품완료", icon: icons[3] },
+    { id: 5, count: 6, label: "하자보수", icon: icons[4] },
   ];
 
   // const [data, setData] = useState<
@@ -131,9 +105,9 @@ const StatusCards: React.FC<StatusCardsProps> = ({ title }) => {
         borderColor="gray.200"
         borderRadius="lg"
         boxShadow="md">
-        {mappedData.map((item, index) => (
+        {mappedData.map((item) => (
           <StatusCard
-            key={index}
+            key={item.id}
             count={item.count}
             label={item.label}
             icon={item.icon}

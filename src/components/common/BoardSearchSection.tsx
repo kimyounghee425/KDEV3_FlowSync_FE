@@ -17,7 +17,7 @@ export default function ProjectsSearchSection() {
     if (!input || keyword === input) return;
     // URL 업데이트
     const params = new URLSearchParams(window.location.search);
-    params.set("query", input); // 검색어 추가
+    params.set("keyword", input); // 검색어 추가
     router.push(`?${params.toString()}`);
 
     // 데이터 다시 가져오기

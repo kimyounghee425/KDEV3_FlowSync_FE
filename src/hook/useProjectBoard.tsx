@@ -8,7 +8,7 @@ import { ProjectPostType } from "../types";
 
 export function useProjectBoard() {
   const searchParams = useSearchParams(); // URL 쿼리스트링 추출
-  const { projectId } = useParams(); // 동적 경로 추출
+  const { projectId, taskId } = useParams(); // 동적 경로 추출
 
   const [boardList, setBoardList] = useState<ProjectPostType[]>([]);
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfoType>();
@@ -17,6 +17,7 @@ export function useProjectBoard() {
   const keyword = searchParams.get("keyword") || "";
   const boardCategory = searchParams.get("boardCategory") || "";
   const boardStatus = searchParams.get("boardStatus") || "";
+  const progressStep = searchParams.get("progressStep") || "";
 
   const fetchBoardList = useCallback(
     async (currentPage: number = 1, pageSize: number = 5) => {
@@ -26,6 +27,7 @@ export function useProjectBoard() {
           await fetchProjectBoard(
             projectId as string,
             keyword,
+            progressStep,
             boardStatus,
             boardCategory,
             currentPage - 1,
@@ -39,7 +41,7 @@ export function useProjectBoard() {
         setLoading(false);
       }
     },
-    [projectId, keyword, boardStatus, boardCategory]
+    [projectId, keyword, progressStep, boardStatus, boardCategory]
   );
 
   useEffect(() => {
@@ -48,11 +50,14 @@ export function useProjectBoard() {
 
   return {
     keyword,
+    progressStep,
     boardStatus,
     boardCategory,
     boardList,
     paginationInfo,
     loading,
+    projectId,
+    taskId,
     fetchBoardList,
   };
 }
