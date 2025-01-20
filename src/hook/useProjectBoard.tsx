@@ -56,6 +56,7 @@ export function useProjectBoard() {
     boardList,
     paginationInfo,
     loading,
+    projectId,
     taskId,
     fetchBoardList,
   };

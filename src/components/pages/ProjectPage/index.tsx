@@ -21,18 +21,18 @@ export default function ProjectPage({ params }: ProjectPageProps) {
 
   // if (loading || !projectInfo) return <Loading />;
 
-  const [projectId, setProjectId] = useState<string>();
+  // const [projectId, setProjectId] = useState<string>();
 
-  const { boardList, taskId, loading } = useProjectBoard();
+  const { boardList, projectId, taskId, loading } = useProjectBoard();
 
   const router = useRouter();
 
-  const getProjectId = useCallback(async () => {
-    setProjectId((await params).projectId);
-  }, [params]);
-  useEffect(() => {
-    getProjectId();
-  }, [getProjectId]);
+  // const getProjectId = useCallback(async () => {
+  //   setProjectId((await params).projectId);
+  // }, [params]);
+  // useEffect(() => {
+  //   getProjectId();
+  // }, [getProjectId]);
 
   const projectInfo = {
     projectTitle: "커넥티드에듀",
@@ -47,7 +47,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
   };
 
   const handleRowClick = (id: number) => {
-    router.push(`/projects/${taskId}/tasks/${id}`);
+    router.push(`/projects/${projectId}/tasks/${id}`);
   };
 
   return (
