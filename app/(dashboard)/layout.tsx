@@ -1,5 +1,5 @@
+import { ReactNode } from "react";
 import type { Metadata } from "next";
-
 import { Box, Container, Flex } from "@chakra-ui/react";
 import Header from "@/src/components/layouts/Header";
 import Sidebar from "@/src/components/layouts/Sidebar";
@@ -10,17 +10,11 @@ export const metadata: Metadata = {
   description: "The World Best PMS Service",
 };
 
-const HomeLayout = (props: { children: React.ReactNode }) => {
-  const { children } = props;
+export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <Header />
-      <Container
-        maxWidth={"100%"}
-        display="flex"
-        flexDirection="row"
-        margin={0}
-        padding={0}>
+      <Container maxWidth={"100%"} display="flex" flexDirection="row" margin={0} padding={0}>
         <SidebarProvider>
           <Sidebar />
         </SidebarProvider>
@@ -32,6 +26,4 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
       </Container>
     </>
   );
-};
-
-export default HomeLayout;
+}

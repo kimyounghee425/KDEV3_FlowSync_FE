@@ -1,23 +1,15 @@
 "use client";
 
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
+import { ReactNode, useState, useEffect, useContext, createContext } from "react";
 
 interface SidebarContextProps {
   projectStatus: string;
   setProjectStatus: (value: string) => void;
 }
 
-const SidebarContext = createContext<SidebarContextProps | undefined>(
-  undefined
-);
+const SidebarContext = createContext<SidebarContextProps | undefined>(undefined);
 
-export const SidebarProvider = ({ children }: { children: ReactNode }) => {
+export function SidebarProvider({ children }: { children: ReactNode }) {
   const [projectStatus, setProjectStatus] = useState<string>("진행중 프로젝트");
 
   useEffect(() => {
@@ -31,18 +23,13 @@ export const SidebarProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("projectStatus", projectStatus);
   }, [projectStatus]);
 
+  return <SidebarContext.Provider value={{ projectStatus, setProjectStatus }}>{children}</SidebarContext.Provider>;
+}
 
-  return (
-    <SidebarContext.Provider value={{ projectStatus, setProjectStatus }}>
-      {children}
-    </SidebarContext.Provider>
-  );
-};
-
-export const useSidebar = () => {
+export function useSidebar() {
   const context = useContext(SidebarContext);
   if (!context) {
     throw new Error("useSidebar must be used within a SidebarProvider");
   }
   return context;
-};
+}

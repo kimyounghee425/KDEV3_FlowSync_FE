@@ -1,3 +1,3 @@
-import AdminOrgsPage from "@/src/components/pages/AdminOrgsPage";
+import AdminOrganizationsPage from "@/src/components/pages/AdminOrganizationsPage";
 
-export default AdminOrgsPage;
+export default AdminOrganizationsPage;

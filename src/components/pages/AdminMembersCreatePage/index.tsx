@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function AdminCreateMemberPage() {
+export default function AdminMembersCreatePage() {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 

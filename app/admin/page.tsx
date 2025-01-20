@@ -1,3 +1,3 @@
-import DashBoardPage from "@/src/components/pages/AdminDashboardPage";
+import AdminPage from "@/src/components/pages/AdminPage";
 
-export default DashBoardPage;
+export default AdminPage;
