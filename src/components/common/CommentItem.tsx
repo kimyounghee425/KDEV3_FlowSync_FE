@@ -46,7 +46,7 @@ const CommentItem = ({ comment }: CommentProps) => {
   const handleReplyClick = () => {
     if (replyingTo && replyContent.trim() !== "") {
       const confirmCancel = window.confirm(
-        "이미 입력된 답글 내용을 취소 하겠습니까?"
+        "이미 입력된 답글 내용을 취소 하겠습니까?",
       );
       if (!confirmCancel) return;
     }
@@ -64,7 +64,7 @@ const CommentItem = ({ comment }: CommentProps) => {
     console.log(`Edit button clicked for comment with ID: ${id}`);
     // 수정 로직 추가
   };
-  
+
   const handleDelete = (id: number) => {
     console.log(`Delete button clicked for comment with ID: ${id}`);
     // 삭제 로직 추가

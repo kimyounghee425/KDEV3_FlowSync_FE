@@ -9,7 +9,9 @@ interface RedirectContextProps {
 }
 
 // Context 생성: 기본값은 undefined로 설정하여 사용 전 오류를 감지
-export const RedirectContext = createContext<RedirectContextProps | undefined>(undefined);
+export const RedirectContext = createContext<RedirectContextProps | undefined>(
+  undefined,
+);
 
 // Provider 컴포넌트: 하위 컴포넌트에 리다이렉트 경로를 제공
 export function RedirectProvider({ children }: { children: ReactNode }) {
@@ -26,7 +28,9 @@ export function RedirectProvider({ children }: { children: ReactNode }) {
 export function useRedirectContext() {
   const context = useContext(RedirectContext);
   if (!context) {
-    throw new Error("useRedirectContext must be used within a RedirectProvider");
+    throw new Error(
+      "useRedirectContext must be used within a RedirectProvider",
+    );
   }
   return context;
 }

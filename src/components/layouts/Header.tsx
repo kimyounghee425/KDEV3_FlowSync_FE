@@ -16,7 +16,13 @@ export default function Header() {
         if (!userData) throw new Error("User 정보가 로컬스토리지에 없습니다.");
 
         const userObject = JSON.parse(userData);
-        if (typeof userObject.id === "number" && typeof userObject.name === "string" && typeof userObject.org_name === "string" && typeof userObject.job_role === "string" && typeof userObject.profile_image_url === "string") {
+        if (
+          typeof userObject.id === "number" &&
+          typeof userObject.name === "string" &&
+          typeof userObject.org_name === "string" &&
+          typeof userObject.job_role === "string" &&
+          typeof userObject.profile_image_url === "string"
+        ) {
           setUser({
             id: userObject.id,
             userName: userObject.name,
@@ -36,7 +42,15 @@ export default function Header() {
   }, []);
 
   return (
-    <Flex as="nav" align="center" justify="space-between" wrap="wrap" padding="1rem" backgroundColor="gray.200" boxShadow="md">
+    <Flex
+      as="nav"
+      align="center"
+      justify="space-between"
+      wrap="wrap"
+      padding="1rem"
+      backgroundColor="gray.200"
+      boxShadow="md"
+    >
       <Flex align="center" mr={5}>
         <Link href="/">
           <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
@@ -46,7 +60,15 @@ export default function Header() {
       </Flex>
       <Drawer />
       {/* Avatar */}
-      {user && <Profile id={user.id} userName={user.userName} orgName={user.orgName} jobRole={user.jobRole} profile_image_url={user.profile_image_url} />}{" "}
+      {user && (
+        <Profile
+          id={user.id}
+          userName={user.userName}
+          orgName={user.orgName}
+          jobRole={user.jobRole}
+          profile_image_url={user.profile_image_url}
+        />
+      )}{" "}
     </Flex>
   );
 }

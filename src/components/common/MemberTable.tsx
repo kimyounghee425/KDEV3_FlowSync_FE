@@ -17,7 +17,12 @@ interface MemberTableProps {
   renderRow: (item: MemberProps) => ReactNode; // `Member` 타입 사용
 }
 
-const MemberTable = ({ headerTitle, memberList, loading, renderRow }: MemberTableProps) => {
+const MemberTable = ({
+  headerTitle,
+  memberList,
+  loading,
+  renderRow,
+}: MemberTableProps) => {
   const router = useRouter();
 
   const handleRowClick = (id: string) => {
@@ -37,7 +42,7 @@ const MemberTable = ({ headerTitle, memberList, loading, renderRow }: MemberTabl
             </Table.Cell>
           </Table.Row>
         ) : (
-          memberList.map(member => (
+          memberList.map((member) => (
             <Table.Row
               key={member.id}
               onClick={() => handleRowClick(member.id)}

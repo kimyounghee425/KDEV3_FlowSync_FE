@@ -12,11 +12,28 @@ interface ProjectInfoType {
   projectCloseAt: string; // 프로젝트 종료일
 }
 
+/**
+ * 프로젝트 정보를 가져오는 커스텀 훅
+ *
+ * @param params Promise<{ projectId: string }>
+ *   - 비동기로 projectId를 추출할 수 있는 객체 (예: Next.js의 'params' 등)
+ * @returns
+ *   - projectId: 현재 프로젝트의 ID
+ *   - projectInfo: 프로젝트 정보 (ProjectInfoType)
+ *   - loading: 로딩 상태 (true/false)
+ */
 export function useProjectInfo(params: Promise<{ projectId: string }>) {
+  // 추출한 프로젝트 ID를 저장할 상태
   const [projectId, setProjectId] = useState<string>();
+  // 프로젝트 정보를 저장할 상태
   const [projectInfo, setProjectInfo] = useState<ProjectInfoType | null>(null);
+  // 로딩 상태 관리
   const [loading, setLoading] = useState(true);
 
+  /**
+   * 컴포넌트 마운트/업데이트 시점에서
+   * 프로젝트 ID를 추출하고, 해당 프로젝트 정보를 가져오는 비동기 함수
+   */
   useEffect(() => {
     const fetchProjectData = async () => {
       try {

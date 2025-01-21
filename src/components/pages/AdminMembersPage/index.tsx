@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { Heading, Stack, Table } from "@chakra-ui/react";
-import { CustomBox } from "@/src/components/common/CustomBox";
+import StatusTag from "@/src/components/common/StatusTag";
 // import Pagination from "@/src/components/common/Pagination";
 import MembersSearchSection from "@/src/components/common/MembersSearchSection";
 import { useMemberList } from "@/src/hook/useMemberList";
@@ -62,7 +62,7 @@ function AdminMembersPageContent() {
           }
           memberList={memberList}
           loading={loading}
-          renderRow={member => (
+          renderRow={(member) => (
             <>
               <Table.Cell>{member.name}</Table.Cell>
               <Table.Cell>{member.organizationId}</Table.Cell>
@@ -70,7 +70,9 @@ function AdminMembersPageContent() {
               <Table.Cell>{member.email}</Table.Cell>
               <Table.Cell>{member.phoneNum}</Table.Cell>
               <Table.Cell>
-                <CustomBox>{STATUS_LABELS[member.status] || "알 수 없음"}</CustomBox>
+                <StatusTag>
+                  {STATUS_LABELS[member.status] || "알 수 없음"}
+                </StatusTag>
               </Table.Cell>
             </>
           )}

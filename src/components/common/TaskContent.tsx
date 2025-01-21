@@ -47,7 +47,8 @@ const TaskContent = ({ task }: { task: Task }) => {
         cursor="pointer"
         color={"blue"}
         onClick={() => window.open(link.url, "_blank")}
-        _hover={{ textDecoration: "underline" }}>
+        _hover={{ textDecoration: "underline" }}
+      >
         <Text fontWeight="normal">{link.name}</Text>
       </Box>
     ));
@@ -78,7 +79,8 @@ const TaskContent = ({ task }: { task: Task }) => {
             }
             onMouseLeave={(e) =>
               (e.currentTarget.style.textDecoration = "none")
-            }>
+            }
+          >
             {fileName}
           </a>
         </Box>

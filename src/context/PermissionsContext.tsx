@@ -12,7 +12,7 @@ interface PermissionsContextType {
 }
 
 const PermissionsContext = createContext<PermissionsContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({

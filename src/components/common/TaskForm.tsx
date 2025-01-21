@@ -24,7 +24,7 @@ const Form = ({
   // 파일 업데이트
   const handleFileChange = (
     index: number,
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const newFiles = [...files];
     const file = event.target.files ? event.target.files[0] : null;

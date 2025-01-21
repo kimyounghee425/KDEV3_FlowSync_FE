@@ -8,14 +8,15 @@ export function useMemberList() {
   const [memberList, setMemberList] = useState<MemberProps[]>([]);
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
-  const query = searchParams.get("query") || "";
-  const filter = searchParams.get("filter") || "";
+  const query = searchParams?.get("query") || "";
+  const filter = searchParams?.get("filter") || "";
 
   const fetchMemberList = useCallback(
     async (currentPage: number = 1, pageSize: number = 5) => {
       setLoading(true);
       try {
-        const response: MemberResponseType<{ members: MemberProps[] }> = await fetchMembers(query, filter, currentPage - 1, pageSize);
+        const response: MemberResponseType<{ members: MemberProps[] }> =
+          await fetchMembers(query, filter, currentPage - 1, pageSize);
         setMemberList(response.data.members);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -23,7 +24,7 @@ export function useMemberList() {
         setLoading(false);
       }
     },
-    [query, filter]
+    [query, filter],
   );
 
   useEffect(() => {
