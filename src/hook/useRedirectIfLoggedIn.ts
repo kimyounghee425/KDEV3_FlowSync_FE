@@ -1,10 +1,10 @@
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useRedirectContext } from "@/src/context/RedirectContext";
 
 export function useRedirectIfLoggedIn() {
-  const { redirectPath } = useRedirectContext(); // Context에서 리다이렉트 경로 가져오기
   const router = useRouter(); // Next.js의 useRouter 훅 사용
+  const { redirectPath } = useRedirectContext(); // Context에서 리다이렉트 경로 가져오기
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");

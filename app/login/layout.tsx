@@ -1,15 +1,7 @@
-"use client"; // 클라이언트 상태 관리를 위해 필요
-
-import { RedirectProvider } from "@/src/context/RedirectContext";
-// import type { Metadata } from "next";
 import { Box, Flex } from "@chakra-ui/react";
+import { RedirectProvider } from "@/src/context/RedirectContext";
 
-// export const metadata: Metadata = {
-//   title: "FlowSync",
-//   description: "The World Best PMS Service",
-// };
-
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+export default function LoginLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <RedirectProvider>
@@ -23,19 +15,11 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           padding="3"
           overflow="hidden" // 스크롤 제거
         >
-          <Box
-            width="100%"
-            maxW="500px"
-            borderRadius="md"
-            bg="white"
-            boxShadow="lg"
-            padding="1">
+          <Box width="100%" maxW="500px" borderRadius="md" bg="white" boxShadow="lg" padding="1">
             {children}
           </Box>
         </Flex>
       </RedirectProvider>
     </>
   );
-};
-
-export default RootLayout;
+}

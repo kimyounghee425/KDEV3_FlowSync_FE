@@ -1,21 +1,18 @@
-"use client";
-
+import { ReactNode } from "react";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import Header from "@/src/components/layouts/Header";
 import Sidebar from "@/src/components/layouts/Sidebar";
 import { SidebarProvider } from "@/src/context/SidebarContext";
 
-const RootLayout = (props: { children: React.ReactNode }) => {
-  const { children } = props;
+interface MemberAndAdminDashboardLayoutProps {
+  children: ReactNode;
+}
+
+export default function MemberAndAdminDashboardLayout({ children }: MemberAndAdminDashboardLayoutProps) {
   return (
     <>
       <Header />
-      <Container
-        maxWidth={"100%"}
-        display="flex"
-        flexDirection="row"
-        margin={0}
-        padding={0}>
+      <Container maxWidth={"100%"} display="flex" flexDirection="row" margin={0} padding={0}>
         <SidebarProvider>
           <Sidebar />
         </SidebarProvider>
@@ -27,6 +24,4 @@ const RootLayout = (props: { children: React.ReactNode }) => {
       </Container>
     </>
   );
-};
-
-export default RootLayout;
+}

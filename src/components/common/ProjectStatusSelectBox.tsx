@@ -1,10 +1,4 @@
-import {
-  SelectContent,
-  SelectItem,
-  SelectRoot,
-  SelectTrigger,
-  SelectValueText,
-} from "@/src/components/ui/select";
+import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "@/src/components/ui/select";
 import { useProjectList } from "@/src/hook/useProjectList";
 import { createListCollection } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
@@ -42,17 +36,12 @@ export default function ProjectStatusSelectBox() {
   };
 
   return (
-    <SelectRoot
-      collection={projectStatusFramework}
-      size="md"
-      width="110px"
-      value={[projectStatus]}
-      onValueChange={handleValueChange}>
+    <SelectRoot collection={projectStatusFramework} size="md" width="110px" value={[projectStatus]} onValueChange={handleValueChange}>
       <SelectTrigger>
         <SelectValueText></SelectValueText>
       </SelectTrigger>
       <SelectContent>
-        {projectStatusFramework.items.map((status) => (
+        {projectStatusFramework.items.map(status => (
           <SelectItem item={status} key={status.value}>
             {status.label}
           </SelectItem>
