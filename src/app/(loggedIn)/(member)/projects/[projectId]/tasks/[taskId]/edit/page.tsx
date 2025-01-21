@@ -50,7 +50,7 @@ export default function EditPage() {
         setError(
           err instanceof Error
             ? err.message
-            : "데이터를 가져오는데 실패했습니다."
+            : "데이터를 가져오는데 실패했습니다.",
         );
       } finally {
         setLoading(false);
@@ -116,13 +116,8 @@ export default function EditPage() {
                   formData.append("file", file);
 
                   const response = await axiosInstance.post(
-<<<<<<< HEAD:src/app/(loggedIn)/(member)/projects/[projectId]/tasks/[taskId]/edit/page.tsx
-                    "/upload",
-                    formData,
-=======
                     API_ENDPOINTS.uploadFile,
-                    formData
->>>>>>> main:app/(loggedIn)/(member)/projects/[projectId]/tasks/[taskId]/edit/page.tsx
+                    formData,
                   );
 
                   // 서버 업로드 성공: 반환된 URL로 교체
@@ -156,17 +151,10 @@ export default function EditPage() {
     setTask({ ...task, file: updatedFiles });
   };
 
-<<<<<<< HEAD:src/app/(loggedIn)/(member)/projects/[projectId]/tasks/[taskId]/edit/page.tsx
-  // --- 새 파일 추가 ---
-  const handleSelectNewFile = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-=======
   // 새 파일 추가
   const handleSelectNewFile = (
     e: React.ChangeEvent<HTMLInputElement>,
-    index: number
->>>>>>> main:app/(loggedIn)/(member)/projects/[projectId]/tasks/[taskId]/edit/page.tsx
+    index: number,
   ) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -217,7 +205,7 @@ export default function EditPage() {
 
         const res = await axiosInstance.post(
           API_ENDPOINTS.uploadFile,
-          formData
+          formData,
         );
         uploadedFileUrls.push(res.data.url);
       }
