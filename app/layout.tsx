@@ -8,9 +8,11 @@ export const metadata: Metadata = {
   description: "The World Best PMS Service",
 };
 
+
 // const useMsw = process.env.USE_MSW === "true";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+
   return (
     <html suppressHydrationWarning>
       <body>
@@ -21,4 +23,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </body>
     </html>
   );
-}
+
+};
+
+
+

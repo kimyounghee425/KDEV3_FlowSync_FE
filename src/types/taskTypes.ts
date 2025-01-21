@@ -24,6 +24,7 @@ export interface Task {
   parent?: {
     title: string;
   } | null;
+  progress: string;
   title: string;
   author: string;
   boardCategory: string; // 아직 미사용

@@ -1,31 +1,43 @@
 "use client";
 
-import "./edit.css";
-import { useParams } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+// 외부 라이브러리
+import React, { useEffect, useState, useRef } from "react";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
+import { useParams } from "next/navigation";
 import axiosInstance from "@/src/api/axiosInstance";
-import { Task, ContentBlock } from "@/src/types/taskTypes";
 import { Box, Flex, Button, Text, Input } from "@chakra-ui/react";
 
-// fetchTaskData 분리
+// 절대 경로 파일
+import { Task, ContentBlock } from "@/src/types/taskTypes";
+
+// 스타일 파일
+import "./edit.css";
+
+// TaskData 가져오는 함수
 const fetchTaskData = async (taskId: string): Promise<Task> => {
   const response = await axiosInstance.get<Task>(`/projects/1/tasks/${taskId}`);
   return response.data;
 };
 
+// API 엔드포인트
+const API_ENDPOINTS = {
+  uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT || "",
+  fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT || "",
+};
+
+// API 헤더
+const AUTH_HEADER = {
+  Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ""}`,
+};
+
 export default function EditPage() {
   const { taskId } = useParams() as { taskId: string };
+  const editorRef = useRef<EditorJS | null>(null);
+  const editorContainerRef = useRef<HTMLDivElement | null>(null);
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // EditorJS 관리
-  const editorRef = useRef<EditorJS | null>(null);
-  const editorContainerRef = useRef<HTMLDivElement | null>(null);
-
-  // **새로 첨부할 파일들 담을 배열
   const [newFiles, setNewFiles] = useState<File[]>([]);
 
   // 서버에서 Task 불러오기
@@ -35,7 +47,11 @@ export default function EditPage() {
         const data = await fetchTaskData(taskId);
         setTask(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "데이터를 가져오는데 실패했습니다.");
+        setError(
+          err instanceof Error
+            ? err.message
+            : "데이터를 가져오는데 실패했습니다."
+        );
       } finally {
         setLoading(false);
       }
@@ -43,18 +59,7 @@ export default function EditPage() {
     loadTask();
   }, [taskId]);
 
-  // API 엔드포인트 상수로 분리
-  const API_ENDPOINTS = {
-    uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT || "",
-    fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT || "",
-  };
-
-  // API 헤더 상수로 분리
-  const AUTH_HEADER = {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ""}`,
-  };
-
-  // --- 2) EditorJS 초기화 ---
+  // EditorJS 초기화
   useEffect(() => {
     if (!task || !editorContainerRef.current) return;
 
@@ -65,7 +70,7 @@ export default function EditPage() {
     }
 
     // Task 의 content 배열을 블록 데이터 형식으로 변환
-    const blocks = task.content?.map(block => {
+    const blocks = task.content?.map((block) => {
       if (block.type === "image") {
         return {
           type: "image",
@@ -110,7 +115,10 @@ export default function EditPage() {
                   const formData = new FormData();
                   formData.append("file", file);
 
-                  const response = await axiosInstance.post("/upload", formData);
+                  const response = await axiosInstance.post(
+                    API_ENDPOINTS.uploadFile,
+                    formData
+                  );
 
                   // 서버 업로드 성공: 반환된 URL로 교체
                   uploadResult.file.url = response.data.url;
@@ -143,11 +151,14 @@ export default function EditPage() {
     setTask({ ...task, file: updatedFiles });
   };
 
-  // --- 새 파일 추가 ---
-  const handleSelectNewFile = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  // 새 파일 추가
+  const handleSelectNewFile = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     const file = e.target.files?.[0];
     if (file) {
-      setNewFiles(prev => {
+      setNewFiles((prev) => {
         const updated = [...prev];
         updated[index] = file;
         return updated;
@@ -157,22 +168,22 @@ export default function EditPage() {
 
   // 파일 슬롯 추가
   const handleAddFileSlot = () => {
-    setNewFiles(prev => [...prev, undefined as unknown as File]);
+    setNewFiles((prev) => [...prev, undefined as unknown as File]);
   };
 
   // 새 파일 슬롯 제거
   const handleRemoveNewFile = (index: number) => {
-    setNewFiles(prev => prev.filter((_, i) => i !== index));
+    setNewFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // --- 저장 ---
+  // 저장
   const handleSave = async () => {
     if (!task || !editorRef.current) return;
 
     try {
       // editorjs 데이터를 변환
       const savedData: OutputData = await editorRef.current.save();
-      const newContent: ContentBlock[] = savedData.blocks.map(block => {
+      const newContent: ContentBlock[] = savedData.blocks.map((block) => {
         if (block.type === "image") {
           return {
             type: "image",
@@ -192,9 +203,10 @@ export default function EditPage() {
         const formData = new FormData();
         formData.append("file", f);
 
-        // 실제 서버 업로드 예시
-        const res = await axiosInstance.post("/upload", formData);
-        // 백엔드 응답에서 업로드된 URL 얻었다고 가정
+        const res = await axiosInstance.post(
+          API_ENDPOINTS.uploadFile,
+          formData
+        );
         uploadedFileUrls.push(res.data.url);
       }
 
@@ -227,13 +239,22 @@ export default function EditPage() {
       {/* 제목 */}
       <Box mb={4}>
         <Text mb={2}>제목</Text>
-        <Input value={task.title || ""} onChange={e => setTask({ ...task, title: e.target.value })} />
+        <Input
+          value={task.title || ""}
+          onChange={(e) => setTask({ ...task, title: e.target.value })}
+        />
       </Box>
 
       {/* 텍스트 편집창 */}
       <Box mb={4}>
         <Text mb={2}>상세 내용</Text>
-        <Box ref={editorContainerRef} border="1px solid #ccc" minH="300px" p={2} borderRadius="md" />
+        <Box
+          ref={editorContainerRef}
+          border="1px solid #ccc"
+          minH="300px"
+          p={2}
+          borderRadius="md"
+        />
       </Box>
 
       {/* (A) 기존 파일 목록 */}
@@ -243,7 +264,10 @@ export default function EditPage() {
           task.file.map((fileUrl, idx) => (
             <Flex key={idx} alignItems="center" mb={2}>
               <Box flex="1">{fileUrl}</Box>
-              <Button colorScheme="red" onClick={() => handleRemoveOldFile(idx)}>
+              <Button
+                colorScheme="red"
+                onClick={() => handleRemoveOldFile(idx)}
+              >
                 제거
               </Button>
             </Flex>
@@ -257,9 +281,13 @@ export default function EditPage() {
         {/* 지금까지 추가된 '슬롯'들 */}
         {newFiles.map((file, idx) => (
           <Flex key={idx} alignItems="center" mb={2}>
-            <Input type="file" onChange={e => handleSelectNewFile(e, idx)} />
+            <Input type="file" onChange={(e) => handleSelectNewFile(e, idx)} />
 
-            <Button ml={2} colorScheme="red" onClick={() => handleRemoveNewFile(idx)}>
+            <Button
+              ml={2}
+              colorScheme="red"
+              onClick={() => handleRemoveNewFile(idx)}
+            >
               제거
             </Button>
           </Flex>

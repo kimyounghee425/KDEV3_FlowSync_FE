@@ -1,13 +1,16 @@
 "use client";
 
+// 외부 라이브러리
 import { Box, VStack } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+
+// 절대 경로 파일
 import TaskContent from "@/src/components/common/TaskContent";
 import TaskComments from "@/src/components/common/TaskComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/backButton";
-import axiosInstance from "@/src/api/axiosInstance";
+import axiosInstance from "@/src/api/axiosInstance"; 
 import { Task, ApiResponse } from "@/src/types/taskTypes";
 
 // fetchTaskData 함수
@@ -37,8 +40,7 @@ export default function ProjectTaskPage() {
   useEffect(() => {
     const loadTask = async () => {
       try {
-        const data = await fetchTaskData(projectId, taskId);
-        console.log("글데이터", data);
+        const data = await fetchTaskData(projectId, taskId)
         // 검증. 받아온 json 의 projectid, id 가 주소창 값과 일치하는지 확인.
         if (
           data &&
@@ -72,6 +74,7 @@ export default function ProjectTaskPage() {
 
     loadTask();
   }, [projectId, taskId]);
+  
 
   if (error) {
     return <Box>에러 발생: {error}</Box>;

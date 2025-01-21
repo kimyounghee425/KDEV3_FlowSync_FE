@@ -11,6 +11,7 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^3.2.5",
+    "@chakra-ui/select": "^2.1.2",
     "@editorjs/editorjs": "^2.30.7",
     "@editorjs/header": "^2.8.8",
     "@editorjs/image": "^2.10.1",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/jwt-decode": "^2.2.1",
     "@types/node": "^20",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19",

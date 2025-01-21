@@ -1,15 +1,21 @@
-import { Box, Text, Image, Link, VStack } from "@chakra-ui/react";
-import { Task, ContentBlock, TaskBoardLink } from "@/src/types/taskTypes";
 
-const isImageFile = (file: string) => {
-  const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
-  const extension = file.split(".").pop()?.toLowerCase();
-  return imageExtensions.includes(extension || "");
-};
+// 외부 라이브러리
+import { Box, Text, Image, VStack } from "@chakra-ui/react";
 
-const TaskContent = ({ task }: { task: Task }) => {
+// 절대 경로 파일
+import { Task, ContentBlock } from "@/src/types/taskTypes";
+import { formatDateString } from "@/src/utils/formatDateString";
+interface TaskContentProps {
+  task: Task;
+}
+
+export default function TaskContent({ task }:TaskContentProps) {
+
+  // 본문 렌더링
   const renderContent = (content: ContentBlock[]) => {
     return content.map((block, index) => {
+      // paragraph 데이터
+
       if (block.type === "paragraph" && typeof block.data === "string") {
         return (
           <Text key={index} mb={4} whiteSpace="pre-line">
@@ -17,6 +23,8 @@ const TaskContent = ({ task }: { task: Task }) => {
           </Text>
         );
       }
+
+      // image 데이터
 
       if (block.type === "image" && typeof block.data === "object") {
         return (
@@ -35,11 +43,8 @@ const TaskContent = ({ task }: { task: Task }) => {
     });
   };
 
+  // 링크 렌더링
   const renderLinks = (links: Task["taskBoardLinkList"]) => {
-    if (!Array.isArray(links)) {
-      console.error("taskBoardLinkList is not an array:", links);
-      return null;
-    }
     return links.map((link, index) => (
       <Box
         key={index}
@@ -47,12 +52,15 @@ const TaskContent = ({ task }: { task: Task }) => {
         cursor="pointer"
         color={"blue"}
         onClick={() => window.open(link.url, "_blank")}
-        _hover={{ textDecoration: "underline" }}>
+        _hover={{ textDecoration: "underline" }}
+      >
         <Text fontWeight="normal">{link.name}</Text>
       </Box>
     ));
   };
 
+
+  // 첨부파일 렌더링
   const renderFiles = (files: string[]) => {
     if (!Array.isArray(files)) {
       console.error("files is not an array:", files);
@@ -64,7 +72,7 @@ const TaskContent = ({ task }: { task: Task }) => {
       return (
         <Box key={index} mb={4}>
           <a
-            href={file} // download 속성만 있어도 되는데 그냥 썼음.
+            href={file}
             target="blank"
             download={fileName}
             style={{
@@ -78,7 +86,8 @@ const TaskContent = ({ task }: { task: Task }) => {
             }
             onMouseLeave={(e) =>
               (e.currentTarget.style.textDecoration = "none")
-            }>
+            }
+          >
             {fileName}
           </a>
         </Box>
@@ -86,7 +95,9 @@ const TaskContent = ({ task }: { task: Task }) => {
     });
   };
 
+
   // regAt 날짜 예쁘게 변환
+  // 연도.월.일 시:분 형태로 반환
   function formatDateString(dateString: string) {
     const date = new Date(dateString); // Date 객체 생성
 
@@ -97,9 +108,9 @@ const TaskContent = ({ task }: { task: Task }) => {
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
 
-    // "2025.01.08 11:34" 형태로 변환
     return `${year}.${month}.${day} ${hours}:${minutes}`;
   }
+
 
   return (
     <Box mb={4}>
@@ -132,10 +143,9 @@ const TaskContent = ({ task }: { task: Task }) => {
         <Text fontWeight="bold" mb={2}>
           첨부 파일
         </Text>
-        {/* <VStack align="start">{renderFiles(task.file)}</VStack> */}
+        <VStack align="start">{renderFiles(task.file)}</VStack>
       </Box>
     </Box>
   );
 };
 
-export default TaskContent;
