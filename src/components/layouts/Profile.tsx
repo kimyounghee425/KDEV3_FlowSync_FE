@@ -10,7 +10,13 @@ export interface ProfileProps {
   profile_image_url?: string;
 }
 
-export default function Profile({ id, userName, orgName = "Unknown", jobRole = "N/A", profile_image_url }: ProfileProps) {
+export default function Profile({
+  id,
+  userName,
+  orgName = "Unknown",
+  jobRole = "N/A",
+  profile_image_url,
+}: ProfileProps) {
   return (
     <Box>
       <Stack>

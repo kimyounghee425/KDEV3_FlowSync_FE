@@ -48,7 +48,7 @@ export default function CommentItem({ comment }: CommentProps) {
   const handleReplyClick = () => {
     if (replyingTo && replyContent.trim() !== "") {
       const confirmCancel = window.confirm(
-        "이미 입력된 답글 내용을 취소 하겠습니까?"
+        "이미 입력된 답글 내용을 취소 하겠습니까?",
       );
       if (!confirmCancel) return;
     }
@@ -65,7 +65,7 @@ export default function CommentItem({ comment }: CommentProps) {
   const handleEdit = (id: number) => {
     // 수정 로직 추가
   };
-  
+
   const handleDelete = (id: number) => {
     // 삭제 로직 추가
   };

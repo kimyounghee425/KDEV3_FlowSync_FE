@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Box, CardRoot, Flex, Heading, VStack } from "@chakra-ui/react";
+import { Box, CardRoot, Flex, Heading } from "@chakra-ui/react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import SidebarTab from "@/src/components/layouts/SidebarTab";
 import { useSidebar } from "@/src/context/SidebarContext";
@@ -11,7 +11,7 @@ export default function Sidebar() {
   const { projectStatus, setProjectStatus } = useSidebar();
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname(); // 현재 URL 경로 가져오기
-  const isAdminPage = pathname.includes("/admin"); // URL에 admin이 포함되는지 확인
+  const isAdminPage = pathname?.includes("/admin"); // URL에 admin이 포함되는지 확인
 
   // 사이드바 탭 (진행중 프로젝트, 완료 프로젝트)
   useEffect(() => {
@@ -24,7 +24,12 @@ export default function Sidebar() {
   }, [projectStatus]);
 
   return (
-    <Flex flexDirection="column" gap="1" backgroundColor="gray.200" boxShadow="md">
+    <Flex
+      flexDirection="column"
+      gap="1"
+      backgroundColor="gray.200"
+      boxShadow="md"
+    >
       <Box width="270px" height="100vh" p={1} marginTop="3">
         <CardRoot width="100%">
           {isAdminPage ? (
@@ -39,7 +44,7 @@ export default function Sidebar() {
               {/* Segmented Control */}
               <SegmentedControl
                 value={projectStatus}
-                onValueChange={e => {
+                onValueChange={(e) => {
                   setProjectStatus(e.value);
                 }}
                 items={["진행중 프로젝트", "완료 프로젝트"]}

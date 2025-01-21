@@ -6,7 +6,7 @@ export async function fetchMembers(
   query: string = "", // 검색어
   filter: string = "", // 필터링 값
   currentPage: number,
-  pageSize: number
+  pageSize: number,
 ): Promise<MemberResponseType<{ members: MemberProps[] }>> {
   const response = await axiosInstance.get("/admins/members", {
     params: { query, filter, currentPage, pageSize },
@@ -16,7 +16,9 @@ export async function fetchMembers(
 }
 
 export async function fetchMemberInfo(memberId: string) {
-  const response = await axiosInstance.get(`/admin/members/${memberId}/memberInfo`);
+  const response = await axiosInstance.get(
+    `/admin/members/${memberId}/memberInfo`,
+  );
   return response.data;
 }
 
@@ -31,7 +33,7 @@ export async function fetchMemberList(
   boardStatus: string = "", // 게시글 유형
   boardCategory: string = "", // 진행단계
   currentPage: number, // 현재 페이지
-  pageSize: number // 페이지 크기
+  pageSize: number, // 페이지 크기
 ) {
   const response = await axiosInstance.get(`/admin/members/${memberId}`, {
     params: { query, boardStatus, boardCategory, currentPage, pageSize },

@@ -24,7 +24,10 @@ export const handlers = [
     const taskData = taskDataMap[taskId as string];
 
     if (!taskData) {
-      return HttpResponse.json({ error: `Task ${taskId} not found.` }, { status: 404 });
+      return HttpResponse.json(
+        { error: `Task ${taskId} not found.` },
+        { status: 404 },
+      );
     }
 
     // 성공적으로 JSON 데이터 반환
@@ -38,16 +41,25 @@ export const handlers = [
     // 쿼리 파라미터 추출
     const query = url.searchParams.get("query") || "";
     const filter = url.searchParams.get("filter") || "전체";
-    const currentPage = parseInt(url.searchParams.get("currentPage") || "0", 10);
+    const currentPage = parseInt(
+      url.searchParams.get("currentPage") || "0",
+      10,
+    );
 
     const pageSize = parseInt(url.searchParams.get("pageSize") || "5", 10);
 
     const allData = projectsData.data;
 
     // 필터 로직
-    const filteredData = allData.filter(item => {
-      const matchesQuery = query === "" || query === null || item.projectName.toLowerCase().includes(query.toLowerCase());
-      const matchesFilter = filter === "전체" || filter === null || item.projectStatus.toLowerCase().includes(filter.toLowerCase());
+    const filteredData = allData.filter((item) => {
+      const matchesQuery =
+        query === "" ||
+        query === null ||
+        item.projectName.toLowerCase().includes(query.toLowerCase());
+      const matchesFilter =
+        filter === "전체" ||
+        filter === null ||
+        item.projectStatus.toLowerCase().includes(filter.toLowerCase());
 
       return matchesQuery && matchesFilter;
     });
@@ -81,11 +93,14 @@ export const handlers = [
     const allData = projectsData.data;
 
     // 상태별 개수 집계
-    const statusSummary = allData.reduce((summary, project) => {
-      const status = project.projectStatus;
-      summary[status] = (summary[status] || 0) + 1;
-      return summary;
-    }, {} as Record<string, number>);
+    const statusSummary = allData.reduce(
+      (summary, project) => {
+        const status = project.projectStatus;
+        summary[status] = (summary[status] || 0) + 1;
+        return summary;
+      },
+      {} as Record<string, number>,
+    );
 
     // 응답 데이터 생성
     const response = {
@@ -103,7 +118,10 @@ export const handlers = [
 
     // 동적 파라미터 확인
     if (!projectId) {
-      return HttpResponse.json({ error: "Project ID is required." }, { status: 400 });
+      return HttpResponse.json(
+        { error: "Project ID is required." },
+        { status: 400 },
+      );
     }
 
     // 동일한 데이터를 반환
@@ -125,7 +143,10 @@ export const handlers = [
     const { projectId } = params;
 
     if (!projectId) {
-      return HttpResponse.json({ error: "Project ID is required." }, { status: 400 });
+      return HttpResponse.json(
+        { error: "Project ID is required." },
+        { status: 400 },
+      );
     }
 
     // Mock 데이터 생성

@@ -12,17 +12,17 @@ interface CommonTableProps<T> {
   handleRowClick: (id: number) => void;
 }
 
-const CommonTable = <
+export default function CommonTable<
   T extends {
     id: number;
-  }
+  },
 >({
   headerTitle,
   data,
   loading,
   renderRow,
   handleRowClick,
-}: CommonTableProps<T>) => {
+}: CommonTableProps<T>) {
   return (
     <Table.Root size="sm" interactive>
       <Table.Header>{headerTitle}</Table.Header>
@@ -46,7 +46,8 @@ const CommonTable = <
                   fontSize: "md",
                   cursor: "pointer",
                 },
-              }}>
+              }}
+            >
               {renderRow(item)}
             </Table.Row>
           ))
@@ -54,6 +55,4 @@ const CommonTable = <
       </Table.Body>
     </Table.Root>
   );
-};
-
-export default CommonTable;
+}

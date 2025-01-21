@@ -10,7 +10,7 @@ export default function TaskComments({ comments }: TaskCommentsProps) {
   const filteredComments = comments.filter(
     (comment) =>
       comment.deletedYn === "N" ||
-      comment.replies.some((reply) => reply.deletedYn === "N")
+      comment.replies.some((reply) => reply.deletedYn === "N"),
   );
 
   return (

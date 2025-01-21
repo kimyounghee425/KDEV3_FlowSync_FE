@@ -1,8 +1,8 @@
 import { HStack, Button } from "@chakra-ui/react";
-import { PaginationInfoType } from "@/src/types";
+import { PaginationProps as PaginationInfo } from "@/src/types";
 
 interface PaginationProps {
-  paginationInfo?: PaginationInfoType; // PaginationMeta 전체를 전달받음
+  paginationInfo?: PaginationInfo; // PaginationMeta 전체를 전달받음
   handlePageChange: (page: number) => void; // 페이지 변경 핸들러
 }
 
@@ -29,7 +29,8 @@ const Pagination: React.FC<PaginationProps> = ({
         variant={"surface"}
         size="sm"
         onClick={() => handlePageChange(currentPage - 1)}
-        disabled={isFirstPage}>
+        disabled={isFirstPage}
+      >
         이전
       </Button>
 
@@ -42,7 +43,8 @@ const Pagination: React.FC<PaginationProps> = ({
             key={page}
             disabled={page === currentPage}
             onClick={() => handlePageChange(page)}
-            variant={page === currentPage ? "surface" : "outline"}>
+            variant={page === currentPage ? "surface" : "outline"}
+          >
             {page}
           </Button>
         );
@@ -53,7 +55,8 @@ const Pagination: React.FC<PaginationProps> = ({
         variant={"surface"}
         size="sm"
         onClick={() => handlePageChange(currentPage + 1)}
-        disabled={isLastPage}>
+        disabled={isLastPage}
+      >
         다음
       </Button>
     </HStack>

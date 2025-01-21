@@ -26,7 +26,7 @@ export const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
     } = props;
 
     const child = React.Children.only(
-      children as React.ReactElement<InputElementProps>
+      children as React.ReactElement<InputElementProps>,
     );
 
     return (
@@ -50,5 +50,5 @@ export const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
         )}
       </Group>
     );
-  }
+  },
 );

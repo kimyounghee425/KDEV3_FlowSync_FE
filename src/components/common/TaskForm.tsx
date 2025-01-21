@@ -178,7 +178,7 @@ export default function TaskForm({
   // 파일 변경 핸들러
   const handleFileChange = async (
     index: number,
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files ? event.target.files[0] : null;
 

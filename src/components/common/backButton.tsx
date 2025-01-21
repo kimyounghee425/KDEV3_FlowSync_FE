@@ -7,7 +7,8 @@ const BackButton = () => (
       bg={"white"}
       color={"black"}
       colorScheme={"blackAlpha"}
-      _hover={{ bg: "blackAlpha.300" }}>
+      _hover={{ bg: "blackAlpha.300" }}
+    >
       <BiArrowBack />
     </Button>
   </Box>

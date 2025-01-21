@@ -13,8 +13,8 @@ const axiosInstance = axios.create({
 
 // 응답 인터셉터 추가
 axiosInstance.interceptors.response.use(
-  response => response,
-  error => {
+  (response) => response,
+  (error) => {
     // 개발 단계에서 에러를 중앙관리하기위한 구문
     // 추후 중앙화된 로깅 도구를 사용하거나 제거
     // 에러 처리는 개별 컴포넌트에서 진행
@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use(
       console.error("500+ Server Error - 서버 오류 발생.");
     }
     return Promise.reject(error); // 에러를 호출한 컴포넌트로 전달
-  }
+  },
 );
 
 export default axiosInstance;
