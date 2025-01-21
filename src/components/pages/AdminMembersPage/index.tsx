@@ -1,14 +1,13 @@
 "use client";
 
-import { Heading, Stack, Table } from "@chakra-ui/react";
-import CommonTable from "../../common/CommonTable";
-import { CustomBox } from "../../common/CustomBox";
-import Pagination from "../../common/Pagination";
-import { useRouter } from "next/navigation";
-import MembersSearchSection from "../../common/MembersSearchSection";
-import { useMemberList } from "@/src/hook/useMemberList";
-import MemberTable from "../../common/MemberTable";
 import { Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { Heading, Stack, Table } from "@chakra-ui/react";
+import { CustomBox } from "@/src/components/common/CustomBox";
+// import Pagination from "@/src/components/common/Pagination";
+import MembersSearchSection from "@/src/components/common/MembersSearchSection";
+import { useMemberList } from "@/src/hook/useMemberList";
+import MemberTable from "@/src/components/common/MemberTable";
 
 const STATUS_LABELS: Record<string, string> = {
   ING_WORK: "근무 O",
@@ -24,8 +23,7 @@ export default function AdminMembersPage() {
 }
 
 function AdminMembersPageContent() {
-  const { memberList, paginationInfo, loading, fetchMemberList } =
-    useMemberList();
+  const { memberList, loading, fetchMemberList } = useMemberList();
   const router = useRouter();
 
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
@@ -35,8 +33,8 @@ function AdminMembersPageContent() {
     params.set("page", page.toString());
     // URL 업데이트
     router.push(`?${params.toString()}`);
-    // 데이터를 다시 가져오기
-    fetchMemberList(page, paginationInfo?.pageSize || 5);
+    // // 데이터를 다시 가져오기
+    // fetchMemberList(page, paginationInfo?.pageSize || 5);
   };
 
   return (
@@ -52,7 +50,8 @@ function AdminMembersPageContent() {
               backgroundColor={"#eee"}
               css={{
                 "& > th": { textAlign: "center" },
-              }}>
+              }}
+            >
               <Table.ColumnHeader>회원명</Table.ColumnHeader>
               <Table.ColumnHeader>소속 업체명</Table.ColumnHeader>
               <Table.ColumnHeader>직무</Table.ColumnHeader>
@@ -63,7 +62,7 @@ function AdminMembersPageContent() {
           }
           memberList={memberList}
           loading={loading}
-          renderRow={(member) => (
+          renderRow={member => (
             <>
               <Table.Cell>{member.name}</Table.Cell>
               <Table.Cell>{member.organizationId}</Table.Cell>
@@ -71,22 +70,12 @@ function AdminMembersPageContent() {
               <Table.Cell>{member.email}</Table.Cell>
               <Table.Cell>{member.phoneNum}</Table.Cell>
               <Table.Cell>
-                <CustomBox>
-                  {STATUS_LABELS[member.status] || "알 수 없음"}
-                </CustomBox>
+                <CustomBox>{STATUS_LABELS[member.status] || "알 수 없음"}</CustomBox>
               </Table.Cell>
             </>
           )}
         />
-        <Pagination
-          paginationInfo={
-            paginationInfo && {
-              ...paginationInfo,
-              currentPage: paginationInfo.currentPage + 1,
-            }
-          }
-          handlePageChange={handlePageChange}
-        />
+        {/* {paginationInfo && <Pagination paginationInfo={paginationInfo} handlePageChange={handlePageChange} />} */}
       </Stack>
     </>
   );

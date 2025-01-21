@@ -1,10 +1,16 @@
 import { Avatar } from "@/src/components/ui/avatar";
 import { Box, HStack, Stack, Text } from "@chakra-ui/react";
-import { ProfileProps } from "@/src/types/profile";
+// import { ProfileProps } from "@/src/types/profile";
 
-const Profile: React.FC<ProfileProps> = ({ id, userName, orgName, jobRole, profile_image_url }) => {
-  // const direction = isSidebar ? "column" : "row";
-  // const marginBottom = isSidebar ? "15px" : "0px";
+export interface ProfileProps {
+  id: number;
+  userName: string;
+  orgName?: string;
+  jobRole?: string;
+  profile_image_url?: string;
+}
+
+export default function Profile({ id, userName, orgName = "Unknown", jobRole = "N/A", profile_image_url }: ProfileProps) {
   return (
     <Box>
       <Stack>
@@ -20,6 +26,4 @@ const Profile: React.FC<ProfileProps> = ({ id, userName, orgName, jobRole, profi
       </Stack>
     </Box>
   );
-};
-
-export default Profile;
+}

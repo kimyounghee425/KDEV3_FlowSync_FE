@@ -1,11 +1,11 @@
 "use client";
 
-import { Box, CardRoot, Flex, Heading, VStack } from "@chakra-ui/react";
-import { SegmentedControl } from "@/src/components/ui/segmented-control";
-import SidebarTab from "@/src/components/common/SidebarTab";
-import { useSidebar } from "@/src/context/SidebarContext";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { Box, CardRoot, Flex, Heading, VStack } from "@chakra-ui/react";
+import { SegmentedControl } from "@/src/components/ui/segmented-control";
+import SidebarTab from "@/src/components/layouts/SidebarTab";
+import { useSidebar } from "@/src/context/SidebarContext";
 
 export default function Sidebar() {
   const { projectStatus, setProjectStatus } = useSidebar();

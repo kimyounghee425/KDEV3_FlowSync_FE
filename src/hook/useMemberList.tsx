@@ -1,14 +1,13 @@
 import { useSearchParams } from "next/navigation";
-import { PaginationInfoType } from "@/src/types";
 import { useCallback, useEffect, useState } from "react";
 import { MemberProps } from "../types/member";
 import { fetchMembers } from "../api/members";
 import { MemberResponseType } from "../types/api";
 
 export function useMemberList() {
-  const searchParams = useSearchParams();
   const [memberList, setMemberList] = useState<MemberProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const filter = searchParams.get("filter") || "";
 

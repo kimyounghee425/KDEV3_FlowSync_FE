@@ -1,41 +1,37 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import { Heading, Flex } from "@chakra-ui/react";
-import Drawer from "./Drawer";
 import Link from "next/link";
-import membersData from "@/src/data/members_mock_data.json";
-import orgsData from "@/src/data/organizations_mock_data.json";
-import Profile from "@/src/components/common/Profile";
-import { ProfileProps } from "@/src/types/profile";
+import { Heading, Flex } from "@chakra-ui/react";
+import Drawer from "@/src/components/layouts/Drawer";
+import Profile, { ProfileProps } from "@/src/components/layouts/Profile";
 
-function Header() {
+export default function Header() {
   const [user, setUser] = useState<ProfileProps | null>(null);
   const [error, setError] = useState<string | null>(null);
   // 사용자 Role 정보 가져오기 (관리자 계정 여부 체크)
   useEffect(() => {
     const getUserData = async () => {
       try {
-        // 로컬스토리지에서 'user' 값을 가져오기
         const userData = localStorage.getItem("user");
-        if (!userData) {
-          throw new Error("User 정보가 로컬스토리지에 없습니다.");
-        }
+        if (!userData) throw new Error("User 정보가 로컬스토리지에 없습니다.");
+
         const userObject = JSON.parse(userData);
-        if (!userObject.id || !userObject.name || !userObject.org_name || !userObject.job_role || !userObject.profile_image_url) {
+        if (typeof userObject.id === "number" && typeof userObject.name === "string" && typeof userObject.org_name === "string" && typeof userObject.job_role === "string" && typeof userObject.profile_image_url === "string") {
+          setUser({
+            id: userObject.id,
+            userName: userObject.name,
+            orgName: userObject.org_name,
+            jobRole: userObject.job_role,
+            profile_image_url: userObject.profile_image_url,
+          });
+        } else {
           throw new Error("User 데이터 형식이 올바르지 않습니다.");
         }
-        setUser({
-          id: userObject.id || null,
-          userName: userObject.name || null,
-          orgName: userObject.org_name || null,
-          jobRole: userObject.job_role || null,
-          profile_image_url: userObject.profile_image_url || null,
-        });
       } catch (err: any) {
         setError(err.message || "An unknown error occurred");
       }
     };
+
     getUserData();
   }, []);
 
@@ -48,13 +44,9 @@ function Header() {
           </Heading>
         </Link>
       </Flex>
-
       <Drawer />
-
       {/* Avatar */}
-      <Profile id={user?.id} userName={user?.userName} orgName={user?.orgName} jobRole={user?.jobRole} profile_image_url={user?.profile_image_url} />
+      {user && <Profile id={user.id} userName={user.userName} orgName={user.orgName} jobRole={user.jobRole} profile_image_url={user.profile_image_url} />}{" "}
     </Flex>
   );
 }
-
-export default Header;
