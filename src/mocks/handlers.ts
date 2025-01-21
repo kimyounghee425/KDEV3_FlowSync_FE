@@ -17,7 +17,7 @@ const taskDataMap: Record<string, any> = {
 export const handlers = [
   // 프로젝트 목록 조회
   // 특정 TaskId 에 맞는 JSON 데이터 반환
-  http.get(`${apiBaseUrl}/projects/:projectId/tasks/:taskId`, ({ params }) => {
+  http.get(`${apiBaseUrl}/posts/:taskId`, ({ params }) => {
     const { taskId } = params;
 
     // taskId 에 해당하는 데이터 찾기

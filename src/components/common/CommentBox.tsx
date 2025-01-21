@@ -1,6 +1,6 @@
 import { Button, Textarea, Box } from "@chakra-ui/react";
 
-const CommentBox = () => {
+export default function CommentBox() {
   return (
     <Box>
       <Textarea placeholder="댓글을 입력하세요." />
@@ -9,6 +9,4 @@ const CommentBox = () => {
       </Button>
     </Box>
   );
-};
-
-export default CommentBox;
+}

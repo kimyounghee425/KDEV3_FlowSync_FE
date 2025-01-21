@@ -1,10 +1,11 @@
 // 댓글 섹션의 최상위 컴포넌트
 
+// 외부 라이브러리
 import { Box, Text } from "@chakra-ui/react";
-import Comments from "./Comments";
+import Comments from "@/src/components/common/Comments";
 import { TaskCommentsProps } from "@/src/types/taskTypes";
 
-const TaskComments = ({ comments }: TaskCommentsProps) => {
+export default function TaskComments({ comments }: TaskCommentsProps) {
   // 삭제된 댓글을 제외한 목록 생성
   const filteredComments = comments.filter(
     (comment) =>
@@ -32,4 +33,4 @@ const TaskComments = ({ comments }: TaskCommentsProps) => {
   );
 };
 
-export default TaskComments;
+
