@@ -1,31 +1,43 @@
 "use client";
 
-import "./edit.css";
-import { useParams } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+// 외부 라이브러리
+import React, { useEffect, useState, useRef } from "react";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
+import { useParams } from "next/navigation";
 import axiosInstance from "@/src/api/axiosInstance";
-import { Task, ContentBlock } from "@/src/types/taskTypes";
 import { Box, Flex, Button, Text, Input } from "@chakra-ui/react";
 
-// fetchTaskData 분리
+// 절대 경로 파일
+import { Task, ContentBlock } from "@/src/types/taskTypes";
+
+// 스타일 파일
+import "./edit.css";
+
+// TaskData 가져오는 함수
 const fetchTaskData = async (taskId: string): Promise<Task> => {
   const response = await axiosInstance.get<Task>(`/projects/1/tasks/${taskId}`);
   return response.data;
 };
 
+// API 엔드포인트
+const API_ENDPOINTS = {
+  uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT || "",
+  fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT || "",
+};
+
+// API 헤더
+const AUTH_HEADER = {
+  Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ""}`,
+};
+
 export default function EditPage() {
   const { taskId } = useParams() as { taskId: string };
+  const editorRef = useRef<EditorJS | null>(null);
+  const editorContainerRef = useRef<HTMLDivElement | null>(null);
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // EditorJS 관리
-  const editorRef = useRef<EditorJS | null>(null);
-  const editorContainerRef = useRef<HTMLDivElement | null>(null);
-
-  // **새로 첨부할 파일들 담을 배열
   const [newFiles, setNewFiles] = useState<File[]>([]);
 
   // 서버에서 Task 불러오기
@@ -47,18 +59,7 @@ export default function EditPage() {
     loadTask();
   }, [taskId]);
 
-  // API 엔드포인트 상수로 분리
-  const API_ENDPOINTS = {
-    uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT || "",
-    fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT || "",
-  };
-
-  // API 헤더 상수로 분리
-  const AUTH_HEADER = {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ""}`,
-  };
-
-  // --- 2) EditorJS 초기화 ---
+  // EditorJS 초기화
   useEffect(() => {
     if (!task || !editorContainerRef.current) return;
 
@@ -115,7 +116,7 @@ export default function EditPage() {
                   formData.append("file", file);
 
                   const response = await axiosInstance.post(
-                    "/upload",
+                    API_ENDPOINTS.uploadFile,
                     formData
                   );
 
@@ -150,7 +151,7 @@ export default function EditPage() {
     setTask({ ...task, file: updatedFiles });
   };
 
-  // --- 새 파일 추가 ---
+  // 새 파일 추가
   const handleSelectNewFile = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -175,7 +176,7 @@ export default function EditPage() {
     setNewFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // --- 저장 ---
+  // 저장
   const handleSave = async () => {
     if (!task || !editorRef.current) return;
 
@@ -202,9 +203,10 @@ export default function EditPage() {
         const formData = new FormData();
         formData.append("file", f);
 
-        // 실제 서버 업로드 예시
-        const res = await axiosInstance.post("/upload", formData);
-        // 백엔드 응답에서 업로드된 URL 얻었다고 가정
+        const res = await axiosInstance.post(
+          API_ENDPOINTS.uploadFile,
+          formData
+        );
         uploadedFileUrls.push(res.data.url);
       }
 

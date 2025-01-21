@@ -1,3 +1,4 @@
+// 외부 라이브러리
 import { useState, useRef, useEffect } from "react";
 import {
   Box,
@@ -7,7 +8,8 @@ import {
   Flex,
   IconButton,
 } from "@chakra-ui/react";
-import ReplyItem from "./ReplyItem";
+
+// 절대 경로 파일
 import { Comment as CommentType } from "@/src/types/taskTypes";
 import { LuSearch } from "react-icons/lu";
 
@@ -15,12 +17,12 @@ interface CommentProps {
   comment: CommentType;
 }
 
-const CommentItem = ({ comment }: CommentProps) => {
+export default function CommentItem({ comment }: CommentProps) {
+  const dropdownRef = useRef<HTMLDivElement>(null); // 드롭다운 영역
   const [replyingTo, setReplyingTo] = useState(false);
   const [replyContent, setReplyContent] = useState("");
   const [openOptionId, setOpenOptionId] = useState<number | null>(null);
 
-  const dropdownRef = useRef<HTMLDivElement>(null); // 드롭다운 영역
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -61,12 +63,10 @@ const CommentItem = ({ comment }: CommentProps) => {
   };
 
   const handleEdit = (id: number) => {
-    console.log(`Edit button clicked for comment with ID: ${id}`);
     // 수정 로직 추가
   };
   
   const handleDelete = (id: number) => {
-    console.log(`Delete button clicked for comment with ID: ${id}`);
     // 삭제 로직 추가
   };
 
@@ -291,5 +291,3 @@ const CommentItem = ({ comment }: CommentProps) => {
     </Box>
   );
 };
-
-export default CommentItem;

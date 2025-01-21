@@ -1,8 +1,11 @@
 "use client";
 
+// 외부 라이브러리
 import { Box, VStack } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+
+// 절대 경로 파일
 import TaskContent from "@/src/components/common/TaskContent";
 import TaskComments from "@/src/components/common/TaskComments";
 import CommentBox from "@/src/components/common/CommentBox";

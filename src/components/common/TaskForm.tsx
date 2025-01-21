@@ -1,35 +1,36 @@
-import { useEffect, useRef, useState } from "react";
+// 외부 라이브러리
+import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
-import axiosInstance from "@/src/api/axiosInstance";
 
-const Form = ({
+// 절대 경로 파일
+import axiosInstance from "@/src/api/axiosInstance";
+import { formatDateString } from "@/src/utils/formatDateString";
+
+// API 엔드포인트 상수로 분리
+const API_ENDPOINTS = {
+  uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT,
+  fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT,
+};
+
+// API 헤더 상수로 분리
+const AUTH_HEADER = {
+  Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+};
+
+export default function TaskForm({
   author,
   createdDate,
 }: {
   author: string;
   createdDate: string;
-}) => {
+}) {
   const editorRef = useRef<EditorJS | null>(null);
-  // 첨부파일
   const [files, setFiles] = useState<(File | null)[]>([]);
-
-  // 첨부 링크
   const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
   const [newLink, setNewLink] = useState("");
   const [newLinkName, setNewLinkName] = useState("");
-
-  // 새 파일 입력 추가
-  const handleAddFile = () => {
-    setFiles([...files, null]);
-  };
-
-  // 특정 파일 제거
-  const handleRemoveFile = (index: number) => {
-    const newFiles = files.filter((_, i) => i !== index);
-    setFiles(newFiles);
-  };
 
   // 링크 추가
   const handleAddLink = () => {
@@ -46,15 +47,15 @@ const Form = ({
     setLinks(updatedLinks);
   };
 
-  // API 엔드포인트 상수로 분리
-  const API_ENDPOINTS = {
-    uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT,
-    fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT,
+  // 새 파일 추가
+  const handleAddFile = () => {
+    setFiles([...files, null]);
   };
 
-  // API 헤더 상수로 분리
-  const AUTH_HEADER = {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+  // 특정 파일 제거
+  const handleRemoveFile = (index: number) => {
+    const newFiles = files.filter((_, i) => i !== index);
+    setFiles(newFiles);
   };
 
   const uploadFile = async (file: File) => {
@@ -205,11 +206,7 @@ const Form = ({
           flex={"1"}
         >
           <Text mb={2}>작성 일시</Text>
-          <Input
-            type="date"
-            value={createdDate.split(".")[0].replace("Z", "").slice(0, 10)}
-            readOnly
-          />
+          <Input type="date" value={formatDateString(createdDate)} readOnly />
         </Box>
       </Flex>
 
@@ -297,6 +294,4 @@ const Form = ({
       </Button>
     </Flex>
   );
-};
-
-export default Form;
+}

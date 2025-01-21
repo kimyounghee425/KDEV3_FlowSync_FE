@@ -1,15 +1,19 @@
-import { Box, Text, Image, Link, VStack } from "@chakra-ui/react";
-import { Task, ContentBlock, TaskBoardLink } from "@/src/types/taskTypes";
+// 외부 라이브러리
+import { Box, Text, Image, VStack } from "@chakra-ui/react";
 
-const isImageFile = (file: string) => {
-  const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
-  const extension = file.split(".").pop()?.toLowerCase();
-  return imageExtensions.includes(extension || "");
-};
+// 절대 경로 파일
+import { Task, ContentBlock } from "@/src/types/taskTypes";
+import { formatDateString } from "@/src/utils/formatDateString";
+interface TaskContentProps {
+  task: Task;
+}
 
-const TaskContent = ({ task }: { task: Task }) => {
+export default function TaskContent({ task }:TaskContentProps) {
+
+  // 본문 렌더링
   const renderContent = (content: ContentBlock[]) => {
     return content.map((block, index) => {
+      // paragraph 데이터
       if (block.type === "paragraph" && typeof block.data === "string") {
         return (
           <Text key={index} mb={4} whiteSpace="pre-line">
@@ -17,7 +21,7 @@ const TaskContent = ({ task }: { task: Task }) => {
           </Text>
         );
       }
-
+      // image 데이터
       if (block.type === "image" && typeof block.data === "object") {
         return (
           <Box key={index} mb={4}>
@@ -35,6 +39,7 @@ const TaskContent = ({ task }: { task: Task }) => {
     });
   };
 
+  // 링크 렌더링
   const renderLinks = (links: Task["taskBoardLinkList"]) => {
     if (!Array.isArray(links)) {
       console.error("taskBoardLinkList is not an array:", links);
@@ -53,12 +58,12 @@ const TaskContent = ({ task }: { task: Task }) => {
     ));
   };
 
+  // 첨부파일 렌더링
   const renderFiles = (files: string[]) => {
     if (!Array.isArray(files)) {
       console.error("files is not an array:", files);
       return null;
     }
-
     return files.map((file: string, index: number) => {
       const fileName = file.split("/").pop(); // 파일 이름 추출
       return (
@@ -86,21 +91,6 @@ const TaskContent = ({ task }: { task: Task }) => {
     });
   };
 
-  // regAt 날짜 예쁘게 변환
-  function formatDateString(dateString: string) {
-    const date = new Date(dateString); // Date 객체 생성
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-
-    // "2025.01.08 11:34" 형태로 변환
-    return `${year}.${month}.${day} ${hours}:${minutes}`;
-  }
-
   return (
     <Box mb={4}>
       {/* 제목 */}
@@ -111,7 +101,7 @@ const TaskContent = ({ task }: { task: Task }) => {
       {/* 작성자, 작성 일시 */}
       <Box mb={4}>
         <Text>작성자: {task.author}</Text>
-        <Text>{task.regAt.split(".")[0].replace("Z", "").slice(0, 10)}</Text>
+        <Text>{formatDateString(task.regAt)}</Text>
       </Box>
 
       {/* 본문 내용 */}
@@ -132,10 +122,9 @@ const TaskContent = ({ task }: { task: Task }) => {
         <Text fontWeight="bold" mb={2}>
           첨부 파일
         </Text>
-        {/* <VStack align="start">{renderFiles(task.file)}</VStack> */}
+        <VStack align="start">{renderFiles(task.file)}</VStack>
       </Box>
     </Box>
   );
 };
 
-export default TaskContent;

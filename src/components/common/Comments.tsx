@@ -1,10 +1,13 @@
 // 댓글 목록을 렌더링하는 중간 레이어 컴포넌트
 
+// 외부 라이브러리
 import { Box } from "@chakra-ui/react";
-import CommentItem from "./CommentItem";
+
+// 절대 경로 파일
+import CommentItem from "@/src/components/common/CommentItem";
 import { TaskCommentsProps } from "@/src/types/taskTypes";
 
-const Comments = ({ comments }: TaskCommentsProps) => {
+export default function Comments({ comments }: TaskCommentsProps) {
   return (
     <Box>
       {comments.map((comment) => (
@@ -14,4 +17,3 @@ const Comments = ({ comments }: TaskCommentsProps) => {
   );
 };
 
-export default Comments;
