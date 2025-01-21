@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: "The World Best PMS Service",
 };
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+export default function MemberLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <Header />
