@@ -1,4 +1,4 @@
-export interface ProjectPropsType {
+export interface ProjectProps {
   id: number; // 프로젝트 ID
   name: string; // 프로젝트 이름
   status: string; // 계약 단계
@@ -8,7 +8,7 @@ export interface ProjectPropsType {
   developerName: string; // 개발사 이름
 }
 
-export interface ProjectInfoType {
+export interface ProjectInfoProps {
   projectTitle: string; // 프로젝트명
   jobRole: string; // 직무
   profileImageUrl: string; // 프로필 이미지 URL
@@ -19,7 +19,7 @@ export interface ProjectInfoType {
   projectCloseAt: string; // 프로젝트 종료일
 }
 
-export interface ProjectPostType {
+export interface ProjectPostProps {
   id: number, 
   number:number, 
   title: string,
