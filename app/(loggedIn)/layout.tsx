@@ -1,12 +1,14 @@
-"use client";
-
 import { ReactNode } from "react";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import Header from "@/src/components/layouts/Header";
 import Sidebar from "@/src/components/layouts/Sidebar";
 import { SidebarProvider } from "@/src/context/SidebarContext";
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+interface MemberAndAdminDashboardLayoutProps {
+  children: ReactNode;
+}
+
+export default function MemberAndAdminDashboardLayout({ children }: MemberAndAdminDashboardLayoutProps) {
   return (
     <>
       <Header />
