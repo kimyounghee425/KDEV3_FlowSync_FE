@@ -1,3 +1,4 @@
+
 // 외부 라이브러리
 import { Box, Text, Image, VStack } from "@chakra-ui/react";
 
@@ -14,6 +15,7 @@ export default function TaskContent({ task }:TaskContentProps) {
   const renderContent = (content: ContentBlock[]) => {
     return content.map((block, index) => {
       // paragraph 데이터
+
       if (block.type === "paragraph" && typeof block.data === "string") {
         return (
           <Text key={index} mb={4} whiteSpace="pre-line">
@@ -21,7 +23,9 @@ export default function TaskContent({ task }:TaskContentProps) {
           </Text>
         );
       }
+
       // image 데이터
+
       if (block.type === "image" && typeof block.data === "object") {
         return (
           <Box key={index} mb={4}>
@@ -41,10 +45,6 @@ export default function TaskContent({ task }:TaskContentProps) {
 
   // 링크 렌더링
   const renderLinks = (links: Task["taskBoardLinkList"]) => {
-    if (!Array.isArray(links)) {
-      console.error("taskBoardLinkList is not an array:", links);
-      return null;
-    }
     return links.map((link, index) => (
       <Box
         key={index}
@@ -52,11 +52,13 @@ export default function TaskContent({ task }:TaskContentProps) {
         cursor="pointer"
         color={"blue"}
         onClick={() => window.open(link.url, "_blank")}
-        _hover={{ textDecoration: "underline" }}>
+        _hover={{ textDecoration: "underline" }}
+      >
         <Text fontWeight="normal">{link.name}</Text>
       </Box>
     ));
   };
+
 
   // 첨부파일 렌더링
   const renderFiles = (files: string[]) => {
@@ -64,12 +66,13 @@ export default function TaskContent({ task }:TaskContentProps) {
       console.error("files is not an array:", files);
       return null;
     }
+
     return files.map((file: string, index: number) => {
       const fileName = file.split("/").pop(); // 파일 이름 추출
       return (
         <Box key={index} mb={4}>
           <a
-            href={file} // download 속성만 있어도 되는데 그냥 썼음.
+            href={file}
             target="blank"
             download={fileName}
             style={{
@@ -83,13 +86,31 @@ export default function TaskContent({ task }:TaskContentProps) {
             }
             onMouseLeave={(e) =>
               (e.currentTarget.style.textDecoration = "none")
-            }>
+            }
+          >
             {fileName}
           </a>
         </Box>
       );
     });
   };
+
+
+  // regAt 날짜 예쁘게 변환
+  // 연도.월.일 시:분 형태로 반환
+  function formatDateString(dateString: string) {
+    const date = new Date(dateString); // Date 객체 생성
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${year}.${month}.${day} ${hours}:${minutes}`;
+  }
+
 
   return (
     <Box mb={4}>

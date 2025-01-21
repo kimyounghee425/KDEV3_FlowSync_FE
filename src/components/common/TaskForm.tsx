@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
+import { Select } from "@chakra-ui/select";
 
 // 절대 경로 파일
 import axiosInstance from "@/src/api/axiosInstance";
@@ -27,8 +28,11 @@ export default function TaskForm({
   createdDate: string;
 }) {
   const editorRef = useRef<EditorJS | null>(null);
+
   const [files, setFiles] = useState<(File | null)[]>([]);
+  const [title, setTitle] = useState("");
   const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
+  const [boardCategory, setBoardCategory] = useState<string>("");
   const [newLink, setNewLink] = useState("");
   const [newLinkName, setNewLinkName] = useState("");
 
@@ -106,30 +110,36 @@ export default function TaskForm({
     };
   }, []);
 
-  // 서버에 저장
+  // 서버에 저장하는 핸들러
   const handleSave = async () => {
     if (editorRef.current) {
       try {
         const savedData = await editorRef.current.save();
 
         const requestData = {
-          title: "게시글 제목입니다.",
-          content: savedData.blocks.map((block) => {
-            if (block.type === "paragraph") {
-              return {
-                type: "paragraph",
-                text: block.data.text,
-              };
-            } else if (block.type === "image") {
-              return {
-                type: "image",
-                data: { src: block.data.file.url },
-              };
-            }
-          }),
-          boardCategory: "QUESTION",
-          boardStatus: "PROGRESS",
-          taskBoardLinkList: links.map((link) => link.url),
+          content: {
+            title,
+            content: savedData.blocks.map((block) => {
+              if (block.type === "paragraph") {
+                return {
+                  type: "paragraph",
+                  text: block.data.text,
+                };
+              } else if (block.type === "image") {
+                return {
+                  type: "image",
+                  data: { src: block.data.file.url },
+                };
+              }
+            }),
+            boardCategory,
+            boardStatus: "PROGRESS",
+            taskBoardLinkList: links.map((link, index) => ({
+              id: index,
+              name: link.name,
+              url: link.url,
+            })),
+          },
         };
 
         await axiosInstance.post("/posts", requestData);
@@ -184,27 +194,51 @@ export default function TaskForm({
 
   return (
     <Flex gap={4} direction={"column"}>
-      <Box>
-        <Text mb={2}>제목</Text>
-        <Input placeholder="제목을 입력하세요." />
-      </Box>
+      <Flex align={"center"} gap={4}>
+        <Box>
+          <Text mb={2}>카테고리</Text>
+          <Select
+            value={boardCategory}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              setBoardCategory(e.target.value)
+            }
+            placeholder="카테고리 선택"
+            bg={"white"}
+            border={"1px solid #ccc"}
+            borderRadius={"md"}
+            height={"40px"}
+            fontSize={"md"}
+            paddingX={2}
+            _focus={{
+              borderColor: "blue.500",
+              boxShadow: "0 0 0 1px blue.500",
+            }}
+            _hover={{
+              borderColor: "gray.500",
+            }}
+          >
+            <option value="QUESTION">질문</option>
+            <option value="REQUEST">요청</option>
+            <option value="ANSWER">답변</option>
+          </Select>
+        </Box>
+        <Box flex={2}>
+          <Text mb={2}>제목</Text>
+          <Input
+            placeholder="제목을 입력하세요."
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </Box>
+      </Flex>
 
       <Flex align={"center"} gap={4} width={"100%"}>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          alignItems={"left"}
-          flex={"1"}
-        >
+        <Box flex={"1"}>
+          {/* 작성자 */}
           <Text mb={2}>작성자</Text>
           <Input type="text" value={author} readOnly />
         </Box>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          alignItems={"start"}
-          flex={"1"}
-        >
+        <Box flex={"1"}>
+          {/* 작성 일시 */}
           <Text mb={2}>작성 일시</Text>
           <Input type="date" value={formatDateString(createdDate)} readOnly />
         </Box>
@@ -262,7 +296,6 @@ export default function TaskForm({
         {files.map((file, index) => (
           <Box key={index} display="flex" alignItems="center" mb={4}>
             <Input type="file" onChange={(e) => handleFileChange(index, e)} />
-
             <Button
               ml={2}
               colorScheme="red"
