@@ -1,3 +1,5 @@
+import { useRouter } from "next/navigation";
+import { createListCollection } from "@chakra-ui/react";
 import {
   SelectContent,
   SelectItem,
@@ -6,8 +8,6 @@ import {
   SelectValueText,
 } from "@/src/components/ui/select";
 import { useProjectBoard } from "@/src/hook/useProjectBoard";
-import { createListCollection } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
 
 const boardCategoryFramework = createListCollection<{
   label: string;
