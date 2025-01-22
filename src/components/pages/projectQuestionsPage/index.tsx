@@ -4,7 +4,7 @@ import { Table } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import CustomColorBox from "@/src/components/common/StatusTag";
 
-// 질문(소통관리) 데이터 예시
+// 질문(소통관리) 더미 데이터
 const dummyData = [
   {
     id: 1,
@@ -24,7 +24,7 @@ const dummyData = [
 
 export default function QuestionsPage() {
   const handleRowClick = (id: number) => {
-    console.log("Row clicked:", id); // 실제로는 라우팅 처리 가능
+    console.log("Row clicked:", id);
   };
 
   return (

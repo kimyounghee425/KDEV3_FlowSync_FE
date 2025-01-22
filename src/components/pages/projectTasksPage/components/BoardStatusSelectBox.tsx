@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "@/src/components/ui/select";
-import { useProjectBoard } from "@/src/hook/useProjectBoard";
+import { useProjectQuestionsList } from "@/src/hook/useProjectQuestionsList";
 
 const boardStatusFramework = createListCollection<{
   label: string;
@@ -29,7 +29,7 @@ const boardStatusFramework = createListCollection<{
  */
 export default function BoardStatusSelectBox() {
   const router = useRouter();
-  const { boardStatus } = useProjectBoard();
+  const { status } = useProjectQuestionsList();
 
   /**
    * 드롭다운 선택이 바뀔 때 실행될 콜백:
@@ -58,7 +58,7 @@ export default function BoardStatusSelectBox() {
       collection={boardStatusFramework}
       size="md"
       width="110px"
-      value={[boardStatus]}
+      value={[status]}
       onValueChange={handleValueChange}
     >
       {/* 드롭다운 버튼(트리거) */}

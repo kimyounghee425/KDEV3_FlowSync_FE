@@ -21,8 +21,8 @@ export interface ProjectInfoProps {
   projectCloseAt: string; // 프로젝트 종료일
 }
 
-// 업무글 속성
-export interface ProjectPostProps {
+// 질문글 목록 속성
+export interface ProjectQuestionProps {
   id: number;
   number: number;
   title: string;
@@ -30,8 +30,8 @@ export interface ProjectPostProps {
   regAt: string;
   editAt: string;
   approveAt: string;
-  boardCategory: string; // 진행단계
-  boardStatus: string; // 게시글 유형
+  category: string; // 진행단계
+  status: string; // 게시글 유형
   deletedYn: string;
   currentPage: number; // 현재 페이지
   pageSize: number; // 페이지 크기

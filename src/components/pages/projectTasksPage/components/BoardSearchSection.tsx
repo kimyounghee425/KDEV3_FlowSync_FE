@@ -3,13 +3,13 @@
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HStack, Input, Button, Box, Flex } from "@chakra-ui/react";
-import { useProjectBoard } from "@/src/hook/useProjectBoard";
-import BoardCategorySelectBox from "@/src/components/pages/projectPage/components/BoardCategorySelectBox";
-import BoardStatusSelectBox from "@/src/components/pages/projectPage/components/BoardStatusSelectBox";
+import { useProjectQuestionsList } from "@/src/hook/useProjectQuestionsList";
+import BoardCategorySelectBox from "@/src/components/pages/projectTasksPage/components/BoardCategorySelectBox";
+import BoardStatusSelectBox from "@/src/components/pages/projectTasksPage/components/BoardStatusSelectBox";
 
 export default function ProjectsSearchSection() {
   const [input, setInput] = useState<string>();
-  const { keyword, fetchBoardList } = useProjectBoard();
+  const { keyword, fetchBoardList } = useProjectQuestionsList();
   const router = useRouter();
 
   // 검색 버튼을 클릭하거나 엔터 입력시 데이터를 가져오는 함수
