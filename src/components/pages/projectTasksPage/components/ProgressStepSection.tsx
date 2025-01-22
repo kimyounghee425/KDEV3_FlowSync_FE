@@ -45,6 +45,11 @@ export default function ProgressStepSection({
    * - fetchBoardList()로 새 데이터 재요청
    */
   const handleStatusChange = (id: string) => {
+    // 이미 선택된 버튼이라면 아무 동작도 하지 않음
+    if (id === selectedButtonId) {
+      return;
+    }
+
     setSelectedButtonId(id); // 클릭된 버튼으로 상태 변경
 
     // progressData에서 선택된 단계의 value를 찾음

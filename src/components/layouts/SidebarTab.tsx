@@ -31,7 +31,7 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
     memberRole === "admin"
       ? adminMenuItems.map((item) => (
           <CardTitle key={item.value} width="100%" mb="2" p="2">
-            <Link href={`/${item.value}`}>{item.title}</Link>
+            <Link href={`${item.value}`}>{item.title}</Link>
           </CardTitle>
         ))
       : userMenuItems.map((item) => (

@@ -3,6 +3,8 @@
 import { Table } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import CustomColorBox from "@/src/components/common/StatusTag";
+import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
+import BoardSearchSection from "@/src/components/common/SearchSection";
 
 // 질문(소통관리) 더미 데이터
 const dummyData = [
@@ -28,30 +30,47 @@ export default function QuestionsPage() {
   };
 
   return (
-    <CommonTable
-      headerTitle={
-        <Table.Row backgroundColor={"#eee"}>
-          <Table.ColumnHeader>제목</Table.ColumnHeader>
-          <Table.ColumnHeader>등록일</Table.ColumnHeader>
-          <Table.ColumnHeader>상태</Table.ColumnHeader>
-          <Table.ColumnHeader>유형</Table.ColumnHeader>
-        </Table.Row>
-      }
-      data={dummyData}
-      loading={false}
-      renderRow={(item) => (
-        <>
-          <Table.Cell>{item.title}</Table.Cell>
-          <Table.Cell>{item.regAt}</Table.Cell>
-          <Table.Cell>
-            <CustomColorBox>{item.status}</CustomColorBox>
-          </Table.Cell>
-          <Table.Cell>
-            <CustomColorBox>{item.category}</CustomColorBox>
-          </Table.Cell>
-        </>
-      )}
-      handleRowClick={handleRowClick}
-    />
+    <ProjectLayout>
+      {/* 검색 섹션 */}
+      <BoardSearchSection />
+      {/* 
+          CommonTable: 게시글 목록을 렌더링하는 공통 테이블 컴포넌트
+          - headerTitle: 테이블 헤더
+          - data: 목록 데이터
+          - loading: 로딩 상태
+          - renderRow: 각 행의 셀을 어떻게 렌더링할지 정의
+          - handleRowClick: 행 클릭 시 동작
+        */}
+      <CommonTable
+        headerTitle={
+          <Table.Row
+            backgroundColor={"#eee"}
+            css={{
+              "& > th": { textAlign: "center" },
+            }}
+          >
+            <Table.ColumnHeader>제목</Table.ColumnHeader>
+            <Table.ColumnHeader>등록일</Table.ColumnHeader>
+            <Table.ColumnHeader>상태</Table.ColumnHeader>
+            <Table.ColumnHeader>유형</Table.ColumnHeader>
+          </Table.Row>
+        }
+        data={dummyData}
+        loading={false}
+        renderRow={(item) => (
+          <>
+            <Table.Cell>{item.title}</Table.Cell>
+            <Table.Cell>{item.regAt}</Table.Cell>
+            <Table.Cell>
+              <CustomColorBox>{item.status}</CustomColorBox>
+            </Table.Cell>
+            <Table.Cell>
+              <CustomColorBox>{item.category}</CustomColorBox>
+            </Table.Cell>
+          </>
+        )}
+        handleRowClick={handleRowClick}
+      />
+    </ProjectLayout>
   );
 }

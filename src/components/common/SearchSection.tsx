@@ -1,13 +1,15 @@
 "useClient";
 
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HStack, Input, Button, Box, Flex } from "@chakra-ui/react";
 import { useProjectQuestionsList } from "@/src/hook/useProjectQuestionsList";
-import BoardCategorySelectBox from "@/src/components/pages/projectTasksPage/components/BoardCategorySelectBox";
-import BoardStatusSelectBox from "@/src/components/pages/projectTasksPage/components/BoardStatusSelectBox";
 
-export default function ProjectsSearchSection() {
+interface SearchSectionProps {
+  children: ReactNode;
+}
+
+export default function SearchSection({ children }: SearchSectionProps) {
   const [input, setInput] = useState<string>();
   const { keyword, fetchBoardList } = useProjectQuestionsList();
   const router = useRouter();
@@ -48,8 +50,7 @@ export default function ProjectsSearchSection() {
     <Box mb="10px">
       <Flex gap={4} alignItems="center" justifyContent="end">
         <HStack>
-          <BoardStatusSelectBox />
-          <BoardCategorySelectBox />
+          {children}
           <Input
             placeholder="프로젝트명 검색"
             size="md"

@@ -13,9 +13,6 @@ interface useProjectQuestionsListProps {
 
 /**
  * 프로젝트 질문관리 게시판 데이터패칭 훅
- * - URL 경로(프로젝트 ID, 태스크 ID) 및 쿼리 파라미터(검색어, 상태 등)를 추출
- * - 서버 API fetchProjectQuestionsList를 통해 게시판 목록과 페이지네이션 정보 로드
- * - 로딩 상태(loading), 리스트/페이지 정보, 재조회 함수 등을 반환
  */
 export function useProjectQuestionsList() {
   const searchParams = useSearchParams(); // URL 쿼리스트링 추출
@@ -25,14 +22,14 @@ export function useProjectQuestionsList() {
   const [projectQuestionsList, setProjectQuestionsList] = useState<
     ProjectQuestionProps[]
   >([]);
-  // 페이지네이션 관련 정보(현재 페이지, 전체 페이지, 페이지 크기 등)
+  // 페이지네이션 관련 정보
   const [paginationInfo, setPaginationInfo] = useState<PaginationProps>();
   // 로딩 여부
   const [loading, setLoading] = useState(false);
 
   // 쿼리 파라미터(검색어, 게시글 상태, 진행 단계)
   const keyword = searchParams?.get("keyword") || "";
-  const status = searchParams?.get("status") || "";
+  const status = (searchParams?.get("status") ?? "") as string;
   const progressStep = searchParams?.get("progressStep") || "";
 
   /**
