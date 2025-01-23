@@ -10,8 +10,8 @@ interface SidebarTabProps {
 // admin 메뉴 항목
 const adminMenuItems = [
   { value: "/", title: "홈 대시보드" },
-  { value: "/members", title: "회원 관리" },
-  { value: "/organizations", title: "업체 관리" },
+  { value: "/admin/members", title: "회원 관리" },
+  { value: "/admin/organizations", title: "업체 관리" },
 ];
 
 export default function SidebarTab({ memberRole }: SidebarTabProps) {
@@ -31,7 +31,7 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
     memberRole === "admin"
       ? adminMenuItems.map((item) => (
           <CardTitle key={item.value} width="100%" mb="2" p="2">
-            <Link href={`/admin${item.value}`}>{item.title}</Link>
+            <Link href={`${item.value}`}>{item.title}</Link>
           </CardTitle>
         ))
       : userMenuItems.map((item) => (

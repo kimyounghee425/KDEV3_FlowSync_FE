@@ -1,13 +1,13 @@
 import axiosInstance from "@/src/api/axiosInstance";
-import { OrganizationProps } from "@/src/types/organization";
-import { MemberResponseType } from "@/src/types/api";
+import { OrganizationListResponse } from "@/src/types";
+import { CommonResponseType } from "@/src/types";
 
-export async function fetchOrganizations(
+export async function fetchOrganizationList(
   query: string = "", // 검색어
   filter: string = "", // 필터링 값
   currentPage: number,
   pageSize: number,
-): Promise<MemberResponseType<{ members: OrganizationProps[] }>> {
+): Promise<CommonResponseType<OrganizationListResponse>> {
   const response = await axiosInstance.get("/admins/members", {
     params: { query, filter, currentPage, pageSize },
   });

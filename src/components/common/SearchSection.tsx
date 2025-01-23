@@ -1,15 +1,25 @@
 "useClient";
 
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HStack, Input, Button, Box, Flex } from "@chakra-ui/react";
-import { useProjectBoard } from "@/src/hook/useProjectBoard";
-import BoardCategorySelectBox from "@/src/components/pages/projectPage/components/BoardCategorySelectBox";
-import BoardStatusSelectBox from "@/src/components/pages/projectPage/components/BoardStatusSelectBox";
 
-export default function ProjectsSearchSection() {
+interface SearchSectionProps {
+  useCustomHook: () => {
+    keyword: string;
+    fetchBoardList: (page: number, pageSize: number) => void;
+  };
+  placeholder?: string;
+  children?: ReactNode;
+}
+
+export default function SearchSection({
+  useCustomHook,
+  placeholder = "검색어를 입력하세요",
+  children,
+}: SearchSectionProps) {
   const [input, setInput] = useState<string>();
-  const { keyword, fetchBoardList } = useProjectBoard();
+  const { keyword, fetchBoardList } = useCustomHook();
   const router = useRouter();
 
   // 검색 버튼을 클릭하거나 엔터 입력시 데이터를 가져오는 함수
@@ -48,10 +58,9 @@ export default function ProjectsSearchSection() {
     <Box mb="10px">
       <Flex gap={4} alignItems="center" justifyContent="end">
         <HStack>
-          <BoardStatusSelectBox />
-          <BoardCategorySelectBox />
+          {children}
           <Input
-            placeholder="프로젝트명 검색"
+            placeholder={placeholder}
             size="md"
             value={input}
             onChange={onChangeSearch}

@@ -1,8 +1,8 @@
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { OrganizationProps } from "@/src/types/organization";
-import { fetchOrganizations } from "@/src/api/organizations";
-import { MemberResponseType } from "@/src/types/api";
+import { OrganizationListResponse, OrganizationProps } from "@/src/types";
+import { fetchOrganizationList } from "@/src/api/organizations";
+import { CommonResponseType } from "@/src/types";
 
 export function useOrganizationList() {
   const [organizationList, setOrganizationList] = useState<OrganizationProps[]>(
@@ -10,35 +10,39 @@ export function useOrganizationList() {
   );
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
-  const query = searchParams?.get("query") || "";
+  const keyword = searchParams?.get("keyword") || "";
   const filter = searchParams?.get("filter") || "";
 
-  const fetchMemberList = useCallback(
+  const fetchBoardList = useCallback(
     async (currentPage: number = 1, pageSize: number = 5) => {
       setLoading(true);
       try {
-        const response: MemberResponseType<{ members: OrganizationProps[] }> =
-          await fetchOrganizations(query, filter, currentPage - 1, pageSize);
-        setOrganizationList(response.data.members);
+        const response: CommonResponseType<OrganizationListResponse> =
+          await fetchOrganizationList(
+            keyword,
+            filter,
+            currentPage - 1,
+            pageSize,
+          );
+        setOrganizationList(response.data.organizations);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
         setLoading(false);
       }
     },
-    [query, filter],
+    [keyword, filter],
   );
 
   useEffect(() => {
-    fetchMemberList();
-    console.log("시작할 때 딱 1번만 실행");
-  }, [fetchMemberList]);
+    fetchBoardList();
+  }, [fetchBoardList]);
 
   return {
-    query,
+    keyword,
     filter,
     organizationList,
     loading,
-    fetchOrganizations,
+    fetchBoardList,
   };
 }

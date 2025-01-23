@@ -1,28 +1,26 @@
 "use client";
 
-import { Table } from "@chakra-ui/react";
-import { createListCollection } from "@chakra-ui/react";
+import { createListCollection, Table } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import CustomColorBox from "@/src/components/common/StatusTag";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import SearchSection from "@/src/components/common/SearchSection";
 import StatusSelectBox from "@/src/components/common/StatusSelectBox";
-import { useProjectTaskList } from "@/src/hook/useProjectTaskList";
+import { useProjectQuestionList } from "@/src/hook/useProjectQuestionList";
 
-const taskStatusFramework = createListCollection<{
+const questionStatusFramework = createListCollection<{
   id: string;
   label: string;
   value: string;
 }>({
   items: [
     { id: "1", label: "전체", value: "" },
-    { id: "2", label: "대기", value: "WAIT" },
-    { id: "3", label: "반려", value: "SUSPENSION" },
-    { id: "4", label: "승인", value: "COMPLETED" },
+    { id: "2", label: "답변대기", value: "WAIT" },
+    { id: "3", label: "답변완료", value: "COMPLETED" },
   ],
 });
 
-// 질문(소통관리) 데이터 예시
+// 질문(소통관리) 더미 데이터
 const dummyData = [
   {
     id: "1",
@@ -41,17 +39,20 @@ const dummyData = [
 ];
 
 export default function QuestionsPage() {
-  const { status } = useProjectTaskList();
+  const { status } = useProjectQuestionList();
   const handleRowClick = (id: string) => {
-    console.log("Row clicked:", id); // 실제로는 라우팅 처리 가능
+    console.log("Row clicked:", id);
   };
 
   return (
     <ProjectLayout>
       {/* 검색 섹션 */}
-      <SearchSection useCustomHook={useProjectTaskList} placeholder="제목 입력">
+      <SearchSection
+        useCustomHook={useProjectQuestionList}
+        placeholder="제목 입력"
+      >
         <StatusSelectBox
-          statusFramework={taskStatusFramework}
+          statusFramework={questionStatusFramework}
           status={status}
         />
       </SearchSection>

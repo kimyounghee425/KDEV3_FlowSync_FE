@@ -9,7 +9,7 @@ import { CommonResponseType, ProjectListResponse } from "@/src/types";
  * @param pageSize 페이지 크기
  * @returns 프로젝트 목록 및 페이징 정보를 담은 객체(BoardResponseProps)
  */
-export async function fetchProjects(
+export async function fetchProjectList(
   keyword: string = "",
   filter: string = "",
   currentPage: number,
@@ -20,6 +20,7 @@ export async function fetchProjects(
   });
   return response.data;
 }
+
 
 /**
  * 특정 프로젝트의 상세 정보를 가져옵니다.
@@ -66,12 +67,11 @@ export async function fetchProjectsStatusCount() {
  * @param pageSize 페이지 크기
  * @returns 게시글 목록 및 페이징 정보를 담은 데이터
  */
-export async function fetchProjectBoard(
+export async function fetchProjectQuestionList(
   projectId: string,
   keyword: string = "",
   progressStep: string = "",
-  boardStatus: string = "",
-  boardCategory: string = "",
+  status: string = "",
   currentPage: number,
   pageSize: number,
 ) {
@@ -81,8 +81,40 @@ export async function fetchProjectBoard(
     params: {
       keyword,
       progressStep,
-      boardStatus,
-      boardCategory,
+      status,
+      currentPage,
+      pageSize,
+    },
+  });
+  return response.data;
+}
+
+/**
+ * 특정 프로젝트(또는 게시글) 목록(게시판)을 가져옵니다.
+ * @param projectId 프로젝트 식별자
+ * @param keyword 검색어 (기본값: "")
+ * @param progressStep 진행 단계(필터링)
+ * @param boardStatus 게시글 상태(필터링)
+ * @param boardCategory 게시글 유형(필터링)
+ * @param currentPage 현재 페이지
+ * @param pageSize 페이지 크기
+ * @returns 게시글 목록 및 페이징 정보를 담은 데이터
+ */
+export async function fetchProjectTaskList(
+  projectId: string,
+  keyword: string = "",
+  progressStep: string = "",
+  status: string = "",
+  currentPage: number,
+  pageSize: number,
+) {
+  // 실제 요청은 /projects/:projectId/tasks endpoint가 될 수도 있으나,
+  // 현재 주석 처리되어 있고, 대신 /posts endpoint를 사용 중입니다.
+  const response = await axiosInstance.get(`/posts`, {
+    params: {
+      keyword,
+      progressStep,
+      status,
       currentPage,
       pageSize,
     },

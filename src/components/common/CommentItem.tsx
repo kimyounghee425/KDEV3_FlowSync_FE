@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 // 절대 경로 파일
-import { Comment as CommentType } from "@/src/types/taskTypes";
+import { Comment as CommentType } from "@/src/types";
 import { LuSearch } from "react-icons/lu";
 
 interface CommentProps {
@@ -22,7 +22,6 @@ export default function CommentItem({ comment }: CommentProps) {
   const [replyingTo, setReplyingTo] = useState(false);
   const [replyContent, setReplyContent] = useState("");
   const [openOptionId, setOpenOptionId] = useState<number | null>(null);
-
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -86,7 +85,10 @@ export default function CommentItem({ comment }: CommentProps) {
                     <Flex alignItems="center" justifyContent="space-between">
                       <Text fontWeight="bold">{reply.author}</Text>
                       <Text fontSize="sm" color="gray.500">
-                        {reply.regAt.split(".")[0].replace("Z", "").slice(0, 10)}
+                        {reply.regAt
+                          .split(".")[0]
+                          .replace("Z", "")
+                          .slice(0, 10)}
                       </Text>
                       <IconButton
                         aria-label="댓글 옵션"
@@ -166,7 +168,7 @@ export default function CommentItem({ comment }: CommentProps) {
               top="36px"
               right="4px"
               bg="white"
-              border="1px solid #ccc" 
+              border="1px solid #ccc"
               borderRadius="md"
               boxShadow="md"
               zIndex={10}
@@ -290,4 +292,4 @@ export default function CommentItem({ comment }: CommentProps) {
       )}
     </Box>
   );
-};
+}

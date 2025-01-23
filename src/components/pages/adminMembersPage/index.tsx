@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { Heading, Stack, Table } from "@chakra-ui/react";
 import StatusTag from "@/src/components/common/StatusTag";
-import MembersSearchSection from "@/src/components/common/MembersSearchSection";
+import MembersSearchSection from "@/src/components/pages/adminMembersPage/components/MembersSearchSection";
 import { useMemberList } from "@/src/hook/useMemberList";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
@@ -23,7 +23,7 @@ export default function AdminMembersPage() {
 }
 
 function AdminMembersPageContent() {
-  const { memberList, paginationMeta, loading, fetchMemberList } =
+  const { memberList, paginationMeta, loading, fetchBoardList } =
     useMemberList();
   const router = useRouter();
 
@@ -35,7 +35,7 @@ function AdminMembersPageContent() {
     // URL 업데이트
     router.push(`?${params.toString()}`);
     // 데이터를 다시 가져오기
-    fetchMemberList(page, paginationMeta?.pageSize || 10);
+    fetchBoardList(page, paginationMeta?.pageSize || 10);
   };
 
   const handleRowClick = (id: string) => {

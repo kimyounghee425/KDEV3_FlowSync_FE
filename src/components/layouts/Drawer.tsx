@@ -47,8 +47,11 @@ export default function Drawer() {
             <Button>공통 - 로그인 화면</Button>
           </Link>
           <hr />
-          <Link href="/admin">
-            <Button>관리자 - 홈 종합 대시보드</Button>
+          <Link href="/admin/members">
+            <Button>관리자 - 회원 관리</Button>
+          </Link>
+          <Link href="/admin/organizations">
+            <Button>관리자 - 업체 관리</Button>
           </Link>
           <hr />
         </DrawerBody>

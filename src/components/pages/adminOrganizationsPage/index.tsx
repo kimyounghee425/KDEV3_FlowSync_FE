@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import { Heading, Stack, Table } from "@chakra-ui/react";
 import { useOrganizationList } from "@/src/hook/useOrganizationList";
 import StatusTag from "@/src/components/common/StatusTag";
-import MembersSearchSection from "../../common/MembersSearchSection";
-import CommonTable from "../../common/CommonTable";
+import CommonTable from "@/src/components/common/CommonTable";
+import OrganizationsSearchSection from "@/src/components/pages/adminOrganizationsPage/components/OrganizationsSearchSection";
 
 const STATUS_LABELS: Record<string, string> = {
-  ING_WORK: "근무 O",
-  STOP_WORK: "근무 X",
+  ACTIVE: "활성화",
+  INACTIVE: "비활성화",
 };
 
 export default function AdminOrganizationsPage() {
@@ -22,8 +22,7 @@ export default function AdminOrganizationsPage() {
 }
 
 function AdminOrganizationsPageContent() {
-  const { organizationList, loading, fetchOrganizations } =
-    useOrganizationList();
+  const { organizationList, loading, fetchBoardList } = useOrganizationList();
   const router = useRouter();
 
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
@@ -34,7 +33,7 @@ function AdminOrganizationsPageContent() {
     // URL 업데이트
     router.push(`?${params.toString()}`);
     // // 데이터를 다시 가져오기
-    // fetchMemberList(page, paginationInfo?.pageSize || 5);
+    // fetchBoardList(page, paginationInfo?.pageSize || 5);
   };
 
   const handleRowClick = (id: string) => {
@@ -47,7 +46,7 @@ function AdminOrganizationsPageContent() {
         <Heading size="2xl" color="gray.600">
           업체 관리
         </Heading>
-        <MembersSearchSection />
+        <OrganizationsSearchSection />
         <CommonTable
           headerTitle={
             <Table.Row
@@ -56,12 +55,11 @@ function AdminOrganizationsPageContent() {
                 "& > th": { textAlign: "center" },
               }}
             >
-              <Table.ColumnHeader>회원명</Table.ColumnHeader>
-              <Table.ColumnHeader>소속 업체명</Table.ColumnHeader>
-              <Table.ColumnHeader>직무</Table.ColumnHeader>
-              <Table.ColumnHeader>이메일</Table.ColumnHeader>
+              <Table.ColumnHeader>업체명</Table.ColumnHeader>
+              <Table.ColumnHeader>업체유형</Table.ColumnHeader>
               <Table.ColumnHeader>연락처</Table.ColumnHeader>
-              <Table.ColumnHeader>근무 상태</Table.ColumnHeader>
+              <Table.ColumnHeader>주소</Table.ColumnHeader>
+              <Table.ColumnHeader>상태</Table.ColumnHeader>
             </Table.Row>
           }
           data={organizationList}
@@ -69,10 +67,9 @@ function AdminOrganizationsPageContent() {
           renderRow={(organization) => (
             <>
               <Table.Cell>{organization.name}</Table.Cell>
-              <Table.Cell>{organization.organizationId}</Table.Cell>
-              <Table.Cell>{organization.jobRole}</Table.Cell>
-              <Table.Cell>{organization.email}</Table.Cell>
-              <Table.Cell>{organization.phoneNum}</Table.Cell>
+              <Table.Cell>{organization.type}</Table.Cell>
+              <Table.Cell>{organization.phone_number}</Table.Cell>
+              <Table.Cell>{`${organization.streetAddress} ${organization.detailAddress}`}</Table.Cell>
               <Table.Cell>
                 <StatusTag>
                   {STATUS_LABELS[organization.status] || "알 수 없음"}

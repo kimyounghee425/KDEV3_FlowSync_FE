@@ -49,13 +49,18 @@ export interface OrganizationProps {
   type: string;
   status: string;
   brNumber: string | null;
-  orgName: string;
+  name: string;
   reg_at: string;
   brCertificateUrl: string | null;
   streetAddress: string | null;
   detailAddress: string | null;
   phone_number: string | null;
   remark: string | null;
+}
+
+export interface OrganizationListResponse {
+  organizations: OrganizationProps[];
+  meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
 // 프로젝트 속성
@@ -69,7 +74,7 @@ export interface ProjectProps {
   developerName: string; // 개발사 이름
 }
 export interface ProjectListResponse {
-  members: ProjectProps[];
+  projects: ProjectProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
@@ -85,8 +90,8 @@ export interface ProjectInfoProps {
   projectCloseAt: string; // 프로젝트 종료일
 }
 
-// 업무글 속성
-export interface ProjectPostProps {
+// 결재글 속성
+export interface ProjectTaskProps {
   id: number;
   number: number;
   title: string;
@@ -94,11 +99,37 @@ export interface ProjectPostProps {
   regAt: string;
   editAt: string;
   approveAt: string;
-  boardCategory: string; // 진행단계
-  boardStatus: string; // 게시글 유형
+  category: string; // 진행단계
+  status: string; // 게시글 유형
   deletedYn: string;
   currentPage: number; // 현재 페이지
   pageSize: number; // 페이지 크기
+}
+
+export interface ProjectTaskListResponse {
+  projectTasks: ProjectTaskProps[];
+  meta: PaginationProps; // 페이지네이션 메타 정보
+}
+
+// 질문글 속성
+export interface ProjectQuestionProps {
+  id: number;
+  number: number;
+  title: string;
+  content: string;
+  regAt: string;
+  editAt: string;
+  approveAt: string;
+  category: string; // 진행단계
+  status: string; // 게시글 유형
+  deletedYn: string;
+  currentPage: number; // 현재 페이지
+  pageSize: number; // 페이지 크기
+}
+
+export interface ProjectQuestionListResponse {
+  projectQuestions: ProjectQuestionProps[];
+  meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
 export interface ApiResponse {
