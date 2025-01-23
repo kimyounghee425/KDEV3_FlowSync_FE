@@ -3,35 +3,33 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { BoardResponseProps, PaginationProps } from "@/src/types";
-import { fetchProjectBoard } from "@/src/api/projects";
-import { ProjectPostProps } from "@/src/types";
+import { fetchProjectQuestionsList } from "@/src/api/projects";
+import { ProjectQuestionProps } from "@/src/types";
 
-interface ProjectBoardParamsProps {
+interface useProjectQuestionsListProps {
   projectId?: string;
   taskId?: string;
 }
 
 /**
- * 프로젝트 게시판 훅
- * - URL 경로(프로젝트 ID, 태스크 ID) 및 쿼리 파라미터(검색어, 상태 등)를 추출
- * - 서버 API fetchProjectBoard를 통해 게시판 목록과 페이지네이션 정보 로드
- * - 로딩 상태(loading), 리스트/페이지 정보, 재조회 함수 등을 반환
+ * 프로젝트 질문관리 게시판 데이터패칭 훅
  */
-export function useProjectBoard() {
+export function useProjectQuestionsList() {
   const searchParams = useSearchParams(); // URL 쿼리스트링 추출
-  const { projectId, taskId } = useParams() as ProjectBoardParamsProps;
+  const { projectId, taskId } = useParams() as useProjectQuestionsListProps;
 
-  // 게시판(프로젝트 게시글) 목록 상태
-  const [boardList, setBoardList] = useState<ProjectPostProps[]>([]);
-  // 페이지네이션 관련 정보(현재 페이지, 전체 페이지, 페이지 크기 등)
+  // 질문글 & 답변글 목록 상태
+  const [projectQuestionsList, setProjectQuestionsList] = useState<
+    ProjectQuestionProps[]
+  >([]);
+  // 페이지네이션 관련 정보
   const [paginationInfo, setPaginationInfo] = useState<PaginationProps>();
   // 로딩 여부
   const [loading, setLoading] = useState(false);
 
-  // 쿼리 파라미터(검색어, 게시글 상태, 진행 단계, 등)
+  // 쿼리 파라미터(검색어, 게시글 상태, 진행 단계)
   const keyword = searchParams?.get("keyword") || "";
-  const boardCategory = searchParams?.get("boardCategory") || "";
-  const boardStatus = searchParams?.get("boardStatus") || "";
+  const status = (searchParams?.get("status") ?? "") as string;
   const progressStep = searchParams?.get("progressStep") || "";
 
   /**
@@ -45,19 +43,18 @@ export function useProjectBoard() {
       try {
         // 서버에서 데이터 요청 (검색어, 진행 단계, 게시글 상태, 등)
         // currentPage - 1 : 0-based 페이지 인덱스 사용
-        const response: BoardResponseProps<ProjectPostProps> =
-          await fetchProjectBoard(
+        const response: BoardResponseProps<ProjectQuestionProps> =
+          await fetchProjectQuestionsList(
             projectId as string,
             keyword,
             progressStep,
-            boardStatus,
-            boardCategory,
+            status,
             currentPage - 1,
             pageSize,
           );
 
         // 응답 데이터에서 게시판 목록, 페이지네이션 정보 추출
-        setBoardList(response.data);
+        setProjectQuestionsList(response.data);
         setPaginationInfo(response.meta);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -65,7 +62,7 @@ export function useProjectBoard() {
         setLoading(false);
       }
     },
-    [projectId, keyword, progressStep, boardStatus, boardCategory],
+    [projectId, keyword, progressStep, status],
   );
 
   useEffect(() => {
@@ -76,10 +73,9 @@ export function useProjectBoard() {
     // 검색/필터를 위한 쿼리 파라미터
     keyword,
     progressStep,
-    boardStatus,
-    boardCategory,
+    status,
     // 게시글 목록
-    boardList,
+    projectQuestionsList,
     // 페이지네이션 정보
     paginationInfo,
     // 로딩 상태

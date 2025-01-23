@@ -66,12 +66,11 @@ export async function fetchProjectsStatusCount() {
  * @param pageSize 페이지 크기
  * @returns 게시글 목록 및 페이징 정보를 담은 데이터
  */
-export async function fetchProjectBoard(
+export async function fetchProjectQuestionsList(
   projectId: string,
   keyword: string = "",
   progressStep: string = "",
-  boardStatus: string = "",
-  boardCategory: string = "",
+  status: string = "",
   currentPage: number,
   pageSize: number,
 ) {
@@ -81,8 +80,7 @@ export async function fetchProjectBoard(
     params: {
       keyword,
       progressStep,
-      boardStatus,
-      boardCategory,
+      status,
       currentPage,
       pageSize,
     },

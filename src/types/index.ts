@@ -2,6 +2,6 @@ export type { PaginationProps } from "./pagination";
 export type {
   ProjectProps,
   ProjectInfoProps,
-  ProjectPostProps,
+  ProjectQuestionProps,
 } from "./project";
 export type { BoardResponseProps } from "./api";

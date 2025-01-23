@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "@/src/components/ui/select";
-import { useProjectBoard } from "@/src/hook/useProjectBoard";
+import { useProjectQuestionsList } from "@/src/hook/useProjectQuestionsList";
 
 const boardCategoryFramework = createListCollection<{
   label: string;
@@ -29,7 +29,6 @@ const boardCategoryFramework = createListCollection<{
  */
 export default function BoardCategorySelectBox() {
   const router = useRouter();
-  const { boardCategory } = useProjectBoard();
 
   /**
    * 셀렉트 박스의 값이 변경될 때 호출되는 핸들러.
@@ -56,7 +55,6 @@ export default function BoardCategorySelectBox() {
       collection={boardCategoryFramework}
       size="md"
       width="110px"
-      value={[boardCategory]}
       onValueChange={handleValueChange}
     >
       {/* 드롭다운 트리거(버튼) 영역 */}

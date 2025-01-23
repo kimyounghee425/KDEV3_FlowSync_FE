@@ -1,29 +1,12 @@
 "use client";
 
 import { Table } from "@chakra-ui/react";
-import { createListCollection } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import CustomColorBox from "@/src/components/common/StatusTag";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
-import SearchSection from "@/src/components/common/SearchSection";
-import StatusSelectBox from "@/src/components/common/StatusSelectBox";
-import { useProjectQuestionsList } from "@/src/hook/useProjectQuestionsList";
+import BoardSearchSection from "@/src/components/common/SearchSection";
 
-const taskStatusFramework = createListCollection<{
-  id: string;
-  label: string;
-  value: string;
-}>({
-  items: [
-    { id: "1", label: "전체", value: "" },
-    { id: "2", label: "진행중", value: "INPROGRESS" },
-    { id: "3", label: "완료", value: "COMPLETED" },
-    { id: "4", label: "보류", value: "SUSPENSION" },
-    { id: "5", label: "승인요청", value: "PERMISSION_REQUEST" },
-  ],
-});
-
-// 질문(소통관리) 데이터 예시
+// 질문(소통관리) 더미 데이터
 const dummyData = [
   {
     id: 1,
@@ -42,20 +25,14 @@ const dummyData = [
 ];
 
 export default function QuestionsPage() {
-  const { status } = useProjectQuestionsList();
   const handleRowClick = (id: number) => {
-    console.log("Row clicked:", id); // 실제로는 라우팅 처리 가능
+    console.log("Row clicked:", id);
   };
 
   return (
     <ProjectLayout>
       {/* 검색 섹션 */}
-      <SearchSection>
-        <StatusSelectBox
-          statusFramework={taskStatusFramework}
-          status={status}
-        />
-      </SearchSection>
+      <BoardSearchSection />
       {/* 
           CommonTable: 게시글 목록을 렌더링하는 공통 테이블 컴포넌트
           - headerTitle: 테이블 헤더
