@@ -1,5 +1,5 @@
 import axiosInstance from "@/src/api/axiosInstance";
-import { BoardResponseProps, ProjectProps } from "@/src/types";
+import { CommonResponseType, ProjectListResponse } from "@/src/types";
 
 /**
  * 프로젝트 목록을 가져옵니다.
@@ -14,7 +14,7 @@ export async function fetchProjects(
   filter: string = "",
   currentPage: number,
   pageSize: number,
-): Promise<BoardResponseProps<ProjectProps>> {
+): Promise<CommonResponseType<ProjectListResponse>> {
   const response = await axiosInstance.get("/projects", {
     params: { keyword, filter, currentPage, pageSize },
   });

@@ -4,14 +4,14 @@ import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { Heading, Stack, Table } from "@chakra-ui/react";
 import StatusTag from "@/src/components/common/StatusTag";
-// import Pagination from "@/src/components/common/Pagination";
 import MembersSearchSection from "@/src/components/common/MembersSearchSection";
 import { useMemberList } from "@/src/hook/useMemberList";
-import MemberTable from "@/src/components/common/MemberTable";
+import CommonTable from "@/src/components/common/CommonTable";
+import Pagination from "@/src/components/common/Pagination";
 
 const STATUS_LABELS: Record<string, string> = {
-  ING_WORK: "근무 O",
-  STOP_WORK: "근무 X",
+  ACTIVE: "활성화",
+  INACTIVE: "비활성화",
 };
 
 export default function AdminMembersPage() {
@@ -23,7 +23,8 @@ export default function AdminMembersPage() {
 }
 
 function AdminMembersPageContent() {
-  const { memberList, loading, fetchMemberList } = useMemberList();
+  const { memberList, paginationMeta, loading, fetchMemberList } =
+    useMemberList();
   const router = useRouter();
 
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
@@ -33,8 +34,12 @@ function AdminMembersPageContent() {
     params.set("page", page.toString());
     // URL 업데이트
     router.push(`?${params.toString()}`);
-    // // 데이터를 다시 가져오기
-    // fetchMemberList(page, paginationInfo?.pageSize || 5);
+    // 데이터를 다시 가져오기
+    fetchMemberList(page, paginationMeta?.pageSize || 10);
+  };
+
+  const handleRowClick = (id: string) => {
+    router.push(`/admins/members/${id}`);
   };
 
   return (
@@ -44,7 +49,7 @@ function AdminMembersPageContent() {
           회원 관리
         </Heading>
         <MembersSearchSection />
-        <MemberTable
+        <CommonTable
           headerTitle={
             <Table.Row
               backgroundColor={"#eee"}
@@ -60,7 +65,7 @@ function AdminMembersPageContent() {
               <Table.ColumnHeader>근무 상태</Table.ColumnHeader>
             </Table.Row>
           }
-          memberList={memberList}
+          data={memberList}
           loading={loading}
           renderRow={(member) => (
             <>
@@ -76,8 +81,14 @@ function AdminMembersPageContent() {
               </Table.Cell>
             </>
           )}
+          handleRowClick={handleRowClick}
         />
-        {/* {paginationInfo && <Pagination paginationInfo={paginationInfo} handlePageChange={handlePageChange} />} */}
+        {paginationMeta && (
+          <Pagination
+            paginationInfo={paginationMeta}
+            handlePageChange={handlePageChange}
+          />
+        )}
       </Stack>
     </>
   );
