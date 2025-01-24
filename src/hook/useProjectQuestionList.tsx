@@ -70,7 +70,7 @@ export function useProjectQuestionList() {
   }, []);
 
   return {
-    keyword, // 검색/필터를 위한 쿼리 파라미터
+    keyword, // 검색 위한 쿼리 파라미터
     progressStep, // 진행 단계
     status, // 글 상태
 

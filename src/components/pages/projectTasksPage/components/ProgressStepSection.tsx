@@ -31,7 +31,7 @@ export default function ProgressStepSection({
   projectId,
 }: ProgressStepSectionProps) {
   // 커스텀 훅: 게시판 정보(검색, 필터, 데이터 재조회 등)를 관리
-  const { progressStep, fetchBoardList } = useProjectQuestionList();
+  const { fetchProjectQuestionList } = useProjectQuestionList();
 
   // 현재 선택된 버튼 id 상태 (기본값은 progressData의 첫 번째 항목)
   const [selectedButtonId, setSelectedButtonId] = useState<string>(
@@ -65,7 +65,7 @@ export default function ProgressStepSection({
     history.replaceState(null, "", newUrl); // URL 업데이트
 
     // 새로운 데이터 패치 (boardList 재조회)
-    fetchBoardList();
+    fetchProjectQuestionList();
   };
 
   // const { progressData, loading, error } = useProgressData(projectId);
@@ -78,10 +78,6 @@ export default function ProgressStepSection({
 
   // if (loading) {
   //   return <Loading />; // 로딩 중 표시
-  // }
-
-  // if (error) {
-  //   return <Box>Error: {error}</Box>; // 에러 메시지 표시
   // }
 
   return (

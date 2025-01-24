@@ -41,7 +41,7 @@ const dummyData = [
 ];
 
 export default function QuestionsPage() {
-  const { status } = useProjectTaskList();
+  const { keyword, status } = useProjectTaskList();
   const handleRowClick = (id: string) => {
     console.log("Row clicked:", id); // 실제로는 라우팅 처리 가능
   };
@@ -49,7 +49,11 @@ export default function QuestionsPage() {
   return (
     <ProjectLayout>
       {/* 검색 섹션 */}
-      <SearchSection useCustomHook={useProjectTaskList} placeholder="제목 입력">
+      <SearchSection
+        keyword={keyword}
+        fetchBoardList={useProjectTaskList}
+        placeholder="제목 입력"
+      >
         <StatusSelectBox
           statusFramework={taskStatusFramework}
           status={status}
