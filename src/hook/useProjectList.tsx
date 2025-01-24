@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchProjectList } from "@/src/api/projects";
+import { fetchProjectList as fetchProjectListApi } from "@/src/api/projects";
 import {
   CommonResponseType,
   PaginationProps,
@@ -25,12 +25,12 @@ export function useProjectList() {
    * @param currentPage 현재 페이지 (기본값: 1)
    * @param pageSize 페이지 크기 (기본값: 5)
    */
-  const fetchBoardList = useCallback(
+  const fetchProjectList = useCallback(
     async (currentPage: number = 1, pageSize: number = 5) => {
       setLoading(true);
       try {
         const response: CommonResponseType<ProjectListResponse> =
-          await fetchProjectList(keyword, status, currentPage - 1, pageSize);
+          await fetchProjectListApi(keyword, status, currentPage, pageSize);
 
         setProjectList(response.data.projects);
         setPaginationInfo(response.data.meta);
@@ -47,7 +47,7 @@ export function useProjectList() {
    * 컴포넌트 마운트 시 (또는 쿼리 파라미터가 변경될 때) 프로젝트 목록을 가져옴
    */
   useEffect(() => {
-    fetchBoardList();
+    fetchProjectList();
   }, []);
 
   return {
@@ -61,6 +61,6 @@ export function useProjectList() {
     // 로딩 여부
     loading,
     // 직접 페이지를 다시 불러올 때 사용할 수 있는 메서드
-    fetchBoardList,
+    fetchProjectList,
   };
 }

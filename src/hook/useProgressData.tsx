@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchProjectProgressCount } from "@/src/api/projects";
+import { fetchProjectProgressStep as fetchProjectProgressStepApi } from "@/src/api/projects";
 
 /**
  * 프로젝트 진척 정보를 담는 타입 정의
@@ -24,7 +24,7 @@ interface ProgressDataType {
  *   - loading: 로딩 여부
  *   - error: 에러 메시지 (없으면 null)
  */
-export function useProgressData(projectId: string) {
+export function useProgressStep(projectId: string) {
   // 진척 정보 데이터를 저장할 상태
   const [progressData, setProgressData] = useState<ProgressDataType[]>([]);
   // 로딩 상태
@@ -36,14 +36,14 @@ export function useProgressData(projectId: string) {
    * 해당 프로젝트의 단계 데이터를 API로부터 가져옴
    */
   useEffect(() => {
-    const fetchProgressData = async () => {
+    const fetchProgressStep = async () => {
       try {
         setLoading(true);
         setError(null);
 
         // 서버로부터 프로젝트 단계 정보 가져오기
-        const response = await fetchProjectProgressCount(projectId);
-        setProgressData(response);
+        const response = await fetchProjectProgressStepApi(projectId);
+        setProgressData(response.data);
       } catch (err) {
         console.error("Failed to fetch progress data:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -52,7 +52,7 @@ export function useProgressData(projectId: string) {
       }
     };
 
-    fetchProgressData();
+    fetchProgressStep();
   }, [projectId]);
 
   return { progressData, loading, error };

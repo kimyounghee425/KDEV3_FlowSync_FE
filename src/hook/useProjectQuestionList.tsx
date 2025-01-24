@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { fetchProjectQuestionList } from "@/src/api/projects";
+import { fetchProjectQuestionList as fetchProjectQuestionListAPI } from "@/src/api/projects";
 import {
   CommonResponseType,
   ProjectQuestionProps,
@@ -37,14 +37,14 @@ export function useProjectQuestionList() {
    * @param currentPage 현재 페이지 (기본값: 1)
    * @param pageSize 페이지 크기 (기본값: 5)
    */
-  const fetchBoardList = useCallback(
+  const fetchProjectQuestionList = useCallback(
     async (currentPage: number = 1, pageSize: number = 5) => {
       setLoading(true);
       try {
         // 서버에서 데이터 요청 (검색어, 진행 단계, 게시글 상태, 등)
         // currentPage - 1 : 0-based 페이지 인덱스 사용
         const response: CommonResponseType<ProjectQuestionListResponse> =
-          await fetchProjectQuestionList(
+          await fetchProjectQuestionListAPI(
             projectId as string,
             keyword,
             progressStep,
@@ -66,11 +66,11 @@ export function useProjectQuestionList() {
   );
 
   useEffect(() => {
-    fetchBoardList();
-  }, [fetchBoardList]);
+    fetchProjectQuestionList();
+  }, []);
 
   return {
-    keyword, // 검색/필터를 위한 쿼리 파라미터
+    keyword, // 검색 위한 쿼리 파라미터
     progressStep, // 진행 단계
     status, // 글 상태
 
@@ -82,6 +82,6 @@ export function useProjectQuestionList() {
     projectId, // URL 경로에서 추출한 프로젝트 ID, 태스크 ID
     taskId,
 
-    fetchBoardList, // 게시글 목록 재조회 함수
+    fetchProjectQuestionList, // 게시글 목록 재조회 함수
   };
 }
