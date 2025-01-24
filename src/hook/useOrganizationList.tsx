@@ -19,7 +19,7 @@ export function useOrganizationList() {
   const filter = searchParams?.get("filter") || "";
 
   const fetchBoardList = useCallback(
-    async (currentPage: number = 1, pageSize: number = 5) => {
+    async (currentPage: number = 1, pageSize: number = 10) => {
       setLoading(true);
       try {
         const response: CommonResponseType<OrganizationListResponse> =

@@ -48,7 +48,7 @@ export function useProjectList() {
    */
   useEffect(() => {
     fetchBoardList();
-  }, [fetchBoardList]);
+  }, []);
 
   return {
     // 검색어, 프로젝트 상태(쿼리 파라미터)

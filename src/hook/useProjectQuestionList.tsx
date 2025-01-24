@@ -49,7 +49,7 @@ export function useProjectQuestionList() {
             keyword,
             progressStep,
             status,
-            currentPage - 1,
+            currentPage,
             pageSize,
           );
 

@@ -63,6 +63,20 @@ export interface OrganizationListResponse {
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
+export interface ProjectInfoProps {
+  id: string; // 프로젝트 아이디
+  projectName: string; // 프로젝트명
+  description: string; // 프로젝트 설명
+  devOrgName: string; // 개발사명
+  memberName: string; // 대표 담당자 이름
+  profileImageUrl: string; // 프로필 이미지 URL
+  jobRole: string; // 직무
+  jobTitle: string; // 직급
+  phoneNum: string; // 연락처
+  startAt: string; // 프로젝트 시작일
+  closeAt: string; // 프로젝트 종료일
+}
+
 // 프로젝트 속성
 export interface ProjectProps {
   id: string; // 프로젝트 ID

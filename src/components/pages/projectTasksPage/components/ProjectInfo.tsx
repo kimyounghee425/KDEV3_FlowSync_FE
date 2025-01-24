@@ -6,21 +6,21 @@ import { ProjectInfoProps } from "@/src/types";
 export default function ProjectInfo({
   projectInfo,
 }: {
-  projectInfo: ProjectInfoProps;
+  projectInfo: ProjectInfoProps | null;
 }) {
   return (
     <Flex alignItems="center" gap="12px">
       <Flex alignItems="center" gap="8px">
-        {projectInfo.jobRole}{" "}
-        <Avatar size="xs" src={projectInfo.profileImageUrl} />
-        {projectInfo.name} {projectInfo.jobTitle}
+        {projectInfo?.jobRole}{" "}
+        <Avatar size="xs" src={projectInfo?.profileImageUrl} />
+        {projectInfo?.memberName} {projectInfo?.jobTitle}
       </Flex>
       <Separator orientation="vertical" height="6" />
-      <Flex>담당자 연락처 {projectInfo.phoneNum}</Flex>
+      <Flex>담당자 연락처 {projectInfo?.phoneNum}</Flex>
       <Separator orientation="vertical" height="6" />
-      <Flex>프로젝트 시작일 {projectInfo.projectStartAt}</Flex>
+      <Flex>프로젝트 시작일 {projectInfo?.startAt}</Flex>
       <Separator orientation="vertical" height="6" />
-      <Flex>프로젝트 시작일 {projectInfo.projectCloseAt}</Flex>
+      <Flex>프로젝트 시작일 {projectInfo?.closeAt}</Flex>
     </Flex>
   );
 }
