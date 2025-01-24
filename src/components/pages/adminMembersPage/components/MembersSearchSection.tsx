@@ -13,7 +13,6 @@ import { useMemberList } from "@/src/hook/useMemberList";
 import {
   SelectContent,
   SelectItem,
-  SelectLabel,
   SelectRoot,
   SelectTrigger,
   SelectValueText,
@@ -23,8 +22,8 @@ import { useRouter } from "next/navigation";
 const frameworks = createListCollection<{ label: string; value: string }>({
   items: [
     { label: "전체", value: "" },
-    { label: "근무 중", value: "ING_WORK" },
-    { label: "근무중단", value: "STOP_WORK" },
+    { label: "활성화", value: "ACTIVE" },
+    { label: "비활성화", value: "INACTIVE" },
   ],
 });
 
@@ -70,19 +69,19 @@ function SelectMemberBox() {
 
 export default function MembersSearchSection() {
   const [input, setInput] = useState<string>();
-  const { query, fetchMemberList } = useMemberList();
+  const { keyword, fetchBoardList } = useMemberList();
   const router = useRouter();
 
   // 검색 버튼을 클릭하거나 엔터 입력시 데이터를 가져오는 함수
   const onSubmit = () => {
-    if (!input || query === input) return;
+    if (!input || keyword === input) return;
     // URL 업데이트
     const params = new URLSearchParams(window.location.search);
     params.set("query", input); // 검색어 추가
     router.push(`?${params.toString()}`);
 
     // 데이터 다시 가져오기
-    fetchMemberList(1, 5); // 첫 페이지 데이터 로드
+    fetchBoardList(1, 5); // 첫 페이지 데이터 로드
   };
 
   // 검색어와 필터 상태값 초기화 함수
@@ -90,7 +89,7 @@ export default function MembersSearchSection() {
     // URL 쿼리스트링 초기화
     router.push("?");
     setInput("");
-    fetchMemberList(1, 5); // 첫 페이지로 리셋
+    fetchBoardList(1, 5); // 첫 페이지로 리셋
   };
 
   // 사용자가 input 태그에 이력하는 값을 실시간으로 query state에 보관

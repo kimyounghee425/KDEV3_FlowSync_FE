@@ -1,4 +1,4 @@
-import { LoginFormData } from "@/src/types/loginForm";
+import { LoginFormData } from "@/src/types";
 
 export default function LoginInputForm({
   label,

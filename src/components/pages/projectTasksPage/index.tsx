@@ -7,7 +7,7 @@ import CustomColorBox from "@/src/components/common/StatusTag";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import SearchSection from "@/src/components/common/SearchSection";
 import StatusSelectBox from "@/src/components/common/StatusSelectBox";
-import { useProjectQuestionsList } from "@/src/hook/useProjectQuestionsList";
+import { useProjectTaskList } from "@/src/hook/useProjectTaskList";
 
 const taskStatusFramework = createListCollection<{
   id: string;
@@ -16,24 +16,23 @@ const taskStatusFramework = createListCollection<{
 }>({
   items: [
     { id: "1", label: "전체", value: "" },
-    { id: "2", label: "진행중", value: "INPROGRESS" },
-    { id: "3", label: "완료", value: "COMPLETED" },
-    { id: "4", label: "보류", value: "SUSPENSION" },
-    { id: "5", label: "승인요청", value: "PERMISSION_REQUEST" },
+    { id: "2", label: "대기", value: "WAIT" },
+    { id: "3", label: "반려", value: "SUSPENSION" },
+    { id: "4", label: "승인", value: "COMPLETED" },
   ],
 });
 
 // 질문(소통관리) 데이터 예시
 const dummyData = [
   {
-    id: 1,
+    id: "1",
     title: "클라이언트 요청사항 정리",
     regAt: "2024-01-10",
     status: "진행중",
     category: "질문",
   },
   {
-    id: 2,
+    id: "2",
     title: "QA 피드백 정리",
     regAt: "2024-01-12",
     status: "완료",
@@ -42,15 +41,15 @@ const dummyData = [
 ];
 
 export default function QuestionsPage() {
-  const { status } = useProjectQuestionsList();
-  const handleRowClick = (id: number) => {
+  const { status } = useProjectTaskList();
+  const handleRowClick = (id: string) => {
     console.log("Row clicked:", id); // 실제로는 라우팅 처리 가능
   };
 
   return (
     <ProjectLayout>
       {/* 검색 섹션 */}
-      <SearchSection>
+      <SearchSection useCustomHook={useProjectTaskList} placeholder="제목 입력">
         <StatusSelectBox
           statusFramework={taskStatusFramework}
           status={status}

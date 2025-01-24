@@ -9,12 +9,12 @@ interface CommonTableProps<T> {
   data: T[];
   loading: boolean;
   renderRow: (item: T) => ReactNode;
-  handleRowClick: (id: number) => void;
+  handleRowClick: (id: string) => void;
 }
 
 export default function CommonTable<
   T extends {
-    id: number;
+    id: string;
   },
 >({
   headerTitle,

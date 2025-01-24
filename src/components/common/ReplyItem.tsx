@@ -1,5 +1,5 @@
 import { Box, Text } from "@chakra-ui/react";
-import { Reply as ReplyType } from "@/src/types/taskTypes";
+import { Reply as ReplyType } from "@/src/types";
 
 interface ReplyProps {
   reply: ReplyType;

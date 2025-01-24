@@ -1,16 +1,14 @@
-
 // 외부 라이브러리
 import { Box, Text, Image, VStack } from "@chakra-ui/react";
 
 // 절대 경로 파일
-import { Task, ContentBlock } from "@/src/types/taskTypes";
+import { Task, ContentBlock } from "@/src/types";
 import { formatDateString } from "@/src/utils/formatDateString";
 interface TaskContentProps {
   task: Task;
 }
 
-export default function TaskContent({ task }:TaskContentProps) {
-
+export default function TaskContent({ task }: TaskContentProps) {
   // 본문 렌더링
   const renderContent = (content: ContentBlock[]) => {
     return content.map((block, index) => {
@@ -59,7 +57,6 @@ export default function TaskContent({ task }:TaskContentProps) {
     ));
   };
 
-
   // 첨부파일 렌더링
   const renderFiles = (files: string[]) => {
     if (!Array.isArray(files)) {
@@ -95,7 +92,6 @@ export default function TaskContent({ task }:TaskContentProps) {
     });
   };
 
-
   // regAt 날짜 예쁘게 변환
   // 연도.월.일 시:분 형태로 반환
   function formatDateString(dateString: string) {
@@ -110,7 +106,6 @@ export default function TaskContent({ task }:TaskContentProps) {
 
     return `${year}.${month}.${day} ${hours}:${minutes}`;
   }
-
 
   return (
     <Box mb={4}>
@@ -147,5 +142,4 @@ export default function TaskContent({ task }:TaskContentProps) {
       </Box>
     </Box>
   );
-};
-
+}

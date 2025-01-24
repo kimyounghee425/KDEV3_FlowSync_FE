@@ -10,8 +10,8 @@ import TaskContent from "@/src/components/common/TaskContent";
 import TaskComments from "@/src/components/common/TaskComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/backButton";
-import axiosInstance from "@/src/api/axiosInstance"; 
-import { Task, ApiResponse } from "@/src/types/taskTypes";
+import axiosInstance from "@/src/api/axiosInstance";
+import { Task } from "@/src/types";
 
 // fetchTaskData 함수
 const fetchTaskData = async (
@@ -40,7 +40,7 @@ export default function ProjectTaskPage() {
   useEffect(() => {
     const loadTask = async () => {
       try {
-        const data = await fetchTaskData(projectId, taskId)
+        const data = await fetchTaskData(projectId, taskId);
         // 검증. 받아온 json 의 projectid, id 가 주소창 값과 일치하는지 확인.
         if (
           data &&
@@ -74,7 +74,6 @@ export default function ProjectTaskPage() {
 
     loadTask();
   }, [projectId, taskId]);
-  
 
   if (error) {
     return <Box>에러 발생: {error}</Box>;

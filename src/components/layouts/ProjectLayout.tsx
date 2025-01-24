@@ -7,7 +7,6 @@ import { Layers, List, MessageCircleQuestion } from "lucide-react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import ProjectInfo from "@/src/components/pages/projectTasksPage/components/ProjectInfo";
 import ProgressStepSection from "@/src/components/pages/projectTasksPage/components/ProgressStepSection";
-import BoardSearchSection from "@/src/components/common/SearchSection";
 
 interface ProjectLayoutProps {
   children: ReactNode;
@@ -33,7 +32,7 @@ const projectMenu = [
     label: (
       <HStack>
         <List />
-        결제관리
+        결재관리
       </HStack>
     ),
   },

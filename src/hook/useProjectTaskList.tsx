@@ -2,11 +2,15 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { BoardResponseProps, PaginationProps } from "@/src/types";
-import { fetchProjectQuestionsList } from "@/src/api/projects";
-import { ProjectQuestionProps } from "@/src/types";
+import { fetchProjectTaskList } from "@/src/api/projects";
+import {
+  CommonResponseType,
+  ProjectTaskProps,
+  ProjectTaskListResponse,
+  PaginationProps,
+} from "@/src/types";
 
-interface useProjectQuestionsListProps {
+interface useProjectTaskListProps {
   projectId?: string;
   taskId?: string;
 }
@@ -14,13 +18,13 @@ interface useProjectQuestionsListProps {
 /**
  * 프로젝트 질문관리 게시판 데이터패칭 훅
  */
-export function useProjectQuestionsList() {
+export function useProjectTaskList() {
   const searchParams = useSearchParams(); // URL 쿼리스트링 추출
-  const { projectId, taskId } = useParams() as useProjectQuestionsListProps;
+  const { projectId, taskId } = useParams() as useProjectTaskListProps;
 
   // 질문글 & 답변글 목록 상태
-  const [projectQuestionsList, setProjectQuestionsList] = useState<
-    ProjectQuestionProps[]
+  const [projectQuestionList, setProjectQuestionList] = useState<
+    ProjectTaskProps[]
   >([]);
   // 페이지네이션 관련 정보
   const [paginationInfo, setPaginationInfo] = useState<PaginationProps>();
@@ -43,8 +47,8 @@ export function useProjectQuestionsList() {
       try {
         // 서버에서 데이터 요청 (검색어, 진행 단계, 게시글 상태, 등)
         // currentPage - 1 : 0-based 페이지 인덱스 사용
-        const response: BoardResponseProps<ProjectQuestionProps> =
-          await fetchProjectQuestionsList(
+        const response: CommonResponseType<ProjectTaskListResponse> =
+          await fetchProjectTaskList(
             projectId as string,
             keyword,
             progressStep,
@@ -54,8 +58,8 @@ export function useProjectQuestionsList() {
           );
 
         // 응답 데이터에서 게시판 목록, 페이지네이션 정보 추출
-        setProjectQuestionsList(response.data);
-        setPaginationInfo(response.meta);
+        setProjectQuestionList(response.data.projectTasks);
+        setPaginationInfo(response.data.meta);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -70,20 +74,18 @@ export function useProjectQuestionsList() {
   }, [fetchBoardList]);
 
   return {
-    // 검색/필터를 위한 쿼리 파라미터
-    keyword,
-    progressStep,
-    status,
-    // 게시글 목록
-    projectQuestionsList,
-    // 페이지네이션 정보
-    paginationInfo,
-    // 로딩 상태
+    keyword, // 검색/필터를 위한 쿼리 파라미터
+    progressStep, // 진행 단계
+    status, // 글 상태
+
+    projectQuestionList, // 게시글 목록
+
+    paginationInfo, // 페이지네이션 정보
     loading,
-    // URL 경로에서 추출한 프로젝트 ID, 태스크 ID
-    projectId,
+
+    projectId, // URL 경로에서 추출한 프로젝트 ID, 태스크 ID
     taskId,
-    // 게시글 목록 재조회 함수
-    fetchBoardList,
+
+    fetchBoardList, // 게시글 목록 재조회 함수
   };
 }
