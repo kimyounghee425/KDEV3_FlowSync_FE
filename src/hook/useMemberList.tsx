@@ -28,6 +28,7 @@ export function useMemberList() {
    */
   const fetchBoardList = useCallback(
     async (currentPage: number = 1, pageSize: number = 10) => {
+      console.log(currentPage, pageSize);
       setLoading(true);
       try {
         const response: CommonResponseType<MemberListResponse> =
@@ -45,7 +46,7 @@ export function useMemberList() {
 
   useEffect(() => {
     fetchBoardList();
-  }, [fetchBoardList]);
+  }, []);
 
   console.log("memberList: ", memberList);
   return {

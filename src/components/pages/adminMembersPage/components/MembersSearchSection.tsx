@@ -81,6 +81,7 @@ export default function MembersSearchSection() {
     router.push(`?${params.toString()}`);
 
     // 데이터 다시 가져오기
+    console.log("onSubmit");
     fetchBoardList(1, 5); // 첫 페이지 데이터 로드
   };
 
@@ -89,6 +90,8 @@ export default function MembersSearchSection() {
     // URL 쿼리스트링 초기화
     router.push("?");
     setInput("");
+
+    console.log("resetSearch");
     fetchBoardList(1, 5); // 첫 페이지로 리셋
   };
 
