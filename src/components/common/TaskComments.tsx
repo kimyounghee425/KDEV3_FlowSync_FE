@@ -3,7 +3,7 @@
 // 외부 라이브러리
 import { Box, Text } from "@chakra-ui/react";
 import Comments from "@/src/components/common/Comments";
-import { TaskCommentsProps } from "@/src/types/taskTypes";
+import { TaskCommentsProps } from "@/src/types";
 
 export default function TaskComments({ comments }: TaskCommentsProps) {
   // 삭제된 댓글을 제외한 목록 생성
@@ -31,6 +31,4 @@ export default function TaskComments({ comments }: TaskCommentsProps) {
       )}
     </Box>
   );
-};
-
-
+}

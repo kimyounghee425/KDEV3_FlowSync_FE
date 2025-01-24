@@ -3,15 +3,23 @@
 import { ChangeEvent, KeyboardEvent, ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HStack, Input, Button, Box, Flex } from "@chakra-ui/react";
-import { useProjectQuestionsList } from "@/src/hook/useProjectQuestionsList";
 
 interface SearchSectionProps {
-  children: ReactNode;
+  useCustomHook: () => {
+    keyword: string;
+    fetchBoardList: (page: number, pageSize: number) => void;
+  };
+  placeholder?: string;
+  children?: ReactNode;
 }
 
-export default function SearchSection({ children }: SearchSectionProps) {
+export default function SearchSection({
+  useCustomHook,
+  placeholder = "검색어를 입력하세요",
+  children,
+}: SearchSectionProps) {
   const [input, setInput] = useState<string>();
-  const { keyword, fetchBoardList } = useProjectQuestionsList();
+  const { keyword, fetchBoardList } = useCustomHook();
   const router = useRouter();
 
   // 검색 버튼을 클릭하거나 엔터 입력시 데이터를 가져오는 함수
@@ -52,7 +60,7 @@ export default function SearchSection({ children }: SearchSectionProps) {
         <HStack>
           {children}
           <Input
-            placeholder="프로젝트명 검색"
+            placeholder={placeholder}
             size="md"
             value={input}
             onChange={onChangeSearch}

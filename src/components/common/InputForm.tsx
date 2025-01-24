@@ -1,4 +1,4 @@
-import { InputFormData } from "@/src/types/inputForm";
+import { InputFormData } from "@/src/types";
 
 // 공통 컴포넌트 (로그인/회원 생성/업체 생성 등 입력창 & 에러메시지)
 export default function InputForm({

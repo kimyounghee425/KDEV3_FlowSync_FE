@@ -9,7 +9,7 @@ import axiosInstance from "@/src/api/axiosInstance";
 import { Box, Flex, Button, Text, Input } from "@chakra-ui/react";
 
 // 절대 경로 파일
-import { Task, ContentBlock } from "@/src/types/taskTypes";
+import { Task, ContentBlock } from "@/src/types";
 
 // 스타일 파일
 import "./edit.css";

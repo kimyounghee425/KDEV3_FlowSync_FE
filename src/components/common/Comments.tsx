@@ -5,7 +5,7 @@ import { Box } from "@chakra-ui/react";
 
 // 절대 경로 파일
 import CommentItem from "@/src/components/common/CommentItem";
-import { TaskCommentsProps } from "@/src/types/taskTypes";
+import { TaskCommentsProps } from "@/src/types";
 
 export default function Comments({ comments }: TaskCommentsProps) {
   return (

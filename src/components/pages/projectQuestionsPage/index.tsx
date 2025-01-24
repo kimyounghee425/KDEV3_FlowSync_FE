@@ -1,38 +1,44 @@
 "use client";
 
-import { Table } from "@chakra-ui/react";
+import { createListCollection, Table } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import CustomColorBox from "@/src/components/common/StatusTag";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
-import BoardSearchSection from "@/src/components/common/SearchSection";
+import SearchSection from "@/src/components/common/SearchSection";
+import StatusSelectBox from "@/src/components/common/StatusSelectBox";
+import { useProjectQuestionList } from "@/src/hook/useProjectQuestionList";
 
-// 질문(소통관리) 더미 데이터
-const dummyData = [
-  {
-    id: 1,
-    title: "클라이언트 요청사항 정리",
-    regAt: "2024-01-10",
-    status: "진행중",
-    category: "질문",
-  },
-  {
-    id: 2,
-    title: "QA 피드백 정리",
-    regAt: "2024-01-12",
-    status: "완료",
-    category: "답변",
-  },
-];
+const questionStatusFramework = createListCollection<{
+  id: string;
+  label: string;
+  value: string;
+}>({
+  items: [
+    { id: "1", label: "전체", value: "" },
+    { id: "2", label: "답변대기", value: "WAIT" },
+    { id: "3", label: "답변완료", value: "COMPLETED" },
+  ],
+});
 
 export default function QuestionsPage() {
-  const handleRowClick = (id: number) => {
+  const { projectQuestionList, status, loading } = useProjectQuestionList();
+
+  const handleRowClick = (id: string) => {
     console.log("Row clicked:", id);
   };
 
   return (
     <ProjectLayout>
       {/* 검색 섹션 */}
-      <BoardSearchSection />
+      <SearchSection
+        useCustomHook={useProjectQuestionList}
+        placeholder="제목 입력"
+      >
+        <StatusSelectBox
+          statusFramework={questionStatusFramework}
+          status={status}
+        />
+      </SearchSection>
       {/* 
           CommonTable: 게시글 목록을 렌더링하는 공통 테이블 컴포넌트
           - headerTitle: 테이블 헤더
@@ -49,23 +55,25 @@ export default function QuestionsPage() {
               "& > th": { textAlign: "center" },
             }}
           >
+            <Table.ColumnHeader>작성일</Table.ColumnHeader>
+            <Table.ColumnHeader>작성자</Table.ColumnHeader>
             <Table.ColumnHeader>제목</Table.ColumnHeader>
-            <Table.ColumnHeader>등록일</Table.ColumnHeader>
             <Table.ColumnHeader>상태</Table.ColumnHeader>
             <Table.ColumnHeader>유형</Table.ColumnHeader>
           </Table.Row>
         }
-        data={dummyData}
-        loading={false}
-        renderRow={(item) => (
+        data={projectQuestionList}
+        loading={loading}
+        renderRow={(question) => (
           <>
-            <Table.Cell>{item.title}</Table.Cell>
-            <Table.Cell>{item.regAt}</Table.Cell>
+            <Table.Cell>{question.regAt}</Table.Cell>
+            <Table.Cell>{"주농퐉"}</Table.Cell>
+            <Table.Cell>{question.title}</Table.Cell>
             <Table.Cell>
-              <CustomColorBox>{item.status}</CustomColorBox>
+              <CustomColorBox>{question.status}</CustomColorBox>
             </Table.Cell>
             <Table.Cell>
-              <CustomColorBox>{item.category}</CustomColorBox>
+              <CustomColorBox>{question.category}</CustomColorBox>
             </Table.Cell>
           </>
         )}

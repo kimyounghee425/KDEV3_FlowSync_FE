@@ -3,19 +3,30 @@
 import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Head from "next/head";
-import { Heading, Stack, Table } from "@chakra-ui/react";
+import { createListCollection, Heading, Stack, Table } from "@chakra-ui/react";
 import CustomColorBox from "@/src/components/common/StatusTag";
 import { useProjectList } from "@/src/hook/useProjectList";
 import ProjectStatusCards from "@/src/components/pages/projectsPage/components/ProjectsStatusCards";
 import CommonTable from "@/src/components/common/CommonTable";
-import ProjectsSearchSection from "@/src/components/pages/projectsPage/components/ProjectsSearchSection";
 import Pagination from "@/src/components/common/Pagination";
+import SearchSection from "@/src/components/common/SearchSection";
+import StatusSelectBox from "@/src/components/common/StatusSelectBox";
 
-/*
- * 프로젝트 상태를 문자열로 매핑하기 위한 상수 객체
- * API에서 받은 status 값(IN_PROGRESS, PAUSED, COMPLETED 등)을
- * 사용자에게 보여줄 레이블(진행중, 일시 중단, 완료 등)로 변환합니다.
- */
+const projectStatusFramework = createListCollection<{
+  label: string;
+  value: string;
+}>({
+  items: [
+    { label: "전체", value: "" },
+    { label: "계약", value: "CONTRACT" },
+    { label: "진행중", value: "INPROGRESS" },
+    { label: "납품완료", value: "COMPLETED" },
+    { label: "하자보수", value: "MAINTENANCE" },
+    { label: "일시중단", value: "PAUSED" },
+    { label: "삭제", value: "DELETED" },
+  ],
+});
+
 const STATUS_LABELS: Record<string, string> = {
   IN_PROGRESS: "진행중",
   PAUSED: "일시 중단",
@@ -41,7 +52,7 @@ export default function projectsPage() {
 function ProjectsPageContent() {
   // useProjectList 훅: 프로젝트 목록, 페이지 정보, 로딩 상태,
   // 재조회 함수(fetchProjectList) 등을 반환합니다.
-  const { projectList, paginationInfo, loading, fetchProjectList } =
+  const { projectList, paginationInfo, status, loading, fetchBoardList } =
     useProjectList();
 
   const router = useRouter();
@@ -59,7 +70,7 @@ function ProjectsPageContent() {
     // URL 업데이트
     router.push(`?${params.toString()}`);
     // 데이터를 다시 가져오기
-    fetchProjectList(page, paginationInfo?.pageSize || 5);
+    fetchBoardList(page, paginationInfo?.pageSize || 5);
   };
 
   /**
@@ -68,7 +79,7 @@ function ProjectsPageContent() {
    *
    * @param id 프로젝트 ID (백엔드 혹은 테이블에서 받아온 값)
    */
-  const handleRowClick = (id: number) => {
+  const handleRowClick = (id: string) => {
     router.push(`/projects/${id}/tasks`);
   };
 
@@ -100,7 +111,12 @@ function ProjectsPageContent() {
           프로젝트 목록
         </Heading>
         {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
-        <ProjectsSearchSection />
+        <SearchSection useCustomHook={useProjectList} placeholder="제목 입력">
+          <StatusSelectBox
+            statusFramework={projectStatusFramework}
+            status={status}
+          />
+        </SearchSection>
         {/*
          * 공통 테이블(CommonTable)
          *  - headerTitle: 테이블 헤더 구성
