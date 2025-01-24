@@ -1,6 +1,10 @@
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { OrganizationListResponse, OrganizationProps } from "@/src/types";
+import {
+  OrganizationListResponse,
+  OrganizationProps,
+  PaginationProps,
+} from "@/src/types";
 import { fetchOrganizationList } from "@/src/api/organizations";
 import { CommonResponseType } from "@/src/types";
 
@@ -8,6 +12,7 @@ export function useOrganizationList() {
   const [organizationList, setOrganizationList] = useState<OrganizationProps[]>(
     [],
   );
+  const [paginationInfo, setPaginationInfo] = useState<PaginationProps>();
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   const keyword = searchParams?.get("keyword") || "";
@@ -25,6 +30,7 @@ export function useOrganizationList() {
             pageSize,
           );
         setOrganizationList(response.data.organizations);
+        setPaginationInfo(response.data.meta);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -42,6 +48,7 @@ export function useOrganizationList() {
     keyword,
     filter,
     organizationList,
+    paginationInfo,
     loading,
     fetchBoardList,
   };

@@ -22,8 +22,8 @@ import { useRouter } from "next/navigation";
 const frameworks = createListCollection<{ label: string; value: string }>({
   items: [
     { label: "전체", value: "" },
-    { label: "근무 중", value: "ING_WORK" },
-    { label: "근무중단", value: "STOP_WORK" },
+    { label: "활성화", value: "ACTIVE" },
+    { label: "비활성화", value: "INACTIVE" },
   ],
 });
 

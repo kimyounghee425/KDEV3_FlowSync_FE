@@ -113,7 +113,7 @@ export interface ProjectTaskListResponse {
 
 // 질문글 속성
 export interface ProjectQuestionProps {
-  id: number;
+  id: string;
   number: number;
   title: string;
   content: string;

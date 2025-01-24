@@ -77,7 +77,7 @@ export async function fetchProjectQuestionList(
 ) {
   // 실제 요청은 /projects/:projectId/tasks endpoint가 될 수도 있으나,
   // 현재 주석 처리되어 있고, 대신 /posts endpoint를 사용 중입니다.
-  const response = await axiosInstance.get(`/posts`, {
+  const response = await axiosInstance.get(`/projects/${projectId}/questions`, {
     params: {
       keyword,
       progressStep,

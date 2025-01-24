@@ -7,6 +7,7 @@ import { useOrganizationList } from "@/src/hook/useOrganizationList";
 import StatusTag from "@/src/components/common/StatusTag";
 import CommonTable from "@/src/components/common/CommonTable";
 import OrganizationsSearchSection from "@/src/components/pages/adminOrganizationsPage/components/OrganizationsSearchSection";
+import Pagination from "@/src/components/common/Pagination";
 
 const STATUS_LABELS: Record<string, string> = {
   ACTIVE: "활성화",
@@ -22,7 +23,8 @@ export default function AdminOrganizationsPage() {
 }
 
 function AdminOrganizationsPageContent() {
-  const { organizationList, loading, fetchBoardList } = useOrganizationList();
+  const { organizationList, paginationInfo, loading, fetchBoardList } =
+    useOrganizationList();
   const router = useRouter();
 
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
@@ -32,12 +34,11 @@ function AdminOrganizationsPageContent() {
     params.set("page", page.toString());
     // URL 업데이트
     router.push(`?${params.toString()}`);
-    // // 데이터를 다시 가져오기
-    // fetchBoardList(page, paginationInfo?.pageSize || 5);
+    fetchBoardList(page, paginationInfo?.pageSize || 5);
   };
 
   const handleRowClick = (id: string) => {
-    router.push(`/admins/members/${id}`);
+    router.push(`/admins/organizations/${id}`);
   };
 
   return (
@@ -79,7 +80,12 @@ function AdminOrganizationsPageContent() {
           )}
           handleRowClick={handleRowClick}
         />
-        {/* {paginationInfo && <Pagination paginationInfo={paginationInfo} handlePageChange={handlePageChange} />} */}
+        {paginationInfo && (
+          <Pagination
+            paginationInfo={paginationInfo}
+            handlePageChange={handlePageChange}
+          />
+        )}
       </Stack>
     </>
   );
