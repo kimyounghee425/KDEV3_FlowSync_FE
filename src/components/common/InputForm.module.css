@@ -1,0 +1,44 @@
+.inputField {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #4a5568;
+  text-align: left;
+}
+
+.required {
+  color: red;
+  margin-left: 4px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  border-color: #00a8ff;
+}
+
+.error {
+  border-color: red;
+}
+
+.errorText {
+  display: block;
+  color: red;
+  font-size: 10px;
+  height: 12px;
+  margin-top: 4px;
+}
