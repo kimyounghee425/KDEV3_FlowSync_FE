@@ -116,7 +116,7 @@ export default function OrganizationsSearchSection() {
         _hover={{ backgroundColor: "#00a8ff", color: "white" }}
         onClick={goToCreateMemberPage}
       >
-        회원 생성
+        업체 생성
       </Button>
       <Flex gap={4} alignItems="center" justifyContent="end">
         <HStack>
