@@ -48,7 +48,6 @@ export function useMemberList() {
     fetchBoardList();
   }, []);
 
-  console.log("memberList: ", memberList);
   return {
     keyword,
     filter,

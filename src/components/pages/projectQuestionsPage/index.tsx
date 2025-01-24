@@ -7,6 +7,8 @@ import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import SearchSection from "@/src/components/common/SearchSection";
 import StatusSelectBox from "@/src/components/common/StatusSelectBox";
 import { useProjectQuestionList } from "@/src/hook/useProjectQuestionList";
+import Pagination from "@/src/components/common/Pagination";
+import { useRouter } from "next/navigation";
 
 const questionStatusFramework = createListCollection<{
   id: string;
@@ -21,17 +23,37 @@ const questionStatusFramework = createListCollection<{
 });
 
 export default function QuestionsPage() {
-  const { projectQuestionList, status, loading } = useProjectQuestionList();
+  const {
+    projectQuestionList,
+    paginationInfo,
+    keyword,
+    status,
+    loading,
+    fetchProjectQuestionList,
+  } = useProjectQuestionList();
+
+  const router = useRouter();
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(window.location.search);
+    // 쿼리스트링 업데이트
+    params.set("page", page.toString());
+    // URL 업데이트
+    router.push(`?${params.toString()}`);
+    // 데이터를 다시 가져오기
+    fetchProjectQuestionList(page, paginationInfo?.pageSize || 5);
+  };
 
   const handleRowClick = (id: string) => {
-    console.log("Row clicked:", id);
+    router.push(`/projects/${id}/tasks`);
   };
 
   return (
     <ProjectLayout>
       {/* 검색 섹션 */}
       <SearchSection
-        useCustomHook={useProjectQuestionList}
+        keyword={keyword}
+        fetchBoardList={fetchProjectQuestionList}
         placeholder="제목 입력"
       >
         <StatusSelectBox
@@ -78,6 +100,15 @@ export default function QuestionsPage() {
           </>
         )}
         handleRowClick={handleRowClick}
+      />
+      <Pagination
+        paginationInfo={
+          paginationInfo && {
+            ...paginationInfo,
+            currentPage: paginationInfo.currentPage + 1,
+          }
+        }
+        handlePageChange={handlePageChange}
       />
     </ProjectLayout>
   );
