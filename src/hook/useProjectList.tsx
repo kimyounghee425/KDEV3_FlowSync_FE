@@ -30,7 +30,7 @@ export function useProjectList() {
       setLoading(true);
       try {
         const response: CommonResponseType<ProjectListResponse> =
-          await fetchProjectList(keyword, status, currentPage - 1, pageSize);
+          await fetchProjectList(keyword, status, currentPage, pageSize);
 
         setProjectList(response.data.projects);
         setPaginationInfo(response.data.meta);

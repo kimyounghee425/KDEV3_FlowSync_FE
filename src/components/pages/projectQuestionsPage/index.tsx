@@ -37,7 +37,7 @@ export default function QuestionsPage() {
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(window.location.search);
     // 쿼리스트링 업데이트
-    params.set("page", page.toString());
+    params.set("currentPage", page.toString());
     // URL 업데이트
     router.push(`?${params.toString()}`);
     // 데이터를 다시 가져오기
@@ -105,7 +105,7 @@ export default function QuestionsPage() {
         paginationInfo={
           paginationInfo && {
             ...paginationInfo,
-            currentPage: paginationInfo.currentPage + 1,
+            currentPage: paginationInfo.currentPage,
           }
         }
         handlePageChange={handlePageChange}
