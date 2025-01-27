@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Heading, Flex } from "@chakra-ui/react";
-import Drawer from "@/src/components/layouts/Drawer";
+// import Drawer from "@/src/components/layouts/Drawer";
 import Profile, { ProfileProps } from "@/src/components/layouts/Profile";
 
 export default function Header() {

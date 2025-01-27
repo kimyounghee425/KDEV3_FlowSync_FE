@@ -213,6 +213,10 @@ export interface ArticleFile {
   size: number;
 }
 
+export interface ArticleCommentsProps {
+  comments: ArticleComment[];
+}
+
 // 댓글
 export interface ArticleComment {
   id: number;
@@ -223,6 +227,7 @@ export interface ArticleComment {
   deletedYn: string;
   replies: ArticleReply[];
 }
+
 
 // 댓글의 답글
 export interface ArticleReply {

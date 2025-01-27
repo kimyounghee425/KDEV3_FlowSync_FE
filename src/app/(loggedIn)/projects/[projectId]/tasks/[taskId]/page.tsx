@@ -1,3 +1,7 @@
+
+export default function ProjectTaskPage() {
+    return <div></div>
+}
 // "use client";
 
 // // 외부 라이브러리

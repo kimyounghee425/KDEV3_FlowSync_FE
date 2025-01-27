@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 // 절대 경로 파일
-import { Comment as CommentType } from "@/src/types";
+import { ArticleComment as CommentType } from "@/src/types";
 import { LuSearch } from "react-icons/lu";
 
 interface CommentProps {

@@ -5,12 +5,12 @@ import { Box } from "@chakra-ui/react";
 
 // 절대 경로 파일
 import CommentItem from "@/src/components/common/CommentItem";
-import { TaskCommentsProps } from "@/src/types";
+import { ArticleCommentsProps } from "@/src/types";
 
-export default function Comments({ comments }: TaskCommentsProps) {
+export default function Comments({ comments }: ArticleCommentsProps) {
   return (
     <Box>
-      {comments.map((comment) => (
+      {(comments || []).map((comment) => (
         <CommentItem key={comment.id} comment={comment} />
       ))}
     </Box>
