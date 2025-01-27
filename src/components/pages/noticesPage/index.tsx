@@ -12,7 +12,7 @@ export default function NoticesPage() {
   const router = useRouter();
 
   const handleRowClick = (id: string) => {
-    router.push(`/projects/${id}/tasks`);
+    router.push(`/notices/${id}`);
   };
 
   return (

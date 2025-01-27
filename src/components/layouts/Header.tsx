@@ -51,14 +51,49 @@ export default function Header() {
       backgroundColor="gray.200"
       boxShadow="md"
     >
-      <Flex align="center" mr={5}>
+      <Flex align="center" mr={5} gap={10}>
         <Link href="/">
           <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
             BN SYSTEM
           </Heading>
         </Link>
+
+        <Link href="/notices">
+          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
+            공지사항
+          </Heading>
+        </Link>
+
+        <Link href="/login">
+          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
+            로그인
+          </Heading>
+        </Link>
+
+        <Link href="/admin/members">
+          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
+            회원관리
+          </Heading>
+        </Link>
+
+        <Link href="/admin/organizations">
+          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
+            업체관리
+          </Heading>
+        </Link>
+
+        <Link href="/projects/1/tasks/new">
+          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
+            게시글작성
+          </Heading>
+        </Link>
+
+        <Link href="/projects/1/tasks/1/edit">
+          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
+            게시글수정
+          </Heading>
+        </Link>
       </Flex>
-      <Drawer />
       {/* Avatar */}
       {user && (
         <Profile
