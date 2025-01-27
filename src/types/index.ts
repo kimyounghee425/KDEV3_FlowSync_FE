@@ -87,6 +87,7 @@ export interface ProjectProps {
   customerName: string; // 고객사 이름
   developerName: string; // 개발사 이름
 }
+
 export interface ProjectListResponse {
   projects: ProjectProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
@@ -222,4 +223,22 @@ export interface InputFormData {
   error?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+// 공지사항
+export interface NoticeProps {
+  id: string; // 공지사항 ID
+  adminId: string; // 프로젝트 이름
+  title: string; // 계약 단계
+  content: string; // 시작일시
+  category: string; // 시작일시
+  priority: string; // 
+  isDeleted: boolean; // 마감일시
+  regAt: string; // 고객사 이름
+  updatedAt: string; // 개발사 이름
+}
+
+export interface NoticeListResponse {
+  notices: NoticeProps[];
+  meta: PaginationProps; // 페이지네이션 메타 정보
 }

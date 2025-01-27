@@ -43,7 +43,7 @@ const dummyData = [
   },
 ];
 
-export default function QuestionsPage() {
+export default function ProjectTasksPage() {
   const { keyword, status } = useProjectTaskList();
   const { projectId } = useParams();
   const router = useRouter();
