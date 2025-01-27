@@ -1,16 +1,12 @@
-// 새 글을 생성하는 페이지 new
+// question 글 작성 페이지
 
 "use client";
-// 목데이터 사용
 
 import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/backButton";
 import TaskForm from "@/src/components/common/TaskForm";
-import "./edit.css";
 
-export default function New() {
-
-
+export default function QuestionRegisterPage() {
   return (
     <Box
       maxW="1000px"

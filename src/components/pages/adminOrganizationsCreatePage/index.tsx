@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@/src/components/ui/radio";
 import { useForm } from "@/src/hook/useForm";
@@ -7,8 +8,10 @@ import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { defaultValuesOfOrganizaion } from "@/src/constants/defaultValues";
 import { validationRulesOfCreatingOrganization } from "@/src/constants/validationRules";
+import { createOrganization } from "@/src/api/organizations";
 
 export default function AdminOrganizationsCreatePage() {
+  const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfOrganizaion, validationRulesOfCreatingOrganization);
 
@@ -20,13 +23,32 @@ export default function AdminOrganizationsCreatePage() {
     return true;
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!validateInputs()) return;
 
-    console.log("폼 제출 성공:", inputValues);
-    alert("업체가 성공적으로 생성되었습니다.");
-    // TODO: 서버로 데이터 전송 로직 추가
+    try {
+      const organizationData = {
+        type: inputValues.type,
+        brNumber: inputValues.brNumber,
+        name: inputValues.name,
+        brCertificateUrl: inputValues.brCertificateUrl,
+        streetAddress: inputValues.streetAddress,
+        detailAddress: inputValues.detailAddress,
+        phoneNumber: inputValues.phoneNumber,
+        typeEnum: inputValues.type, // #TODO typeEnum 불필요한 변수
+      };
+      // 파일 입력 처리 (예: inputValues.file에서 가져오기)
+      const file = null; // 파일이 있을 경우에만 처리
+
+      const response = await createOrganization(organizationData, file);
+      console.log("업체 생성 성공 - response: ", response);
+      alert("업체가 성공적으로 생성되었습니다.");
+      route.push("/admin/organizations");
+    } catch (error) {
+      console.error("업체 생성 중 오류 발생:", error);
+      alert("업체 생성에 실패했습니다. 다시 시도해주세요.");
+    }
   }
 
   return (
@@ -54,7 +76,12 @@ export default function AdminOrganizationsCreatePage() {
             *
           </span>
           <RadioGroup
-            value={inputValues.Type}
+            // Type이 string인지 확인
+            value={
+              typeof inputValues.Type === "string"
+                ? inputValues.Type
+                : undefined
+            }
             onValueChange={(e) => handleInputChange("Type", e.value)}
           >
             <HStack gap={6}>

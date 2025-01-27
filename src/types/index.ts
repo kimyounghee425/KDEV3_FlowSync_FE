@@ -58,6 +58,24 @@ export interface OrganizationProps {
   remark: string | null;
 }
 
+// `createOrganization` 함수에서 입력값의 타입 정의
+export interface CreateOrganizationInput {
+  type: string;
+  brNumber: string;
+  name: string;
+  brCertificateUrl: string;
+  streetAddress: string;
+  detailAddress: string;
+  phoneNumber: string;
+  typeEnum: string;
+}
+
+// 반환값의 타입 정의
+export interface CreateOrganizationResponse {
+  success: boolean;
+  organization: OrganizationProps;
+}
+
 export interface OrganizationListResponse {
   organizations: OrganizationProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
@@ -217,7 +235,7 @@ export interface Reply {
 export interface InputFormData {
   label: string;
   id: string;
-  type: "text" | "email" | "password" | "number" | "tel" | "url"; // 가능한 타입만 명시
+  type: "text" | "email" | "password" | "number" | "tel" | "url"; // 가능한 타입만 명시;
   placeholder: string;
   value?: string;
   error?: string;
