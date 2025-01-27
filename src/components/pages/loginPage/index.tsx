@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { login } from "@/src/api/auth";
 import {
   Box,
   Button,
@@ -13,17 +14,13 @@ import {
   Span,
   Text,
 } from "@chakra-ui/react";
-import LoginInputForm from "@/src/components/pages/loginPage/components/LoginInputForm";
-import { useRedirectIfLoggedIn } from "@/src/hook/useRedirectIfLoggedIn";
-import { login } from "@/src/api/auth";
+import InputForm from "@/src/components/common/InputForm";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();
-
-  useRedirectIfLoggedIn(); // 이미 로그인 된 상태라면 리다이렉트
 
   function handleChange(field: string, value: string) {
     setFormData({ ...formData, [field]: value });
@@ -41,8 +38,8 @@ export default function LoginPage() {
 
     try {
       const { token, user } = await login(formData.email, formData.password);
-      localStorage.setItem("accessToken", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      // localStorage.setItem("accessToken", token);
+      // localStorage.setItem("user", JSON.stringify(user));
       route.push("/"); // 대시보드 리다이렉트
     } catch (err: any) {
       setError(err.message || "로그인 실패");
@@ -94,26 +91,25 @@ export default function LoginPage() {
         borderRadius="md"
         bg="white"
         boxShadow="sm"
-        gap="3"
       >
         <form onSubmit={handleSubmit}>
           <Flex direction="column" align="center" gap="2">
-            <LoginInputForm
+            <InputForm
               id="email"
               type="email"
               label="Email address"
               placeholder="이메일을 입력하세요."
+              value={formData.email}
               onChange={(e) => handleChange("email", e.target.value)}
             />
-            <LoginInputForm
+            <InputForm
               id="password"
               type="password"
               label="Password"
               placeholder="패스워드를 입력하세요."
+              value={formData.password}
               onChange={(e) => handleChange("password", e.target.value)}
             />
-
-            {error && <span style={{ color: "red" }}>{error}</span>}
 
             <Button
               type="submit"
@@ -135,8 +131,6 @@ export default function LoginPage() {
           </Text>
           <Separator orientation="vertical" height="4" />
           <Text>아이디 찾기</Text>
-          <Separator orientation="vertical" height="4" />
-          <Text>회원가입</Text>
         </HStack>
       </Box>
     </Flex>

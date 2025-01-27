@@ -1,15 +1,17 @@
-import { LoginFormData } from "@/src/types";
+import { InputFormData } from "@/src/types";
 
-export default function LoginInputForm({
-  label,
+// 공통 컴포넌트 (로그인/회원 생성/업체 생성 등 입력창 & 에러메시지)
+export default function InputForm({
   id,
   type,
+  label,
   placeholder,
+  value = "",
+  error = "",
   onChange,
   className = "",
-}: LoginFormData & {
+}: InputFormData & {
   className?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
     <div
@@ -33,22 +35,34 @@ export default function LoginInputForm({
       </label>
       <input
         id={id}
+        className="input"
         type={type}
         placeholder={placeholder}
-        className="input"
+        value={value}
         onChange={onChange}
         style={{
           width: "100%",
           padding: "10px",
-          border: "1px solid #CBD5E0",
+          border: error ? "1px solid red" : "1px solid #ccc",
           borderRadius: "4px",
           fontSize: "14px",
           outline: "none",
           transition: "border-color 0.2s ease",
         }}
         onFocus={(e) => (e.target.style.borderColor = "#00a8ff")}
-        onBlur={(e) => (e.target.style.borderColor = "#CBD5E0")}
       />
+      {/* 에러 메시지가 없는 경우, 화면에는 보이지 않지만 고정된 높이를 유지 */}
+      <span
+        style={{
+          display: "block",
+          color: error ? "red" : "transparent",
+          fontSize: "10px",
+          height: "12px",
+          marginTop: "4px",
+        }}
+      >
+        {error || " "} {/* 에러가 없으면 빈 공백 출력 */}
+      </span>
     </div>
   );
 }
