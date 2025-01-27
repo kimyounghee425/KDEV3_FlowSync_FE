@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { login } from "@/src/api/auth";
 import {
   Box,
   Button,
@@ -14,37 +13,35 @@ import {
   Span,
   Text,
 } from "@chakra-ui/react";
+import { login } from "@/src/api/auth";
+import { useForm } from "@/src/hook/useForm";
 import InputForm from "@/src/components/common/InputForm";
+import { defaultValuesOfLogin } from "@/src/constants/defaultValues";
+import { validationRulesOfLogin } from "@/src/constants/validationRules";
 
 export default function LoginPage() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();
+  const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
+    useForm(defaultValuesOfLogin, validationRulesOfLogin);
 
-  function handleChange(field: string, value: string) {
-    setFormData({ ...formData, [field]: value });
+  function validateInputs() {
+    if (!checkAllInputs()) {
+      alert("입력값을 확인하세요.");
+      return false;
+    }
+    return true;
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!formData.email || !formData.password) {
-      setError("이메일과 비밀번호를 모두 입력하세요.");
-      return;
-    }
+    if (!validateInputs()) return;
 
-    setError(null); // 에러 메시지 초기화
-    setIsLoading(true); // 로딩 상태 활성화
+    // console.log("로그인 시도 - ", inputValues);
 
-    try {
-      const { token, user } = await login(formData.email, formData.password);
-      // localStorage.setItem("accessToken", token);
-      // localStorage.setItem("user", JSON.stringify(user));
-      route.push("/"); // 대시보드 리다이렉트
-    } catch (err: any) {
-      setError(err.message || "로그인 실패");
-    } finally {
-      setIsLoading(false); // 로딩 상태 비활성화
+    if (await login(inputValues.email, inputValues.password)) {
+      console.log("성공적으로 로그인 되었습니다.");
+      route.push("/");
     }
   }
 
@@ -79,6 +76,7 @@ export default function LoginPage() {
         </Heading>
       </Flex>
 
+      {/* #TODO InputFormLayout 으로 스타일링 코드 별도 분리 */}
       {/* 로그인 폼 */}
       <Box
         display="flex"
@@ -99,18 +97,19 @@ export default function LoginPage() {
               type="email"
               label="Email address"
               placeholder="이메일을 입력하세요."
-              value={formData.email}
-              onChange={(e) => handleChange("email", e.target.value)}
+              value={inputValues.email}
+              error={inputErrors.email}
+              onChange={(e) => handleInputChange("email", e.target.value)}
             />
             <InputForm
               id="password"
               type="password"
               label="Password"
               placeholder="패스워드를 입력하세요."
-              value={formData.password}
-              onChange={(e) => handleChange("password", e.target.value)}
+              value={inputValues.password}
+              error={inputErrors.password}
+              onChange={(e) => handleInputChange("password", e.target.value)}
             />
-
             <Button
               type="submit"
               backgroundColor="#00a8ff"

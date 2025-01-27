@@ -27,20 +27,10 @@ export function useForm(
       return;
     }
     const isValid = rule.isValid?.(inputValue); // 함수 존재 여부 체크 후 호출
-    if (isValid) {
-      // 값이 유효하면 에러 제거
-
-      setInputErrors((prevErrors) => ({
-        ...prevErrors,
-        [inputName]: undefined,
-      }));
-    } else {
-      // 값이 유효하지 않으면 에러 메시지 추가
-      setInputErrors((prevErrors) => ({
-        ...prevErrors,
-        [inputName]: rule?.errorMessage,
-      }));
-    }
+    setInputErrors((prevErrors) => ({
+      ...prevErrors,
+      [inputName]: isValid ? undefined : rule.errorMessage,
+    }));
   }
 
   // 모든 입력값을 유효성 검사하고, 유효하지 않은 필드에 대해 에러 메시지를 설정

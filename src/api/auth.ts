@@ -20,20 +20,8 @@ export async function fetchUserPermissions(): Promise<PermissionsResponse> {
 // 로그인 API 호출 => 액세스 토큰 & user 정보 반환
 export async function login(email: string, password: string) {
   const response = await axiosInstance.post("/login", { email, password });
-  const token = response.headers["authorization"]; // Access Token (string 타입)
-  if (!token) {
-    throw new Error("Authorization 헤더에 토큰이 없습니다.");
-  }
-  const decodedToken: DecodedToken = jwtDecode(token); // JWT 액세스 토큰 deCoding
-  return {
-    token, // string
-    user: {
-      name: decodedToken.name,
-      email: decodedToken.email,
-      role: decodedToken.role,
-      exp: decodedToken.exp,
-    },
-  };
+  // console.log("로그인 API 응답 완료 - response: ", response);
+  return response;
 }
 
 // 로그아웃 API 호출
