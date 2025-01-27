@@ -1,6 +1,7 @@
 import { Flex, Separator } from "@chakra-ui/react";
 import { Avatar } from "@/src/components/ui/avatar";
 import { ProjectInfoProps } from "@/src/types";
+import { formatDateToISODate } from "@/src/utils/formatDateUtil";
 
 // 프로젝트 기본정보 컴포넌트
 export default function ProjectInfo({
@@ -18,9 +19,9 @@ export default function ProjectInfo({
       <Separator orientation="vertical" height="6" />
       <Flex>담당자 연락처 {projectInfo?.phoneNum}</Flex>
       <Separator orientation="vertical" height="6" />
-      <Flex>프로젝트 시작일 {projectInfo?.startAt}</Flex>
+      <Flex>프로젝트 시작일 {formatDateToISODate(projectInfo?.startAt)}</Flex>
       <Separator orientation="vertical" height="6" />
-      <Flex>프로젝트 시작일 {projectInfo?.closeAt}</Flex>
+      <Flex>프로젝트 시작일 {formatDateToISODate(projectInfo?.closeAt)}</Flex>
     </Flex>
   );
 }
