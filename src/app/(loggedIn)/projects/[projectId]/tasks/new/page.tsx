@@ -5,12 +5,10 @@
 
 import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/backButton";
-import TaskForm from "@/src/components/common/TaskForm";
+import TaskForm from "@/src/components/common/ArticleForm";
 import "./edit.css";
 
 export default function New() {
-
-
   return (
     <Box
       maxW="1000px"
