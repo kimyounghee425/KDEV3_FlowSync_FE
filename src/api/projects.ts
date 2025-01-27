@@ -39,9 +39,9 @@ export async function fetchProjectInfo(projectId: string) {
  * @param projectId 프로젝트 식별자
  * @returns 프로젝트 진행 상황 요약(숫자 형태)
  */
-export async function fetchProjectProgressCount(projectId: string) {
+export async function fetchProjectQuestionProgressStep(projectId: string) {
   const response = await axiosInstance.get(
-    `/projects/${projectId}/progressCount`,
+    `/projects/${projectId}/questions/counts`,
   );
   return response.data;
 }

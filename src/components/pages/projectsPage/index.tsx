@@ -52,8 +52,14 @@ export default function projectsPage() {
 function ProjectsPageContent() {
   // useProjectList 훅: 프로젝트 목록, 페이지 정보, 로딩 상태,
   // 재조회 함수(fetchProjectList) 등을 반환합니다.
-  const { projectList, paginationInfo, status, loading, fetchBoardList } =
-    useProjectList();
+  const {
+    projectList,
+    paginationInfo,
+    keyword,
+    status,
+    loading,
+    fetchProjectList,
+  } = useProjectList();
 
   const router = useRouter();
 
@@ -70,7 +76,7 @@ function ProjectsPageContent() {
     // URL 업데이트
     router.push(`?${params.toString()}`);
     // 데이터를 다시 가져오기
-    fetchBoardList(page, paginationInfo?.pageSize || 5);
+    fetchProjectList(page, paginationInfo?.pageSize || 5);
   };
 
   /**
@@ -111,7 +117,11 @@ function ProjectsPageContent() {
           프로젝트 목록
         </Heading>
         {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
-        <SearchSection useCustomHook={useProjectList} placeholder="제목 입력">
+        <SearchSection
+          keyword={keyword}
+          fetchBoardList={fetchProjectList}
+          placeholder="제목 입력"
+        >
           <StatusSelectBox
             statusFramework={projectStatusFramework}
             status={status}

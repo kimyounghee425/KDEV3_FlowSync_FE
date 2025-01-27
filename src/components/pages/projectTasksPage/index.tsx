@@ -1,13 +1,16 @@
 "use client";
 
-import { Table } from "@chakra-ui/react";
-import { createListCollection } from "@chakra-ui/react";
+import { useParams, useRouter } from "next/navigation";
+import { Box, Table, createListCollection } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import CustomColorBox from "@/src/components/common/StatusTag";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import SearchSection from "@/src/components/common/SearchSection";
 import StatusSelectBox from "@/src/components/common/StatusSelectBox";
 import { useProjectTaskList } from "@/src/hook/useProjectTaskList";
+import ProgressStepSection from "@/src/components/common/ProgressStepSection";
+import { useProjectQuestionProgressStep } from "@/src/hook/useProjectQuestionProgressStep";
+import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 
 const taskStatusFramework = createListCollection<{
   id: string;
@@ -41,21 +44,43 @@ const dummyData = [
 ];
 
 export default function QuestionsPage() {
-  const { status } = useProjectTaskList();
-  const handleRowClick = (id: string) => {
-    console.log("Row clicked:", id); // 실제로는 라우팅 처리 가능
+  const { keyword, status } = useProjectTaskList();
+  const { projectId } = useParams();
+  const router = useRouter();
+
+  const handleRowClick = (taskId: string) => {
+    router.push(`/projects/${projectId}/tasks/${taskId}`);
   };
 
   return (
     <ProjectLayout>
-      {/* 검색 섹션 */}
-      <SearchSection useCustomHook={useProjectTaskList} placeholder="제목 입력">
-        <StatusSelectBox
-          statusFramework={taskStatusFramework}
-          status={status}
-        />
-      </SearchSection>
-      {/* 
+      {/* 프로젝트 단계 섹션 */}
+      <ProgressStepSection
+        fetchProgressStep={useProjectQuestionProgressStep}
+        projectId={projectId as string}
+      />
+      <Box
+        direction="column"
+        padding="30px 23px"
+        gap="8px"
+        border="1px solid"
+        borderColor="gray.200"
+        borderRadius="lg"
+        boxShadow="md"
+        mb="30px"
+      >
+        {/* 검색 섹션 */}
+        <SearchSection
+          keyword={keyword}
+          fetchBoardList={useProjectTaskList}
+          placeholder="제목 입력"
+        >
+          <StatusSelectBox
+            statusFramework={taskStatusFramework}
+            status={status}
+          />
+        </SearchSection>
+        {/* 
           CommonTable: 게시글 목록을 렌더링하는 공통 테이블 컴포넌트
           - headerTitle: 테이블 헤더
           - data: 목록 데이터
@@ -63,36 +88,37 @@ export default function QuestionsPage() {
           - renderRow: 각 행의 셀을 어떻게 렌더링할지 정의
           - handleRowClick: 행 클릭 시 동작
         */}
-      <CommonTable
-        headerTitle={
-          <Table.Row
-            backgroundColor={"#eee"}
-            css={{
-              "& > th": { textAlign: "center" },
-            }}
-          >
-            <Table.ColumnHeader>제목</Table.ColumnHeader>
-            <Table.ColumnHeader>등록일</Table.ColumnHeader>
-            <Table.ColumnHeader>상태</Table.ColumnHeader>
-            <Table.ColumnHeader>유형</Table.ColumnHeader>
-          </Table.Row>
-        }
-        data={dummyData}
-        loading={false}
-        renderRow={(item) => (
-          <>
-            <Table.Cell>{item.title}</Table.Cell>
-            <Table.Cell>{item.regAt}</Table.Cell>
-            <Table.Cell>
-              <CustomColorBox>{item.status}</CustomColorBox>
-            </Table.Cell>
-            <Table.Cell>
-              <CustomColorBox>{item.category}</CustomColorBox>
-            </Table.Cell>
-          </>
-        )}
-        handleRowClick={handleRowClick}
-      />
+        <CommonTable
+          headerTitle={
+            <Table.Row
+              backgroundColor={"#eee"}
+              css={{
+                "& > th": { textAlign: "center" },
+              }}
+            >
+              <Table.ColumnHeader>제목</Table.ColumnHeader>
+              <Table.ColumnHeader>등록일</Table.ColumnHeader>
+              <Table.ColumnHeader>상태</Table.ColumnHeader>
+              <Table.ColumnHeader>유형</Table.ColumnHeader>
+            </Table.Row>
+          }
+          data={dummyData}
+          loading={false}
+          renderRow={(item) => (
+            <>
+              <Table.Cell>{item.title}</Table.Cell>
+              <Table.Cell>{formatDynamicDate(item.regAt)}</Table.Cell>
+              <Table.Cell>
+                <CustomColorBox>{item.status}</CustomColorBox>
+              </Table.Cell>
+              <Table.Cell>
+                <CustomColorBox>{item.category}</CustomColorBox>
+              </Table.Cell>
+            </>
+          )}
+          handleRowClick={handleRowClick}
+        />
+      </Box>
     </ProjectLayout>
   );
 }

@@ -3,7 +3,6 @@ import { Box, Text, Image, VStack } from "@chakra-ui/react";
 
 // 절대 경로 파일
 import { Task, ContentBlock } from "@/src/types";
-import { formatDateString } from "@/src/utils/formatDateString";
 interface TaskContentProps {
   task: Task;
 }

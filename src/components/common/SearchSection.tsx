@@ -5,21 +5,19 @@ import { useRouter } from "next/navigation";
 import { HStack, Input, Button, Box, Flex } from "@chakra-ui/react";
 
 interface SearchSectionProps {
-  useCustomHook: () => {
-    keyword: string;
-    fetchBoardList: (page: number, pageSize: number) => void;
-  };
+  keyword: string;
+  fetchBoardList: (page: number, pageSize: number) => void;
   placeholder?: string;
   children?: ReactNode;
 }
 
 export default function SearchSection({
-  useCustomHook,
+  keyword,
+  fetchBoardList,
   placeholder = "검색어를 입력하세요",
   children,
 }: SearchSectionProps) {
   const [input, setInput] = useState<string>();
-  const { keyword, fetchBoardList } = useCustomHook();
   const router = useRouter();
 
   // 검색 버튼을 클릭하거나 엔터 입력시 데이터를 가져오는 함수

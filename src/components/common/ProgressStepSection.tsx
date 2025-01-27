@@ -2,22 +2,21 @@
 
 import { useState } from "react";
 import { Flex } from "@chakra-ui/react";
-import ProgressStepButton from "@/src/components/pages/projectTasksPage/components/ProgressStepButton";
+import ProgressStepButton from "@/src/components/common/ProgressStepButton";
 import { useProjectQuestionList } from "@/src/hook/useProjectQuestionList";
+import { Loading } from "@/src/components/common/Loading";
 
 interface ProgressStepSectionProps {
+  fetchProgressStep: (projectId: string) => {
+    progressStep: Array<{
+      id: string;
+      title: string;
+      count: number;
+    }>;
+    loading: boolean;
+  };
   projectId: string;
 }
-
-const progressData = [
-  { id: "1", title: "전체", value: "", count: 32 },
-  { id: "2", title: "요구사항정의", value: "CONTRACT", count: 6 },
-  { id: "3", title: "화면설계", value: "INPROGRESS", count: 6 },
-  { id: "4", title: "디자인", value: "COMPLETED", count: 8 },
-  { id: "5", title: "퍼블리싱", value: "MAINTENANCE", count: 6 },
-  { id: "6", title: "개발", value: "PAUSED", count: 6 },
-  { id: "7", title: "검수", value: "DELETED", count: 0 },
-];
 
 /**
  * ProgressStepSection 컴포넌트
@@ -28,22 +27,18 @@ const progressData = [
  * @param projectId 프로젝트 식별자 (현재 미사용, 추후 서버 데이터 연동 시 활용 가능)
  */
 export default function ProgressStepSection({
+  fetchProgressStep,
   projectId,
 }: ProgressStepSectionProps) {
-  // 커스텀 훅: 게시판 정보(검색, 필터, 데이터 재조회 등)를 관리
-  const { progressStep, fetchBoardList } = useProjectQuestionList();
+  const { progressStep, loading } = fetchProgressStep(projectId);
+
+  const { fetchProjectQuestionList } = useProjectQuestionList();
 
   // 현재 선택된 버튼 id 상태 (기본값은 progressData의 첫 번째 항목)
   const [selectedButtonId, setSelectedButtonId] = useState<string>(
-    progressData[0].id,
+    progressStep.length > 0 ? progressStep[0].id : "",
   );
 
-  /**
-   * 버튼 클릭 시 호출되는 핸들러:
-   * - 선택한 버튼의 id를 상태(selectedButtonId)에 저장
-   * - 해당 id에 대응하는 value를 URL 쿼리 파라미터(progressStep)에 반영
-   * - fetchBoardList()로 새 데이터 재요청
-   */
   const handleStatusChange = (id: string) => {
     // 이미 선택된 버튼이라면 아무 동작도 하지 않음
     if (id === selectedButtonId) {
@@ -54,7 +49,7 @@ export default function ProgressStepSection({
 
     // progressData에서 선택된 단계의 value를 찾음
     const selectedValue =
-      progressData.find((item) => item.id === id)?.value || "";
+      progressStep.find((item) => item.id === id)?.title || "";
 
     // URL 쿼리 파라미터를 수정 (progressStep 값 변경)
     const params = new URLSearchParams(window.location.search);
@@ -65,24 +60,18 @@ export default function ProgressStepSection({
     history.replaceState(null, "", newUrl); // URL 업데이트
 
     // 새로운 데이터 패치 (boardList 재조회)
-    fetchBoardList();
+    fetchProjectQuestionList();
   };
 
-  // const { progressData, loading, error } = useProgressData(projectId);
+  if (loading) {
+    return <Loading />;
+  }
 
   // useEffect(() => {
   //   if (progressData && progressData.length > 0) {
   //     setSelectedButtonId(progressData[0].id);
   //   }
   // }, [progressData]);
-
-  // if (loading) {
-  //   return <Loading />; // 로딩 중 표시
-  // }
-
-  // if (error) {
-  //   return <Box>Error: {error}</Box>; // 에러 메시지 표시
-  // }
 
   return (
     <Flex
@@ -97,13 +86,13 @@ export default function ProgressStepSection({
       mb="30px"
     >
       {/*
-        progressData 배열을 순회하며 ProgressStepButton을 렌더링
+        progressStep 배열을 순회하며 ProgressStepButton을 렌더링
         - text: 단계명 (예: "요구사항정의")
         - count: 현재 단계 개수
         - isSelected: 현재 선택 상태 여부
         - onClick: 클릭 시 handleStatusChange 실행
       */}
-      {progressData.map((button) => (
+      {progressStep.map((button) => (
         <ProgressStepButton
           key={button.id}
           text={button.title}

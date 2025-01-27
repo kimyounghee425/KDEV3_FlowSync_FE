@@ -7,7 +7,7 @@ import { Select } from "@chakra-ui/select";
 
 // 절대 경로 파일
 import axiosInstance from "@/src/api/axiosInstance";
-import { formatDateString } from "@/src/utils/formatDateString";
+import { formatDateWithTime } from "@/src/utils/formatDateUtil";
 
 // API 엔드포인트 상수로 분리
 const API_ENDPOINTS = {
@@ -240,7 +240,7 @@ export default function TaskForm({
         <Box flex={"1"}>
           {/* 작성 일시 */}
           <Text mb={2}>작성 일시</Text>
-          <Input type="date" value={formatDateString(createdDate)} readOnly />
+          <Input type="date" value={formatDateWithTime(createdDate)} readOnly />
         </Box>
       </Flex>
 
