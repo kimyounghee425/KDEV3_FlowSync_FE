@@ -12,8 +12,5 @@ interface SelectOrganizationSectionProps {
 export default function SelectOrganizationSection({
   onSelect,
 }: SelectOrganizationSectionProps) {
-
-
-    
   return <div></div>;
 }

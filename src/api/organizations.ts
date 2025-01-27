@@ -23,22 +23,6 @@ export async function createOrganization(
   data: CreateOrganizationInput,
   file: any, // file 타입을 File 또는 null로 처리
 ): Promise<CommonResponseType<CreateOrganizationResponse>> {
-  // application/json
-  // const content = new FormData();
-  // Object.entries(data).forEach(([key, value]) => {
-  //   if (value !== null && value !== undefined) {
-  //     // 파일이 있는 경우 처리
-  //     content.append(key, value instanceof File ? value : value.toString());
-  //   }
-  // });
-
-  // const response = await axiosInstance.post("/admin/organizations", content, {
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  // multipart / formData;
   const formData = new FormData();
   // content 객체를 JSON 문자열로 변환하여 추가
   const json = JSON.stringify(data);
