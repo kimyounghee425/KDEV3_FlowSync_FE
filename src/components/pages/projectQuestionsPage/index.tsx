@@ -32,7 +32,7 @@ const STATUS_LABELS: Record<string, string> = {
   ANSWER: "답변",
 };
 
-export default function QuestionsPage() {
+export default function ProjectQuestionsPage() {
   const {
     projectQuestionList,
     paginationInfo,
@@ -55,7 +55,7 @@ export default function QuestionsPage() {
   };
 
   const handleRowClick = (taskId: string) => {
-    router.push(`/projects/${projectId}/tasks/${taskId}`);
+    router.push(`/projects/${projectId}/questions/${taskId}`);
   };
 
   return (

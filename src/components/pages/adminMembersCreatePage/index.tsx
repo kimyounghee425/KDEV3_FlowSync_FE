@@ -63,7 +63,7 @@ export default function AdminMembersCreatePage() {
           </RadioGroup>
         </Flex>
       </Box>
-      {/* 업체 생성 페이지 - 업체 정보 입력*/}
+      {/* 회원 생성 페이지 - 회원 정보 입력*/}
       <InputForm
         id="organizationId"
         type="text"
