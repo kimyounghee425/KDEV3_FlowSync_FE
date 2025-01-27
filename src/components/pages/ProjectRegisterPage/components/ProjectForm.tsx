@@ -8,6 +8,19 @@ import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import HeaderSection from "@/src/components/pages/ProjectRegisterPage/components/HeaderSection";
 import DateSection from "@/src/components/pages/ProjectRegisterPage/components/DateSection";
 import ContentSection from "@/src/components/pages/ProjectRegisterPage/components/ContentSection";
+import SelectOrganizationSection from "@/src/components/pages/ProjectRegisterPage/components/SelectOrganizationSection";
+
+interface Organization {
+  id: number;
+  type: string;
+  name: string;
+  status: string;
+}
+
+interface Member {
+  id: number;
+  name: string;
+}
 
 export default function ProjectForm({ id }: { id: string }) {
   const [name, setName] = useState<string>("");
@@ -19,18 +32,19 @@ export default function ProjectForm({ id }: { id: string }) {
   const [description, setDescription] = useState<string>(""); // 짧은 설명
   const [detail, setDetail] = useState<string>(""); // 긴 설명
 
-  // 서버에 제출하는 로직 작성
+  const [customerOrganizations, setCustomerOrganizations] = useState<
+    Organization[]
+  >([]);
+  const [developerOrganizations, setDeveloperOrganizations] = useState<
+    Organization[]
+  >([]);
+
+  const [selectedCustomer, setSelectedCustomer] = useState<Organization>
+
+  // 서버에 제출하는 로직 작성 << 해야함
   const handleSubmit = () => {
     console.log("제출 완료");
   };
-  // console.log(startAt);
-  // // 2024-12-31T15:00:00.000Z 출력
-
-  // console.log(startAt.toLocaleString());
-  // // 2024-12-31T15:00:00.000Z 출력
-
-  // console.log(new Date(startAt));
-  // // Wed Jan 01 2025 00:00:00 GMT+0900 (한국 표준시) 출력
 
   return (
     <Flex direction="column">
@@ -60,6 +74,10 @@ export default function ProjectForm({ id }: { id: string }) {
           setDescription={setDescription}
         />
       </Box>
+      <Box>
+        <SelectOrganizationSection />
+      </Box>
+
       <Button onClick={handleSubmit}>작성</Button>
     </Flex>
   );

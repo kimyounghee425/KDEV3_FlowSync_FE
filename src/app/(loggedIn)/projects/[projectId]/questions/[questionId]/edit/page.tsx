@@ -5,10 +5,10 @@ import React, { useEffect, useState, useRef } from "react";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import { useParams } from "next/navigation";
-import axiosInstance from "@/src/api/axiosInstance";
 import { Box, Flex, Button, Text, Input } from "@chakra-ui/react";
 
 // 절대 경로 파일
+import axiosInstance from "@/src/api/axiosInstance";
 import { Task, ContentBlock } from "@/src/types";
 
 // 스타일 파일
@@ -25,7 +25,6 @@ const API_ENDPOINTS = {
   uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT || "",
   fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT || "",
 };
-
 
 export default function EditPage() {
   const { taskId } = useParams() as { taskId: string };

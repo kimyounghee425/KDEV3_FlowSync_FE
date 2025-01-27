@@ -9,8 +9,8 @@ import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
-import axiosInstance from "@/src/api/axiosInstance";
 
+import { createQuestionApi, uploadFileApi } from "@/src/api/RegisterArticle";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -40,14 +40,11 @@ export default function TaskForm() {
 
   const uploadFile = async (file: File): Promise<string> => {
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
       // 서버로 파일 업로드 요청
-      const response = await axiosInstance.post(`${BASE_URL}/file`, formData);
+      const data = await uploadFileApi(file);
 
       // 서버에서 반환된 파일 URL 반환
-      return response.data.url; // 서버 응답에서 URL을 반환하는 키를 확인해야 합니다
+      return data.url; // 서버 응답에서 URL을 반환하는 키를 확인해야 합니다
     } catch (error) {
       console.error("파일 업로드 실패:", error);
       throw new Error("파일 업로드 중 문제가 발생했습니다.");
@@ -125,10 +122,7 @@ export default function TaskForm() {
           progressStepId: progressStepId,
         };
 
-        const response = await axiosInstance.post(
-          `${BASE_URL}/projects/${projectId}/questions`,
-          requestData,
-        );
+        const response = await createQuestionApi(Number(projectId), requestData)
         console.log("요청데이터", requestData);
         console.log("저장성공", response.data);
         alert("저장이 완료되었습니다.");

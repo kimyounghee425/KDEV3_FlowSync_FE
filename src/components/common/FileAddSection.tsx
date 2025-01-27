@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { Text, Box, Button } from "@chakra-ui/react";
-import axiosInstance from "@/src/api/axiosInstance";
-
+import { uploadFileApi } from "@/src/api/RegisterArticle";
 interface UploadedFilesProps {
   originalName: string;
   saveName: string;
@@ -29,9 +28,9 @@ export default function FileAddSection({
 
       console.log(formData);
 
-      const response = await axiosInstance.post(`${BASE_URL}/file`, formData);
+      const data = await uploadFileApi(file);
 
-      const responseFileData: UploadedFilesProps = response.data; // 이게 파일 배열에 넣어야 할 객체
+      const responseFileData: UploadedFilesProps = data; // 이게 파일 배열에 넣어야 할 객체
       setUploadedFiles((prev) => [...prev, responseFileData]);
       // setFileSize((prev) => [...prev, responseFileData.size]);
     } catch (error) {
