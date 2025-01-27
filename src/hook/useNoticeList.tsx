@@ -18,7 +18,7 @@ export function useNoticeList() {
       const response: CommonResponseType<NoticeProps[]> =
         await fetchNoticeListApi();
 
-      setNoticeList(response.data);
+      setNoticeList(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Failed to fetch data:", error);
     } finally {
