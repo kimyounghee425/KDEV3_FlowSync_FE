@@ -1,79 +1,53 @@
+// Question 글에 맞추어 만들어 놓음.
+
 // 외부 라이브러리
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
+import { useParams } from "next/navigation";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
-import { Select } from "@chakra-ui/select";
+import FileAddSection from "@/src/components/common/FileAddSection";
+import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSection";
+import LinkAddSection from "@/src/components/common/LinkAddSection";
 
-// 절대 경로 파일
-import axiosInstance from "@/src/api/axiosInstance";
-import { formatDateWithTime } from "@/src/utils/formatDateUtil";
+import { createQuestionApi, uploadFileApi } from "@/src/api/RegisterArticle";
 
-// API 엔드포인트 상수로 분리
-const API_ENDPOINTS = {
-  uploadFile: process.env.NEXT_PUBLIC_UPLOAD_FILE_ENDPOINT,
-  fetchUrl: process.env.NEXT_PUBLIC_FETCH_URL_ENDPOINT,
-};
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-// API 헤더 상수로 분리
-const AUTH_HEADER = {
-  Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
-};
+const progressData = [
+  { id: 1, title: "전체" },
+  { id: 2, title: "요구사항정의" },
+  { id: 3, title: "화면설계" },
+  { id: 4, title: "디자인" },
+  { id: 5, title: "퍼블리싱" },
+  { id: 6, title: "개발" },
+  { id: 7, title: "검수" },
+];
+interface UploadedFilesProps {
+  originalName: string;
+  saveName: string;
+  url: string;
+  size: number;
+}
 
-export default function TaskForm({
-  author,
-  createdDate,
-}: {
-  author: string;
-  createdDate: string;
-}) {
+export default function TaskForm() {
+  const { projectId } = useParams();
+  const [progressStepId, setProgressStepId] = useState<number>(0);
+  const [title, setTitle] = useState<string>("");
   const editorRef = useRef<EditorJS | null>(null);
+  const [linkList, setLinkList] = useState<{ url: string; name: string }[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
 
-  const [files, setFiles] = useState<(File | null)[]>([]);
-  const [title, setTitle] = useState("");
-  const [links, setLinks] = useState<{ url: string; name: string }[]>([]);
-  const [boardCategory, setBoardCategory] = useState<string>("");
-  const [newLink, setNewLink] = useState("");
-  const [newLinkName, setNewLinkName] = useState("");
-
-  // 링크 추가
-  const handleAddLink = () => {
-    if (newLink && newLinkName) {
-      setLinks([...links, { url: newLink, name: newLinkName }]);
-      setNewLink("");
-      setNewLinkName("");
-    }
-  };
-
-  // 링크 제거
-  const handleRemoveLink = (index: number) => {
-    const updatedLinks = links.filter((_, i) => i !== index);
-    setLinks(updatedLinks);
-  };
-
-  // 새 파일 추가
-  const handleAddFile = () => {
-    setFiles([...files, null]);
-  };
-
-  // 특정 파일 제거
-  const handleRemoveFile = (index: number) => {
-    const newFiles = files.filter((_, i) => i !== index);
-    setFiles(newFiles);
-  };
-
-  const uploadFile = async (file: File) => {
-    const previewUrl = URL.createObjectURL(file);
-
+  const uploadFile = async (file: File): Promise<string> => {
     try {
-      const formData = new FormData();
-      formData.append("fileList", file);
+      // 서버로 파일 업로드 요청
+      const data = await uploadFileApi(file);
 
-      const response = await axiosInstance.post("/upload", formData);
-      return response.data.url || previewUrl; // 서버 응답 URL 또는 미리보기 URL
+      // 서버에서 반환된 파일 URL 반환
+      return data.url; // 서버 응답에서 URL을 반환하는 키를 확인해야 합니다
     } catch (error) {
-      console.error("File upload failed:", error);
-      return previewUrl; // 실패 시 미리보기 URL 유지
+      console.error("파일 업로드 실패:", error);
+      throw new Error("파일 업로드 중 문제가 발생했습니다.");
     }
   };
 
@@ -85,10 +59,9 @@ export default function TaskForm({
           image: {
             class: ImageTool,
             config: {
-              endpoints: API_ENDPOINTS,
+              endpoints: BASE_URL,
               field: "image",
               types: "image/*",
-              additionalRequestHeaders: AUTH_HEADER,
               uploader: {
                 async uploadByFile(file: File) {
                   const url = await uploadFile(file);
@@ -116,34 +89,42 @@ export default function TaskForm({
       try {
         const savedData = await editorRef.current.save();
 
+        if (!title.trim()) {
+          window.alert("제목을 입력하세요.")
+          return;
+        }
+
+        
+        const content = savedData.blocks.map((block) => {
+          if (block.type === "paragraph") {
+            return {
+              type: "paragrpah",
+              text: block.data.text,
+            };
+          } else if (block.type === "image") {
+            return {
+              type: "image",
+              data: { src: block.data.file.url },
+            };
+          }
+          return "";
+        });
+        if (content.length === 0) {
+          window.alert("내용을 입력하세요.")
+          return;
+        }
+
         const requestData = {
-          content: {
-            title,
-            content: savedData.blocks.map((block) => {
-              if (block.type === "paragraph") {
-                return {
-                  type: "paragraph",
-                  text: block.data.text,
-                };
-              } else if (block.type === "image") {
-                return {
-                  type: "image",
-                  data: { src: block.data.file.url },
-                };
-              }
-            }),
-            boardCategory,
-            boardStatus: "PROGRESS",
-            taskBoardLinkList: links.map((link, index) => ({
-              id: index,
-              name: link.name,
-              url: link.url,
-            })),
-          },
+          title: title,
+          content: "게시글 본문 입니다.", // TODO 이거 백엔드 수정해야 함. 1/28
+          linkList: linkList,
+          fileInfoList: uploadedFiles,
+          progressStepId: progressStepId,
         };
 
-        await axiosInstance.post("/posts", requestData);
-
+        const response = await createQuestionApi(Number(projectId), requestData)
+        console.log("요청데이터", requestData);
+        console.log("저장성공", response.data);
         alert("저장이 완료되었습니다.");
       } catch (error) {
         console.error("저장 실패:", error);
@@ -152,95 +133,21 @@ export default function TaskForm({
     }
   };
 
-  // 파일 저장하는 핸들러 따로 만들기
-  // 파일 업로드 핸들러
-  const handleFileUpload = async (file: File) => {
-    try {
-      const formData = new FormData();
-      formData.append("fileList", file);
-      const response = await axiosInstance.post("/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      const uploadedUrl = response.data.url;
-      console.log(file);
-      console.log([...formData.entries()]);
-      alert(`파일 업로드 성공: ${uploadedUrl}`);
-      return uploadedUrl; // 서버에서 반환된 URL
-    } catch (error) {
-      console.error("파일 업로드 실패:", error);
-      alert("파일 업로드 중 문제가 발생했습니다.");
-      return null;
-    }
-  };
-
-  // 파일 변경 핸들러
-  const handleFileChange = async (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files ? event.target.files[0] : null;
-
-    if (file) {
-      const uploadedUrl = await handleFileUpload(file);
-      if (uploadedUrl) {
-        const newFiles = [...files];
-        newFiles[index] = file;
-        setFiles(newFiles);
-      }
-    }
-  };
-
   return (
+    // 제목 입력
     <Flex gap={4} direction={"column"}>
       <Flex align={"center"} gap={4}>
-        <Box>
-          <Text mb={2}>카테고리</Text>
-          <Select
-            value={boardCategory}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              setBoardCategory(e.target.value)
-            }
-            placeholder="카테고리 선택"
-            bg={"white"}
-            border={"1px solid #ccc"}
-            borderRadius={"md"}
-            height={"40px"}
-            fontSize={"md"}
-            paddingX={2}
-            _focus={{
-              borderColor: "blue.500",
-              boxShadow: "0 0 0 1px blue.500",
-            }}
-            _hover={{
-              borderColor: "gray.500",
-            }}
-          >
-            <option value="QUESTION">질문</option>
-            <option value="REQUEST">요청</option>
-            <option value="ANSWER">답변</option>
-          </Select>
-        </Box>
+        <ProgressStepAddSection
+          progressStepId={progressStepId}
+          setProgressStepId={setProgressStepId}
+          progressData = {progressData}
+        />
         <Box flex={2}>
           <Text mb={2}>제목</Text>
           <Input
             placeholder="제목을 입력하세요."
             onChange={(e) => setTitle(e.target.value)}
           />
-        </Box>
-      </Flex>
-
-      <Flex align={"center"} gap={4} width={"100%"}>
-        <Box flex={"1"}>
-          {/* 작성자 */}
-          <Text mb={2}>작성자</Text>
-          <Input type="text" value={author} readOnly />
-        </Box>
-        <Box flex={"1"}>
-          {/* 작성 일시 */}
-          <Text mb={2}>작성 일시</Text>
-          <Input type="date" value={formatDateWithTime(createdDate)} readOnly />
         </Box>
       </Flex>
 
@@ -255,61 +162,15 @@ export default function TaskForm({
         ></Box>
       </Box>
 
-      <Box mt={6}>
-        <Text>링크 입력</Text>
-        {links.map((link, index) => (
-          <Flex key={index} align="center" mb={2}>
-            <Text>
-              {link.name} ({link.url})
-            </Text>
-            <Button
-              ml={4}
-              colorScheme="red"
-              size="sm"
-              onClick={() => handleRemoveLink(index)}
-            >
-              제거
-            </Button>
-          </Flex>
-        ))}
-        <Flex gap={2} mt={4}>
-          <Input
-            placeholder="링크(URL)를 입력하세요"
-            value={newLink}
-            onChange={(e) => setNewLink(e.target.value)}
-          />
-          <Input
-            placeholder="링크 이름(별명)을 입력하세요"
-            value={newLinkName}
-            onChange={(e) => setNewLinkName(e.target.value)}
-          />
-          <Button colorScheme="blue" onClick={handleAddLink}>
-            추가
-          </Button>
-        </Flex>
-      </Box>
+      <LinkAddSection linkList={linkList} setLinkList={setLinkList} />
 
-      <Box mt={6}>
-        <Text fontWeight="bold" mb={2}>
-          첨부 파일
-        </Text>
-        {files.map((file, index) => (
-          <Box key={index} display="flex" alignItems="center" mb={4}>
-            <Input type="file" onChange={(e) => handleFileChange(index, e)} />
-            <Button
-              ml={2}
-              colorScheme="red"
-              onClick={() => handleRemoveFile(index)}
-            >
-              제거
-            </Button>
-          </Box>
-        ))}
-        <Button colorScheme="blue" onClick={handleAddFile}>
-          파일 추가
-        </Button>
-      </Box>
+      {/* 파일 입력 */}
+      <FileAddSection
+        uploadedFiles={uploadedFiles}
+        setUploadedFiles={setUploadedFiles}
+      />
 
+      {/* 작성 버튼 */}
       <Button
         bg={"red.500"}
         colorScheme={"red"}
