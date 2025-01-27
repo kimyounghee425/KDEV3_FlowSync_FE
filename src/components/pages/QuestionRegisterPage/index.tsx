@@ -2,18 +2,11 @@
 
 "use client";
 
-import { useEffect } from "react";
 import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/backButton";
 import TaskForm from "@/src/components/common/TaskForm";
 
-import TaskButton from "@/src/components/common/TaskButton";
-
 export default function QuestionRegisterPage() {
-
-  useEffect(() => {
-  }, []);
-
   return (
     <Box
       maxW="1000px"
@@ -28,7 +21,6 @@ export default function QuestionRegisterPage() {
       <BackButton />
 
       <TaskForm />
-      <TaskButton></TaskButton>
     </Box>
   );
 }
