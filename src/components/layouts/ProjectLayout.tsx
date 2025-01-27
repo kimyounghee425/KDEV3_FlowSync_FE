@@ -2,11 +2,10 @@
 
 import { ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import { Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { Layers, List, MessageCircleQuestion } from "lucide-react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
-import ProjectInfo from "@/src/components/pages/projectTasksPage/components/ProjectInfo";
-import ProgressStepSection from "@/src/components/pages/projectTasksPage/components/ProgressStepSection";
+import ProjectInfo from "@/src/components/common/ProjectInfo";
 import { useProjectInfo } from "@/src/hook/useProjectInfo";
 import { Loading } from "@/src/components/common/Loading";
 
@@ -95,21 +94,7 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
         <ProjectInfo projectInfo={projectInfo} />
       </Flex>
 
-      {/* 프로젝트 단계 섹션 */}
-      <ProgressStepSection projectId={projectId as string} />
-
-      <Box
-        direction="column"
-        padding="30px 23px"
-        gap="8px"
-        border="1px solid"
-        borderColor="gray.200"
-        borderRadius="lg"
-        boxShadow="md"
-        mb="30px"
-      >
-        {children}
-      </Box>
+      {children}
     </>
   );
 }
