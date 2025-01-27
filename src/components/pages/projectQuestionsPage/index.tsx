@@ -32,7 +32,7 @@ const STATUS_LABELS: Record<string, string> = {
   ANSWER: "답변",
 };
 
-export default function QuestionsPage() {
+export default function ProjectQuestionsPage() {
   const {
     projectQuestionList,
     paginationInfo,
