@@ -57,18 +57,25 @@ export default function ArticleContent({ article }: ArticleContentProps) {
 
   // 링크 렌더링
   const renderLinks = (links: Article["linkList"]) => {
-    return links.map((link: ArticleLink, index: number) => (
-      <Box
-        key={index}
-        mb={2}
-        cursor="pointer"
-        color={"blue"}
-        onClick={() => window.open(link.url, "_blank")}
-        _hover={{ textDecoration: "underline" }}
-      >
-        <Text fontWeight="normal">{link.name}</Text>
-      </Box>
-    ));
+    return links.map((link: ArticleLink, index: number) => {
+      const url =
+        link.url.startsWith("http://") || link.url.startsWith("https://")
+          ? link.url
+          : `https://${link.url}`;
+
+      return (
+        <Box
+          key={index}
+          mb={2}
+          cursor="pointer"
+          color={"blue"}
+          onClick={() => window.open(url, "_blank")}
+          _hover={{ textDecoration: "underline" }}
+        >
+          <Text fontWeight="normal">{link.name}</Text>
+        </Box>
+      );
+    });
   };
 
   // 첨부파일 렌더링
