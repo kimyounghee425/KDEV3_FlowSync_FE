@@ -1,11 +1,11 @@
 // 업체 생성 페이지 - 입력 폼 초기값 설정
 export const defaultValuesOfOrganizaion = {
-  name: "",
-  brNumber: "",
-  brCertificateUrl: "https://",
-  streetAddress: "",
-  detailAddress: "",
-  phoneNumber: "",
+  name: "비엔시스템",
+  brNumber: "123-45-67890",
+  brCertificateUrl: "https://www.naver.com",
+  streetAddress: "서울시 강남구",
+  detailAddress: "역삼동",
+  phoneNumber: "010-9081-6109",
   type: "CUSTOMER",
 };
 
