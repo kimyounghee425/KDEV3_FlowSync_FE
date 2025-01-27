@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/backButton";
-import ProjectForm from "@/src/components/pages/ProjectRegisterPage/components/ProjectForm";
+// import ProjectForm from "@/src/components/pages/ProjectRegisterPage/components/ProjectForm";
 import axiosInstance from "@/src/api/axiosInstance";
 
 interface UserInterface {
@@ -41,7 +41,7 @@ export default function ProjectRegisterPage() {
     >
       <BackButton />
 
-      <ProjectForm id={id} />
+      {/* <ProjectForm id={id} /> */}
     </Box>
   );
 }

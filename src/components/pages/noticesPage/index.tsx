@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Heading, Table } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import { useNoticeList } from "@/src/hook/useNoticeList";
