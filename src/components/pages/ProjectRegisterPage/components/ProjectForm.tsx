@@ -32,14 +32,14 @@ export default function ProjectForm({ id }: { id: string }) {
   const [description, setDescription] = useState<string>(""); // 짧은 설명
   const [detail, setDetail] = useState<string>(""); // 긴 설명
 
-  const [customerOrganizations, setCustomerOrganizations] = useState<
-    Organization[]
-  >([]);
-  const [developerOrganizations, setDeveloperOrganizations] = useState<
-    Organization[]
-  >([]);
+  // const [customerOrganizations, setCustomerOrganizations] = useState<
+  //   Organization[]
+  // >([]);
+  // const [developerOrganizations, setDeveloperOrganizations] = useState<
+  //   Organization[]
+  // >([]);
 
-  const [selectedCustomer, setSelectedCustomer] = useState<Organization>
+  // const [selectedCustomer, setSelectedCustomer] = useState<Organization>;
 
   // 서버에 제출하는 로직 작성 << 해야함
   const handleSubmit = () => {
@@ -74,9 +74,7 @@ export default function ProjectForm({ id }: { id: string }) {
           setDescription={setDescription}
         />
       </Box>
-      <Box>
-        <SelectOrganizationSection />
-      </Box>
+      <Box>{/* <SelectOrganizationSection /> */}</Box>
 
       <Button onClick={handleSubmit}>작성</Button>
     </Flex>

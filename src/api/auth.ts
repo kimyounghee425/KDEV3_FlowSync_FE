@@ -1,14 +1,7 @@
-import { jwtDecode } from "jwt-decode";
 import axiosInstance from "@/src/api/axiosInstance";
 
 interface PermissionsResponse {
   role: string;
-}
-interface DecodedToken {
-  name: string;
-  email: string;
-  role: string;
-  exp: number; // 만료 시간 (Unix timestamp)
 }
 
 // 사용자 권한 API 호출
