@@ -53,7 +53,6 @@ function NoticesPageContent() {
     fetchApi: fetchNoticeListApi,
     keySelector: "notices",
     params: [keyword, status, currentPage, pageSize],
-    dependencies: [keyword, status, currentPage, pageSize],
   });
 
   const handlePageChange = (page: number) => {

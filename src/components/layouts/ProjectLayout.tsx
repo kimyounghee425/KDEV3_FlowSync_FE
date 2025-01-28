@@ -60,7 +60,6 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
   >({
     fetchApi: fetchProjectInfo,
     params: [resolvedProjectId],
-    dependencies: [resolvedProjectId],
   });
   // 현재 탭 추출
   const currentTab = pathname.split("/").pop(); // "tasks" | "questions" | "workflow"
