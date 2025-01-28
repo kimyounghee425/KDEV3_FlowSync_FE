@@ -10,7 +10,8 @@ import {
 
 interface StatusSelectBoxProps {
   statusFramework: ReturnType<typeof createListCollection>;
-  status: string;
+  selectedValue: string;
+  queryKey: string;
 }
 
 /**
@@ -18,9 +19,10 @@ interface StatusSelectBoxProps {
  *   - 게시글/업무 상태를 선택(필터링)하기 위한 드롭다운 UI.
  *   - 상태가 바뀔 때, URL 쿼리 파라미터를 업데이트하여 필터로 사용한다.
  */
-export default function StatusSelectBox({
+export default function FilterSelectBox({
   statusFramework,
-  status,
+  selectedValue,
+  queryKey,
 }: StatusSelectBoxProps) {
   const router = useRouter();
 
@@ -30,22 +32,22 @@ export default function StatusSelectBox({
    */
   const handleValueChange = (details: { value: string[] }) => {
     // Chakra Select 컴포넌트는 배열 형태로 값을 제공하므로, 첫 번째 값만 추출
-    const selectedValue = details.value[0];
+    const newValue = details.value[0];
 
     // 현재 선택된 값과 동일하면 함수 실행 종료
-    if (selectedValue === status) {
+    if (newValue === selectedValue) {
       return;
     }
 
     // 현재 URL의 쿼리 파라미터를 파싱
     const params = new URLSearchParams(window.location.search);
 
-    if (selectedValue) {
+    if (newValue) {
       // 선택된 상태 값이 있으면, boardStatus 파라미터로 설정
-      params.set("status", selectedValue);
+      params.set(queryKey, newValue);
     } else {
       // "전체"를 선택하면, 파라미터 삭제
-      params.delete("status"); // 필터값 제거
+      params.delete(queryKey); // 필터값 제거
     }
 
     // 변경된 쿼리 파라미터를 포함한 새 URL로 이동
@@ -57,7 +59,7 @@ export default function StatusSelectBox({
       collection={statusFramework}
       size="md"
       width="110px"
-      value={[status]}
+      value={[selectedValue]}
       onValueChange={handleValueChange}
     >
       {/* 드롭다운 버튼(트리거) */}

@@ -1,9 +1,7 @@
 import { Box, Button } from "@chakra-ui/react";
 import { BiArrowBack } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
 
 export default function BackButton() {
-
   return (
     <Box position={"relative"} w={"100"} mb={4}>
       <Button

@@ -1,5 +1,5 @@
 import axiosInstance from "@/src/api/axiosInstance";
-import { CommonResponseType, ProjectListResponse } from "@/src/types";
+import { CommonResponseType, ProjectListResponse, ProjectProgressStepProps, ProjectQuestionListResponse, ProjectTaskListResponse } from "@/src/types";
 
 /**
  * 프로젝트 목록을 가져옵니다.
@@ -11,12 +11,12 @@ import { CommonResponseType, ProjectListResponse } from "@/src/types";
  */
 export async function fetchProjectList(
   keyword: string = "",
-  filter: string = "",
+  status: string = "",
   currentPage: number,
   pageSize: number,
 ): Promise<CommonResponseType<ProjectListResponse>> {
   const response = await axiosInstance.get("/projects", {
-    params: { keyword, filter, currentPage, pageSize },
+    params: { keyword, status, currentPage, pageSize },
   });
   return response.data;
 }
@@ -39,9 +39,21 @@ export async function fetchProjectInfo(projectId: string) {
  * @param projectId 프로젝트 식별자
  * @returns 프로젝트 진행 상황 요약(숫자 형태)
  */
-export async function fetchProjectQuestionProgressStep(projectId: string) {
+export async function fetchProjectQuestionProgressStep(projectId: string): Promise<CommonResponseType<ProjectProgressStepProps[]>> {
   const response = await axiosInstance.get(
     `/projects/${projectId}/questions/counts`,
+  );
+  return response.data;
+}
+
+/**
+ * 특정 프로젝트의 진행 상황(Count)을 가져옵니다.
+ * @param projectId 프로젝트 식별자
+ * @returns 프로젝트 진행 상황 요약(숫자 형태)
+ */
+export async function fetchProjectTaskProgressStep(projectId: string): Promise<CommonResponseType<ProjectProgressStepProps[]>> {
+  const response = await axiosInstance.get(
+    `/projects/${projectId}/tasks/counts`,
   );
   return response.data;
 }
@@ -61,8 +73,7 @@ export async function fetchProjectsStatusCount() {
  * @param projectId 프로젝트 식별자
  * @param keyword 검색어 (기본값: "")
  * @param progressStep 진행 단계(필터링)
- * @param boardStatus 게시글 상태(필터링)
- * @param boardCategory 게시글 유형(필터링)
+ * @param status 게시글 상태(필터링)
  * @param currentPage 현재 페이지
  * @param pageSize 페이지 크기
  * @returns 게시글 목록 및 페이징 정보를 담은 데이터
@@ -74,9 +85,7 @@ export async function fetchProjectQuestionList(
   status: string = "",
   currentPage: number,
   pageSize: number,
-) {
-  // 실제 요청은 /projects/:projectId/tasks endpoint가 될 수도 있으나,
-  // 현재 주석 처리되어 있고, 대신 /posts endpoint를 사용 중입니다.
+): Promise<CommonResponseType<ProjectQuestionListResponse>> {
   const response = await axiosInstance.get(`/projects/${projectId}/questions`, {
     params: {
       keyword,
@@ -94,8 +103,7 @@ export async function fetchProjectQuestionList(
  * @param projectId 프로젝트 식별자
  * @param keyword 검색어 (기본값: "")
  * @param progressStep 진행 단계(필터링)
- * @param boardStatus 게시글 상태(필터링)
- * @param boardCategory 게시글 유형(필터링)
+ * @param status 게시글 상태(필터링)
  * @param currentPage 현재 페이지
  * @param pageSize 페이지 크기
  * @returns 게시글 목록 및 페이징 정보를 담은 데이터
@@ -107,10 +115,10 @@ export async function fetchProjectTaskList(
   status: string = "",
   currentPage: number,
   pageSize: number,
-) {
+): Promise<CommonResponseType<ProjectTaskListResponse>> {
   // 실제 요청은 /projects/:projectId/tasks endpoint가 될 수도 있으나,
   // 현재 주석 처리되어 있고, 대신 /posts endpoint를 사용 중입니다.
-  const response = await axiosInstance.get(`/posts`, {
+  const response = await axiosInstance.get(`/projects/${projectId}/tasks`, {
     params: {
       keyword,
       progressStep,

@@ -3,37 +3,21 @@
 import { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import ProgressStepButton from "@/src/components/common/ProgressStepButton";
-import { useProjectQuestionList } from "@/src/hook/useProjectQuestionList";
 import { Loading } from "@/src/components/common/Loading";
+import { ProjectProgressStepProps } from "@/src/types";
 
 interface ProgressStepSectionProps {
-  fetchProgressStep: (projectId: string) => {
-    progressStep: Array<{
-      id: string;
-      title: string;
-      count: number;
-    }>;
-    loading: boolean;
-  };
-  projectId: string;
+  progressStep: ProjectProgressStepProps[];
+  loading: boolean;
 }
 
 /**
  * ProgressStepSection 컴포넌트
- * - 프로젝트의 여러 진행 단계(요구사항정의, 디자인 등)를 버튼 형태로 표시
- * - 선택된 버튼(단계)에 따라 URL 쿼리 파라미터(progressStep)를 업데이트하고,
- *   게시판 데이터를 재조회(fetchBoardList)함
- *
- * @param projectId 프로젝트 식별자 (현재 미사용, 추후 서버 데이터 연동 시 활용 가능)
  */
 export default function ProgressStepSection({
-  fetchProgressStep,
-  projectId,
+  progressStep,
+  loading,
 }: ProgressStepSectionProps) {
-  const { progressStep, loading } = fetchProgressStep(projectId);
-
-  const { fetchProjectQuestionList } = useProjectQuestionList();
-
   // 현재 선택된 버튼 id 상태 (기본값은 progressData의 첫 번째 항목)
   const [selectedButtonId, setSelectedButtonId] = useState<string>(
     progressStep.length > 0 ? progressStep[0].id : "",
@@ -55,23 +39,13 @@ export default function ProgressStepSection({
     const params = new URLSearchParams(window.location.search);
     params.set("progressStep", selectedValue);
 
-    // 브라우저 히스토리(주소)를 업데이트 (페이지 재로드 X)
-    const newUrl = `?${params.toString()}`;
-    history.replaceState(null, "", newUrl); // URL 업데이트
-
-    // 새로운 데이터 패치 (boardList 재조회)
-    fetchProjectQuestionList();
+    // 브라우저 히스토리(주소)를 업데이트
+    history.replaceState(null, "", `?${params.toString()}`); // URL 업데이트
   };
 
   if (loading) {
     return <Loading />;
   }
-
-  // useEffect(() => {
-  //   if (progressData && progressData.length > 0) {
-  //     setSelectedButtonId(progressData[0].id);
-  //   }
-  // }, [progressData]);
 
   return (
     <Flex

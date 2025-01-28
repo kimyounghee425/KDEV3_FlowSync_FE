@@ -1,8 +1,14 @@
 // 공통 API 응답 타입 (리스트 응답)
+// 기본 타입 (meta 포함 X)
 export interface CommonResponseType<T> {
   code: number; // 상태 코드
   result: string; // 요청 결과 (SUCCESS, FAILURE 등)
   data: T; // 제네릭 데이터
+}
+
+// meta를 포함하는 타입
+export interface CommonResponseWithMetaType<T> extends CommonResponseType<T> {
+  data: T & { meta: PaginationProps }; // data 내부에 meta 포함
 }
 
 // 서버에서 반환되는 페이징 메타데이터 타입
@@ -125,7 +131,7 @@ export interface ProjectInfoProps {
 
 // 결재글 속성
 export interface ProjectTaskProps {
-  id: number;
+  id: string;
   number: number;
   title: string;
   content: string;
@@ -268,4 +274,10 @@ export interface NoticeProps {
 export interface NoticeListResponse {
   notices: NoticeProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
+}
+
+export interface ProjectProgressStepProps {
+  id: string,
+  title:string,
+  count: number
 }

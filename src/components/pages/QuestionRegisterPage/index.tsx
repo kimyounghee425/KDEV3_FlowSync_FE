@@ -3,7 +3,7 @@
 "use client";
 
 import { Box } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/backButton";
+import BackButton from "@/src/components/common/BackButton";
 import TaskForm from "@/src/components/common/ArticleForm";
 
 export default function QuestionRegisterPage() {
