@@ -6,14 +6,12 @@ import { HStack, Input, Button, Box, Flex } from "@chakra-ui/react";
 
 interface SearchSectionProps {
   keyword: string;
-  fetchBoardList: (page: number, pageSize: number) => void;
   placeholder?: string;
   children?: ReactNode;
 }
 
 export default function SearchSection({
   keyword,
-  fetchBoardList,
   placeholder = "검색어를 입력하세요",
   children,
 }: SearchSectionProps) {
@@ -27,9 +25,6 @@ export default function SearchSection({
     const params = new URLSearchParams(window.location.search);
     params.set("keyword", input); // 검색어 추가
     router.push(`?${params.toString()}`);
-
-    // 데이터 다시 가져오기
-    fetchBoardList(1, 5); // 첫 페이지 데이터 로드
   };
 
   // 검색어와 필터 상태값 초기화 함수
@@ -37,7 +32,6 @@ export default function SearchSection({
     // URL 쿼리스트링 초기화
     router.push("?");
     setInput("");
-    fetchBoardList(1, 5); // 첫 페이지로 리셋
   };
 
   // 사용자가 input 태그에 이력하는 값을 실시간으로 query state에 보관

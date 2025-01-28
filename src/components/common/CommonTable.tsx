@@ -6,7 +6,7 @@ import { SkeletonText } from "@/src/components/ui/skeleton";
 
 interface CommonTableProps<T> {
   headerTitle: ReactNode;
-  data: T[];
+  data: T[] | null;
   loading: boolean;
   renderRow: (item: T) => ReactNode;
   handleRowClick: (id: string) => void;
@@ -18,7 +18,7 @@ export default function CommonTable<
   },
 >({
   headerTitle,
-  data,
+  data = [],
   loading,
   renderRow,
   handleRowClick,

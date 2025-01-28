@@ -2,13 +2,21 @@ import { Flex, Separator } from "@chakra-ui/react";
 import { Avatar } from "@/src/components/ui/avatar";
 import { ProjectInfoProps } from "@/src/types";
 import { formatDateToISODate } from "@/src/utils/formatDateUtil";
+import { Loading } from "@/src/components/common/Loading";
+
+interface ProjectInfoSectionProps {
+  projectInfo: ProjectInfoProps | null;
+  loading: boolean;
+}
 
 // 프로젝트 기본정보 컴포넌트
-export default function ProjectInfo({
+export default function ProjectInfoSection({
   projectInfo,
-}: {
-  projectInfo: ProjectInfoProps | null;
-}) {
+  loading,
+}: ProjectInfoSectionProps) {
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <Flex alignItems="center" gap="12px">
       <Flex alignItems="center" gap="8px">
