@@ -11,6 +11,7 @@ import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSecti
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 
 import { createQuestionApi, uploadFileApi } from "@/src/api/RegisterArticle";
+import { link } from "fs";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -30,12 +31,17 @@ interface UploadedFilesProps {
   size: number;
 }
 
+interface linkListProps {
+  name : string;
+  url: string;
+}
+
 export default function TaskForm() {
   const { projectId } = useParams();
   const [progressStepId, setProgressStepId] = useState<number>(0);
   const [title, setTitle] = useState<string>("");
   const editorRef = useRef<EditorJS | null>(null);
-  const [linkList, setLinkList] = useState<{ url: string; name: string }[]>([]);
+  const [linkList, setLinkList] = useState<linkListProps[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
 
   const uploadFile = async (file: File): Promise<string> => {
@@ -132,6 +138,8 @@ export default function TaskForm() {
       }
     }
   };
+
+  console.log(linkList)
 
   return (
     // 제목 입력
