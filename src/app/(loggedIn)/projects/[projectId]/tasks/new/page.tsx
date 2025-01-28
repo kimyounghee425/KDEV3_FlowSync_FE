@@ -4,13 +4,11 @@
 // 목데이터 사용
 
 import { Box } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/backButton";
-import TaskForm from "@/src/components/common/TaskForm";
+import BackButton from "@/src/components/common/BackButton";
+import TaskForm from "@/src/components/common/ArticleForm";
 import "./edit.css";
 
 export default function New() {
-
-
   return (
     <Box
       maxW="1000px"

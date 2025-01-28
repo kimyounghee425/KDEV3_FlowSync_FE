@@ -103,7 +103,7 @@ export default function ProjectQuestionsPage() {
   };
 
   const handleRowClick = (taskId: string) => {
-    router.push(`/projects/${projectId}/tasks/${taskId}`);
+    router.push(`/projects/${projectId}/questions/${taskId}`);
   };
 
   return (

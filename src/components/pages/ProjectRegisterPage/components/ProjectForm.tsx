@@ -39,7 +39,7 @@
 //     Organization[]
 //   >([]);
 
-//   const [selectedCustomer, setSelectedCustomer] = useState<Organization>;
+//   const [selectedCustomer, setSelectedCustomer] = useState<Organization>
 
 //   // 서버에 제출하는 로직 작성 << 해야함
 //   const handleSubmit = () => {
@@ -74,7 +74,10 @@
 //           setDescription={setDescription}
 //         />
 //       </Box>
-//       <Box>{/* <SelectOrganizationSection /> */}</Box>
+
+//       <Box>
+//         <SelectOrganizationSection />
+//       </Box>
 
 //       <Button onClick={handleSubmit}>작성</Button>
 //     </Flex>

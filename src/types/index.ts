@@ -175,7 +175,7 @@ export interface ApiResponse {
   code: number;
   result: string;
   message: string;
-  data: Task;
+  data: Article;
 }
 // 게시글의 콘텐츠 블럭
 export interface ContentBlock {
@@ -183,51 +183,60 @@ export interface ContentBlock {
   data: string | { src: string };
 }
 
-export interface TaskBoardLink {
+
+
+// 게시글
+export interface Article {
+  id: number;
+  number: number;
+  title: string;
+  content: string;
+  // content: ContentBlock[]; // ContentBlock 인터페이스 사용
+  regAt: string;
+  editAt: string;
+  approverAt: string;
+  category: string;
+  status: string;
+  deletedYn: string;
+  author: string;
+  fileList: ArticleFile[];
+  linkList: ArticleLink[];
+  commentList: ArticleComment[];
+}
+
+// 게시글 첨부링크
+export interface ArticleLink {
   id: number;
   name: string;
   url: string;
 }
 
-// 게시글
-export interface Task {
-  id: number;
-  projectid: number;
-  number: number;
-  parent?: {
-    title: string;
-  } | null;
-  progress: string;
-  title: string;
-  author: string;
-  boardCategory: string; // 아직 미사용
-  boardStatus: string; // 아직 미사용
-  regAt: string;
-  editAt: string;
-  content: ContentBlock[]; // ContentBlock 인터페이스 사용
-  file: string[]; // 첨부파일
-  taskBoardLinkList: TaskBoardLink[];
-  commentList: Comment[];
+// 게시글 첨부파일
+export interface ArticleFile {
+  originalName: string;
+  saveName: string;
+  url: string;
+  size: number;
 }
 
-export interface TaskCommentsProps {
-  comments: Comment[];
+export interface ArticleCommentsProps {
+  comments: ArticleComment[];
 }
 
 // 댓글
-export interface Comment {
+export interface ArticleComment {
   id: number;
   author: string;
   content: string;
   regAt: string;
   editAt: string;
   deletedYn: string;
-  parentId: number | null;
-  replies: Reply[];
+  replies: ArticleReply[];
 }
 
+
 // 댓글의 답글
-export interface Reply {
+export interface ArticleReply {
   id: number;
   author: string;
   content: string;
