@@ -75,7 +75,6 @@ function AdminMembersPageContent() {
     fetchApi: fetchMemberListApi,
     keySelector: "members",
     params: [keyword, role, status, currentPage, pageSize],
-    dependencies: [keyword, role, status, currentPage, pageSize],
   });
 
   // 페이지 변경 시 새로운 데이터를 가져오는 함수

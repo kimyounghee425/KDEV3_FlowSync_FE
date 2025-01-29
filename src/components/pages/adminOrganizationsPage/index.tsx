@@ -74,7 +74,6 @@ function AdminOrganizationsPageContent() {
     fetchApi: fetchOrganizationListApi,
     keySelector: "organizations",
     params: [keyword, type, status, currentPage, pageSize],
-    dependencies: [keyword, type, status, currentPage, pageSize],
   });
 
   // 페이지 변경 시 새로운 데이터를 가져오는 함수

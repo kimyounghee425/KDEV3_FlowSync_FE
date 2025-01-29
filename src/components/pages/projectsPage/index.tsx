@@ -75,7 +75,6 @@ function ProjectsPageContent() {
     fetchApi: fetchProjectListApi,
     keySelector: "projects",
     params: [keyword, status, currentPage, pageSize],
-    dependencies: [keyword, status, currentPage, pageSize],
   });
 
   /**

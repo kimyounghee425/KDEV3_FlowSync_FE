@@ -59,7 +59,6 @@ export default function ProjectTasksPage() {
   >({
     fetchApi: fetchProjectTaskProgressStepApi,
     params: [resolvedProjectId],
-    dependencies: [resolvedProjectId],
   });
 
   // ProjectTaskList 데이터 패칭
@@ -75,14 +74,6 @@ export default function ProjectTasksPage() {
     fetchApi: fetchProjectTaskListApi,
     keySelector: "projectTasks",
     params: [
-      resolvedProjectId,
-      keyword,
-      progressStep,
-      status,
-      currentPage,
-      pageSize,
-    ],
-    dependencies: [
       resolvedProjectId,
       keyword,
       progressStep,
