@@ -24,7 +24,7 @@ export interface PaginationProps {
 // 회원 타입
 export interface MemberProps {
   id: string; // 회원 ID
-  organizationId: number; // 소속 업체 ID
+  organizationId: string; // 소속 업체 ID
   organizationName: string; // 소속 업체 이름
   role: "ADMIN" | "MEMBER"; // 역할 (Enum)
   status: "ACTIVE" | "INACTIVE"; // 상태 (Enum)
@@ -268,11 +268,12 @@ export interface InputFormData {
   label: string;
   id: string;
   type: "text" | "email" | "password" | "number" | "tel" | "url"; // 가능한 타입만 명시;
-  placeholder: string;
+  placeholder?: string;
   value?: string;
   error?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean; // ✅ 추가: 입력 비활성화 속성
 }
 
 // 공지사항
