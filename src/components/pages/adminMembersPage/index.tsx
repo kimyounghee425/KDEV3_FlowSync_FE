@@ -99,7 +99,7 @@ function AdminMembersPageContent() {
   };
 
   const handleRowClick = (id: string) => {
-    router.push(`/admins/members/${id}`);
+    router.push(`/admin/members/${id}`);
   };
 
   return (
