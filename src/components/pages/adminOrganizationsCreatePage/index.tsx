@@ -42,18 +42,18 @@ export default function AdminOrganizationsCreatePage() {
       const file = null; // 파일이 있을 경우에만 처리
 
       const response = await createOrganization(organizationData, file);
-      console.log("업체 생성 성공 - response: ", response);
-      alert("업체가 성공적으로 생성되었습니다.");
+      console.log("업체 등록 성공 - response: ", response);
+      alert("업체가 성공적으로 등록되었습니다.");
       route.push("/admin/organizations");
     } catch (error) {
-      console.error("업체 생성 중 오류 발생:", error);
-      alert("업체 생성에 실패했습니다. 다시 시도해주세요.");
+      console.error("업체 등록 중 오류 발생:", error);
+      alert("업체 등록에 실패했습니다. 다시 시도해주세요.");
     }
   }
 
   return (
     <InputFormLayout
-      title="▹ 업체 생성"
+      title="▹ 업체 등록"
       onSubmit={handleSubmit}
       isLoading={false}
     >

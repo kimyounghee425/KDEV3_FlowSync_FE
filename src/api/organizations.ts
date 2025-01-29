@@ -34,7 +34,7 @@ export async function createOrganization(
   // file이 존재할 경우에만 추가
   formData.append("file", file);
 
-  console.log("업체 생성 API 호출 전 - formData 생성: ", formData);
+  console.log("업체 등록 API 호출 전 - formData 생성: ", formData);
 
   // FormData 전송
   const response = await axiosInstance.post("/admins/organizations", formData, {
@@ -43,7 +43,7 @@ export async function createOrganization(
     },
   });
 
-  console.log("업체 생성 API 호출 응답 - response: ", response);
-  console.log("업체 생성 API 호출 응답 - response.data: ", response.data);
+  console.log("업체 등록 API 호출 응답 - response: ", response);
+  console.log("업체 등록 API 호출 응답 - response.data: ", response.data);
   return response.data; // 생성된 데이터 반환
 }

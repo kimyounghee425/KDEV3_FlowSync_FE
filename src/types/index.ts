@@ -24,7 +24,7 @@ export interface PaginationProps {
 // 회원 타입
 export interface MemberProps {
   id: string; // 회원 ID
-  organizationId: string; // 소속 업체 ID
+  organizationId: number; // 소속 업체 ID
   organizationName: string; // 소속 업체 이름
   role: "ADMIN" | "MEMBER"; // 역할 (Enum)
   status: "ACTIVE" | "INACTIVE"; // 상태 (Enum)
@@ -36,6 +36,26 @@ export interface MemberProps {
   regAt: string; // 등록일
   introduction: string; // 자기소개
   remark: string; // 비고
+}
+
+// `createMember` 함수에서 입력값의 타입 정의
+export interface CreateMemberInput {
+  role: string;
+  organizationId: number;
+  name: string;
+  email: string;
+  password: string;
+  phoneNum: string;
+  jobRole: string;
+  jobTitle: string;
+  introduction: string;
+  remark: string;
+}
+
+// 반환값의 타입 정의
+export interface CreateMemberResponse {
+  success: boolean;
+  member: MemberProps;
 }
 
 export interface MemberListResponse {
@@ -183,8 +203,6 @@ export interface ContentBlock {
   data: string | { src: string };
 }
 
-
-
 // 게시글
 export interface Article {
   id: number;
@@ -234,7 +252,6 @@ export interface ArticleComment {
   replies: ArticleReply[];
 }
 
-
 // 댓글의 답글
 export interface ArticleReply {
   id: number;
@@ -265,7 +282,7 @@ export interface NoticeProps {
   title: string; // 계약 단계
   content: string; // 시작일시
   category: string; // 시작일시
-  priority: string; // 
+  priority: string; //
   isDeleted: boolean; // 마감일시
   regAt: string; // 고객사 이름
   updatedAt: string; // 개발사 이름
@@ -277,7 +294,7 @@ export interface NoticeListResponse {
 }
 
 export interface ProjectProgressStepProps {
-  id: string,
-  title:string,
-  count: number
+  id: string;
+  title: string;
+  count: number;
 }
