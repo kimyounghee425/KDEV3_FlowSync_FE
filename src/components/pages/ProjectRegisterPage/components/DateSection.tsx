@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Flex, Text, Box, Button } from "@chakra-ui/react";
-
+import "./dateSection.css"
 interface DateSectionProps {
   startAt: string;
   closeAt: string;
@@ -53,6 +53,7 @@ export default function DateSection({
   return (
     <Flex direction={"row"} mb={4}>
       <DatePicker
+        className="custom-calender"
         selected={
           closeAt ? new Date(closeAt) : startAt ? new Date(startAt) : null
         }

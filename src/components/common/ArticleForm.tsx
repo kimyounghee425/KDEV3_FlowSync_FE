@@ -36,7 +36,7 @@ interface linkListProps {
   url: string;
 }
 
-export default function TaskForm() {
+export default function ArticleForm() {
   const { projectId } = useParams();
   const [progressStepId, setProgressStepId] = useState<number>(0);
   const [title, setTitle] = useState<string>("");
