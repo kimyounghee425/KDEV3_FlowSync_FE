@@ -1,38 +1,52 @@
 /* 달력 전체 크기 조절 */
 .custom-calendar {
-    transform: scale(1.5); /* 달력 크기 1.5배 확대 */
-    width: 400px !important; /* 원하는 크기로 설정 */
-  }
-  
-  /* 달력 내부 요소 크기 조절 */
-  .react-datepicker {
+  transform: scale(2); /* 달력 크기 1.5배 확대 */
+  width: 500px !important; /* 원하는 크기로 설정 */
+}
+
+/* 달력 내부 요소 크기 조절 */
+/* .react-datepicker {
     font-size: 18px; /* 전체 폰트 크기 증가 */
-    width: 100%;
+/* width: 100%; */
+/* } */
+
+/* 헤더 (월/연도 선택 부분) */
+.react-datepicker__header {
+  font-size: 20px;
+  padding: 10px;
+}
+.react-datepicker__current-month {
+  font-size: 22px;
+  font-weight: bold;
+  padding: 20px;
+}
+.react-datepicker__navigation {
+  width: 40px; /* 버튼 크기 증가 */
+  height: 40px;
+}
+
+
+
+/* 날짜 버튼 크기 조절 */
+.react-datepicker__day {
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 16px;
+}
+.react-datepicker__day-names {
+  display: flex; /* Flexbox를 사용하여 균등 정렬 */
+  justify-content: space-between; /* 요일을 동일한 간격으로 정렬 */
+  padding: 0 5px; /* 좌우 여백 추가 */
+}
+
+/* 주말(토/일) 강조 */
+.react-datepicker__day--weekend {
+  color: red;
+}
+
+.react-datepicker__day--highlighted {
+    background-color: #53a7f5 !important; /* 노란색 */
+    color: black !important;
+    border-radius: 50%; /* 원형 강조 */
   }
-  
-  /* 헤더 (월/연도 선택 부분) */
-  .react-datepicker__header {
-    font-size: 18px;
-    padding: 10px;
-  }
-  
-  /* 날짜 버튼 크기 조절 */
-  .react-datepicker__day {
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    font-size: 16px;
-  }
-  
-  /* 주말(토/일) 강조 */
-  .react-datepicker__day--weekend {
-    color: red;
-  }
-  
-  /* 선택된 날짜 스타일 */
-  .react-datepicker__day--selected {
-    background-color: blue !important;
-    color: white !important;
-    border-radius: 50%;
-  }
-  
