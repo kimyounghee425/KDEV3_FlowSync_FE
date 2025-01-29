@@ -4,8 +4,10 @@ import {
   CreateMemberInput,
   CreateMemberResponse,
   MemberListResponse,
+  MemberProps,
 } from "@/src/types";
 
+// 🔹 회원 목록 Fetch API
 export async function fetchMemberList(
   keyword: string = "", // 검색키워드
   role: string = "", // 계정타입
@@ -20,7 +22,7 @@ export async function fetchMemberList(
   return response.data;
 }
 
-// 회원 생성 API (파일 업로드 X)
+// 🔹 회원 생성 API (파일 업로드 X)
 export async function createMember(
   role: string,
   organizationId: string,
@@ -50,7 +52,7 @@ export async function createMember(
   return response.data; // 생성된 데이터 반환
 }
 
-// 회원 생성 API (파일 업로드 O)
+// 🔹 회원 생성 API (파일 업로드 O)
 export async function createMemberWithFile(
   data: CreateMemberInput,
   file: any,
@@ -77,4 +79,39 @@ export async function createMemberWithFile(
   console.log("회원 등록 API 호출 응답 - response: ", response);
   console.log("회원 등록 API 호출 응답 - response.data: ", response.data);
   return response.data; // 생성된 데이터 반환
+}
+
+// 🔹 회원 상세 정보 가져오기
+export async function fetchMemberDetails(
+  memberId: string,
+): Promise<MemberProps> {
+  console.log("회원 상세정보 가져오기 API 호출 전");
+  const response = await axiosInstance.get(`/admins/members/${memberId}`);
+  console.log("회원 상세정보 가져오기 API 호출 후 - response: ", response);
+  console.log(
+    "회원 상세정보 가져오기 API 호출 후 - response.data: ",
+    response.data,
+  );
+  return response.data.data; // ✅ `data` 필드만 반환하도록 수정
+}
+
+// 🔹 회원 정보 수정 (PATCH 요청)
+export async function updateMember(
+  memberId: string,
+  updateData: Partial<MemberProps>,
+) {
+  console.log("회원 정보 수정 API 호출 전");
+  const response = await axiosInstance.patch(
+    `/admins/members/${memberId}`,
+    updateData,
+  );
+  console.log("회원 정보 수정 API 호출 후 - response: ", response);
+  console.log("회원 정보 수정 API 호출 후 - response.data: ", response.data);
+
+  return response.data;
+}
+
+// 🔹 회원 삭제
+export async function deleteMember(memberId: string): Promise<void> {
+  await axiosInstance.delete(`/admins/members/delete/${memberId}`);
 }
