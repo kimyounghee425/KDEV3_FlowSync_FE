@@ -1,13 +1,14 @@
 "use client";
 
 import { ReactNode } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { Layers, List, MessageCircleQuestion } from "lucide-react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
-import ProjectInfo from "@/src/components/common/ProjectInfo";
-import { useProjectInfo } from "@/src/hook/useProjectInfo";
-import { Loading } from "@/src/components/common/Loading";
+import ProjectInfoSection from "@/src/components/common/ProjectInfoSection";
+import { useFetchData } from "@/src/hook/useFetchData";
+import { fetchProjectInfo } from "@/src/api/projects";
+import { ProjectInfoProps } from "@/src/types";
 
 interface ProjectLayoutProps {
   children: ReactNode;
@@ -45,10 +46,21 @@ const projectMenu = [
 ];
 
 export function ProjectLayout({ children }: ProjectLayoutProps) {
-  const { projectId, projectInfo, loading } = useProjectInfo();
   const router = useRouter();
-  const pathname = usePathname(); // 현재 경로 확인
+  const { projectId } = useParams();
+  const pathname = usePathname();
 
+  const resolvedProjectId = Array.isArray(projectId)
+    ? projectId[0]
+    : projectId || "";
+
+  const { data: projectInfo, loading: projectInfoLoading } = useFetchData<
+    ProjectInfoProps,
+    [string]
+  >({
+    fetchApi: fetchProjectInfo,
+    params: [resolvedProjectId],
+  });
   // 현재 탭 추출
   const currentTab = pathname.split("/").pop(); // "tasks" | "questions" | "workflow"
 
@@ -57,10 +69,6 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
     // details.value = "tasks" | "questions" | "workflow"
     router.push(`/projects/${projectId}/${details.value}`);
   };
-
-  if (loading) {
-    return <Loading />; // 로딩 중일 때 렌더링
-  }
 
   return (
     <>
@@ -91,7 +99,10 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
           />
         </Flex>
         {/* 프로젝트 정보 */}
-        <ProjectInfo projectInfo={projectInfo} />
+        <ProjectInfoSection
+          projectInfo={projectInfo}
+          loading={projectInfoLoading}
+        />
       </Flex>
 
       {children}

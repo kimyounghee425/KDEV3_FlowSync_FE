@@ -1,16 +1,22 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Box, Table, createListCollection } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
-import CustomColorBox from "@/src/components/common/StatusTag";
+import Pagination from "@/src/components/common/Pagination";
+import StatusTag from "@/src/components/common/StatusTag";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import SearchSection from "@/src/components/common/SearchSection";
-import StatusSelectBox from "@/src/components/common/StatusSelectBox";
-import { useProjectTaskList } from "@/src/hook/useProjectTaskList";
-import ProgressStepSection from "@/src/components/common/ProgressStepSection";
-import { useProjectQuestionProgressStep } from "@/src/hook/useProjectQuestionProgressStep";
+import StatusSelectBox from "@/src/components/common/FilterSelectBox";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
+import { ProjectProgressStepProps, ProjectTaskListResponse } from "@/src/types";
+import { useFetchData } from "@/src/hook/useFetchData";
+import {
+  fetchProjectTaskList as fetchProjectTaskListApi,
+  fetchProjectTaskProgressStep as fetchProjectTaskProgressStepApi,
+} from "@/src/api/projects";
+import { useFetchBoardList } from "@/src/hook/useFetchBoardList";
+import ProgressStepSection from "@/src/components/common/ProgressStepSection";
 
 const taskStatusFramework = createListCollection<{
   id: string;
@@ -25,28 +31,65 @@ const taskStatusFramework = createListCollection<{
   ],
 });
 
-// 질문(소통관리) 데이터 예시
-const dummyData = [
-  {
-    id: "1",
-    title: "클라이언트 요청사항 정리",
-    regAt: "2024-01-10",
-    status: "진행중",
-    category: "질문",
-  },
-  {
-    id: "2",
-    title: "QA 피드백 정리",
-    regAt: "2024-01-12",
-    status: "완료",
-    category: "답변",
-  },
-];
+const STATUS_LABELS: Record<string, string> = {
+  WAIT: "답변대기",
+  COMPLETED: "답변완료",
+  QUESTION: "질문",
+  ANSWER: "답변",
+};
 
 export default function ProjectTasksPage() {
-  const { keyword, status } = useProjectTaskList();
   const { projectId } = useParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
+
+  const resolvedProjectId = Array.isArray(projectId)
+    ? projectId[0]
+    : projectId || "";
+  const keyword = searchParams?.get("keyword") || "";
+  const progressStep = searchParams?.get("progressStep") || "";
+  const status = searchParams?.get("status") || "";
+  const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
+  const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
+
+  // ProgressStep 데이터 패칭
+  const { data: progressStepData, loading: progressStepLoading } = useFetchData<
+    ProjectProgressStepProps[],
+    [string]
+  >({
+    fetchApi: fetchProjectTaskProgressStepApi,
+    params: [resolvedProjectId],
+  });
+
+  // ProjectTaskList 데이터 패칭
+  const {
+    data: projectTaskList,
+    paginationInfo,
+    loading: projectTaskListLoading,
+  } = useFetchBoardList<
+    ProjectTaskListResponse,
+    [string, string, string, string, number, number],
+    "projectTasks"
+  >({
+    fetchApi: fetchProjectTaskListApi,
+    keySelector: "projectTasks",
+    params: [
+      resolvedProjectId,
+      keyword,
+      progressStep,
+      status,
+      currentPage,
+      pageSize,
+    ],
+  });
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(window.location.search);
+    // 쿼리스트링 업데이트
+    params.set("currentPage", page.toString());
+    // URL 업데이트
+    router.push(`?${params.toString()}`);
+  };
 
   const handleRowClick = (taskId: string) => {
     router.push(`/projects/${projectId}/tasks/${taskId}`);
@@ -56,8 +99,8 @@ export default function ProjectTasksPage() {
     <ProjectLayout>
       {/* 프로젝트 단계 섹션 */}
       <ProgressStepSection
-        fetchProgressStep={useProjectQuestionProgressStep}
-        projectId={projectId as string}
+        progressStep={progressStepData || []}
+        loading={progressStepLoading}
       />
       <Box
         direction="column"
@@ -70,14 +113,11 @@ export default function ProjectTasksPage() {
         mb="30px"
       >
         {/* 검색 섹션 */}
-        <SearchSection
-          keyword={keyword}
-          fetchBoardList={useProjectTaskList}
-          placeholder="제목 입력"
-        >
+        <SearchSection keyword={keyword} placeholder="제목 입력">
           <StatusSelectBox
             statusFramework={taskStatusFramework}
-            status={status}
+            selectedValue={status}
+            queryKey="status"
           />
         </SearchSection>
         {/* 
@@ -102,21 +142,35 @@ export default function ProjectTasksPage() {
               <Table.ColumnHeader>유형</Table.ColumnHeader>
             </Table.Row>
           }
-          data={dummyData}
-          loading={false}
-          renderRow={(item) => (
+          data={projectTaskList}
+          loading={projectTaskListLoading}
+          renderRow={(task) => (
             <>
-              <Table.Cell>{item.title}</Table.Cell>
-              <Table.Cell>{formatDynamicDate(item.regAt)}</Table.Cell>
               <Table.Cell>
-                <CustomColorBox>{item.status}</CustomColorBox>
+                <StatusTag>
+                  {STATUS_LABELS[task.category] || "알 수 없음"}
+                </StatusTag>
               </Table.Cell>
+              <Table.Cell>{"주농퐉"}</Table.Cell>
+              <Table.Cell>{task.title}</Table.Cell>
               <Table.Cell>
-                <CustomColorBox>{item.category}</CustomColorBox>
+                <StatusTag>
+                  {STATUS_LABELS[task.status] || "알 수 없음"}
+                </StatusTag>
               </Table.Cell>
+              <Table.Cell>{formatDynamicDate(task.regAt)}</Table.Cell>
             </>
           )}
           handleRowClick={handleRowClick}
+        />
+        <Pagination
+          paginationInfo={
+            paginationInfo && {
+              ...paginationInfo,
+              currentPage: paginationInfo.currentPage,
+            }
+          }
+          handlePageChange={handlePageChange}
         />
       </Box>
     </ProjectLayout>

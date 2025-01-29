@@ -1,8 +1,8 @@
-import { CommonResponseType, NoticeProps } from "@/src/types";
+import { CommonResponseType, NoticeListResponse } from "@/src/types";
 import axiosInstance from "@/src/api/axiosInstance";
 
 export async function fetchNoticeList(
-): Promise<CommonResponseType<NoticeProps[]>> {
-  const response = await axiosInstance.get("/notices");
+): Promise<CommonResponseType<NoticeListResponse>> {
+  const response = await axiosInstance.get("/projects");
   return response.data;
 }

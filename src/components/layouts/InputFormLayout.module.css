@@ -1,47 +1,47 @@
-.container {
-  max-width: 800px;
-  width: 100%;
-  margin: auto;
-  padding: 16px;
-  border-radius: 10px;
-}
-
-.formWrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  padding: 16px;
-  background-color: white;
-}
-
-.title {
-  font-size: 18px;
+.pageTitle {
+  font-size: 24px;
   font-weight: bold;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .submitButton {
   width: 100%;
-  padding: 12px;
-  background-color: #00a8ff;
+  max-width: 400px;
+  background-color: #007bff;
   color: white;
+  padding: 10px 15px;
   border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
   cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
 .submitButton:hover {
-  background-color: #007acc;
+  background-color: #0056b3;
 }
 
-.submitButton:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.deleteButton {
+  background-color: #dc3545; /* ✅ 삭제 버튼 색상 (빨간색) */
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  position: absolute;
+  bottom: 10px;
+  right: 10px; /* ✅ 우측 하단 배치 */
 }
 
-.loading {
-  background-color: #ccc;
+.deleteButton:hover {
+  background-color: #c82333;
 }

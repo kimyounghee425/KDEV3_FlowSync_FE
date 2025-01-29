@@ -21,7 +21,7 @@ const Pagination: React.FC<PaginationProps> = ({
   const currentGroup = Math.ceil(currentPage / maxVisibleButtons);
   const startPage = (currentGroup - 1) * maxVisibleButtons + 1;
   const endPage = Math.min(currentGroup * maxVisibleButtons, totalPages);
-  console.log({ currentPage, startPage, endPage, totalPages });
+
   return (
     <HStack wrap="wrap" justify="center" mt={4}>
       {/* 이전 버튼 */}
@@ -37,7 +37,6 @@ const Pagination: React.FC<PaginationProps> = ({
       {/* 페이지 번호 버튼 */}
       {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
         const page = startPage + i;
-        console.log(page);
         return (
           <Button
             size="sm"

@@ -1,17 +1,25 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Box, createListCollection, Table } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
-import CustomColorBox from "@/src/components/common/StatusTag";
+import StatusTag from "@/src/components/common/StatusTag";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import SearchSection from "@/src/components/common/SearchSection";
-import StatusSelectBox from "@/src/components/common/StatusSelectBox";
-import { useProjectQuestionList } from "@/src/hook/useProjectQuestionList";
+import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import Pagination from "@/src/components/common/Pagination";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
-import { useProjectQuestionProgressStep } from "@/src/hook/useProjectQuestionProgressStep";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
+import { useFetchBoardList } from "@/src/hook/useFetchBoardList";
+import {
+  ProjectProgressStepProps,
+  ProjectQuestionListResponse,
+} from "@/src/types";
+import {
+  fetchProjectQuestionList as fetchProjectQuestionListApi,
+  fetchProjectQuestionProgressStep as fetchProjectQuestionProgressStepApi,
+} from "@/src/api/projects";
+import { useFetchData } from "@/src/hook/useFetchData";
 
 const questionStatusFramework = createListCollection<{
   id: string;
@@ -33,17 +41,49 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export default function ProjectQuestionsPage() {
-  const {
-    projectQuestionList,
-    paginationInfo,
-    keyword,
-    status,
-    loading,
-    fetchProjectQuestionList,
-  } = useProjectQuestionList();
-
   const { projectId } = useParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
+
+  const resolvedProjectId = Array.isArray(projectId)
+    ? projectId[0]
+    : projectId || "";
+  const keyword = searchParams?.get("keyword") || "";
+  const progressStep = searchParams?.get("progressStep") || "";
+  const status = searchParams?.get("status") || "";
+  const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
+  const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
+
+  // ProgressStep 데이터 패칭
+  const { data: progressStepData, loading: progressStepLoading } = useFetchData<
+    ProjectProgressStepProps[],
+    [string]
+  >({
+    fetchApi: fetchProjectQuestionProgressStepApi,
+    params: [resolvedProjectId],
+  });
+
+  // ProjectQuestionList 데이터 패칭
+  const {
+    data: projectQuestionList,
+    paginationInfo,
+    loading: projectQuestionListLoading,
+  } = useFetchBoardList<
+    ProjectQuestionListResponse,
+    [string, string, string, string, number, number],
+    "projectQuestions"
+  >({
+    fetchApi: fetchProjectQuestionListApi,
+    keySelector: "projectQuestions",
+    params: [
+      resolvedProjectId,
+      keyword,
+      progressStep,
+      status,
+      currentPage,
+      pageSize,
+    ],
+  });
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(window.location.search);
@@ -51,7 +91,6 @@ export default function ProjectQuestionsPage() {
     params.set("currentPage", page.toString());
     // URL 업데이트
     router.push(`?${params.toString()}`);
-    fetchProjectQuestionList(page, paginationInfo?.pageSize || 5);
   };
 
   const handleRowClick = (taskId: string) => {
@@ -62,8 +101,8 @@ export default function ProjectQuestionsPage() {
     <ProjectLayout>
       {/* 프로젝트 단계 섹션 */}
       <ProgressStepSection
-        fetchProgressStep={useProjectQuestionProgressStep}
-        projectId={projectId as string}
+        progressStep={progressStepData || []}
+        loading={progressStepLoading}
       />
       <Box
         direction="column"
@@ -76,14 +115,11 @@ export default function ProjectQuestionsPage() {
         mb="30px"
       >
         {/* 검색 섹션 */}
-        <SearchSection
-          keyword={keyword}
-          fetchBoardList={fetchProjectQuestionList}
-          placeholder="제목 입력"
-        >
-          <StatusSelectBox
+        <SearchSection keyword={keyword} placeholder="제목 입력">
+          <FilterSelectBox
             statusFramework={questionStatusFramework}
-            status={status}
+            selectedValue={status}
+            queryKey="status"
           />
         </SearchSection>
         {/* 
@@ -110,20 +146,20 @@ export default function ProjectQuestionsPage() {
             </Table.Row>
           }
           data={projectQuestionList}
-          loading={loading}
+          loading={projectQuestionListLoading}
           renderRow={(question) => (
             <>
               <Table.Cell>
-                <CustomColorBox>
+                <StatusTag>
                   {STATUS_LABELS[question.category] || "알 수 없음"}
-                </CustomColorBox>
+                </StatusTag>
               </Table.Cell>
               <Table.Cell>{"주농퐉"}</Table.Cell>
               <Table.Cell>{question.title}</Table.Cell>
               <Table.Cell>
-                <CustomColorBox>
+                <StatusTag>
                   {STATUS_LABELS[question.status] || "알 수 없음"}
-                </CustomColorBox>
+                </StatusTag>
               </Table.Cell>
               <Table.Cell>{formatDynamicDate(question.regAt)}</Table.Cell>
             </>

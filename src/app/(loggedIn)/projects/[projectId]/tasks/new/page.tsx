@@ -4,7 +4,7 @@
 // 목데이터 사용
 
 import { Box } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/backButton";
+import BackButton from "@/src/components/common/BackButton";
 import TaskForm from "@/src/components/common/ArticleForm";
 import "./edit.css";
 

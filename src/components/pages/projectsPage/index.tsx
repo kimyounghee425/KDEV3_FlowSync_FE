@@ -1,16 +1,18 @@
 "use client";
 
 import { Suspense } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
 import { createListCollection, Heading, Stack, Table } from "@chakra-ui/react";
+import { fetchProjectList as fetchProjectListApi } from "@/src/api/projects";
 import StatusTag from "@/src/components/common/StatusTag";
-import { useProjectList } from "@/src/hook/useProjectList";
 import ProjectStatusCards from "@/src/components/pages/projectsPage/components/ProjectsStatusCards";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
 import SearchSection from "@/src/components/common/SearchSection";
-import StatusSelectBox from "@/src/components/common/StatusSelectBox";
+import StatusSelectBox from "@/src/components/common/FilterSelectBox";
+import { useFetchBoardList } from "@/src/hook/useFetchBoardList";
+import { ProjectListResponse } from "@/src/types";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -28,16 +30,19 @@ const projectStatusFramework = createListCollection<{
 });
 
 const STATUS_LABELS: Record<string, string> = {
-  IN_PROGRESS: "진행중",
-  PAUSED: "일시 중단",
-  COMPLETED: "완료",
+  CONTRACT: "계약",
+  INPROGRESS: "진행중",
+  COMPLETED: "납품완료",
+  MAINTENANCE: "하자보수",
+  PAUSED: "일시중단",
+  DELETED: "삭제",
 };
 
 /*
  * 페이지 기본 Export
  * useSearchParams() 훅 사용을 위해 Suspense로 감쌈
  */
-export default function projectsPage() {
+export default function ProjectsPage() {
   return (
     <Suspense>
       <ProjectsPageContent />
@@ -50,18 +55,27 @@ export default function projectsPage() {
  * - 프로젝트 목록, 검색 섹션, 프로젝트 현황 카드, 페이지네이션 등을 표시
  */
 function ProjectsPageContent() {
-  // useProjectList 훅: 프로젝트 목록, 페이지 정보, 로딩 상태,
-  // 재조회 함수(fetchProjectList) 등을 반환합니다.
-  const {
-    projectList,
-    paginationInfo,
-    keyword,
-    status,
-    loading,
-    fetchProjectList,
-  } = useProjectList();
-
+  const searchParams = useSearchParams();
   const router = useRouter();
+
+  const keyword = searchParams?.get("keyword") || "";
+  const status = searchParams?.get("status") || "";
+  const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
+  const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
+
+  const {
+    data: projectList,
+    paginationInfo,
+    loading: projectListLoading,
+  } = useFetchBoardList<
+    ProjectListResponse,
+    [string, string, number, number],
+    "projects"
+  >({
+    fetchApi: fetchProjectListApi,
+    keySelector: "projects",
+    params: [keyword, status, currentPage, pageSize],
+  });
 
   /**
    * 페이지 변경 시 호출되는 콜백 함수
@@ -72,11 +86,9 @@ function ProjectsPageContent() {
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(window.location.search);
     // 쿼리스트링 업데이트
-    params.set("page", page.toString());
+    params.set("currentPage", page.toString());
     // URL 업데이트
     router.push(`?${params.toString()}`);
-    // 데이터를 다시 가져오기
-    fetchProjectList(page, paginationInfo?.pageSize || 5);
   };
 
   /**
@@ -117,14 +129,11 @@ function ProjectsPageContent() {
           프로젝트 목록
         </Heading>
         {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
-        <SearchSection
-          keyword={keyword}
-          fetchBoardList={fetchProjectList}
-          placeholder="제목 입력"
-        >
+        <SearchSection keyword={keyword} placeholder="프로젝트명 입력">
           <StatusSelectBox
             statusFramework={projectStatusFramework}
-            status={status}
+            selectedValue={status}
+            queryKey="status"
           />
         </SearchSection>
         {/*
@@ -152,7 +161,7 @@ function ProjectsPageContent() {
             </Table.Row>
           }
           data={projectList}
-          loading={loading}
+          loading={projectListLoading}
           renderRow={(project) => (
             <>
               <Table.Cell>{project.name}</Table.Cell>
@@ -178,7 +187,7 @@ function ProjectsPageContent() {
           paginationInfo={
             paginationInfo && {
               ...paginationInfo,
-              currentPage: paginationInfo.currentPage + 1,
+              currentPage: paginationInfo.currentPage,
             }
           }
           handlePageChange={handlePageChange}

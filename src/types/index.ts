@@ -1,8 +1,14 @@
 // 공통 API 응답 타입 (리스트 응답)
+// 기본 타입 (meta 포함 X)
 export interface CommonResponseType<T> {
   code: number; // 상태 코드
   result: string; // 요청 결과 (SUCCESS, FAILURE 등)
   data: T; // 제네릭 데이터
+}
+
+// meta를 포함하는 타입
+export interface CommonResponseWithMetaType<T> extends CommonResponseType<T> {
+  data: T & { meta: PaginationProps }; // data 내부에 meta 포함
 }
 
 // 서버에서 반환되는 페이징 메타데이터 타입
@@ -30,6 +36,26 @@ export interface MemberProps {
   regAt: string; // 등록일
   introduction: string; // 자기소개
   remark: string; // 비고
+}
+
+// `createMember` 함수에서 입력값의 타입 정의
+export interface CreateMemberInput {
+  role: string;
+  organizationId: number;
+  name: string;
+  email: string;
+  password: string;
+  phoneNum: string;
+  jobRole: string;
+  jobTitle: string;
+  introduction: string;
+  remark: string;
+}
+
+// 반환값의 타입 정의
+export interface CreateMemberResponse {
+  success: boolean;
+  member: MemberProps;
 }
 
 export interface MemberListResponse {
@@ -125,7 +151,7 @@ export interface ProjectInfoProps {
 
 // 결재글 속성
 export interface ProjectTaskProps {
-  id: number;
+  id: string;
   number: number;
   title: string;
   content: string;
@@ -177,8 +203,6 @@ export interface ContentBlock {
   data: string | { src: string };
 }
 
-
-
 // 게시글
 export interface Article {
   id: number;
@@ -228,7 +252,6 @@ export interface ArticleComment {
   replies: ArticleReply[];
 }
 
-
 // 댓글의 답글
 export interface ArticleReply {
   id: number;
@@ -245,11 +268,12 @@ export interface InputFormData {
   label: string;
   id: string;
   type: "text" | "email" | "password" | "number" | "tel" | "url"; // 가능한 타입만 명시;
-  placeholder: string;
+  placeholder?: string;
   value?: string;
   error?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean; // ✅ 추가: 입력 비활성화 속성
 }
 
 // 공지사항
@@ -259,7 +283,7 @@ export interface NoticeProps {
   title: string; // 계약 단계
   content: string; // 시작일시
   category: string; // 시작일시
-  priority: string; // 
+  priority: string; //
   isDeleted: boolean; // 마감일시
   regAt: string; // 고객사 이름
   updatedAt: string; // 개발사 이름
@@ -268,4 +292,10 @@ export interface NoticeProps {
 export interface NoticeListResponse {
   notices: NoticeProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
+}
+
+export interface ProjectProgressStepProps {
+  id: string;
+  title: string;
+  count: number;
 }

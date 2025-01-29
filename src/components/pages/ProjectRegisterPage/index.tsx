@@ -4,7 +4,8 @@
 
 import { useState, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/backButton";
+
+import BackButton from "@/src/components/common/BackButton";
 import ProjectForm from "@/src/components/pages/ProjectRegisterPage/components/ProjectForm";
 import axiosInstance from "@/src/api/axiosInstance";
 

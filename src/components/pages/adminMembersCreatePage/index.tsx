@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@/src/components/ui/radio";
 import { useForm } from "@/src/hook/useForm";
@@ -7,8 +8,10 @@ import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { defaultValuesOfMember } from "@/src/constants/defaultValues";
 import { validationRulesOfCreatingMember } from "@/src/constants/validationRules";
+import { createMember, createMemberWithFile } from "@/src/api/members";
 
 export default function AdminMembersCreatePage() {
+  const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfMember, validationRulesOfCreatingMember);
 
@@ -20,13 +23,34 @@ export default function AdminMembersCreatePage() {
     return true;
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!validateInputs()) return;
+    try {
+      const response = await createMember(
+        inputValues.role,
+        inputValues.organizationId,
+        inputValues.name,
+        inputValues.email,
+        inputValues.password,
+        inputValues.phoneNum,
+        inputValues.jobRole,
+        inputValues.jobTitle,
+        inputValues.introduction,
+        inputValues.remark,
+      );
 
-    console.log("폼 제출 성공:", inputValues);
-    alert("업체가 성공적으로 생성되었습니다.");
-    // TODO: 서버로 데이터 전송 로직 추가
+      // 회원 등록 API(2) - 파일 업로드 O
+      // const file = null; // 파일이 있을 경우에만 처리
+      // const response = await createMemberWithFile(memberData, file);
+
+      console.log("회원 등록 성공 - response: ", response);
+      alert("회원이 성공적으로 등록되었습니다.");
+      route.push("/admin/members");
+    } catch (error) {
+      console.error("회원 등록 중 오류 발생:", error);
+      alert("회원 등록에 실패했습니다. 다시 시도해주세요.");
+    }
   }
 
   return (
