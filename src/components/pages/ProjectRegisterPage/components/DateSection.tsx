@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Flex, Text, Box, Button } from "@chakra-ui/react";
@@ -16,7 +16,6 @@ export default function DateSection({
   setStartAt,
   setCloseAt,
 }: DateSectionProps) {
-
   // iso 형식 예쁘게 변형
   const formatDate = (isoString: string): string => {
     if (!isoString) {
@@ -25,8 +24,9 @@ export default function DateSection({
     const date = new Date(isoString);
     return date.toLocaleString("ko-KR", {
       year: "numeric",
-      month: "2-digit",
+      month: "long",
       day: "2-digit",
+      weekday: "long"
     });
   };
 
@@ -55,13 +55,10 @@ export default function DateSection({
 
     while (currentDate <= endDate) {
       dateArray.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1)
+      currentDate.setDate(currentDate.getDate() + 1);
     }
     return dateArray;
-  }
-
-
-
+  };
 
   return (
     <Flex direction={"row"} alignItems={"center"} mb={4}>
@@ -76,6 +73,21 @@ export default function DateSection({
             selected={startAt ? new Date(startAt) : null}
             onChange={handleStartDateChange}
             highlightDates={getHighlightedDates()}
+            dayClassName={(date) => {
+              if (!startAt || !closeAt) return "";
+
+              const startDate = new Date(startAt).toDateString();
+              const currentDate = date.toDateString();
+
+              if (currentDate === startDate) return "highlight-start";
+
+              if (new Date(startAt) <= date && date <= new Date(closeAt)) {
+                return "highlight-range";
+              }
+
+              return "";
+            }}
+            todayButton="오늘로 이동"
             inline
           />
         </Box>
@@ -91,6 +103,20 @@ export default function DateSection({
             onChange={handleCloseDateChange}
             minDate={startAt ? new Date(startAt) : undefined} // 종료일은 등록일 이후만 가능
             highlightDates={getHighlightedDates()}
+            dayClassName={(date) => {
+              if (!startAt || !closeAt) return "";
+
+              const endDate = new Date(closeAt).toDateString();
+              const currentDate = date.toDateString();
+              
+              if (currentDate === endDate) return "highlight-end";
+              if (new Date(startAt) <= date && date <= new Date(closeAt)) {
+                return "highlight-range";
+              }
+
+              return "";
+            }}
+            todayButton="오늘로 이동"
             inline
           />
         </Box>

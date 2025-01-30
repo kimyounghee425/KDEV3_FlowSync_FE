@@ -1,14 +1,8 @@
 /* 달력 전체 크기 조절 */
 .custom-calendar {
-  transform: scale(2); /* 달력 크기 1.5배 확대 */
-  width: 500px !important; /* 원하는 크기로 설정 */
+  transform: scale(1.5);
+  width: 500px !important;
 }
-
-/* 달력 내부 요소 크기 조절 */
-/* .react-datepicker {
-    font-size: 18px; /* 전체 폰트 크기 증가 */
-/* width: 100%; */
-/* } */
 
 /* 헤더 (월/연도 선택 부분) */
 .react-datepicker__header {
@@ -25,28 +19,56 @@
   height: 40px;
 }
 
-
-
 /* 날짜 버튼 크기 조절 */
 .react-datepicker__day {
+  margin: 0px;
   width: 50px;
   height: 50px;
   line-height: 50px;
   font-size: 16px;
+  text-align: center;
+  display: inline-block;
+  position: relative;
 }
 .react-datepicker__day-names {
-  display: flex; /* Flexbox를 사용하여 균등 정렬 */
-  justify-content: space-between; /* 요일을 동일한 간격으로 정렬 */
-  padding: 0 5px; /* 좌우 여백 추가 */
+  display: flex; 
+  justify-content: space-between;
+  padding: 0 5px; 
 }
 
-/* 주말(토/일) 강조 */
+/* 일요일 빨갛게 */
 .react-datepicker__day--weekend {
   color: red;
 }
 
-.react-datepicker__day--highlighted {
-    background-color: #53a7f5 !important; /* 노란색 */
-    color: black !important;
-    border-radius: 50%; /* 원형 강조 */
-  }
+/* 토요일 파랗게 */
+.react-datepicker__day:nth-child(7n) {
+  color: blue !important;
+}
+
+/* 연속된 날짜 */
+.highlight-range {
+  background-color: #d1e7ff !important;
+  color: black !important;
+  border-radius: 0 !important;
+}
+
+/* 시작일, 종료일 둥글게 처리 */
+.highlight-start {
+  background-color: #53a7f5 !important; /* 진한 파란색 */
+  color: white !important;
+  border-top-left-radius: 50px !important;
+  border-bottom-left-radius: 50px !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  position: relative;
+}
+
+.highlight-end {
+  background-color: #53a7f5 !important;
+  color: white !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-right-radius: 50px !important;
+  border-bottom-right-radius: 50px !important;
+}
