@@ -76,11 +76,20 @@ export default function ArticleForm() {
               types: "image/*",
               uploader: {
                 async uploadByFile(file: File) {
-                  const url = await uploadFile(file);
-                  return {
-                    success: 1,
-                    file: { url },
-                  };
+                  try {
+                    const responseData = await uploadFileApi(file);
+                    if (responseData.result !== "SUCCESS") {
+                      console.error("파일 업로드 실패");
+                      return { success: 0 };
+                    }
+                    return {
+                      success: 1,
+                      file: { url: responseData.data.url },
+                    };
+                  } catch (error) {
+                    console.error("파일 업로드 중 오류 발생:", error);
+                    return { success: 0 };
+                  }
                 },
               },
             },
@@ -127,7 +136,7 @@ export default function ArticleForm() {
 
         const requestData = {
           title: title,
-          content: "게시글 본문 입니다.", // TODO 이거 백엔드 수정해야 함. 1/28
+          content: content, // TODO 이거 백엔드 수정해야 함. 1/28
           linkList: linkList,
           fileInfoList: uploadedFiles,
           progressStepId: progressStepId,
