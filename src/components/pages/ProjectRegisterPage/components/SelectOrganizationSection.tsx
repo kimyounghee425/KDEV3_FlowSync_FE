@@ -123,7 +123,7 @@ export default function SelectOrganizationSection({
                 borderRadius="8px"
                 p="4"
               >
-                {orgMembers.length > 0 ? (
+                {orgMembers?.length > 0 ? (
                   orgMembers.map((member) => {
                     const isSelected = selectedMembers.some(
                       (m) => m.id === member.id,

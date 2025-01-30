@@ -11,7 +11,6 @@ import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSecti
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 
 import { createQuestionApi, uploadFileApi } from "@/src/api/RegisterArticle";
-import { link } from "fs";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 

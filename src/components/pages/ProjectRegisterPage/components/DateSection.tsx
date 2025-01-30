@@ -26,7 +26,7 @@ export default function DateSection({
       year: "numeric",
       month: "long",
       day: "2-digit",
-      weekday: "long"
+      weekday: "long",
     });
   };
 
@@ -46,6 +46,8 @@ export default function DateSection({
     }
   };
 
+
+  
   const getHighlightedDates = () => {
     if (!startAt || !closeAt) return [];
     const startDate = new Date(startAt);
@@ -108,7 +110,7 @@ export default function DateSection({
 
               const endDate = new Date(closeAt).toDateString();
               const currentDate = date.toDateString();
-              
+
               if (currentDate === endDate) return "highlight-end";
               if (new Date(startAt) <= date && date <= new Date(closeAt)) {
                 return "highlight-range";
