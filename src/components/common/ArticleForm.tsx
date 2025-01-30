@@ -9,8 +9,12 @@ import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
-
-import { createQuestionApi, uploadFileApi } from "@/src/api/RegisterArticle";
+import { usePathname } from "next/navigation";
+import {
+  createQuestionApi,
+  createTaskApi,
+  uploadFileApi,
+} from "@/src/api/RegisterArticle";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -31,7 +35,7 @@ interface UploadedFilesProps {
 }
 
 interface linkListProps {
-  name : string;
+  name: string;
   url: string;
 }
 
@@ -42,6 +46,9 @@ export default function ArticleForm() {
   const editorRef = useRef<EditorJS | null>(null);
   const [linkList, setLinkList] = useState<linkListProps[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
+  const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
+
+  const pathname = usePathname(); // 현재 경로 가져옴
 
   const uploadFile = async (file: File): Promise<string> => {
     try {
@@ -95,11 +102,10 @@ export default function ArticleForm() {
         const savedData = await editorRef.current.save();
 
         if (!title.trim()) {
-          window.alert("제목을 입력하세요.")
+          window.alert("제목을 입력하세요.");
           return;
         }
 
-        
         const content = savedData.blocks.map((block) => {
           if (block.type === "paragraph") {
             return {
@@ -115,7 +121,7 @@ export default function ArticleForm() {
           return "";
         });
         if (content.length === 0) {
-          window.alert("내용을 입력하세요.")
+          window.alert("내용을 입력하세요.");
           return;
         }
 
@@ -127,9 +133,20 @@ export default function ArticleForm() {
           progressStepId: progressStepId,
         };
 
-        const response = await createQuestionApi(Number(projectId), requestData)
-        console.log("요청데이터", requestData);
-        console.log("저장성공", response.data);
+        if (pathname.includes("/questions/new")) {
+          const response = await createQuestionApi(
+            Number(projectId),
+            requestData,
+          );
+          console.log("저장성공", response.data);
+        } else if (pathname.includes("/tasks/new")) {
+          const response = await createTaskApi(Number(projectId), requestData);
+          console.log("저장성공", response.data);
+        } else {
+          alert("잘못된 경로입니다.");
+          return;
+        }
+
         alert("저장이 완료되었습니다.");
       } catch (error) {
         console.error("저장 실패:", error);
@@ -138,7 +155,7 @@ export default function ArticleForm() {
     }
   };
 
-  console.log(linkList)
+  console.log(linkList);
 
   return (
     // 제목 입력
@@ -147,7 +164,7 @@ export default function ArticleForm() {
         <ProgressStepAddSection
           progressStepId={progressStepId}
           setProgressStepId={setProgressStepId}
-          progressData = {progressData}
+          progressData={progressData}
         />
         <Box flex={2}>
           <Text mb={2}>제목</Text>
@@ -175,6 +192,8 @@ export default function ArticleForm() {
       <FileAddSection
         uploadedFiles={uploadedFiles}
         setUploadedFiles={setUploadedFiles}
+        uploadedFileSize={uploadedFileSize}
+        setUploadedFileSize={setUploadedFileSize}
       />
 
       {/* 작성 버튼 */}
