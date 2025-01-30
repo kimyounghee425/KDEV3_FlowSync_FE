@@ -6,32 +6,29 @@ import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { MemberProps } from "@/src/types";
 import { deleteMember, updateMember } from "@/src/api/members";
-import { validationRulesOfUpdatingMember } from "@/src/constants/validationRules"; // 🔹 유효성 검사 규칙 import
-import styles from "@/src/components/pages/adminMemberPage/components/MemberDetailForm.module.css";
+import { validationRulesOfUpdatingMember } from "@/src/constants/validationRules"; // 유효성 검사 규칙 import
 
 export default function MemberDetailForm({
   memberData,
   memberId,
 }: {
-  memberData: MemberProps; // ✅ 회원 상세 타입 추가
+  memberData: MemberProps; // 회원 상세 타입
   memberId: string;
 }) {
   const route = useRouter();
-  const [formData, setFormData] = useState<MemberProps>(memberData); // ✅ useState에 타입 추가
+  const [formData, setFormData] = useState<MemberProps>(memberData);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [errors, setErrors] = useState<{ [key: string]: string | null }>({}); // 🔹 유효성 검사 에러 상태
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteReason, setDeleteReason] = useState<string>("");
+  const [errors, setErrors] = useState<{ [key: string]: string | null }>({}); // 유효성 검사 에러 상태
 
-  // 🔹 입력값 변경 처리 및 유효성 검사 실행
+  // 📌 입력값 변경 처리 및 유효성 검사 실행
   function handleChange(field: keyof MemberProps, value: string) {
-    // ✅ field는 MemberProps의 key, value는 string
+    // field: MemberProps의 key, value: string
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
 
-    // ✅ 유효성 검사 규칙이 있는 필드만 검사
+    // 유효성 검사 규칙이 있는 필드만 검사
     if (field in validationRulesOfUpdatingMember) {
       const isValid =
         validationRulesOfUpdatingMember[
@@ -48,7 +45,7 @@ export default function MemberDetailForm({
     }
   }
 
-  // 🔹 전체 입력값 유효성 검사 (수정 버튼 활성화 여부 체크)
+  // 📌 전체 입력값 유효성 검사 (수정 버튼 활성화 여부 체크)
   function isFormValid() {
     return Object.values(errors).every((error) => !error);
   }
@@ -81,23 +78,17 @@ export default function MemberDetailForm({
     }
   }
 
-  // 📌 회원 삭제
-  async function handleDelete() {
+  // 📌 회원 삭제 (삭제 컴포넌트(공통)는 InputFormLayout.tsx 에서 관리)
+  async function handleDelete(deleteReason: string) {
     if (!deleteReason.trim()) {
       alert("탈퇴 사유를 입력해주세요.");
       return;
     }
 
     try {
-      console.log(
-        "회원 탈퇴(삭제) - memberId:",
-        memberId,
-        "탈퇴 사유:",
-        deleteReason,
-      );
-      await deleteMember(memberId, deleteReason); // ✅ 탈퇴 사유 전달
-      alert("회원이 탈퇴(삭제) 조치 되었습니다.");
-      route.push("/admin/members"); // ✅ 삭제 후 목록 페이지(회원 관리)로 이동
+      await deleteMember(memberId, deleteReason); // 탈퇴 사유 입력값 전달
+      alert("회원이 탈퇴 조치 되었습니다.");
+      route.push("/admin/members"); // 삭제 후 목록 페이지(회원 관리)로 이동
     } catch (error) {
       console.error("회원 삭제 중 오류 발생:", error);
       alert("회원 삭제에 실패했습니다.");
@@ -105,92 +96,80 @@ export default function MemberDetailForm({
   }
 
   return (
-    <InputFormLayout
-      title="▹ 회원 상세 조회"
-      onSubmit={handleUpdate}
-      isLoading={isSubmitting}
-      onDelete={() => setIsDeleting(true)} // ✅ 삭제 버튼 클릭 시 탈퇴 사유 입력 창 활성화
-    >
-      {/* ✅ 수정 불가 필드 */}
-      <InputForm
-        id="email"
-        type="email"
-        label="로그인 Email"
-        value={formData.email}
-        disabled
-      />
-      <InputForm
-        id="role"
-        type="text"
-        label="사용자 권한"
-        value={formData.role}
-        disabled
-      />
+    <>
+      <InputFormLayout
+        title="▹ 회원 상세 조회"
+        onSubmit={handleUpdate}
+        isLoading={isSubmitting}
+        onDelete={handleDelete}
+        deleteEntityType="회원" // 삭제 대상 선택 ("회원" | "업체" | "프로젝트")
+      >
+        {/* 수정 불가 필드 */}
+        <InputForm
+          id="email"
+          type="email"
+          label="로그인 Email"
+          value={formData.email}
+          disabled
+        />
+        <InputForm
+          id="role"
+          type="text"
+          label="사용자 권한"
+          value={formData.role}
+          disabled
+        />
 
-      {/* ✅ 수정 가능 필드 */}
-      <InputForm
-        id="name"
-        type="text"
-        label="성함"
-        value={formData.name}
-        onChange={(e) => handleChange("name", e.target.value)}
-        error={errors.name ?? undefined} // 🔹 null 값을 undefined로 변환
-      />
-      <InputForm
-        id="phoneNum"
-        type="tel"
-        label="연락처"
-        value={formData.phoneNum}
-        onChange={(e) => handleChange("phoneNum", e.target.value)}
-        error={errors.phoneNum ?? undefined} // 🔹 null 값을 undefined로 변환
-      />
-      <InputForm
-        id="jobRole"
-        type="text"
-        label="직무"
-        value={formData.jobRole}
-        onChange={(e) => handleChange("jobRole", e.target.value)}
-        error={errors.jobRole ?? undefined} // 🔹 null 값을 undefined로 변환
-      />
-      <InputForm
-        id="jobTitle"
-        type="text"
-        label="직함"
-        value={formData.jobTitle}
-        onChange={(e) => handleChange("jobTitle", e.target.value)}
-        error={errors.jobTitle ?? undefined} // 🔹 null 값을 undefined로 변환
-      />
-      <InputForm
-        id="introduction"
-        type="text"
-        label="회원 소개"
-        value={formData.introduction}
-        onChange={(e) => handleChange("introduction", e.target.value)}
-        error={errors.introduction ?? undefined} // 🔹 null 값을 undefined로 변환
-      />
-      <InputForm
-        id="remark"
-        type="text"
-        label="특이사항"
-        value={formData.remark}
-        onChange={(e) => handleChange("remark", e.target.value)}
-        error={errors.remark ?? undefined} // 🔹 null 값을 undefined로 변환
-      />
-
-      {/* ✅ 삭제 버튼 클릭 시 탈퇴 사유 입력창 표시 */}
-      {isDeleting && (
-        <div className={styles.deleteContainer}>
-          <input
-            className={styles.deleteInput}
-            placeholder="탈퇴 사유를 입력하세요"
-            value={deleteReason}
-            onChange={(e) => setDeleteReason(e.target.value)}
-          />
-          <button className={styles.confirmButton} onClick={handleDelete}>
-            확인
-          </button>
-        </div>
-      )}
-    </InputFormLayout>
+        {/* 수정 가능 필드 */}
+        <InputForm
+          id="name"
+          type="text"
+          label="성함"
+          value={formData.name}
+          onChange={(e) => handleChange("name", e.target.value)}
+          error={errors.name ?? undefined} // 에러 null 값을 undefined로 변환 (이하 동일)
+        />
+        <InputForm
+          id="phoneNum"
+          type="tel"
+          label="연락처"
+          value={formData.phoneNum}
+          onChange={(e) => handleChange("phoneNum", e.target.value)}
+          error={errors.phoneNum ?? undefined}
+        />
+        <InputForm
+          id="jobRole"
+          type="text"
+          label="직무"
+          value={formData.jobRole}
+          onChange={(e) => handleChange("jobRole", e.target.value)}
+          error={errors.jobRole ?? undefined}
+        />
+        <InputForm
+          id="jobTitle"
+          type="text"
+          label="직함"
+          value={formData.jobTitle}
+          onChange={(e) => handleChange("jobTitle", e.target.value)}
+          error={errors.jobTitle ?? undefined}
+        />
+        <InputForm
+          id="introduction"
+          type="text"
+          label="회원 소개"
+          value={formData.introduction}
+          onChange={(e) => handleChange("introduction", e.target.value)}
+          error={errors.introduction ?? undefined}
+        />
+        <InputForm
+          id="remark"
+          type="text"
+          label="특이사항"
+          value={formData.remark}
+          onChange={(e) => handleChange("remark", e.target.value)}
+          error={errors.remark ?? undefined}
+        />
+      </InputFormLayout>
+    </>
   );
 }
