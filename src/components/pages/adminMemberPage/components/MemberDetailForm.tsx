@@ -1,14 +1,13 @@
 "use client";
 
-import { deleteMember, updateMember } from "@/src/api/members";
-import InputForm from "@/src/components/common/InputForm";
-import InputFormLayout from "@/src/components/layouts/InputFormLayout";
-import { Radio, RadioGroup } from "@/src/components/ui/radio";
-import { MemberProps } from "@/src/types";
-import { Box, Flex, HStack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import InputForm from "@/src/components/common/InputForm";
+import InputFormLayout from "@/src/components/layouts/InputFormLayout";
+import { MemberProps } from "@/src/types";
+import { deleteMember, updateMember } from "@/src/api/members";
 import { validationRulesOfUpdatingMember } from "@/src/constants/validationRules"; // 🔹 유효성 검사 규칙 import
+import styles from "@/src/components/pages/adminMemberPage/components/MemberDetailForm.module.css";
 
 export default function MemberDetailForm({
   memberData,
@@ -21,6 +20,8 @@ export default function MemberDetailForm({
   const [formData, setFormData] = useState<MemberProps>(memberData); // ✅ useState에 타입 추가
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errors, setErrors] = useState<{ [key: string]: string | null }>({}); // 🔹 유효성 검사 에러 상태
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteReason, setDeleteReason] = useState<string>("");
 
   // 🔹 입력값 변경 처리 및 유효성 검사 실행
   function handleChange(field: keyof MemberProps, value: string) {
@@ -82,12 +83,21 @@ export default function MemberDetailForm({
 
   // 📌 회원 삭제
   async function handleDelete() {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
+    if (!deleteReason.trim()) {
+      alert("탈퇴 사유를 입력해주세요.");
+      return;
+    }
 
     try {
-      await deleteMember(memberId);
-      alert("회원이 삭제되었습니다.");
-      route.push("/admin/members");
+      console.log(
+        "회원 탈퇴(삭제) - memberId:",
+        memberId,
+        "탈퇴 사유:",
+        deleteReason,
+      );
+      await deleteMember(memberId, deleteReason); // ✅ 탈퇴 사유 전달
+      alert("회원이 탈퇴(삭제) 조치 되었습니다.");
+      route.push("/admin/members"); // ✅ 삭제 후 목록 페이지(회원 관리)로 이동
     } catch (error) {
       console.error("회원 삭제 중 오류 발생:", error);
       alert("회원 삭제에 실패했습니다.");
@@ -99,7 +109,7 @@ export default function MemberDetailForm({
       title="▹ 회원 상세 조회"
       onSubmit={handleUpdate}
       isLoading={isSubmitting}
-      onDelete={handleDelete} // ✅ 삭제 핸들러 추가
+      onDelete={() => setIsDeleting(true)} // ✅ 삭제 버튼 클릭 시 탈퇴 사유 입력 창 활성화
     >
       {/* ✅ 수정 불가 필드 */}
       <InputForm
@@ -116,6 +126,7 @@ export default function MemberDetailForm({
         value={formData.role}
         disabled
       />
+
       {/* ✅ 수정 가능 필드 */}
       <InputForm
         id="name"
@@ -165,6 +176,21 @@ export default function MemberDetailForm({
         onChange={(e) => handleChange("remark", e.target.value)}
         error={errors.remark ?? undefined} // 🔹 null 값을 undefined로 변환
       />
+
+      {/* ✅ 삭제 버튼 클릭 시 탈퇴 사유 입력창 표시 */}
+      {isDeleting && (
+        <div className={styles.deleteContainer}>
+          <input
+            className={styles.deleteInput}
+            placeholder="탈퇴 사유를 입력하세요"
+            value={deleteReason}
+            onChange={(e) => setDeleteReason(e.target.value)}
+          />
+          <button className={styles.confirmButton} onClick={handleDelete}>
+            확인
+          </button>
+        </div>
+      )}
     </InputFormLayout>
   );
 }

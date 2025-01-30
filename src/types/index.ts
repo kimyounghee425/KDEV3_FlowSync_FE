@@ -63,6 +63,13 @@ export interface MemberListResponse {
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
+// 🔹 회원 삭제 응답 타입 정의
+export interface DeleteMemberResponse {
+  code: number; // HTTP 상태 코드
+  result: "SUCCESS" | "FAIL"; // 결과 상태
+  message: string; // 응답 메시지
+}
+
 export interface LoginFormData {
   label: string;
   id: string;
