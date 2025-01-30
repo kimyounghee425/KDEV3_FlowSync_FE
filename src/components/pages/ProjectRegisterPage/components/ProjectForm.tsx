@@ -40,7 +40,7 @@ interface Member {
   remark: string;
 }
 
-export default function ProjectForm({ id }: { id: string }) {
+export default function ProjectForm() {
   const [name, setName] = useState<string>("");
   const [status, setStatus] = useState<string>("IN_PROGRESS");
   const [managementStep, setManagementStep] = useState<string>("CONTRACT");
@@ -70,7 +70,6 @@ export default function ProjectForm({ id }: { id: string }) {
   // 최종 선택된 멤버들 (고객사 + 개발사)
   const [selectedMembers, setSelectedMembers] = useState<number[]>([]);
 
-
   useEffect(() => {
     async function fetchCustomer() {
       try {
@@ -87,20 +86,29 @@ export default function ProjectForm({ id }: { id: string }) {
   }, []);
 
   useEffect(() => {
-    if (selectedCustomerOrgId === 0) return;
+    setSelectedCustomerMembers([]);
+    if (selectedCustomerOrgId === 0) {
+      setCustomerMembers([]);
+      return;
+    }
     async function fetchMember() {
       try {
         const data = await getMembersApi(selectedCustomerOrgId, 1, 100000);
         setCustomerMembers(data.data.members);
       } catch (error) {
         console.error(error);
+        setCustomerMembers([]);
       }
     }
     fetchMember();
   }, [selectedCustomerOrgId]);
 
   useEffect(() => {
-    if (selectedDeveloperOrgId === 0) return;
+    setSelectedDeveloperMembers([]);
+    if (selectedDeveloperOrgId === 0) {
+      setDeveloperMembers([]);
+      return;
+    }
     async function fetchMember() {
       try {
         const data = await getMembersApi(selectedDeveloperOrgId, 1, 100000);
@@ -108,16 +116,19 @@ export default function ProjectForm({ id }: { id: string }) {
         console.log(data.data.members);
       } catch (error) {
         console.error(error);
+        setDeveloperMembers([]);
       }
     }
     fetchMember();
   }, [selectedDeveloperOrgId]);
 
+  console.log(selectedMembers)
+
   // 고객사 멤버, 개발사 멤버 합쳐서 멤버 배열에 넣기.
   useEffect(() => {
     setSelectedMembers([
-      ...selectedCustomerMembers.map(member => member.id),
-      ...selectedDeveloperMembers.map(member => member.id),
+      ...selectedCustomerMembers.map((member) => member.id),
+      ...selectedDeveloperMembers.map((member) => member.id),
     ]);
   }, [selectedCustomerMembers, selectedDeveloperMembers]);
 
