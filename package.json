@@ -33,7 +33,8 @@
     "react-icons": "^5.4.0",
     "react-rainbow-components": "^1.32.0",
     "react-router-dom": "^7.1.3",
-    "react-select": "^5.9.0"
+    "react-select": "^5.9.0",
+    "signature_pad": "^5.0.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
