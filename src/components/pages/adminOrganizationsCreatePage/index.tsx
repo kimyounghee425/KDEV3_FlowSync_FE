@@ -9,18 +9,28 @@ import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { defaultValuesOfOrganizaion } from "@/src/constants/defaultValues";
 import { validationRulesOfCreatingOrganization } from "@/src/constants/validationRules";
 import { createOrganization } from "@/src/api/organizations";
+import { useState } from "react";
 
 export default function AdminOrganizationsCreatePage() {
   const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfOrganizaion, validationRulesOfCreatingOrganization);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   function validateInputs() {
     if (!checkAllInputs()) {
+      console.log("입력값 확인요청");
       alert("입력값을 확인하세요.");
       return false;
     }
     return true;
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -32,16 +42,12 @@ export default function AdminOrganizationsCreatePage() {
         type: inputValues.type,
         brNumber: inputValues.brNumber,
         name: inputValues.name,
-        brCertificateUrl: inputValues.brCertificateUrl,
         streetAddress: inputValues.streetAddress,
         detailAddress: inputValues.detailAddress,
         phoneNumber: inputValues.phoneNumber,
-        typeEnum: inputValues.type, // #TODO typeEnum 불필요한 변수
       };
-      // 파일 입력 처리 (예: inputValues.file에서 가져오기)
-      const file = null; // 파일이 있을 경우에만 처리
 
-      const response = await createOrganization(organizationData, file);
+      const response = await createOrganization(organizationData, selectedFile);
       console.log("업체 등록 성공 - response: ", response);
       alert("업체가 성공적으로 등록되었습니다.");
       route.push("/admin/organizations");
@@ -76,13 +82,8 @@ export default function AdminOrganizationsCreatePage() {
             *
           </span>
           <RadioGroup
-            // Type이 string인지 확인
-            value={
-              typeof inputValues.Type === "string"
-                ? inputValues.Type
-                : undefined
-            }
-            onValueChange={(e) => handleInputChange("Type", e.value)}
+            value={inputValues.type}
+            onValueChange={(e) => handleInputChange("type", e.value)}
           >
             <HStack gap={6}>
               <Radio value="CUSTOMER">고객사</Radio>
@@ -91,7 +92,6 @@ export default function AdminOrganizationsCreatePage() {
           </RadioGroup>
         </Flex>
       </Box>
-
       {/* 업체 생성 페이지 - 업체 정보 입력*/}
       <InputForm
         id="name"
@@ -102,24 +102,28 @@ export default function AdminOrganizationsCreatePage() {
         error={inputErrors.name}
         onChange={(e) => handleInputChange("name", e.target.value)}
       />
-      <InputForm
-        id="brNumber"
-        type="text"
-        label="사업자 등록번호"
-        placeholder="ex) 123-45-67890"
-        value={inputValues.brNumber}
-        error={inputErrors.brNumber}
-        onChange={(e) => handleInputChange("brNumber", e.target.value)}
-      />
-      <InputForm
-        id="brCertificateUrl"
-        type="text"
-        label="회사 URL"
-        placeholder="ex) https://www.example.com"
-        value={inputValues.brCertificateUrl}
-        error={inputErrors.brCertificateUrl}
-        onChange={(e) => handleInputChange("brCertificateUrl", e.target.value)}
-      />
+      <Flex gap={4} align="center">
+        <Box flex="1">
+          <InputForm
+            id="brNumber"
+            type="text"
+            label="사업자 등록번호"
+            placeholder="ex) 123-45-67890"
+            value={inputValues.brNumber}
+            error={inputErrors.brNumber}
+            onChange={(e) => handleInputChange("brNumber", e.target.value)}
+          />
+        </Box>
+        <Box flex="1">
+          <InputForm
+            id="businessLicense"
+            type="file"
+            label="사업자 등록증 첨부"
+            placeholder=""
+            onChange={(e) => handleFileChange(e)}
+          />
+        </Box>
+      </Flex>
       <InputForm
         id="streetAddress"
         type="text"

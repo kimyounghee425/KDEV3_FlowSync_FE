@@ -38,7 +38,7 @@ export async function fetchOrganizationDetails(
 // 📌 업체 생성 API (파일 업로드 API 완성 시 추가 구현 예정)
 export async function createOrganization(
   data: CreateOrganizationInput,
-  file: any, // file 타입을 File 또는 null로 처리
+  file?: any,
 ): Promise<CommonResponseType<CreateOrganizationResponse>> {
   const formData = new FormData();
   // content 객체를 JSON 문자열로 변환하여 추가

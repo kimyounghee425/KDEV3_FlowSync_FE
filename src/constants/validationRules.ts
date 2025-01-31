@@ -8,10 +8,6 @@ export const validationRulesOfCreatingOrganization = {
     isValid: (value: string) => /^\d{3}-\d{2}-\d{5}$/.test(value),
     errorMessage: "올바른 사업자 등록번호를 입력하세요.",
   },
-  brCertificateUrl: {
-    isValid: (value: string) => /^https?:\/\/.+\..+$/.test(value),
-    errorMessage: "올바른 회사 URL을 입력하세요.",
-  },
   streetAddress: {
     isValid: (value: string) => value.trim() !== "",
     errorMessage: "사업장 도로명 주소를 입력하세요.",

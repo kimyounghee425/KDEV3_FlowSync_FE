@@ -16,6 +16,13 @@ import {
 } from "@/src/components/ui/dialog"; // Chakra UI Dialog
 import { Button, Input, Text } from "@chakra-ui/react";
 import styles from "@/src/components/layouts/InputFormLayout.module.css";
+import FileAddSection from "@/src/components/common/FileAddSection";
+interface UploadedFilesProps {
+  originalName: string;
+  saveName: string;
+  url: string;
+  size: number;
+}
 
 export default function InputFormLayout({
   title,
@@ -32,24 +39,32 @@ export default function InputFormLayout({
   onDelete?: (reason: string) => void; // 삭제 핸들러 (탈퇴 사유 전달)
   deleteEntityType?: "회원" | "업체" | "프로젝트"; // 삭제 대상 지정
 }) {
-  const pathname = usePathname();
-  const isDetailPage =
-    pathname.includes(`/admin/members/`) ||
-    pathname.includes(`/admin/organizations/`);
   const [deleteReason, setDeleteReason] = useState<string>(""); // 삭제 사유 입력 상태
+  const urlPathName = usePathname();
+  const urlPathSegments = urlPathName.split("/");
+  const urlLastPathSegment = urlPathSegments[urlPathSegments.length - 1]; // 생성 페이지와 상세조회 페이지 구분에 쓰일 변수
+  const isCreatePage = urlLastPathSegment === "create" ? true : false; // 생성 페이지인지 확인
+  const isDetailPage =
+    (urlPathName.includes(`/admin/members/`) ||
+      urlPathName.includes(`/admin/organizations/`) ||
+      urlPathName.includes("/admin/projects/")) &&
+    !isCreatePage; // create가 아닌 경우만 상세 페이지로 처리
+
   const entityType = deleteEntityType || "항목"; // deleteEntityType이 undefined일 경우 삭제 버튼이 생성되지 않아서 기본값을 설정
 
   return (
     <div className={styles.container}>
       <div className={styles.formWrapper}>
-        {/* 페이지 타이틀 */}
+        {/* 📌 페이지 타이틀 */}
         <h1 className={styles.pageTitle}>{title}</h1>
         <form onSubmit={onSubmit}>
+          {/* 📌 페이지 입력폼 */}
           {children}
+          {/* 📌 페이지 하단 - 등록/수정/삭제 버튼 */}
           <div className={styles.buttonContainer}>
             {isDetailPage ? (
               <>
-                {/* 📌 수정 버튼 */}
+                {/* 수정 버튼 */}
                 <button
                   type="submit"
                   className={`${styles.submitButton} ${
@@ -60,7 +75,7 @@ export default function InputFormLayout({
                 >
                   {isLoading ? "처리 중..." : "수정하기"}
                 </button>
-                {/* 📌 삭제 버튼 - 차크라 UI Dialog 컴포넌트 이용 */}
+                {/* 삭제 버튼 - 차크라 UI Dialog 컴포넌트 이용 */}
                 {onDelete && ( // 삭제 핸들러가 존재하는 경우만 표시
                   <DialogRoot role="alertdialog">
                     <DialogTrigger asChild>
@@ -105,7 +120,7 @@ export default function InputFormLayout({
                 )}
               </>
             ) : (
-              /* ✅ 신규 등록 버튼 */
+              /* 신규 등록 버튼 */
               <button
                 type="submit"
                 className={`${styles.submitButton} ${
