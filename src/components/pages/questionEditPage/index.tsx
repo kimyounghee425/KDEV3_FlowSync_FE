@@ -1,5 +1,26 @@
-// 질문 글 수정
+// question 글 수정 페이지
 
-export default function QuestionEditPage() {
-  return <div></div>;
+"use client";
+
+import { Box } from "@chakra-ui/react";
+import BackButton from "@/src/components/common/BackButton";
+import QuestionEditForm from "@/src/components/pages/questionEditPage/components/QuestionEditForm";
+
+export default function QuestionRegisterPage() {
+  return (
+    <Box
+      maxW="1000px"
+      w={"100%"}
+      mx="auto"
+      mt={10}
+      p={6}
+      borderWidth={1}
+      borderRadius="lg"
+      boxShadow="md"
+    >
+      <BackButton />
+
+      <QuestionEditForm />
+    </Box>
+  );
 }
