@@ -19,13 +19,12 @@ import {
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const progressData = [
-  { id: 1, title: "전체" },
-  { id: 2, title: "요구사항정의" },
-  { id: 3, title: "화면설계" },
-  { id: 4, title: "디자인" },
-  { id: 5, title: "퍼블리싱" },
-  { id: 6, title: "개발" },
-  { id: 7, title: "검수" },
+  { id: 1, title: "요구사항정의" },
+  { id: 2, title: "화면설계" },
+  { id: 3, title: "디자인" },
+  { id: 4, title: "퍼블리싱" },
+  { id: 5, title: "개발" },
+  { id: 6, title: "검수" },
 ];
 interface UploadedFilesProps {
   originalName: string;
@@ -41,7 +40,7 @@ interface linkListProps {
 
 export default function ArticleForm() {
   const { projectId } = useParams();
-  const [progressStepId, setProgressStepId] = useState<number>(0);
+  const [progressStepId, setProgressStepId] = useState<number>(1);
   const [title, setTitle] = useState<string>("");
   const editorRef = useRef<EditorJS | null>(null);
   const [linkList, setLinkList] = useState<linkListProps[]>([]);
@@ -118,8 +117,8 @@ export default function ArticleForm() {
         const content = savedData.blocks.map((block) => {
           if (block.type === "paragraph") {
             return {
-              type: "paragrpah",
-              text: block.data.text,
+              type: "paragraph",
+              data: block.data.text,
             };
           } else if (block.type === "image") {
             return {

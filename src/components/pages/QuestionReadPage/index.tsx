@@ -13,7 +13,7 @@ import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/BackButton";
 import { readQuestionApi } from "@/src/api/ReadArticle";
 
-import { Article } from "@/src/types";
+import { Article, ArticleComment } from "@/src/types";
 
 export default function QuestionReadPage() {
   const { projectId, questionId } = useParams() as {
@@ -24,15 +24,17 @@ export default function QuestionReadPage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [commentList, setCommentList] = useState<ArticleComment[]>([]);
 
   useEffect(() => {
     const loadTask = async () => {
       try {
-        const data = await readQuestionApi(
+        const responseData = await readQuestionApi(
           Number(projectId),
           Number(questionId),
         );
-        setArticle(data);
+        setArticle(responseData);
+        setCommentList(responseData.commentList ?? []);
       } catch (err) {
         setError(
           err instanceof Error
@@ -72,7 +74,7 @@ export default function QuestionReadPage() {
 
       {/* 댓글 섹션 */}
       <VStack align="stretch" gap={8} mt={10}>
-        <ArticleComments comments={article?.commentList || []} />
+        {/* <ArticleComments comments={commentList} /> */}
         <CommentBox />
       </VStack>
     </Box>

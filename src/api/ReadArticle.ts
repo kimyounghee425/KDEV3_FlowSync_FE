@@ -12,7 +12,7 @@ export async function readQuestionApi(
       `${BASE_URL}/projects/${projectId}/questions/${questionId}`,
     );
 
-    console.log(response.data.data)
+    // console.log(response.data.data)
     return response.data.data;
   } catch (error) {
     console.error("API 호출 실패:", error);

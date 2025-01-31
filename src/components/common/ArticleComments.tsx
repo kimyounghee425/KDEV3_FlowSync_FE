@@ -10,7 +10,7 @@ export default function ArticleComments({ comments }: ArticleCommentsProps) {
   const filteredComments = (comments || []).filter(
     (comment) =>
       comment.deletedYn === "N" ||
-      comment.replies.some((reply) => reply.deletedYn === "N"),
+      Array.isArray(comment.replies) && comment.replies.some((reply) => reply.deletedYn === "N"),
   );
 
   return (

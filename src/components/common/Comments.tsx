@@ -10,7 +10,7 @@ import { ArticleCommentsProps } from "@/src/types";
 export default function Comments({ comments }: ArticleCommentsProps) {
   return (
     <Box>
-      {(comments || []).map((comment) => (
+      {comments.map((comment) => (
         <CommentItem key={comment.id} comment={comment} />
       ))}
     </Box>

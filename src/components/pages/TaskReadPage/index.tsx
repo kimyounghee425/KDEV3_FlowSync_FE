@@ -78,7 +78,7 @@ export default function TaskReadPage() {
 
       {/* 댓글 섹션 */}
       <VStack align="stretch" gap={8} mt={10}>
-        <ArticleComments comments={article?.commentList || []} />
+        {/* <ArticleComments comments={article?.commentList || []} /> */}
         <CommentBox />
       </VStack>
     </Box>
