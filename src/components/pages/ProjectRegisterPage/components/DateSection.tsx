@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Flex, Text, Box, Button } from "@chakra-ui/react";
-
+import "./dateSection.css";
 interface DateSectionProps {
   startAt: string;
   closeAt: string;
@@ -16,27 +16,6 @@ export default function DateSection({
   setStartAt,
   setCloseAt,
 }: DateSectionProps) {
-  // 활성 필드 두기. startAt -> closeAt 동선
-  const [activeField, setActiveField] = useState<"startAt" | "closeAt">(
-    "startAt",
-  );
-
-  // react-datepicker 은 선택된 날짜를 Date 객체로 반환.
-  const handleDateChange = (date: Date | null) => {
-    if (date) {
-      // 날짜 iso 형식으로 변환 후 업뎃. 시각은 00시00분00초임
-      if (activeField === "startAt") {
-        setStartAt(date.toISOString());
-        setCloseAt("");
-        setActiveField("closeAt");
-      } else {
-        setCloseAt(date.toISOString());
-        setActiveField("startAt");
-      }
-    }
-  };
-
-  // console.log(startAt);
   // iso 형식 예쁘게 변형
   const formatDate = (isoString: string): string => {
     if (!isoString) {
@@ -45,71 +24,145 @@ export default function DateSection({
     const date = new Date(isoString);
     return date.toLocaleString("ko-KR", {
       year: "numeric",
-      month: "2-digit",
+      month: "long",
       day: "2-digit",
+      weekday: "long",
     });
   };
 
+  const handleStartDateChange = (date: Date | null) => {
+    if (date) {
+      setStartAt(date.toISOString());
+      if (!closeAt || new Date(closeAt) < date) {
+        setCloseAt("");
+      }
+    }
+  };
+
+  const handleCloseDateChange = (date: Date | null) => {
+    if (date) {
+      if (startAt && new Date(startAt) > date) return; // 종료일이 등록일보다 빠를 수 없음
+      setCloseAt(date.toISOString());
+    }
+  };
+
+
+  
+  const getHighlightedDates = () => {
+    if (!startAt || !closeAt) return [];
+    const startDate = new Date(startAt);
+    const endDate = new Date(closeAt);
+    const dateArray = [];
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      dateArray.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dateArray;
+  };
+
   return (
-    <Flex direction={"row"} mb={4}>
-      <DatePicker
-        selected={
-          closeAt ? new Date(closeAt) : startAt ? new Date(startAt) : null
-        }
-        onChange={handleDateChange}
-        startDate={startAt ? new Date(formatDate(startAt)) : null}
-        endDate={closeAt ? new Date(formatDate(closeAt)) : null}
-        inline
-      />
-      <Flex direction={"column"} justifyContent={"center"} ml={10}>
-        {/* 등록 일시 */}
-        <Box
-          onClick={() => setActiveField("startAt")}
-          cursor="pointer"
-          mb={10}
-          border={
-            activeField === "startAt" ? "2px solid blue" : "2px solid grey"
-          }
-          borderRadius={"lg"}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-        >
-          <Text ml={4} mr={4}>
+    <Flex direction={"row"} alignItems={"center"} mb={4}>
+      <Flex direction={"row"} justifyContent={"center"} gap={10}>
+        {/* 등록 일시 선택 달력 */}
+        <Box>
+          <Text fontWeight="bold" mb={2}>
             프로젝트 등록 일시
           </Text>
-          <Text>{formatDate(startAt)}</Text>
+          <DatePicker
+            className="custom-calender"
+            selected={startAt ? new Date(startAt) : null}
+            onChange={handleStartDateChange}
+            highlightDates={getHighlightedDates()}
+            dayClassName={(date) => {
+              if (!startAt || !closeAt) return "";
+
+              const startDate = new Date(startAt).toDateString();
+              const currentDate = date.toDateString();
+
+              if (currentDate === startDate) return "highlight-start";
+
+              if (new Date(startAt) <= date && date <= new Date(closeAt)) {
+                return "highlight-range";
+              }
+
+              return "";
+            }}
+            todayButton="오늘로 이동"
+            inline
+          />
         </Box>
-        {/* 종료 일시 */}
+
+        {/* 종료 일시 선택 달력 */}
+        <Box>
+          <Text fontWeight="bold" mb={2}>
+            프로젝트 종료 일시
+          </Text>
+          <DatePicker
+            className="custom-calender"
+            selected={closeAt ? new Date(closeAt) : null}
+            onChange={handleCloseDateChange}
+            minDate={startAt ? new Date(startAt) : undefined} // 종료일은 등록일 이후만 가능
+            highlightDates={getHighlightedDates()}
+            dayClassName={(date) => {
+              if (!startAt || !closeAt) return "";
+
+              const endDate = new Date(closeAt).toDateString();
+              const currentDate = date.toDateString();
+
+              if (currentDate === endDate) return "highlight-end";
+              if (new Date(startAt) <= date && date <= new Date(closeAt)) {
+                return "highlight-range";
+              }
+
+              return "";
+            }}
+            todayButton="오늘로 이동"
+            inline
+          />
+        </Box>
+      </Flex>
+
+      {/* 선택된 날짜 표시 */}
+      <Flex direction={"column"} alignItems={"center"} ml={20}>
         <Box
-          onClick={() => setActiveField("closeAt")}
-          cursor="pointer"
-          border={
-            activeField === "closeAt" ? "2px solid blue" : "2px solid grey"
-          }
+          border="2px solid blue"
           borderRadius={"lg"}
           display="flex"
           flexDirection="column"
           alignItems="center"
-          mb={5}
+          p={3}
+          mb={10}
+          width="200px"
         >
-          <Text ml={4} mr={4}>
-            프로젝트 종료 일시
-          </Text>
+          <Text>등록 일시</Text>
+          <Text>{formatDate(startAt)}</Text>
+        </Box>
+
+        <Box
+          border="2px solid grey"
+          borderRadius={"lg"}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          p={3}
+          mb={5}
+          width="200px"
+        >
+          <Text>종료 일시</Text>
           <Text>{formatDate(closeAt)}</Text>
         </Box>
-        <Box display="flex" flexDirection="column" alignItems="center">
-          <Button
-            borderRadius={"lg"}
-            onClick={() => {
-              setStartAt("");
-              setCloseAt("");
-              setActiveField("startAt");
-            }}
-          >
-            초기화
-          </Button>
-        </Box>
+
+        <Button
+          borderRadius={"lg"}
+          onClick={() => {
+            setStartAt("");
+            setCloseAt("");
+          }}
+        >
+          초기화
+        </Button>
       </Flex>
     </Flex>
   );
