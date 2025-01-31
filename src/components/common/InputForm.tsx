@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import AddressAPI from "@/src/components/common/AddressAPI";
 import { InputFormData } from "@/src/types";
 import styles from "@/src/components/common/InputForm.module.css";
 
@@ -13,11 +14,13 @@ export default function InputForm({
   value = "",
   error = "",
   onChange,
+  // onChange = () => {}, // onChange가 undefined 일 경우에도 기본값이 빈 함수이기 때문에 에러 발생하지 않음
   disabled = false, // 기본값 false 추가
 }: InputFormData) {
   const [originalValue, setOriginalValue] = useState(value); // 초기값 저장
   const [isChanged, setIsChanged] = useState(false); // 변경 여부 상태 관리
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     // 수정 시 기존 데이터에서 변경된 사항이 있는 경우
@@ -38,14 +41,61 @@ export default function InputForm({
     }
   }
 
+  function handleAddressChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (onChange) {
+      // 기존 event 객체를 복사하면서 target.value 값을 유지하여 새로운 이벤트 객체를 생성
+      const fakeEvent = {
+        ...event,
+        target: { ...event.target, value: event.target.value },
+      };
+      onChange(fakeEvent);
+    }
+  }
+
+  function handleAddressSelect(selectedAddress: string) {
+    if (onChange) {
+      // 주소 선택 시, 가짜 이벤트 객체를 만들어 onChange 호출
+      // `React.ChangeEvent<HTMLInputElement>`로 타입 단언 (타입스크립트 에러 방지)
+      const fakeEvent = {
+        target: { value: selectedAddress },
+      } as React.ChangeEvent<HTMLInputElement>;
+      onChange(fakeEvent);
+    }
+    setModalOpen(false); // 주소 선택 후 모달 닫기
+  }
+
   return (
     <div className={styles.inputFieldContainer}>
       <label htmlFor={id} className={styles.label}>
         {label}
         {!disabled && <span className={styles.required}>*</span>}
       </label>
-      {/* ✅ 일반 입력 필드 vs 파일 업로드 필드 분기 */}
-      {type === "file" ? (
+      {/* 주소 입력 필드 - 클릭 시 검색 모달 오픈 */}
+      {type === "address" ? (
+        <>
+          <input
+            id={id}
+            className={`${styles.input} ${error ? styles.error : ""} ${isChanged ? styles.changed : ""}`}
+            type="text"
+            placeholder={placeholder}
+            value={value}
+            readOnly={!disabled} // 주소 직접 입력 방지 (검색 기능을 통해서만 입력)
+            onChange={handleAddressChange} // 입력 변경 처리 (입력 가능할 경우)
+            onClick={() => !disabled && setModalOpen(true)} // 클릭 시 모달 오픈 (disabled 상태가 아닐 때만)
+          />
+          {/* 주소 검색 모달 (isModalOpen 상태가 true일 때만 렌더링) */}
+          {isModalOpen && (
+            <AddressAPI
+              isOpen={isModalOpen}
+              onClose={() => setModalOpen(false)}
+              onComplete={(selectedAddress) => {
+                handleAddressSelect(selectedAddress); // 선택된 주소를 입력 필드에 반영
+              }}
+            />
+          )}
+        </>
+      ) : // 일반 입력 필드 vs 파일 업로드 필드
+      type === "file" ? (
         <div className={styles.fileUploadContainer}>
           {/* ✅ 파일 첨부 버튼 */}
           <input

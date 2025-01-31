@@ -11,8 +11,6 @@ import { validationRulesOfCreatingOrganization } from "@/src/constants/validatio
 import { createOrganization } from "@/src/api/organizations";
 import { useState } from "react";
 
-import AddressForm from "@/src/components/common/AddressForm";
-
 export default function AdminOrganizationsCreatePage() {
   const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
@@ -28,10 +26,39 @@ export default function AdminOrganizationsCreatePage() {
     return true;
   }
 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
+  function handleChange(inputName: string, value: string | File) {
+    if (inputName === "phoneNumber") {
+      // 📌 전화번호 입력 처리 (자동 하이픈 추가)
+      const onlyNumbers = value.toString().replace(/[^0-9]/g, "");
+      let formattedValue = onlyNumbers;
+
+      if (onlyNumbers.length > 3 && onlyNumbers.length <= 7) {
+        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3)}`;
+      } else if (onlyNumbers.length > 7) {
+        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3, 7)}-${onlyNumbers.slice(7, 11)}`;
+      }
+
+      handleInputChange(inputName, formattedValue);
+    } else if (inputName === "brNumber") {
+      // 📌 사업자 등록번호 입력 처리 (자동 하이픈 추가) => "123-45-67890" 형식
+      const onlyNumbers = value.toString().replace(/[^0-9]/g, "");
+      let formattedValue = onlyNumbers;
+
+      if (onlyNumbers.length > 3 && onlyNumbers.length <= 5) {
+        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3)}`;
+      } else if (onlyNumbers.length > 5) {
+        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3, 5)}-${onlyNumbers.slice(5, 10)}`;
+      }
+
+      handleInputChange(inputName, formattedValue);
+    } else if (inputName === "businessLicense") {
+      // 📌 파일 업로드 처리
+      if (value instanceof File) {
+        setSelectedFile(value);
+      }
+    } else {
+      // 📌 일반 입력 처리
+      handleInputChange(inputName, value.toString());
     }
   }
 
@@ -59,19 +86,6 @@ export default function AdminOrganizationsCreatePage() {
     }
   }
 
-  const handlePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value.replace(/[^0-9]/g, ""); // 숫자만 허용
-    let formattedInput = input;
-  
-    if (input.length > 3 && input.length <= 7) {
-      formattedInput = `${input.slice(0, 3)}-${input.slice(3)}`;
-    } else if (input.length > 7) {
-      formattedInput = `${input.slice(0, 3)}-${input.slice(3, 7)}-${input.slice(7, 11)}`;
-    }
-  
-    handleInputChange("phoneNumber", formattedInput); // ✅ `inputValues.phoneNumber`를 직접 업데이트
-  };
-
   return (
     <InputFormLayout
       title="▹ 업체 등록"
@@ -98,7 +112,7 @@ export default function AdminOrganizationsCreatePage() {
           </span>
           <RadioGroup
             value={inputValues.type}
-            onValueChange={(e) => handleInputChange("type", e.value)}
+            onValueChange={(e) => handleChange("type", e.value)}
           >
             <HStack gap={6}>
               <Radio value="CUSTOMER">고객사</Radio>
@@ -107,7 +121,7 @@ export default function AdminOrganizationsCreatePage() {
           </RadioGroup>
         </Flex>
       </Box>
-      {/* 업체 생성 페이지 - 업체 정보 입력*/}
+      {/* 업체 정보 입력*/}
       <InputForm
         id="name"
         type="text"
@@ -115,36 +129,40 @@ export default function AdminOrganizationsCreatePage() {
         placeholder="ex) 비엔시스템"
         value={inputValues.name}
         error={inputErrors.name}
-        onChange={(e) => handleInputChange("name", e.target.value)}
+        onChange={(e) => handleChange("name", e.target.value)}
       />
-
+      <Flex gap={4} align="center">
+        <Box flex="1">
+          <InputForm
+            id="brNumber"
+            type="text"
+            label="사업자 등록번호"
+            placeholder="ex) 123-45-67890"
+            value={inputValues.brNumber}
+            error={inputErrors.brNumber}
+            onChange={(e) => handleChange("brNumber", e.target.value)}
+          />
+        </Box>
+        <Box flex="1">
+          <InputForm
+            id="businessLicense"
+            type="file"
+            label="사업자 등록증 첨부"
+            placeholder=""
+            onChange={(e) =>
+              handleChange("businessLicense", e.target.files?.[0] || "")
+            }
+          />
+        </Box>
+      </Flex>
       <InputForm
-        id="brNumber"
-        type="text"
-        label="사업자 등록번호"
-        placeholder="ex) 123-45-67890"
-        value={inputValues.brNumber}
-        error={inputErrors.brNumber}
-        onChange={(e) => handleInputChange("brNumber", e.target.value)}
-      />
-      <InputForm
-        id="brCertificateUrl"
-        type="text"
-        label="회사 URL"
-        placeholder="ex) https://www.example.com"
-        value={inputValues.brCertificateUrl}
-        error={inputErrors.brCertificateUrl}
-        onChange={(e) => handleInputChange("brCertificateUrl", e.target.value)}
-      />
-      <AddressForm
         id="streetAddress"
+        type="address"
         label="사업장 도로명 주소"
-        placeholder="ex) 서울시 강남구"
+        placeholder="주소를 검색해주세요."
         value={inputValues.streetAddress}
-        onChange={(selectedAddress) =>
-          handleInputChange("streetAddress", selectedAddress)
-        }
         error={inputErrors.streetAddress}
+        onChange={(e) => handleChange("streetAddress", e.target.value)}
       />
       <InputForm
         id="detailAddress"
@@ -153,7 +171,7 @@ export default function AdminOrganizationsCreatePage() {
         placeholder="ex) 역삼동"
         value={inputValues.detailAddress}
         error={inputErrors.detailAddress}
-        onChange={(e) => handleInputChange("detailAddress", e.target.value)}
+        onChange={(e) => handleChange("detailAddress", e.target.value)}
       />
       <InputForm
         id="phoneNumber"
@@ -162,7 +180,7 @@ export default function AdminOrganizationsCreatePage() {
         placeholder="ex) 010-1234-5678"
         value={inputValues.phoneNumber}
         error={inputErrors.phoneNumber}
-        onChange={handlePhoneNumber}
+        onChange={(e) => handleChange("phoneNumber", e.target.value)}
       />
     </InputFormLayout>
   );

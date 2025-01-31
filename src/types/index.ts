@@ -286,7 +286,15 @@ export interface ArticleReply {
 export interface InputFormData {
   label: string;
   id: string;
-  type: "text" | "email" | "password" | "number" | "tel" | "url" | "file"; // 가능한 타입만 명시;
+  type:
+    | "text"
+    | "email"
+    | "password"
+    | "number"
+    | "tel"
+    | "url"
+    | "file"
+    | "address"; // 가능한 타입만 명시;
   placeholder?: string;
   value?: string;
   error?: string;
