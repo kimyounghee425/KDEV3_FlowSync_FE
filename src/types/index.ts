@@ -81,13 +81,13 @@ export interface OrganizationProps {
   id: string;
   type: string;
   status: string;
-  brNumber: string | null;
+  brNumber: string;
   name: string;
   reg_at: string;
-  brCertificateUrl: string | null;
-  streetAddress: string | null;
-  detailAddress: string | null;
-  phone_number: string | null;
+  brCertificateUrl: string;
+  streetAddress: string;
+  detailAddress: string;
+  phoneNumber: string;
   remark: string | null;
 }
 
@@ -110,8 +110,22 @@ export interface CreateOrganizationResponse {
 }
 
 export interface OrganizationListResponse {
-  organizations: OrganizationProps[];
+  dtoList: OrganizationProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
+}
+
+// 🔹 업체 삭제 응답 타입 정의 (탈퇴 사유 포함 X)
+export interface DeleteOriginationResponse {
+  code: number; // HTTP 상태 코드
+  result: "SUCCESS" | "FAIL"; // 결과 상태
+  message: string; // 응답 메시지
+}
+
+// 🔹 업체 삭제 응답 타입 정의 (탈퇴 사유 포함 ver.)
+export interface DeleteOriginationWithReasonResponse {
+  code: number; // HTTP 상태 코드
+  result: "SUCCESS" | "FAIL"; // 결과 상태
+  message: string; // 응답 메시지
 }
 
 export interface ProjectInfoProps {
@@ -280,7 +294,7 @@ export interface InputFormData {
   error?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  disabled?: boolean; // ✅ 추가: 입력 비활성화 속성
+  disabled?: boolean;
 }
 
 // 공지사항

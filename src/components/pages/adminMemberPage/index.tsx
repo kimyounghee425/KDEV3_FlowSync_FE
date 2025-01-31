@@ -32,7 +32,7 @@ export default function AdminMemberPage() {
       try {
         console.log("Fetching member data for ID:", memberId);
         const response = await fetchMemberDetails(memberId);
-        console.log("회원 데이터 fetch 결과:", response);
+        console.log("회원 데이터 fetch 결과 - response:", response);
 
         if (!response) {
           router.replace("/404"); // 🚀 데이터가 없는 경우 404 이동

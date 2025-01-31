@@ -16,7 +16,7 @@
 }
 
 .input.changed {
-  background-color: #e8f5e9 !important; /* ✅ 변경된 입력 필드 연한 초록색 강조 */
+  background-color: #e8f5e9 !important; /* 수정 시 변경된 입력 필드 연한 초록색 강조 */
   border: 1px solid #4caf50 !important;
 }
 

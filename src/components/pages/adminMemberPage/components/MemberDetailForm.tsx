@@ -5,7 +5,11 @@ import { useState } from "react";
 import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { MemberProps } from "@/src/types";
-import { deleteMember, updateMember } from "@/src/api/members";
+import {
+  deleteMember,
+  fetchMemberDetails,
+  updateMember,
+} from "@/src/api/members";
 import { validationRulesOfUpdatingMember } from "@/src/constants/validationRules"; // 유효성 검사 규칙 import
 
 export default function MemberDetailForm({
@@ -19,6 +23,20 @@ export default function MemberDetailForm({
   const [formData, setFormData] = useState<MemberProps>(memberData);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errors, setErrors] = useState<{ [key: string]: string | null }>({}); // 유효성 검사 에러 상태
+  const [isFetching, setIsFetching] = useState<boolean>(false); // ✅ 새로 렌더링 여부
+
+  // 📌 회원 데이터 다시 불러오기 (업데이트 후)
+  async function refetchMemberData() {
+    setIsFetching(true);
+    try {
+      const updatedData = await fetchMemberDetails(memberId);
+      setFormData(updatedData); // ✅ 새로 불러온 데이터로 상태 업데이트
+    } catch (error) {
+      console.error("회원 데이터 갱신 실패:", error);
+    } finally {
+      setIsFetching(false);
+    }
+  }
 
   // 📌 입력값 변경 처리 및 유효성 검사 실행
   function handleChange(field: keyof MemberProps, value: string) {
@@ -71,6 +89,12 @@ export default function MemberDetailForm({
         remark: formData.remark,
       });
       alert("회원 정보가 수정되었습니다.");
+      // #TODO 업데이트 방법1) 수정 후 최신 데이터만 렌더링 (-> 변경된 필드 초록색으로 변한 게 그대로 유지되는 문제)
+      // await refetchMemberData();
+      // #TODO 업데이트 방법2) 페이지 전체 새로고침 (-> 속도 느리고, 화면 깜빡여서 fetch만 하는 방향으로 수정되어야 함)
+      window.location.reload();
+      // #TODO 업데이트 방법3) 페이지 전체 새로고침 없이 데이터만 새로고침 (-> 변경된 필드 초록색 스타일 그대로 유지되는 문제)
+      // route.refresh();
     } catch (error) {
       alert("수정 실패: 다시 시도해주세요.");
     } finally {
@@ -127,7 +151,7 @@ export default function MemberDetailForm({
           label="성함"
           value={formData.name}
           onChange={(e) => handleChange("name", e.target.value)}
-          error={errors.name ?? undefined} // 에러 null 값을 undefined로 변환 (이하 동일)
+          error={errors.name ?? undefined} // 에러 값이 null 이면 안돼서 undefined로 변환 (이하 동일)
         />
         <InputForm
           id="phoneNum"

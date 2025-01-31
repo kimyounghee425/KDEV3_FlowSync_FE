@@ -76,10 +76,10 @@ function AdminOrganizationsPageContent() {
   } = useFetchBoardList<
     OrganizationListResponse,
     [string, string, string, number, number],
-    "organizations"
+    "dtoList"
   >({
     fetchApi: fetchOrganizationListApi,
-    keySelector: "organizations",
+    keySelector: "dtoList",
     params: [keyword, type, status, currentPage, pageSize],
   });
 
@@ -98,7 +98,7 @@ function AdminOrganizationsPageContent() {
   };
 
   const handleRowClick = (id: string) => {
-    router.push(`/admins/organizations/${id}`);
+    router.push(`/admin/organizations/${id}`);
   };
 
   return (
@@ -153,7 +153,7 @@ function AdminOrganizationsPageContent() {
               </Table.Cell>
               <Table.Cell>{organization.name}</Table.Cell>
               <Table.Cell>{organization.brNumber}</Table.Cell>
-              <Table.Cell>{organization.phone_number}</Table.Cell>
+              <Table.Cell>{organization.phoneNumber}</Table.Cell>
               <Table.Cell>{`${organization.streetAddress} ${organization.detailAddress}`}</Table.Cell>
               <Table.Cell>
                 <StatusTag>
