@@ -1,8 +1,21 @@
 "use client";
 
 import { ReactNode } from "react";
-import { usePathname } from "next/navigation"; // ✅ 현재 URL 경로 가져오기
-import styles from "./InputFormLayout.module.css";
+import { useState } from "react";
+import { usePathname } from "next/navigation"; // 현재 URL 경로 가져오기
+import {
+  DialogRoot,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+  DialogActionTrigger,
+  DialogCloseTrigger,
+} from "@/src/components/ui/dialog"; // Chakra UI Dialog
+import { Button, Input, Text } from "@chakra-ui/react";
+import styles from "@/src/components/layouts/InputFormLayout.module.css";
 
 export default function InputFormLayout({
   title,
@@ -10,25 +23,30 @@ export default function InputFormLayout({
   onSubmit,
   isLoading,
   onDelete, // 삭제 핸들러 추가
+  deleteEntityType, // 삭제할 대상 (회원, 업체, 프로젝트 등)
 }: {
-  title: string; // title - 페이지 별 입력 폼 타이틀
-  children: ReactNode; // 입력 폼 내부에 렌더링 될 내용
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void; // 입력 폼 제출 핸들러
-  isLoading: boolean; // 제출 버튼의 로딩 상태
-  onDelete?: () => void; // 삭제 핸들러 (선택 사항)
+  title: string; // 페이지 제목
+  children: ReactNode; // 폼 내부 요소
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void; // 폼 제출 핸들러
+  isLoading: boolean; // 제출 버튼 로딩 상태
+  onDelete?: (reason: string) => void; // 삭제 핸들러 (탈퇴 사유 전달)
+  deleteEntityType?: "회원" | "업체" | "프로젝트"; // 삭제 대상 지정
 }) {
   const pathname = usePathname();
-  const isDetailPage = pathname.includes(`/admin/members/`); // ✅ 상세 조회 페이지 여부 확인
+  const isDetailPage = pathname.includes(`/admin/members/`); // 상세 조회 페이지 여부 확인
+  const [deleteReason, setDeleteReason] = useState<string>(""); // 삭제 사유 입력 상태
 
   return (
     <div className={styles.container}>
       <div className={styles.formWrapper}>
+        {/* 페이지 타이틀 */}
         <h1 className={styles.pageTitle}>{title}</h1>
         <form onSubmit={onSubmit}>
           {children}
           <div className={styles.buttonContainer}>
             {isDetailPage ? (
               <>
+                {/* 📌 수정 버튼 */}
                 <button
                   type="submit"
                   className={`${styles.submitButton} ${
@@ -39,17 +57,53 @@ export default function InputFormLayout({
                 >
                   {isLoading ? "처리 중..." : "수정하기"}
                 </button>
-                {onDelete && (
-                  <button
-                    type="button"
-                    className={styles.deleteButton} // ✅ 삭제 버튼 스타일 적용
-                    onClick={onDelete}
-                  >
-                    삭제하기
-                  </button>
-                )}
+                {/* 📌 삭제 버튼 - 차크라 UI Dialog 컴포넌트 이용 */}
+                {onDelete &&
+                  deleteEntityType && ( // 삭제 핸들러가 존재하는 경우만 표시
+                    <DialogRoot role="alertdialog">
+                      <DialogTrigger asChild>
+                        <Button className={styles.deleteButton}>
+                          {deleteEntityType} 삭제
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>{deleteEntityType} 삭제</DialogTitle>
+                        </DialogHeader>
+                        <DialogBody>
+                          <Text fontWeight="medium" mb="2">
+                            {deleteEntityType} 삭제 사유를 입력하세요.
+                          </Text>
+                          <Input
+                            placeholder={`${deleteEntityType} 삭제 사유 입력`}
+                            size="sm"
+                            value={deleteReason}
+                            onChange={(e) => setDeleteReason(e.target.value)} // 입력값 업데이트
+                          />
+                        </DialogBody>
+                        <DialogFooter>
+                          <DialogActionTrigger asChild>
+                            <Button variant="outline">취소</Button>
+                          </DialogActionTrigger>
+                          <Button
+                            colorScheme="red"
+                            disabled={!deleteReason.trim()} // 삭제 사유 입력 전까지 비활성화
+                            opacity={deleteReason.trim() ? 1 : 0.5} // 비활성화 시 흐린 색상 적용
+                            onClick={() => {
+                              onDelete(deleteReason);
+                              setDeleteReason(""); // 입력값 초기화
+                            }}
+                          >
+                            삭제 확인
+                          </Button>
+                        </DialogFooter>
+                        <DialogCloseTrigger />
+                      </DialogContent>
+                    </DialogRoot>
+                  )}
               </>
             ) : (
+              /* ✅ 신규 등록 버튼 */
               <button
                 type="submit"
                 className={`${styles.submitButton} ${

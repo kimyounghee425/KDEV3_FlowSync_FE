@@ -3,6 +3,7 @@ import {
   CommonResponseType,
   CreateMemberInput,
   CreateMemberResponse,
+  DeleteMemberResponse,
   MemberListResponse,
   MemberProps,
 } from "@/src/types";
@@ -111,7 +112,23 @@ export async function updateMember(
   return response.data;
 }
 
-// 🔹 회원 삭제
-export async function deleteMember(memberId: string): Promise<void> {
-  await axiosInstance.delete(`/admins/members/delete/${memberId}`);
+// 🔹 회원 삭제 (탈퇴 사유 포함)
+export async function deleteMember(
+  memberId: string,
+  reason: string,
+): Promise<DeleteMemberResponse> {
+  try {
+    const response = await axiosInstance.post(
+      `/admins/members/delete/${memberId}`,
+      { reason }, // 🔹 요청 바디에 탈퇴 사유 추가
+    );
+
+    console.log("회원 탈퇴 API 호출 후 - response: ", response);
+    console.log("회원 탈퇴 API 호출 후 - response.data: ", response.data);
+
+    return response.data; // ✅ 응답 데이터 반환
+  } catch (error) {
+    console.error("회원 탈퇴 API 호출 중 오류 발생:", error);
+    throw error; // 🚨 에러 발생 시 throw
+  }
 }

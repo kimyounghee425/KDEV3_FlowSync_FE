@@ -63,7 +63,6 @@ export default function AdminMembersPage() {
 function AdminMembersPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const keyword = searchParams?.get("keyword") || "";
   const role = searchParams?.get("role") || "";
   const status = searchParams?.get("status") || "";
