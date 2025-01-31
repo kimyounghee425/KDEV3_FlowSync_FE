@@ -1,27 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { Box, CardRoot, Flex, Heading } from "@chakra-ui/react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import SidebarTab from "@/src/components/layouts/SidebarTab";
 import { useSidebar } from "@/src/context/SidebarContext";
+import { useUserRole } from "@/src/hook/useUserRole";
 
 export default function Sidebar() {
-  const { projectStatus, setProjectStatus } = useSidebar();
-  const [isLoading, setIsLoading] = useState(true);
-  const pathname = usePathname(); // 현재 URL 경로 가져오기
-  const isAdminPage = pathname?.includes("/admin"); // URL에 admin이 포함되는지 확인
+  const { selectedProjectFilter, setSelectedProjectFilter } = useSidebar();
+  const { userRole, loading: roleLoading } = useUserRole();
 
-  // 사이드바 탭 (진행중 프로젝트, 완료 프로젝트)
-  useEffect(() => {
-    // 프로젝트 상태 변경 시 로딩 시뮬레이션
-    setIsLoading(true);
-    const timeout = setTimeout(() => {
-      setIsLoading(false); // 로딩 완료
-    }, 300); // 로딩 시간 설정 (예: 500ms)
-    return () => clearTimeout(timeout); // 클린업
-  }, [projectStatus]);
+  if (roleLoading) return null;
 
   return (
     <Flex
@@ -32,7 +21,7 @@ export default function Sidebar() {
     >
       <Box width="270px" height="100vh" p={1} marginTop="3">
         <CardRoot width="100%">
-          {isAdminPage ? (
+          {userRole === "ADMIN" ? (
             <>
               <Heading textAlign="center" borderRadius="4xl">
                 관리자 전용 페이지
@@ -43,9 +32,9 @@ export default function Sidebar() {
             <>
               {/* Segmented Control */}
               <SegmentedControl
-                value={projectStatus}
+                value={selectedProjectFilter}
                 onValueChange={(e) => {
-                  setProjectStatus(e.value);
+                  setSelectedProjectFilter(e.value);
                 }}
                 items={["진행중 프로젝트", "완료 프로젝트"]}
               />

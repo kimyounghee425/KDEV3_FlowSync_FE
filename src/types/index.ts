@@ -146,7 +146,7 @@ export interface ProjectTaskProps {
 }
 
 export interface ProjectTaskListResponse {
-  projectTasks: ProjectTaskProps[];
+  projectApprovals: ProjectTaskProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
@@ -280,4 +280,19 @@ export interface ProjectProgressStepProps {
   id: string,
   title:string,
   count: number
+}
+
+export interface UserInfoResponse {
+  id: string;
+  organizationId: string;
+  role: string;
+  status: string;
+  email: string;
+  name: string;
+  phoneNum: string;
+  jobRole: string;
+  jobTitle: string;
+  regAt: string;
+  introduction: string;
+  remark: string;
 }
