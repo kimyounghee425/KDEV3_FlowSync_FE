@@ -37,14 +37,16 @@ export default function AddressAPI({
     <div style={styles.overlay}>
       <div style={styles.modal}>
         <h2 style={styles.header}>주소 검색</h2>
-        <button style={styles.closeButton} onClick={onClose}>✖</button>
+        <button style={styles.closeButton} onClick={onClose}>
+          ✖
+        </button>
         <Box>
           <DaumPostcode onComplete={handleComplete} autoClose={false} />
         </Box>
       </div>
     </div>
   );
-};
+}
 
 // 스타일 객체
 const styles: { [key: string]: React.CSSProperties } = {
@@ -84,4 +86,3 @@ const styles: { [key: string]: React.CSSProperties } = {
     cursor: "pointer",
   },
 };
-
