@@ -18,11 +18,12 @@ export default function ArticleContent({ article }: ArticleContentProps) {
       </Box>
     );
   }
+
   const parsedContent = typeof article.content === "string"
   ? JSON.parse(article.content)
   : article.content;
 
-  console.log(parsedContent[0])
+  // console.log(parsedContent[0])
 
   const renderContent = (content: ContentBlock[]) => {
     return content.map((block, index) => {
