@@ -4,13 +4,26 @@ import { Box, CardRoot, Flex, Heading } from "@chakra-ui/react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import SidebarTab from "@/src/components/layouts/SidebarTab";
 import { useSidebar } from "@/src/context/SidebarContext";
-import { useUserRole } from "@/src/hook/useUserRole";
+import { fetchUserInfo as fetchUserInfoApi } from "@/src/api/auth";
+import { useFetchData } from "@/src/hook/useFetchData";
+import { UserInfoResponse } from "@/src/types";
+import { Loading } from "../common/Loading";
 
 export default function Sidebar() {
   const { selectedProjectFilter, setSelectedProjectFilter } = useSidebar();
-  const { userRole, loading: roleLoading } = useUserRole();
+  const { data: userInfoData, loading: userInfoLoading } = useFetchData<
+    UserInfoResponse,
+    []
+  >({
+    fetchApi: fetchUserInfoApi,
+    params: [],
+  });
 
-  if (roleLoading) return null;
+  const userRole = userInfoData?.role;
+
+  if (userInfoLoading) {
+    return <Loading />;
+  }
 
   return (
     <Flex
