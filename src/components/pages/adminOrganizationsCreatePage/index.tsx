@@ -1,5 +1,5 @@
 "use client";
-
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@/src/components/ui/radio";
@@ -12,6 +12,7 @@ import { createOrganization } from "@/src/api/organizations";
 import { useState } from "react";
 
 export default function AdminOrganizationsCreatePage() {
+  // const [phoneNumber, setPhoneNumber] = useState("");
   const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfOrganizaion, validationRulesOfCreatingOrganization);
@@ -56,6 +57,21 @@ export default function AdminOrganizationsCreatePage() {
       alert("업체 등록에 실패했습니다. 다시 시도해주세요.");
     }
   }
+
+  const handlePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value.replace(/[^0-9]/g, "");
+    let formattedInput = input;
+
+    if (input.length > 3 && input.length <= 7) {
+      formattedInput = `${input.slice(0, 3)}-${input.slice(3)}`;
+    } else if (input.length > 7) {
+      formattedInput = `${input.slice(0, 3)}-${input.slice(3, 7)}-${input.slice(
+        7,
+        11,
+      )}`;
+    }
+    handleInputChange("phoneNumber", formattedInput);
+  };
 
   return (
     <InputFormLayout
@@ -149,7 +165,7 @@ export default function AdminOrganizationsCreatePage() {
         placeholder="ex) 010-1234-5678"
         value={inputValues.phoneNumber}
         error={inputErrors.phoneNumber}
-        onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
+        onChange={handlePhoneNumber}
       />
     </InputFormLayout>
   );
