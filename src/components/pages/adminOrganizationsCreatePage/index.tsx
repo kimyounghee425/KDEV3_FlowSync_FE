@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+
 import { useRouter } from "next/navigation";
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@/src/components/ui/radio";
@@ -11,8 +11,9 @@ import { validationRulesOfCreatingOrganization } from "@/src/constants/validatio
 import { createOrganization } from "@/src/api/organizations";
 import { useState } from "react";
 
+import AddressForm from "@/src/components/common/AddressForm";
+
 export default function AdminOrganizationsCreatePage() {
-  // const [phoneNumber, setPhoneNumber] = useState("");
   const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfOrganizaion, validationRulesOfCreatingOrganization);
@@ -59,18 +60,16 @@ export default function AdminOrganizationsCreatePage() {
   }
 
   const handlePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value.replace(/[^0-9]/g, "");
+    const input = e.target.value.replace(/[^0-9]/g, ""); // 숫자만 허용
     let formattedInput = input;
-
+  
     if (input.length > 3 && input.length <= 7) {
       formattedInput = `${input.slice(0, 3)}-${input.slice(3)}`;
     } else if (input.length > 7) {
-      formattedInput = `${input.slice(0, 3)}-${input.slice(3, 7)}-${input.slice(
-        7,
-        11,
-      )}`;
+      formattedInput = `${input.slice(0, 3)}-${input.slice(3, 7)}-${input.slice(7, 11)}`;
     }
-    handleInputChange("phoneNumber", formattedInput);
+  
+    handleInputChange("phoneNumber", formattedInput); // ✅ `inputValues.phoneNumber`를 직접 업데이트
   };
 
   return (
@@ -118,36 +117,34 @@ export default function AdminOrganizationsCreatePage() {
         error={inputErrors.name}
         onChange={(e) => handleInputChange("name", e.target.value)}
       />
-      <Flex gap={4} align="center">
-        <Box flex="1">
-          <InputForm
-            id="brNumber"
-            type="text"
-            label="사업자 등록번호"
-            placeholder="ex) 123-45-67890"
-            value={inputValues.brNumber}
-            error={inputErrors.brNumber}
-            onChange={(e) => handleInputChange("brNumber", e.target.value)}
-          />
-        </Box>
-        <Box flex="1">
-          <InputForm
-            id="businessLicense"
-            type="file"
-            label="사업자 등록증 첨부"
-            placeholder=""
-            onChange={(e) => handleFileChange(e)}
-          />
-        </Box>
-      </Flex>
+
       <InputForm
-        id="streetAddress"
+        id="brNumber"
         type="text"
+        label="사업자 등록번호"
+        placeholder="ex) 123-45-67890"
+        value={inputValues.brNumber}
+        error={inputErrors.brNumber}
+        onChange={(e) => handleInputChange("brNumber", e.target.value)}
+      />
+      <InputForm
+        id="brCertificateUrl"
+        type="text"
+        label="회사 URL"
+        placeholder="ex) https://www.example.com"
+        value={inputValues.brCertificateUrl}
+        error={inputErrors.brCertificateUrl}
+        onChange={(e) => handleInputChange("brCertificateUrl", e.target.value)}
+      />
+      <AddressForm
+        id="streetAddress"
         label="사업장 도로명 주소"
         placeholder="ex) 서울시 강남구"
         value={inputValues.streetAddress}
+        onChange={(selectedAddress) =>
+          handleInputChange("streetAddress", selectedAddress)
+        }
         error={inputErrors.streetAddress}
-        onChange={(e) => handleInputChange("streetAddress", e.target.value)}
       />
       <InputForm
         id="detailAddress"
