@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 
 // 절대 경로 파일
 import ArticleContent from "@/src/components/common/ArticleContent";
-import ArticleComments from "@/src/components/common/ArticleComments";
+// import ArticleComments from "@/src/components/common/ArticleComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/BackButton";
 import { readQuestionApi } from "@/src/api/ReadArticle";
