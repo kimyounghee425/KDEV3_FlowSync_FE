@@ -2,7 +2,14 @@
 
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createListCollection, Heading, Stack, Table } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  createListCollection,
+  Heading,
+  Stack,
+  Table,
+} from "@chakra-ui/react";
 import StatusTag from "@/src/components/common/StatusTag";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
@@ -69,12 +76,17 @@ function AdminOrganizationsPageContent() {
   } = useFetchBoardList<
     OrganizationListResponse,
     [string, string, string, number, number],
-    "organizations"
+    "dtoList"
   >({
     fetchApi: fetchOrganizationListApi,
-    keySelector: "organizations",
+    keySelector: "dtoList",
     params: [keyword, type, status, currentPage, pageSize],
   });
+
+  // 신규등록 버튼 클릭 시 - 업체 등록 페이지로 이동
+  const handleMemberCreateButton = () => {
+    router.push("/admin/organizations/create");
+  };
 
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
   const handlePageChange = (page: number) => {
@@ -86,7 +98,7 @@ function AdminOrganizationsPageContent() {
   };
 
   const handleRowClick = (id: string) => {
-    router.push(`/admins/organizations/${id}`);
+    router.push(`/admin/organizations/${id}`);
   };
 
   return (
@@ -95,18 +107,27 @@ function AdminOrganizationsPageContent() {
         <Heading size="2xl" color="gray.600">
           업체 관리
         </Heading>
-        <SearchSection keyword={keyword} placeholder="업체명 입력">
-          <FilterSelectBox
-            statusFramework={organizationTypeFramework}
-            selectedValue={type}
-            queryKey="type"
-          />
-          <FilterSelectBox
-            statusFramework={OrganizationStatusFramework}
-            selectedValue={status}
-            queryKey="status"
-          />
-        </SearchSection>
+        <Box display="flex" justifyContent="space-between">
+          <SearchSection keyword={keyword} placeholder="업체명 입력">
+            <FilterSelectBox
+              statusFramework={organizationTypeFramework}
+              selectedValue={type}
+              queryKey="type"
+            />
+            <FilterSelectBox
+              statusFramework={OrganizationStatusFramework}
+              selectedValue={status}
+              queryKey="status"
+            />
+          </SearchSection>
+          <Button
+            variant={"surface"}
+            _hover={{ backgroundColor: "#00a8ff", color: "white" }}
+            onClick={handleMemberCreateButton}
+          >
+            신규 등록
+          </Button>
+        </Box>
         <CommonTable
           headerTitle={
             <Table.Row
@@ -132,7 +153,7 @@ function AdminOrganizationsPageContent() {
               </Table.Cell>
               <Table.Cell>{organization.name}</Table.Cell>
               <Table.Cell>{organization.brNumber}</Table.Cell>
-              <Table.Cell>{organization.phone_number}</Table.Cell>
+              <Table.Cell>{organization.phoneNumber}</Table.Cell>
               <Table.Cell>{`${organization.streetAddress} ${organization.detailAddress}`}</Table.Cell>
               <Table.Cell>
                 <StatusTag>

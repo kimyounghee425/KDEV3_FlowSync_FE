@@ -1,7 +1,9 @@
+import TaskReadPage from "@/src/components/pages/TaskReadPage";
 
-export default function ProjectTaskPage() {
-    return <div></div>
+export default function Page() {
+  return <TaskReadPage />;
 }
+
 // "use client";
 
 // // 외부 라이브러리

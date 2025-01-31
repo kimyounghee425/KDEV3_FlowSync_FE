@@ -10,6 +10,7 @@ interface ArticleContentProps {
 }
 
 export default function ArticleContent({ article }: ArticleContentProps) {
+
   if (!article) {
     return (
       <Box>
@@ -18,16 +19,12 @@ export default function ArticleContent({ article }: ArticleContentProps) {
     );
   }
 
-  // 임시용
-  const fakeRenderContent = (content: string) => {
-    return (
-      <Text mb={4} whiteSpace="pre-line">
-        {content}
-      </Text>
-    );
-  };
+  const parsedContent = typeof article.content === "string"
+  ? JSON.parse(article.content)
+  : article.content;
 
-  // 이게 진짜임
+  // console.log(parsedContent[0])
+
   const renderContent = (content: ContentBlock[]) => {
     return content.map((block, index) => {
       // paragraph 데이터
@@ -80,6 +77,7 @@ export default function ArticleContent({ article }: ArticleContentProps) {
 
   // 첨부파일 렌더링
   const renderFiles = (files: ArticleFile[]) => {
+
     return files.map((file, index) => {
       const fileName = file.originalName;
       return (
@@ -124,7 +122,7 @@ export default function ArticleContent({ article }: ArticleContentProps) {
       </Box>
 
       {/* 본문 내용 */}
-      <Box mb={4}>{fakeRenderContent(article.content)}</Box>
+      <Box mb={4}>{renderContent(parsedContent)}</Box>
       <br />
       <br />
       {/* 첨부 링크 */}

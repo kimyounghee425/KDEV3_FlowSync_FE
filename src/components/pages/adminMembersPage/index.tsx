@@ -2,7 +2,14 @@
 
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createListCollection, Heading, Stack, Table } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  createListCollection,
+  Heading,
+  Stack,
+  Table,
+} from "@chakra-ui/react";
 import StatusTag from "@/src/components/common/StatusTag";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
@@ -56,7 +63,6 @@ export default function AdminMembersPage() {
 function AdminMembersPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const keyword = searchParams?.get("keyword") || "";
   const role = searchParams?.get("role") || "";
   const status = searchParams?.get("status") || "";
@@ -77,6 +83,11 @@ function AdminMembersPageContent() {
     params: [keyword, role, status, currentPage, pageSize],
   });
 
+  // 신규등록 버튼 클릭 시 - 회원 등록 페이지로 이동
+  const handleMemberCreateButton = () => {
+    router.push("/admin/members/create");
+  };
+
   // 페이지 변경 시 새로운 데이터를 가져오는 함수
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(window.location.search);
@@ -87,7 +98,7 @@ function AdminMembersPageContent() {
   };
 
   const handleRowClick = (id: string) => {
-    router.push(`/admins/members/${id}`);
+    router.push(`/admin/members/${id}`);
   };
 
   return (
@@ -96,18 +107,27 @@ function AdminMembersPageContent() {
         <Heading size="2xl" color="gray.600">
           회원 관리
         </Heading>
-        <SearchSection keyword={keyword} placeholder="회원명 입력">
-          <FilterSelectBox
-            statusFramework={memberRoleFramework}
-            selectedValue={role}
-            queryKey="role"
-          />
-          <FilterSelectBox
-            statusFramework={memberStatusFramework}
-            selectedValue={status}
-            queryKey="status"
-          />
-        </SearchSection>
+        <Box display="flex" justifyContent="space-between">
+          <SearchSection keyword={keyword} placeholder="회원명 입력">
+            <FilterSelectBox
+              statusFramework={memberRoleFramework}
+              selectedValue={role}
+              queryKey="role"
+            />
+            <FilterSelectBox
+              statusFramework={memberStatusFramework}
+              selectedValue={status}
+              queryKey="status"
+            />
+          </SearchSection>
+          <Button
+            variant={"surface"}
+            _hover={{ backgroundColor: "#00a8ff", color: "white" }}
+            onClick={handleMemberCreateButton}
+          >
+            신규 등록
+          </Button>
+        </Box>
         <CommonTable
           headerTitle={
             <Table.Row

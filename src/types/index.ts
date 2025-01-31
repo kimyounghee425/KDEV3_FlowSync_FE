@@ -38,9 +38,36 @@ export interface MemberProps {
   remark: string; // 비고
 }
 
+// `createMember` 함수에서 입력값의 타입 정의
+export interface CreateMemberInput {
+  role: string;
+  organizationId: number;
+  name: string;
+  email: string;
+  password: string;
+  phoneNum: string;
+  jobRole: string;
+  jobTitle: string;
+  introduction: string;
+  remark: string;
+}
+
+// 반환값의 타입 정의
+export interface CreateMemberResponse {
+  success: boolean;
+  member: MemberProps;
+}
+
 export interface MemberListResponse {
   members: MemberProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
+}
+
+// 🔹 회원 삭제 응답 타입 정의
+export interface DeleteMemberResponse {
+  code: number; // HTTP 상태 코드
+  result: "SUCCESS" | "FAIL"; // 결과 상태
+  message: string; // 응답 메시지
 }
 
 export interface LoginFormData {
@@ -54,13 +81,13 @@ export interface OrganizationProps {
   id: string;
   type: string;
   status: string;
-  brNumber: string | null;
+  brNumber: string;
   name: string;
   reg_at: string;
-  brCertificateUrl: string | null;
-  streetAddress: string | null;
-  detailAddress: string | null;
-  phone_number: string | null;
+  brCertificateUrl: string;
+  streetAddress: string;
+  detailAddress: string;
+  phoneNumber: string;
   remark: string | null;
 }
 
@@ -69,11 +96,9 @@ export interface CreateOrganizationInput {
   type: string;
   brNumber: string;
   name: string;
-  brCertificateUrl: string;
   streetAddress: string;
   detailAddress: string;
   phoneNumber: string;
-  typeEnum: string;
 }
 
 // 반환값의 타입 정의
@@ -83,8 +108,22 @@ export interface CreateOrganizationResponse {
 }
 
 export interface OrganizationListResponse {
-  organizations: OrganizationProps[];
+  dtoList: OrganizationProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
+}
+
+// 🔹 업체 삭제 응답 타입 정의 (탈퇴 사유 포함 X)
+export interface DeleteOriginationResponse {
+  code: number; // HTTP 상태 코드
+  result: "SUCCESS" | "FAIL"; // 결과 상태
+  message: string; // 응답 메시지
+}
+
+// 🔹 업체 삭제 응답 타입 정의 (탈퇴 사유 포함 ver.)
+export interface DeleteOriginationWithReasonResponse {
+  code: number; // HTTP 상태 코드
+  result: "SUCCESS" | "FAIL"; // 결과 상태
+  message: string; // 응답 메시지
 }
 
 export interface ProjectInfoProps {
@@ -179,18 +218,16 @@ export interface ApiResponse {
 }
 // 게시글의 콘텐츠 블럭
 export interface ContentBlock {
-  type: "paragraph" | "image";
+  type: string;
   data: string | { src: string };
 }
-
-
 
 // 게시글
 export interface Article {
   id: number;
   number: number;
   title: string;
-  content: string;
+  content: ContentBlock[];
   // content: ContentBlock[]; // ContentBlock 인터페이스 사용
   regAt: string;
   editAt: string;
@@ -234,7 +271,6 @@ export interface ArticleComment {
   replies: ArticleReply[];
 }
 
-
 // 댓글의 답글
 export interface ArticleReply {
   id: number;
@@ -243,19 +279,20 @@ export interface ArticleReply {
   regAt: string;
   editAt: string;
   parentId: number;
-  deletedYn: "Y" | "N";
+  deletedYn: string;
 }
 
 // 회원/업체 생성 페이지 입력 폼 인터페이스
 export interface InputFormData {
   label: string;
   id: string;
-  type: "text" | "email" | "password" | "number" | "tel" | "url"; // 가능한 타입만 명시;
-  placeholder: string;
+  type: "text" | "email" | "password" | "number" | "tel" | "url" | "file"; // 가능한 타입만 명시;
+  placeholder?: string;
   value?: string;
   error?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 // 공지사항
@@ -265,7 +302,7 @@ export interface NoticeProps {
   title: string; // 계약 단계
   content: string; // 시작일시
   category: string; // 시작일시
-  priority: string; // 
+  priority: string; //
   isDeleted: boolean; // 마감일시
   regAt: string; // 고객사 이름
   updatedAt: string; // 개발사 이름

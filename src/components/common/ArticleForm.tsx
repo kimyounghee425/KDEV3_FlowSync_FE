@@ -9,20 +9,22 @@ import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
-
-import { createQuestionApi, uploadFileApi } from "@/src/api/RegisterArticle";
-import { link } from "fs";
+import { usePathname } from "next/navigation";
+import {
+  createQuestionApi,
+  createTaskApi,
+  uploadFileApi,
+} from "@/src/api/RegisterArticle";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const progressData = [
-  { id: 1, title: "전체" },
-  { id: 2, title: "요구사항정의" },
-  { id: 3, title: "화면설계" },
-  { id: 4, title: "디자인" },
-  { id: 5, title: "퍼블리싱" },
-  { id: 6, title: "개발" },
-  { id: 7, title: "검수" },
+  { id: 1, title: "요구사항정의" },
+  { id: 2, title: "화면설계" },
+  { id: 3, title: "디자인" },
+  { id: 4, title: "퍼블리싱" },
+  { id: 5, title: "개발" },
+  { id: 6, title: "검수" },
 ];
 interface UploadedFilesProps {
   originalName: string;
@@ -32,17 +34,20 @@ interface UploadedFilesProps {
 }
 
 interface linkListProps {
-  name : string;
+  name: string;
   url: string;
 }
 
-export default function TaskForm() {
+export default function ArticleForm() {
   const { projectId } = useParams();
-  const [progressStepId, setProgressStepId] = useState<number>(0);
+  const [progressStepId, setProgressStepId] = useState<number>(1);
   const [title, setTitle] = useState<string>("");
   const editorRef = useRef<EditorJS | null>(null);
   const [linkList, setLinkList] = useState<linkListProps[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
+  const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
+
+  const pathname = usePathname(); // 현재 경로 가져옴
 
   const uploadFile = async (file: File): Promise<string> => {
     try {
@@ -70,11 +75,20 @@ export default function TaskForm() {
               types: "image/*",
               uploader: {
                 async uploadByFile(file: File) {
-                  const url = await uploadFile(file);
-                  return {
-                    success: 1,
-                    file: { url },
-                  };
+                  try {
+                    const responseData = await uploadFileApi(file);
+                    if (responseData.result !== "SUCCESS") {
+                      console.error("파일 업로드 실패");
+                      return { success: 0 };
+                    }
+                    return {
+                      success: 1,
+                      file: { url: responseData.data.url },
+                    };
+                  } catch (error) {
+                    console.error("파일 업로드 중 오류 발생:", error);
+                    return { success: 0 };
+                  }
                 },
               },
             },
@@ -96,16 +110,15 @@ export default function TaskForm() {
         const savedData = await editorRef.current.save();
 
         if (!title.trim()) {
-          window.alert("제목을 입력하세요.")
+          window.alert("제목을 입력하세요.");
           return;
         }
 
-        
         const content = savedData.blocks.map((block) => {
           if (block.type === "paragraph") {
             return {
-              type: "paragrpah",
-              text: block.data.text,
+              type: "paragraph",
+              data: block.data.text,
             };
           } else if (block.type === "image") {
             return {
@@ -116,21 +129,32 @@ export default function TaskForm() {
           return "";
         });
         if (content.length === 0) {
-          window.alert("내용을 입력하세요.")
+          window.alert("내용을 입력하세요.");
           return;
         }
 
         const requestData = {
           title: title,
-          content: "게시글 본문 입니다.", // TODO 이거 백엔드 수정해야 함. 1/28
+          content: content, // TODO 이거 백엔드 수정해야 함. 1/28
           linkList: linkList,
           fileInfoList: uploadedFiles,
           progressStepId: progressStepId,
         };
 
-        const response = await createQuestionApi(Number(projectId), requestData)
-        console.log("요청데이터", requestData);
-        console.log("저장성공", response.data);
+        if (pathname.includes("/questions/new")) {
+          const response = await createQuestionApi(
+            Number(projectId),
+            requestData,
+          );
+          console.log("저장성공", response.data);
+        } else if (pathname.includes("/tasks/new")) {
+          const response = await createTaskApi(Number(projectId), requestData);
+          console.log("저장성공", response.data);
+        } else {
+          alert("잘못된 경로입니다.");
+          return;
+        }
+
         alert("저장이 완료되었습니다.");
       } catch (error) {
         console.error("저장 실패:", error);
@@ -139,7 +163,7 @@ export default function TaskForm() {
     }
   };
 
-  console.log(linkList)
+  console.log(linkList);
 
   return (
     // 제목 입력
@@ -148,7 +172,7 @@ export default function TaskForm() {
         <ProgressStepAddSection
           progressStepId={progressStepId}
           setProgressStepId={setProgressStepId}
-          progressData = {progressData}
+          progressData={progressData}
         />
         <Box flex={2}>
           <Text mb={2}>제목</Text>
@@ -176,6 +200,8 @@ export default function TaskForm() {
       <FileAddSection
         uploadedFiles={uploadedFiles}
         setUploadedFiles={setUploadedFiles}
+        uploadedFileSize={uploadedFileSize}
+        setUploadedFileSize={setUploadedFileSize}
       />
 
       {/* 작성 버튼 */}
