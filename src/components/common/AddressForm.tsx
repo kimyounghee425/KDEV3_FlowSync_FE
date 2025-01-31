@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./InputForm.module.css"; // ★ InputForm과 동일한 CSS 모듈
 import AddressAPI from "@/src/components/common/AddressAPI";
-
+import { Input } from "@chakra-ui/react";
 interface AddressFormProps {
   id: string;              // Input의 id
   label: string;
@@ -48,7 +48,7 @@ export default function AddressForm({
       </label>
 
       {/* 인풋 */}
-      <input
+      <Input
         id={id}
         className={`
           ${styles.input} 
@@ -56,6 +56,7 @@ export default function AddressForm({
           ${disabled ? styles.disabled : ""} 
           ${isChanged ? styles.changed : ""}
         `}
+
         type="text"
         placeholder={placeholder}
         value={value}
