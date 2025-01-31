@@ -1,5 +1,6 @@
-export default function EditPage() {
-  return <div></div>
+import QuestionEditPage from "@/src/components/pages/questionEditPage";
+export default function Page() {
+  return <QuestionEditPage />;
 }
 
 // "use client";
