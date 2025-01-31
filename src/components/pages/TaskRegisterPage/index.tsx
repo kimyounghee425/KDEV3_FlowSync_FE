@@ -1,27 +1,28 @@
-// 프로젝트 생성 페이지
+// 결재 글 생성 페이지
 
 "use client";
+// 목데이터 사용
 
 import { Box } from "@chakra-ui/react";
-
 import BackButton from "@/src/components/common/BackButton";
-import ProjectForm from "@/src/components/pages/ProjectRegisterPage/components/ProjectForm";
+import ArticleForm from "@/src/components/common/ArticleForm";
+import "./edit.css";
 
-export default function ProjectRegisterPage() {
+export default function TaskRegisterPage() {
   return (
     <Box
-      maxW="1400px"
-      w="100%"
+      maxW="1000px"
+      w={"100%"}
       mx="auto"
       mt={10}
       p={6}
-      borderWidth="1"
+      borderWidth={1}
       borderRadius="lg"
       boxShadow="md"
     >
       <BackButton />
 
-      <ProjectForm />
+      <ArticleForm />
     </Box>
   );
 }

@@ -2,7 +2,7 @@
 "use client";
 
 // 외부 라이브러리
-import { Box, VStack } from "@chakra-ui/react";
+import { Box, VStack, Flex } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -12,10 +12,10 @@ import ArticleContent from "@/src/components/common/ArticleContent";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/BackButton";
 import { readQuestionApi } from "@/src/api/ReadArticle";
+import SignToApprove from "@/src/components/pages/TaskReadPage/components/SignToApprove";
+import { Article } from "@/src/types";
 
-import { Article, ArticleComment } from "@/src/types";
-
-export default function QuestionReadPage() {
+export default function TaskReadPage() {
   const { projectId, questionId } = useParams() as {
     projectId: string;
     questionId: string;
@@ -24,17 +24,15 @@ export default function QuestionReadPage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [commentList, setCommentList] = useState<ArticleComment[]>([]);
 
   useEffect(() => {
     const loadTask = async () => {
       try {
-        const responseData = await readQuestionApi(
+        const data = await readQuestionApi(
           Number(projectId),
           Number(questionId),
         );
-        setArticle(responseData);
-        setCommentList(responseData.commentList ?? []);
+        setArticle(data);
       } catch (err) {
         setError(
           err instanceof Error
@@ -70,11 +68,17 @@ export default function QuestionReadPage() {
       <BackButton />
 
       {/* 게시글 내용 */}
+
       <ArticleContent article={article} />
+
+      {/* 결재 사인 섹션 */}
+      <Flex justifyContent={"center"}>
+        <SignToApprove />
+      </Flex>
 
       {/* 댓글 섹션 */}
       <VStack align="stretch" gap={8} mt={10}>
-        {/* <ArticleComments comments={commentList} /> */}
+        {/* <ArticleComments comments={article?.commentList || []} /> */}
         <CommentBox />
       </VStack>
     </Box>

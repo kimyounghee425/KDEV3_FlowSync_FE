@@ -199,7 +199,7 @@ export interface ApiResponse {
 }
 // 게시글의 콘텐츠 블럭
 export interface ContentBlock {
-  type: "paragraph" | "image";
+  type: string;
   data: string | { src: string };
 }
 
@@ -208,7 +208,7 @@ export interface Article {
   id: number;
   number: number;
   title: string;
-  content: string;
+  content: ContentBlock[];
   // content: ContentBlock[]; // ContentBlock 인터페이스 사용
   regAt: string;
   editAt: string;
@@ -260,7 +260,7 @@ export interface ArticleReply {
   regAt: string;
   editAt: string;
   parentId: number;
-  deletedYn: "Y" | "N";
+  deletedYn: string;
 }
 
 // 회원/업체 생성 페이지 입력 폼 인터페이스
