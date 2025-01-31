@@ -3,14 +3,14 @@
 import {
   ReactNode,
   useState,
-  useEffect,
   useContext,
   createContext,
+  useEffect,
 } from "react";
 
 interface SidebarContextProps {
-  projectStatus: string;
-  setProjectStatus: (value: string) => void;
+  selectedProjectFilter: string;
+  setSelectedProjectFilter: (value: string) => void;
 }
 
 const SidebarContext = createContext<SidebarContextProps | undefined>(
@@ -18,21 +18,29 @@ const SidebarContext = createContext<SidebarContextProps | undefined>(
 );
 
 export function SidebarProvider({ children }: { children: ReactNode }) {
-  const [projectStatus, setProjectStatus] = useState<string>("진행중 프로젝트");
+  const [selectedProjectFilter, setSelectedProjectFilter] =
+    useState<string>("진행중 프로젝트");
 
   useEffect(() => {
-    const savedStatus = localStorage.getItem("projectStatus");
-    setProjectStatus(savedStatus as string);
+    const savedFilter = localStorage.getItem("selectedProjectFilter");
+    if (savedFilter) {
+      setSelectedProjectFilter(savedFilter);
+    }
   }, []);
 
-  useEffect(() => {
-    // 상태 변경 시 LocalStorage에 저장
-    // TODO 다른 방법 찾아보기
-    localStorage.setItem("projectStatus", projectStatus);
-  }, [projectStatus]);
+  // 🔹 상태 변경 시 localStorage 업데이트
+  const handleFilterChange = (filter: string) => {
+    setSelectedProjectFilter(filter);
+    localStorage.setItem("selectedProjectFilter", filter);
+  };
 
   return (
-    <SidebarContext.Provider value={{ projectStatus, setProjectStatus }}>
+    <SidebarContext.Provider
+      value={{
+        selectedProjectFilter,
+        setSelectedProjectFilter: handleFilterChange,
+      }}
+    >
       {children}
     </SidebarContext.Provider>
   );

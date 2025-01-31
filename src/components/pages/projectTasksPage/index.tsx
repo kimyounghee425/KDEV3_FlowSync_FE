@@ -69,10 +69,10 @@ export default function ProjectTasksPage() {
   } = useFetchBoardList<
     ProjectTaskListResponse,
     [string, string, string, string, number, number],
-    "projectTasks"
+    "projectApprovals"
   >({
     fetchApi: fetchProjectTaskListApi,
-    keySelector: "projectTasks",
+    keySelector: "projectApprovals",
     params: [
       resolvedProjectId,
       keyword,

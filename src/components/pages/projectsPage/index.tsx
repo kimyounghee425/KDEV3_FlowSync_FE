@@ -21,7 +21,7 @@ const projectStatusFramework = createListCollection<{
   items: [
     { label: "전체", value: "" },
     { label: "계약", value: "CONTRACT" },
-    { label: "진행중", value: "INPROGRESS" },
+    { label: "진행중", value: "IN_PROGRESS" },
     { label: "납품완료", value: "COMPLETED" },
     { label: "하자보수", value: "MAINTENANCE" },
     { label: "일시중단", value: "PAUSED" },
@@ -31,7 +31,7 @@ const projectStatusFramework = createListCollection<{
 
 const STATUS_LABELS: Record<string, string> = {
   CONTRACT: "계약",
-  INPROGRESS: "진행중",
+  IN_PROGRESS: "진행중",
   COMPLETED: "납품완료",
   MAINTENANCE: "하자보수",
   PAUSED: "일시중단",

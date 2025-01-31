@@ -1,49 +1,70 @@
-import { Box, CardBody, CardRoot, CardTitle } from "@chakra-ui/react";
-import Data from "@/src/data/projects_mock_data.json";
+import { Box, CardBody, CardRoot, CardTitle, Spinner } from "@chakra-ui/react";
 import Link from "next/link";
 import { useSidebar } from "@/src/context/SidebarContext";
+import { useProjectInfiniteScroll } from "@/src/hook/useProjectInfiniteScroll";
 
 interface SidebarTabProps {
   memberRole: "admin" | "member";
 }
 
-// admin 메뉴 항목
-const adminMenuItems = [
+// 관리자 메뉴 항목
+const ADMIN_MENU_ITEMS = [
   { value: "/", title: "홈 대시보드" },
   { value: "/admin/members", title: "회원 관리" },
   { value: "/admin/organizations", title: "업체 관리" },
 ];
 
 export default function SidebarTab({ memberRole }: SidebarTabProps) {
-  const { projectStatus } = useSidebar();
+  const { selectedProjectFilter } = useSidebar();
 
-  // 일반 user 메뉴 항목 (프로젝트 진행 상태에 따른 데이터 필터링 -> 각각 최대 5개)
-  const userMenuItems = Data.data
-    .filter((item) =>
-      projectStatus === "완료 프로젝트"
-        ? item.projectStatus === "납품완료"
-        : item.projectStatus === "진행중",
-    )
-    .slice(0, 5);
+  const status =
+    selectedProjectFilter === "완료 프로젝트" ? "COMPLETED" : "IN_PROGRESS";
 
-  // 조건에 따라 메뉴 항목 생성
-  const menuItems =
-    memberRole === "admin"
-      ? adminMenuItems.map((item) => (
-          <CardTitle key={item.value} width="100%" mb="2" p="2">
-            <Link href={`${item.value}`}>{item.title}</Link>
-          </CardTitle>
-        ))
-      : userMenuItems.map((item) => (
-          <CardTitle key={item.id} mb="2" p="1">
-            <Link href={`/projects/${item.id}/tasks`}>{item.projectName}</Link>
-          </CardTitle>
-        ));
+  const { projectList, loading, hasMore, observerRef } =
+    useProjectInfiniteScroll(status, 2);
+
+  // 관리자 메뉴 렌더링
+  if (memberRole === "admin") {
+    return (
+      <Box bg="gray.200">
+        <CardRoot>
+          <CardBody>
+            {ADMIN_MENU_ITEMS.map((item) => (
+              <Link key={item.value} href={item.value} passHref>
+                <CardTitle width="100%" mb="2" p="2">
+                  {item.title}
+                </CardTitle>
+              </Link>
+            ))}
+          </CardBody>
+        </CardRoot>
+      </Box>
+    );
+  }
 
   return (
-    <Box bg="gray.200">
+    <Box bg="gray.200" height="calc(100vh - 60px)">
       <CardRoot>
-        <CardBody>{menuItems}</CardBody>
+        {/* ✅ 스크롤이 `SidebarTab` 내에서만 이루어지도록 설정 */}
+        <CardBody overflowY="auto" maxHeight="400px">
+          {projectList.map((project) => (
+            <Link
+              key={project.id}
+              href={`/projects/${project.id}/tasks`}
+              passHref
+            >
+              <CardTitle mb="2" p="1">
+                {project.name}
+              </CardTitle>
+            </Link>
+          ))}
+
+          {/* ✅ 로딩 상태 표시 */}
+          {loading && <Spinner size="sm" mx="auto" my="4" />}
+
+          {/* ✅ 마지막 요소 감지 (무한 스크롤) */}
+          {hasMore && <div ref={observerRef} style={{ height: "10px" }} />}
+        </CardBody>
       </CardRoot>
     </Box>
   );
