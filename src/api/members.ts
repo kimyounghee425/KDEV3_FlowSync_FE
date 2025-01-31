@@ -8,7 +8,7 @@ import {
   MemberProps,
 } from "@/src/types";
 
-// 🔹 회원 목록 Fetch API
+// 📌 회원 목록 Fetch API
 export async function fetchMemberList(
   keyword: string = "", // 검색키워드
   role: string = "", // 계정타입
@@ -23,7 +23,15 @@ export async function fetchMemberList(
   return response.data;
 }
 
-// 🔹 회원 생성 API (파일 업로드 X)
+// 📌 회원 상세 정보 가져오기
+export async function fetchMemberDetails(
+  memberId: string,
+): Promise<MemberProps> {
+  const response = await axiosInstance.get(`/admins/members/${memberId}`);
+  return response.data.data; // ✅ `data` 필드만 반환하도록 수정
+}
+
+// 📌 회원 생성 API (파일 업로드 X)
 export async function createMember(
   role: string,
   organizationId: string,
@@ -48,12 +56,10 @@ export async function createMember(
     introduction,
     remark,
   });
-  console.log("회원 등록 API 호출 응답 - response: ", response);
-  console.log("회원 등록 API 호출 응답 - response.data: ", response.data);
   return response.data; // 생성된 데이터 반환
 }
 
-// 🔹 회원 생성 API (파일 업로드 O)
+// 📌 회원 생성 API (파일 업로드 O)
 export async function createMemberWithFile(
   data: CreateMemberInput,
   file: any,
@@ -68,8 +74,6 @@ export async function createMemberWithFile(
   // file이 존재할 경우에만 추가
   formData.append("file", file);
 
-  console.log("회원 등록 API 호출 전 - formData 생성: ", formData);
-
   // FormData 전송
   const response = await axiosInstance.post("/admins/members", formData, {
     headers: {
@@ -77,42 +81,23 @@ export async function createMemberWithFile(
     },
   });
 
-  console.log("회원 등록 API 호출 응답 - response: ", response);
-  console.log("회원 등록 API 호출 응답 - response.data: ", response.data);
   return response.data; // 생성된 데이터 반환
 }
 
-// 🔹 회원 상세 정보 가져오기
-export async function fetchMemberDetails(
-  memberId: string,
-): Promise<MemberProps> {
-  console.log("회원 상세정보 가져오기 API 호출 전");
-  const response = await axiosInstance.get(`/admins/members/${memberId}`);
-  console.log("회원 상세정보 가져오기 API 호출 후 - response: ", response);
-  console.log(
-    "회원 상세정보 가져오기 API 호출 후 - response.data: ",
-    response.data,
-  );
-  return response.data.data; // ✅ `data` 필드만 반환하도록 수정
-}
-
-// 🔹 회원 정보 수정 (PATCH 요청)
+// 📌  회원 정보 수정 (PATCH 요청)
 export async function updateMember(
   memberId: string,
   updateData: Partial<MemberProps>,
 ) {
-  console.log("회원 정보 수정 API 호출 전");
   const response = await axiosInstance.patch(
     `/admins/members/${memberId}`,
     updateData,
   );
-  console.log("회원 정보 수정 API 호출 후 - response: ", response);
-  console.log("회원 정보 수정 API 호출 후 - response.data: ", response.data);
 
   return response.data;
 }
 
-// 🔹 회원 삭제 (탈퇴 사유 포함)
+// 📌 회원 삭제 (탈퇴 사유 포함)
 export async function deleteMember(
   memberId: string,
   reason: string,
@@ -122,13 +107,8 @@ export async function deleteMember(
       `/admins/members/delete/${memberId}`,
       { reason }, // 🔹 요청 바디에 탈퇴 사유 추가
     );
-
-    console.log("회원 탈퇴 API 호출 후 - response: ", response);
-    console.log("회원 탈퇴 API 호출 후 - response.data: ", response.data);
-
     return response.data; // ✅ 응답 데이터 반환
   } catch (error) {
-    console.error("회원 탈퇴 API 호출 중 오류 발생:", error);
     throw error; // 🚨 에러 발생 시 throw
   }
 }
