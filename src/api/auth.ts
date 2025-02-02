@@ -1,5 +1,5 @@
 import axiosInstance from "@/src/api/axiosInstance";
-import { CommonResponseType, UserInfoResponse } from "@/src/types";
+import { CommonResponseType, ReissueResponse, UserInfoResponse } from "@/src/types";
 
 // 사용자 권한 API 호출
 export async function fetchUserInfo(accessToken?: string): Promise<CommonResponseType<UserInfoResponse>> {
@@ -16,7 +16,7 @@ export async function fetchUserInfo(accessToken?: string): Promise<CommonRespons
 }
 
 // 🔹 Refresh Token을 포함하여 토큰 재발급 요청
-export async function fetchReissueToken(refreshToken?: string) {
+export async function fetchReissueToken(refreshToken?: string): Promise<CommonResponseType<ReissueResponse>> {
   const response = await axiosInstance.get("/reissue", {
     headers: {
       "Content-Type": "application/json",

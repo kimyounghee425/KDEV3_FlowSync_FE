@@ -11,6 +11,11 @@ export interface CommonResponseWithMetaType<T> extends CommonResponseType<T> {
   data: T & { meta: PaginationProps }; // data 내부에 meta 포함
 }
 
+export interface ReissueResponse {
+  access: string,
+  refresh: string
+}
+
 // 서버에서 반환되는 페이징 메타데이터 타입
 export interface PaginationProps {
   currentPage: number; // 현재 페이지 번호
@@ -317,7 +322,7 @@ export interface NoticeProps {
 }
 
 export interface NoticeListResponse {
-  notices: NoticeProps[];
+  content: NoticeProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
