@@ -24,6 +24,11 @@ const noticeStatusFramework = createListCollection<{
   ],
 });
 
+const EMERGENCY_STYLE = {
+  backgroundColor: "gray.200", // 🔹 기존 red.100 → 자연스러운 회색 계열
+  fontWeight: "bold",
+};
+
 export default function NoticesPage() {
   return (
     <Suspense>
@@ -48,10 +53,10 @@ function NoticesPageContent() {
   } = useFetchBoardList<
     NoticeListResponse,
     [string, string, number, number],
-    "notices"
+    "content"
   >({
     fetchApi: fetchNoticeListApi,
-    keySelector: "notices",
+    keySelector: "content",
     params: [keyword, status, currentPage, pageSize],
   });
 
@@ -73,7 +78,7 @@ function NoticesPageContent() {
         공지사항
       </Heading>
       {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
-      <SearchSection keyword={keyword} placeholder="프로젝트명 입력">
+      <SearchSection keyword={keyword} placeholder="제목 입력">
         <FilterSelectBox
           statusFramework={noticeStatusFramework}
           selectedValue={status}
@@ -95,13 +100,22 @@ function NoticesPageContent() {
         }
         data={noticeList}
         loading={noticeLoading}
-        renderRow={(notice) => (
-          <>
-            <Table.Cell>{notice.category}</Table.Cell>
-            <Table.Cell>{notice.title}</Table.Cell>
-            <Table.Cell>{notice.regAt}</Table.Cell>
-          </>
-        )}
+        renderRow={(notice) => {
+          const isEmergency = notice.priority === "EMERGENCY";
+          return (
+            <>
+              <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
+                {notice.category}
+              </Table.Cell>
+              <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
+                {notice.title}
+              </Table.Cell>
+              <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
+                {notice.regAt}
+              </Table.Cell>
+            </>
+          );
+        }}
         handleRowClick={handleRowClick}
       />
       <Pagination
