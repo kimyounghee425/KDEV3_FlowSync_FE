@@ -4,7 +4,7 @@
 // 목데이터 사용
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
@@ -23,14 +23,20 @@ const progressData = [
 
 export default function TaskRegisterPage() {
   const { projectId } = useParams();
+  const router = useRouter();
   const [title, setTitle] = useState<string>("");
   const [progressStepId, setProgressStepId] = useState<number>(1);
 
-  const handleSave = async (requestData: TaskRequestData) => {
+  const handleSave = async <T extends TaskRequestData>(requestData: T) => {
     try {
-      const response = await createTaskApi(Number(projectId), requestData);
-      console.log("저장 성공", response.data);
+      const response = await createTaskApi(Number(projectId), {
+        ...requestData,
+        ...(requestData.progressStepId !== undefined
+          ? { progressStepId: requestData.progressStepId }
+          : {}),
+      });
       alert("저장이 완료되었습니다.");
+      router.push(`/projects/${projectId}/tasks`);
     } catch (error) {
       console.error("저장 실패:", error);
       alert("저장 중 문제가 발생했습니다.");
@@ -50,12 +56,7 @@ export default function TaskRegisterPage() {
     >
       <BackButton />
 
-      <ArticleForm
-        title={title}
-        setTitle={setTitle}
-        progressStepId={progressStepId}
-        handleSave={handleSave}
-      >
+      <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
         <ProgressStepAddSection
           progressStepId={progressStepId}
           setProgressStepId={setProgressStepId}

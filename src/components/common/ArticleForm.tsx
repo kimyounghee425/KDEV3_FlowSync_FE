@@ -8,7 +8,7 @@ import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
-import { QuestionRequestData } from "@/src/types";
+import { BaseArticleRequestData } from "@/src/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -24,21 +24,19 @@ interface LinkListProps {
   url: string;
 }
 
-interface ArticleFormProps {
+interface ArticleFormProps<T extends BaseArticleRequestData> {
   title: string;
   setTitle: (value: string) => void;
-  progressStepId: number;
-  handleSave: (data: QuestionRequestData) => void;
+  handleSave: (data: T) => void;
   children?: React.ReactNode;
 }
 
 export default function ArticleForm({
   title,
   setTitle,
-  progressStepId,
   handleSave,
   children,
-}: ArticleFormProps) {
+}: ArticleFormProps<BaseArticleRequestData>) {
   const editorRef = useRef<EditorJS | null>(null);
   const [linkList, setLinkList] = useState<LinkListProps[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
@@ -107,15 +105,12 @@ export default function ArticleForm({
           return;
         }
 
-        const requestData: QuestionRequestData = {
+        handleSave({
           title: title,
           content: content, // TODO 이거 백엔드 수정해야 함. 1/28
           linkList: linkList,
           fileInfoList: uploadedFiles,
-          progressStepId: progressStepId,
-        };
-
-        handleSave(requestData);
+        });
 
         alert("저장이 완료되었습니다.");
       } catch (error) {
