@@ -26,8 +26,8 @@ const taskStatusFramework = createListCollection<{
   items: [
     { id: "1", label: "전체", value: "" },
     { id: "2", label: "대기", value: "WAIT" },
-    { id: "3", label: "반려", value: "SUSPENSION" },
-    { id: "4", label: "승인", value: "COMPLETED" },
+    { id: "3", label: "반려", value: "REJECTED" },
+    { id: "4", label: "승인", value: "APPROVED" },
   ],
 });
 

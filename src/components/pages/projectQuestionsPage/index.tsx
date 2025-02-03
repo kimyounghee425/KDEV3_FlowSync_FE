@@ -1,7 +1,13 @@
 "use client";
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { Box, createListCollection, Table } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  createListCollection,
+  Flex,
+  Table,
+} from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import StatusTag from "@/src/components/common/StatusTag";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
@@ -97,6 +103,11 @@ export default function ProjectQuestionsPage() {
     router.push(`/projects/${projectId}/questions/${taskId}`);
   };
 
+  // 신규등록 버튼 클릭 시 - 회원 등록 페이지로 이동
+  const handleProjectQuestionCreateButton = () => {
+    router.push(`/projects/${projectId}/questions/new`);
+  };
+
   return (
     <ProjectLayout>
       {/* 프로젝트 단계 섹션 */}
@@ -114,14 +125,23 @@ export default function ProjectQuestionsPage() {
         boxShadow="md"
         mb="30px"
       >
-        {/* 검색 섹션 */}
-        <SearchSection keyword={keyword} placeholder="제목 입력">
-          <FilterSelectBox
-            statusFramework={questionStatusFramework}
-            selectedValue={status}
-            queryKey="status"
-          />
-        </SearchSection>
+        <Flex justifyContent={"space-between"}>
+          <Button
+            variant={"surface"}
+            _hover={{ backgroundColor: "#00a8ff", color: "white" }}
+            onClick={handleProjectQuestionCreateButton}
+          >
+            신규 등록
+          </Button>
+          {/* 검색 섹션 */}
+          <SearchSection keyword={keyword} placeholder="제목 입력">
+            <FilterSelectBox
+              statusFramework={questionStatusFramework}
+              selectedValue={status}
+              queryKey="status"
+            />
+          </SearchSection>
+        </Flex>
         {/* 
           CommonTable: 게시글 목록을 렌더링하는 공통 테이블 컴포넌트
           - headerTitle: 테이블 헤더
