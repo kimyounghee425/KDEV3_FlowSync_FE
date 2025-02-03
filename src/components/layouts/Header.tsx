@@ -1,108 +1,53 @@
-"use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { Heading, Flex } from "@chakra-ui/react";
-import Profile, { ProfileProps } from "@/src/components/layouts/Profile";
+import { Box, Flex, Image, Spacer } from "@chakra-ui/react";
+import Profile from "@/src/components/layouts/Profile";
 
 export default function Header() {
-  const [user, setUser] = useState<ProfileProps | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  // 사용자 Role 정보 가져오기 (관리자 계정 여부 체크)
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const userData = localStorage.getItem("user");
-        if (!userData) throw new Error("User 정보가 로컬스토리지에 없습니다.");
-
-        const userObject = JSON.parse(userData);
-        if (
-          typeof userObject.id === "number" &&
-          typeof userObject.name === "string" &&
-          typeof userObject.org_name === "string" &&
-          typeof userObject.job_role === "string" &&
-          typeof userObject.profile_image_url === "string"
-        ) {
-          setUser({
-            id: userObject.id,
-            userName: userObject.name,
-            orgName: userObject.org_name,
-            jobRole: userObject.job_role,
-            profile_image_url: userObject.profile_image_url,
-          });
-        } else {
-          throw new Error("User 데이터 형식이 올바르지 않습니다.");
-        }
-      } catch (err: any) {
-        setError(err.message || "An unknown error occurred");
-      }
-    };
-
-    getUserData();
-  }, []);
-
   return (
     <Flex
       as="nav"
       align="center"
       justify="space-between"
-      wrap="wrap"
+      wrap="nowrap" // 콘텐츠 줄바꿈 방지
       padding="1rem"
-      backgroundColor="gray.200"
+      backgroundColor="white"
       boxShadow="md"
+      position="relative"
+      zIndex="10"
+      height="70px" // 헤더 고정 높이
     >
-      <Flex align="center" mr={5} gap={10}>
-        <Link href="/">
-          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-            BN SYSTEM
-          </Heading>
-        </Link>
+      {/* 로고와 메뉴를 묶음 */}
+      <Flex align="center" gap="24">
+        {/* 로고 */}
+        <Box>
+          <Link href="/">
+            <Image
+              src="https://bn-system.com/img/LOGO_SVG.svg"
+              alt="BN SYSTEM"
+              height={{ base: "40px", md: "50px" }} // 반응형 크기 조정
+              objectFit="contain"
+            />
+          </Link>
+        </Box>
 
-        <Link href="/notices">
-          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-            공지사항
-          </Heading>
-        </Link>
-
-        <Link href="/login">
-          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-            로그인
-          </Heading>
-        </Link>
-
-        <Link href="/admin/members">
-          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-            회원관리
-          </Heading>
-        </Link>
-
-        <Link href="/admin/organizations">
-          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-            업체관리
-          </Heading>
-        </Link>
-
-        <Link href="/projects/1/tasks/new">
-          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-            게시글작성
-          </Heading>
-        </Link>
-
-        <Link href="/projects/1/tasks/1/edit">
-          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-            게시글수정
-          </Heading>
-        </Link>
+        {/* 메뉴 */}
+        <Flex as="ul" listStyleType="none" align="center">
+          <li>
+            <Link href="/notices" style={{ fontSize: "1.1rem" }}>
+              공지사항
+            </Link>
+          </li>
+        </Flex>
       </Flex>
-      {/* Avatar */}
-      {user && (
-        <Profile
-          id={user.id}
-          userName={user.userName}
-          orgName={user.orgName}
-          jobRole={user.jobRole}
-          profile_image_url={user.profile_image_url}
-        />
-      )}{" "}
+
+      {/* Spacer를 사용해 프로필을 오른쪽으로 배치 */}
+      <Spacer />
+
+      {/* 프로필 */}
+      <Box>
+        <Profile />
+      </Box>
     </Flex>
   );
 }
