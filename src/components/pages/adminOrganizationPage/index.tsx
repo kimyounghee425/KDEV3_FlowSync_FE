@@ -22,7 +22,7 @@ export default function AdminOrganizationPage() {
   // URL 에 업체 아이디가 없는 경우, 404 페이지 이동
   useEffect(() => {
     if (!organizationId) {
-      router.replace("/404");
+      // router.replace("/404");
     }
   }, [organizationId, router]);
 
@@ -45,7 +45,7 @@ export default function AdminOrganizationPage() {
         setOrganizationData(response);
       } catch (error) {
         console.error("업체 데이터 조회 실패:", error);
-        router.replace("/404");
+        // router.replace("/404");
       }
     };
     getOrganization();
