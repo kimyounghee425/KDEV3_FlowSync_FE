@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 
 // 절대 경로 파일
 import ArticleContent from "@/src/components/common/ArticleContent";
-// import ArticleComments from "@/src/components/common/ArticleComments";
+import ArticleComments from "@/src/components/common/ArticleComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/BackButton";
 import { readQuestionApi } from "@/src/api/ReadArticle";
@@ -25,6 +25,8 @@ export default function QuestionReadPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [commentList, setCommentList] = useState<ArticleComment[]>([]);
+
+  const [commentIsWritten, setCommentIsWritten] = useState<boolean>(false);
 
   useEffect(() => {
     const loadTask = async () => {
@@ -46,7 +48,7 @@ export default function QuestionReadPage() {
       }
     };
     loadTask();
-  }, [projectId, questionId]);
+  }, [projectId, questionId, commentIsWritten]);
 
   if (error) {
     return <Box>에러 발생: {error}</Box>;
@@ -74,8 +76,8 @@ export default function QuestionReadPage() {
 
       {/* 댓글 섹션 */}
       <VStack align="stretch" gap={8} mt={10}>
-        {/* <ArticleComments comments={commentList} /> */}
-        <CommentBox />
+        <ArticleComments comments={commentList} setCommentIsWritten={setCommentIsWritten} />
+        <CommentBox setCommentIsWritten={setCommentIsWritten} />
       </VStack>
     </Box>
   );
