@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddressAPI from "@/src/components/common/AddressAPI";
 import { InputFormData } from "@/src/types";
 import styles from "@/src/components/common/InputForm.module.css";
@@ -14,18 +14,12 @@ export default function InputForm({
   value = "",
   error = "",
   onChange,
-  // onChange = () => {}, // onChange가 undefined 일 경우에도 기본값이 빈 함수이기 때문에 에러 발생하지 않음
   disabled = false, // 기본값 false 추가
+  isChanged, // 부모 컴포넌트에서 전달받음
 }: InputFormData) {
   const [originalValue, setOriginalValue] = useState(value); // 초기값 저장
-  const [isChanged, setIsChanged] = useState(false); // 변경 여부 상태 관리
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
-
-  useEffect(() => {
-    // 수정 시 기존 데이터에서 변경된 사항이 있는 경우
-    setIsChanged(value !== originalValue);
-  }, [value, originalValue]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (onChange) {
@@ -39,6 +33,24 @@ export default function InputForm({
       setSelectedFile(file);
       if (onChange) onChange(e); // 기존 onChange 핸들러 호출
     }
+  }
+
+  function getDisplayFileName(fileValue: string | File) {
+    if (typeof fileValue === "string" && fileValue.includes("|")) {
+      const [fileName] = fileValue.split("|");
+      return fileName.replace(/^[0-9_]+/, ""); // 숫자 및 언더스코어 제거
+    }
+    if (fileValue instanceof File) {
+      return fileValue.name;
+    }
+    return "파일을 선택하세요";
+  }
+
+  function getFileUrl(fileValue: string | File) {
+    if (typeof fileValue === "string" && fileValue.includes("|")) {
+      return fileValue.split("|")[1]; // URL만 반환
+    }
+    return null;
   }
 
   function handleAddressChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -66,7 +78,7 @@ export default function InputForm({
 
   return (
     <div className={styles.inputFieldContainer}>
-      <label htmlFor={id} className={styles.label}>
+      <label className={styles.label}>
         {label}
         {!disabled && <span className={styles.required}>*</span>}
       </label>
@@ -97,7 +109,6 @@ export default function InputForm({
       ) : // 일반 입력 필드 vs 파일 업로드 필드
       type === "file" ? (
         <div className={styles.fileUploadContainer}>
-          {/* ✅ 파일 첨부 버튼 */}
           <input
             type="file"
             id={id}
@@ -107,11 +118,16 @@ export default function InputForm({
           <label htmlFor={id} className={styles.fileUploadButton}>
             파일 첨부
           </label>
-          {selectedFile && (
-            <span className={styles.selectedFileName}>
-              ✔ {selectedFile.name}
-            </span>
-          )}
+          {selectedFile || value ? (
+            <a
+              href={getFileUrl(value) || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.selectedFileName}
+            >
+              ✔ {selectedFile?.name || getDisplayFileName(value)}
+            </a>
+          ) : null}
         </div>
       ) : (
         <input
@@ -127,7 +143,7 @@ export default function InputForm({
         />
       )}
       {/* 에러 메시지 표시 (에러 메시지가 없는 경우에도 레이아웃 유지 위해 높이를 고정) */}
-      <span className={styles.errorText}>{error || " "}</span>{" "}
+      <span className={styles.errorText}>{error || " "}</span>
     </div>
   );
 }

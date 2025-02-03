@@ -16,13 +16,6 @@ import {
 } from "@/src/components/ui/dialog"; // Chakra UI Dialog
 import { Button, Input, Text } from "@chakra-ui/react";
 import styles from "@/src/components/layouts/InputFormLayout.module.css";
-import FileAddSection from "@/src/components/common/FileAddSection";
-interface UploadedFilesProps {
-  originalName: string;
-  saveName: string;
-  url: string;
-  size: number;
-}
 
 export default function InputFormLayout({
   title,
@@ -31,6 +24,7 @@ export default function InputFormLayout({
   isLoading,
   onDelete, // 삭제 핸들러 추가
   deleteEntityType, // 삭제할 대상 (회원, 업체, 프로젝트 등)
+  isDisabled, // 수정 버튼 비활성화 여부
 }: {
   title: string; // 페이지 제목
   children: ReactNode; // 폼 내부 요소
@@ -38,6 +32,7 @@ export default function InputFormLayout({
   isLoading: boolean; // 제출 버튼 로딩 상태
   onDelete?: (reason: string) => void; // 삭제 핸들러 (탈퇴 사유 전달)
   deleteEntityType?: "회원" | "업체" | "프로젝트"; // 삭제 대상 지정
+  isDisabled?: boolean;
 }) {
   const [deleteReason, setDeleteReason] = useState<string>(""); // 삭제 사유 입력 상태
   const urlPathName = usePathname();
@@ -70,7 +65,7 @@ export default function InputFormLayout({
                   className={`${styles.submitButton} ${
                     isLoading ? styles.loading : ""
                   }`}
-                  disabled={isLoading}
+                  disabled={isLoading || isDisabled}
                   aria-busy={isLoading}
                 >
                   {isLoading ? "처리 중..." : "수정하기"}

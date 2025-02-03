@@ -47,17 +47,18 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
       <CardRoot>
         {/* ✅ 스크롤이 `SidebarTab` 내에서만 이루어지도록 설정 */}
         <CardBody overflowY="auto" maxHeight="400px">
-          {projectList.map((project) => (
-            <Link
-              key={project.id}
-              href={`/projects/${project.id}/tasks`}
-              passHref
-            >
-              <CardTitle mb="2" p="1">
-                {project.name}
-              </CardTitle>
-            </Link>
-          ))}
+          {projectList &&
+            projectList.map((project) => (
+              <Link
+                key={project.id}
+                href={`/projects/${project.id}/tasks`}
+                passHref
+              >
+                <CardTitle mb="2" p="1">
+                  {project.name}
+                </CardTitle>
+              </Link>
+            ))}
 
           {/* ✅ 로딩 상태 표시 */}
           {loading && <Spinner size="sm" mx="auto" my="4" />}

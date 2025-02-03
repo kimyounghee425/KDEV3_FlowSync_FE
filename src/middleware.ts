@@ -22,10 +22,13 @@ function shouldBypassMiddleware(pathname: string): boolean {
 function handleUnauthorized(request: NextRequest) {
   console.log("🔹 Unauthorized Access → Redirecting to login");
   const res = NextResponse.redirect(new URL("/login", request.url));
-  res.headers.set("Set-Cookie", [
-    "access=; Path=/; HttpOnly; Secure; SameSite=none; Max-Age=0",
-    "refresh=; Path=/; HttpOnly; Secure; SameSite=none; Max-Age=0"
-  ].join(", "));
+  res.headers.set(
+    "Set-Cookie",
+    [
+      "access=; Path=/; HttpOnly; Secure; SameSite=none; Max-Age=0",
+      "refresh=; Path=/; HttpOnly; Secure; SameSite=none; Max-Age=0",
+    ].join(", "),
+  );
   return res;
 }
 
@@ -53,7 +56,11 @@ async function validateAndRefreshTokens(
 
     console.log("🔹 Reissue Response:", reissueResponse);
 
-    if (reissueResponse.result === "SUCCESS" && reissueResponse.data?.access && reissueResponse.data?.refresh) {
+    if (
+      reissueResponse.result === "SUCCESS" &&
+      reissueResponse.data?.access &&
+      reissueResponse.data?.refresh
+    ) {
       console.log("✅ 새 Access Token 발급 성공 → 다시 요청 진행");
 
       // 클라이언트의 쿠키를 업데이트
@@ -78,7 +85,7 @@ async function validateAndRefreshTokens(
       userInfoResponse = await fetchUserInfo(reissueResponse.data.access);
 
       if (userInfoResponse.result === "SUCCESS") {
-        console.log(userInfoResponse)
+        console.log(userInfoResponse);
         return { userInfo: userInfoResponse.data, response };
       }
     }
@@ -88,29 +95,30 @@ async function validateAndRefreshTokens(
 }
 
 export async function middleware(request: NextRequest) {
-  // 요청 경로
-  const pathname = request.nextUrl.pathname;
+  return NextResponse.next();
+  // // 요청 경로
+  // const pathname = request.nextUrl.pathname;
 
-  // 정적 리소스 및 /login 페이지는 미들웨어 실행 제외
-  if (shouldBypassMiddleware(pathname)) {
-    return NextResponse.next();
-  }
+  // // 정적 리소스 및 /login 페이지는 미들웨어 실행 제외
+  // if (shouldBypassMiddleware(pathname)) {
+  //   return NextResponse.next();
+  // }
 
-  const { userInfo, response } = await validateAndRefreshTokens(request);
+  // const { userInfo, response } = await validateAndRefreshTokens(request);
 
-  if (!userInfo) {
-    return handleUnauthorized(request);
-  }
+  // if (!userInfo) {
+  //   return handleUnauthorized(request);
+  // }
 
-  // 관리자 권한 없으면 홈으로 이동
-  if (pathname.startsWith("/admin") && userInfo.role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
+  // // 관리자 권한 없으면 홈으로 이동
+  // if (pathname.startsWith("/admin") && userInfo.role !== "ADMIN") {
+  //   return NextResponse.redirect(new URL("/", request.url));
+  // }
 
-  // `x-user-role` 헤더 추가하여 서버 컴포넌트에서 사용 가능하도록 설정
-  response?.headers.set("x-user-id", userInfo.id);
-  response?.headers.set("x-user-role", userInfo.role);
-  return response;
+  // // `x-user-role` 헤더 추가하여 서버 컴포넌트에서 사용 가능하도록 설정
+  // response?.headers.set("x-user-id", userInfo.id);
+  // response?.headers.set("x-user-role", userInfo.role);
+  // return response;
 }
 
 export const config = {
