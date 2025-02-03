@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Box, Text, Button, Flex, Input } from "@chakra-ui/react";
 interface LinkProps {
-  url: string;
   name: string;
+  url: string;
 }
 
 interface LinkAddSectionProps {
@@ -63,7 +63,7 @@ export default function LinkAddSection({
           onChange={(e) => setNewLinkName(e.target.value)}
         />
         <Button colorScheme={"blue"} onClick={handleAddLink}>
-            추가
+          추가
         </Button>
       </Flex>
     </Box>

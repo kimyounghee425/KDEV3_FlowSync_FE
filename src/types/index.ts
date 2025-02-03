@@ -309,7 +309,7 @@ export interface NoticeProps {
 }
 
 export interface NoticeListResponse {
-  content: NoticeProps[];
+  notices: NoticeProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
@@ -332,4 +332,20 @@ export interface UserInfoResponse {
   regAt: string;
   introduction: string;
   remark: string;
+}
+
+export interface QuestionRequestData {
+  title: string;
+  content: { type: string; data: string | { src: string } }[];
+  linkList: { name: string; url: string }[];
+  fileInfoList: { originalName: string; saveName: string; url: string; size: number }[];
+  progressStepId: number;
+}
+
+export interface TaskRequestData {
+  title: string;
+  content: { type: string; data: string | { src: string } }[];
+  linkList: { name: string; url: string }[];
+  fileInfoList: { originalName: string; saveName: string; url: string; size: number }[];
+  progressStepId: number;
 }

@@ -103,7 +103,7 @@ export default function ProjectQuestionsPage() {
     router.push(`/projects/${projectId}/questions/${taskId}`);
   };
 
-  // 신규등록 버튼 클릭 시 - 회원 등록 페이지로 이동
+  // 신규등록 버튼 클릭 시 - 질문글 등록 페이지로 이동
   const handleProjectQuestionCreateButton = () => {
     router.push(`/projects/${projectId}/questions/new`);
   };

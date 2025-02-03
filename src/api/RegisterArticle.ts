@@ -1,12 +1,12 @@
 import axiosInstance from "@/src/api/axiosInstance";
+import { QuestionRequestData, TaskRequestData } from "@/src/types";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function uploadFileApi(file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await axiosInstance.post(`${BASE_URL}/file`, formData, {
+  const response = await axiosInstance.post("/file", formData, {
     headers: {
       "Content-type": "multipart/form-data",
     },
@@ -14,17 +14,17 @@ export async function uploadFileApi(file: File) {
   return response.data;
 }
 
-export async function createQuestionApi(projectId: number, requestData: any) {
+export async function createQuestionApi(projectId: number, requestData: QuestionRequestData) {
   const response = await axiosInstance.post(
-    `${BASE_URL}/projects/${projectId}/questions`,
+    `/projects/${projectId}/questions`,
     requestData,
   );
   return response.data;
 }
 
-export async function createTaskApi(projectId: number, requestData: any) {
+export async function createTaskApi(projectId: number, requestData: TaskRequestData) {
   const response = await axiosInstance.post(
-    `${BASE_URL}/projects/${projectId}/approvals`,
+    `/projects/${projectId}/approvals`,
     requestData,
   );
   return response.data;

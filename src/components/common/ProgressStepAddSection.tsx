@@ -3,7 +3,7 @@ import { Box, Text } from "@chakra-ui/react";
 
 interface ProgressStepAddsectionProps {
   progressStepId: number;
-  setProgressStepId: React.Dispatch<React.SetStateAction<number>>;
+  setProgressStepId: (newStep: number) => void;
   progressData: { id: number; title: string }[];
 }
 
