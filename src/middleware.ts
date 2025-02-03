@@ -22,8 +22,10 @@ function shouldBypassMiddleware(pathname: string): boolean {
 function handleUnauthorized(request: NextRequest) {
   console.log("🔹 Unauthorized Access → Redirecting to login");
   const res = NextResponse.redirect(new URL("/login", request.url));
-  res.cookies.delete("access");
-  res.cookies.delete("refresh");
+  res.headers.set("Set-Cookie", [
+    "access=; Path=/; HttpOnly; Secure; SameSite=none; Max-Age=0",
+    "refresh=; Path=/; HttpOnly; Secure; SameSite=none; Max-Age=0"
+  ].join(", "));
   return res;
 }
 
@@ -32,15 +34,16 @@ function handleUnauthorized(request: NextRequest) {
  */
 async function validateAndRefreshTokens(
   request: NextRequest,
-  accessToken: string | undefined,
-  refreshToken: string | undefined
-): Promise<{ userInfo?: UserInfoResponse; accessToken?: string }> {
+): Promise<{ userInfo?: UserInfoResponse; response?: NextResponse }> {
   let userInfoResponse;
+  const accessToken = request.cookies.get("access")?.value;
+  const refreshToken = request.cookies.get("refresh")?.value;
+  const response = NextResponse.next();
 
   if (accessToken) {
     userInfoResponse = await fetchUserInfo(accessToken);
     if (userInfoResponse.result === "SUCCESS") {
-      return { userInfo: userInfoResponse.data, accessToken };
+      return { userInfo: userInfoResponse.data, response };
     }
   }
 
@@ -48,13 +51,35 @@ async function validateAndRefreshTokens(
     console.log("🔄 Access Token 만료됨 → Refresh Token 사용");
     const reissueResponse = await fetchReissueToken(refreshToken);
 
-    if (reissueResponse.result === "SUCCESS") {
+    console.log("🔹 Reissue Response:", reissueResponse);
+
+    if (reissueResponse.result === "SUCCESS" && reissueResponse.data?.access && reissueResponse.data?.refresh) {
       console.log("✅ 새 Access Token 발급 성공 → 다시 요청 진행");
-      const newAccessToken = request.cookies.get("access")?.value;
-      userInfoResponse = await fetchUserInfo(newAccessToken);
+
+      // 클라이언트의 쿠키를 업데이트
+      response.cookies.set("access", reissueResponse.data.access, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        domain: "flowssync.com",
+        maxAge: 86400,
+      });
+
+      response.cookies.set("refresh", reissueResponse.data.refresh, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        domain: "flowssync.com",
+        maxAge: 86400,
+      });
+
+      userInfoResponse = await fetchUserInfo(reissueResponse.data.access);
 
       if (userInfoResponse.result === "SUCCESS") {
-        return { userInfo: userInfoResponse.data, accessToken: newAccessToken };
+        console.log(userInfoResponse)
+        return { userInfo: userInfoResponse.data, response };
       }
     }
   }
@@ -71,10 +96,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const accessToken = request.cookies.get("access")?.value;
-  const refreshToken = request.cookies.get("refresh")?.value;
-
-  const { userInfo } = await validateAndRefreshTokens(request, accessToken, refreshToken)
+  const { userInfo, response } = await validateAndRefreshTokens(request);
 
   if (!userInfo) {
     return handleUnauthorized(request);
@@ -86,10 +108,9 @@ export async function middleware(request: NextRequest) {
   }
 
   // `x-user-role` 헤더 추가하여 서버 컴포넌트에서 사용 가능하도록 설정
-  const res = NextResponse.next();
-  res.headers.set("x-user-id", userInfo.id);
-  res.headers.set("x-user-role", userInfo.role);
-  return res;
+  response?.headers.set("x-user-id", userInfo.id);
+  response?.headers.set("x-user-role", userInfo.role);
+  return response;
 }
 
 export const config = {

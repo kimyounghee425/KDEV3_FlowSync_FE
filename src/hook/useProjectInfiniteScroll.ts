@@ -30,6 +30,11 @@ export function useProjectInfiniteScroll(status: string, prefetchPages = 2) {
       const response = await fetchProjectList("", status, page, 8);
       const newProjects = response.data.projects;
 
+      if (!newProjects || newProjects.length === 0) {
+        setHasMore(false); // 패칭 결과가 없으면 더 이상 요청하지 않음
+        return;
+      }
+
       setProjectList((prev) => {
         const existingIds = new Set(prev.map((item) => item.id));
         const uniqueNewProjects = newProjects.filter(
@@ -38,9 +43,10 @@ export function useProjectInfiniteScroll(status: string, prefetchPages = 2) {
         return [...prev, ...uniqueNewProjects];
       });
 
-      setHasMore(newProjects.length > 0);
+      setCurrentPage((prev) => prev + 1); // 성공 시에만 페이지 증가
     } catch (error) {
       console.error("Error fetching more projects:", error);
+      setHasMore(false); // 패칭 실패 시 더 이상 요청하지 않음
     } finally {
       setLoading(false);
     }
@@ -77,6 +83,11 @@ export function useProjectInfiniteScroll(status: string, prefetchPages = 2) {
           (res) => res.data.projects
         );
 
+        if (allProjects.length === 0) {
+          setHasMore(false); // 첫 로딩에도 데이터가 없으면 더 이상 요청하지 않음
+          return;
+        }
+
         setProjectList((prev) => {
           const existingIds = new Set(prev.map((item) => item.id));
           const uniqueProjects = allProjects.filter(
@@ -85,9 +96,10 @@ export function useProjectInfiniteScroll(status: string, prefetchPages = 2) {
           return [...prev, ...uniqueProjects];
         });
 
-        setHasMore(allProjects.length > 0);
+        setCurrentPage(prefetchPages + 1);
       } catch (error) {
         console.error("Error prefetching projects:", error);
+        setHasMore(false); // 패칭 실패 시 무한 요청 방지
       } finally {
         setLoading(false);
       }
@@ -97,14 +109,13 @@ export function useProjectInfiniteScroll(status: string, prefetchPages = 2) {
   }, [status]);
 
   /**
-   * 📌 Intersection Observer를 활용한 무한 스크롤 감지
+   *  Intersection Observer를 활용한 무한 스크롤 감지
    */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !loading) {
           fetchMoreProjects(currentPage);
-          setCurrentPage((prevPage) => prevPage + 1);
         }
       },
       { threshold: 0.6 }
