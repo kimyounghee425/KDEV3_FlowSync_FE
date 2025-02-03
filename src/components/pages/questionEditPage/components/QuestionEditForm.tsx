@@ -4,9 +4,8 @@ import React, { useEffect, useState, useRef } from "react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import { useParams } from "next/navigation";
-import { Box, Input, Text, Flex, Button, Progress } from "@chakra-ui/react";
+import { Box, Input, Text, Flex } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
-import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 import { readQuestionApi } from "@/src/api/ReadArticle";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
@@ -49,9 +48,6 @@ export default function QuestionEditForm() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
 
-
-  
-
   useEffect(() => {
     const loadTask = async () => {
       try {
@@ -59,14 +55,15 @@ export default function QuestionEditForm() {
           Number(projectId),
           Number(questionId),
         );
-        console.log(responseData)
+        console.log(responseData);
         setTitle(responseData.title);
         setLinkList(responseData.linkList);
         setUploadedFiles(responseData.fileList);
 
-        const parsedContent = typeof responseData.content === "string"
-        ? JSON.parse(responseData.content)
-        : responseData.content;
+        const parsedContent =
+          typeof responseData.content === "string"
+            ? JSON.parse(responseData.content)
+            : responseData.content;
 
         if (!editorRef.current) {
           editorRef.current = new EditorJS({

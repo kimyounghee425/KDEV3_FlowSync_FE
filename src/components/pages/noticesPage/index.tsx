@@ -1,15 +1,25 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Box, createListCollection, Heading, Table } from "@chakra-ui/react";
+import {
+  Box,
+  createListCollection,
+  Flex,
+  Heading,
+  Table,
+} from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import { fetchNoticeList as fetchNoticeListApi } from "@/src/api/notices";
-import { NoticeListResponse } from "@/src/types";
+import { NoticeListResponse, UserInfoResponse } from "@/src/types";
 import { useFetchBoardList } from "@/src/hook/useFetchBoardList";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import Pagination from "@/src/components/common/Pagination";
-import { Suspense } from "react";
+import { formatDateWithTime } from "@/src/utils/formatDateUtil";
+import { fetchUserInfo as fetchUserInfoApi } from "@/src/api/auth";
+import { useFetchData } from "@/src/hook/useFetchData";
+import CreateButton from "@/src/components/common/CreateButton";
 
 const noticeStatusFramework = createListCollection<{
   label: string;
@@ -46,6 +56,13 @@ function NoticesPageContent() {
   const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
   const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
 
+  const { data: userInfoData } = useFetchData<UserInfoResponse, []>({
+    fetchApi: fetchUserInfoApi,
+    params: [],
+  });
+
+  const userRole = userInfoData?.role;
+
   const {
     data: noticeList,
     paginationInfo,
@@ -53,10 +70,10 @@ function NoticesPageContent() {
   } = useFetchBoardList<
     NoticeListResponse,
     [string, string, number, number],
-    "content"
+    "notices"
   >({
     fetchApi: fetchNoticeListApi,
-    keySelector: "content",
+    keySelector: "notices",
     params: [keyword, status, currentPage, pageSize],
   });
 
@@ -68,8 +85,13 @@ function NoticesPageContent() {
     router.push(`?${params.toString()}`);
   };
 
-  const handleRowClick = (id: string) => {
-    router.push(`/notices/${id}`);
+  const handleRowClick = (noticeId: string) => {
+    router.push(`/notices/${noticeId}`);
+  };
+
+  // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
+  const handleNoticeCreateButton = () => {
+    router.push(`/notices/new`);
   };
 
   return (
@@ -77,14 +99,32 @@ function NoticesPageContent() {
       <Heading size="2xl" color="gray.700" mb="10px">
         공지사항
       </Heading>
-      {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
-      <SearchSection keyword={keyword} placeholder="제목 입력">
-        <FilterSelectBox
-          statusFramework={noticeStatusFramework}
-          selectedValue={status}
-          queryKey="status"
-        />
-      </SearchSection>
+
+      {userRole === "ADMIN" ? (
+        <Flex justifyContent="space-between">
+          <CreateButton handleButton={handleNoticeCreateButton} />
+          {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
+          <SearchSection keyword={keyword} placeholder="제목 입력">
+            <FilterSelectBox
+              statusFramework={noticeStatusFramework}
+              selectedValue={status}
+              queryKey="status"
+            />
+          </SearchSection>
+        </Flex>
+      ) : (
+        <Flex justifyContent="end">
+          {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
+          <SearchSection keyword={keyword} placeholder="제목 입력">
+            <FilterSelectBox
+              statusFramework={noticeStatusFramework}
+              selectedValue={status}
+              queryKey="status"
+            />
+          </SearchSection>
+        </Flex>
+      )}
+
       <CommonTable
         headerTitle={
           <Table.Row
@@ -96,6 +136,14 @@ function NoticesPageContent() {
             <Table.ColumnHeader>카테고리</Table.ColumnHeader>
             <Table.ColumnHeader>제목</Table.ColumnHeader>
             <Table.ColumnHeader>등록일</Table.ColumnHeader>
+            {userRole === "ADMIN" ? (
+              <>
+                <Table.ColumnHeader>수정일</Table.ColumnHeader>
+                <Table.ColumnHeader>삭제여부</Table.ColumnHeader>
+              </>
+            ) : (
+              <></>
+            )}
           </Table.Row>
         }
         data={noticeList}
@@ -111,8 +159,20 @@ function NoticesPageContent() {
                 {notice.title}
               </Table.Cell>
               <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
-                {notice.regAt}
+                {formatDateWithTime(notice.regAt)}
               </Table.Cell>
+              {userRole === "ADMIN" ? (
+                <>
+                  <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
+                    {formatDateWithTime(notice.updatedAt)}
+                  </Table.Cell>
+                  <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
+                    {notice.isDeleted === true ? "Y" : "N"}
+                  </Table.Cell>
+                </>
+              ) : (
+                <></>
+              )}
             </>
           );
         }}

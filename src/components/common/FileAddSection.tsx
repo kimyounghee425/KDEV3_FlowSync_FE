@@ -98,7 +98,8 @@ export default function FileAddSection({
           {uploadedFiles.map((file, index) => (
             <Box key={index} display={"flex"} alignItems={"center"} mt={4}>
               <Text>
-                파일 이름: {file.originalName}, 파일 크기 : {formatFileSize(file.size)} byte
+                파일 이름: {file.originalName}, 파일 크기 :{" "}
+                {formatFileSize(file.size)} byte
               </Text>
               <Button onClick={() => handleRemoveFile(index)}>삭제</Button>
             </Box>
