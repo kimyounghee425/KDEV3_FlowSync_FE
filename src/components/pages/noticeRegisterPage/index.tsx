@@ -8,6 +8,7 @@ import { NoticeRequestData } from "@/src/types";
 import { createNoticeApi } from "@/src/api/notices";
 import SelectInput from "@/src/components/common/FormSelectInput";
 import dynamic from "next/dynamic";
+import "./edit.css"
 
 const categoryData = [
   { id: 1, title: "서비스업데이트", value: "SERVICE_UPDATE" },

@@ -11,6 +11,7 @@ import ArticleForm from "@/src/components/common/ArticleForm";
 import { createTaskApi } from "@/src/api/RegisterArticle";
 import { TaskRequestData } from "@/src/types";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
+import "./edit.css"
 
 const progressData = [
   { id: "1", title: "요구사항정의", value: "" },
