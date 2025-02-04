@@ -20,7 +20,7 @@ export default function CommentItem({
   replies = [],
   setCommentIsWritten,
 }: CommentProps) {
-  console.log(comment.regAt)
+  // console.log(comment.regAt)
   const { projectId, questionId } = useParams() as {
     projectId: string;
     questionId: string;

@@ -243,6 +243,24 @@ export interface ContentBlock {
 }
 
 // 게시글
+
+export interface Article {
+  id: number;
+  number: number;
+  title: string;
+  content: ContentBlock[];
+  regAt: string;
+  editAt: string;
+  approverAt: string;
+  category: string;
+  status: string;
+  deletedYn: string;
+  author: string;
+  fileList: ArticleFile[];
+  linkList: ArticleLink[];
+  commentList: ArticleComment[];
+}
+
 export interface QuestionArticle {
   id: number;
   number: number;

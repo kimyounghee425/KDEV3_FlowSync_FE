@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import { useParams } from "next/navigation";
-import { Box, Input, Text, Flex } from "@chakra-ui/react";
+import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 import { readQuestionApi } from "@/src/api/ReadArticle";

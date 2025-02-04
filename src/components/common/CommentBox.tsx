@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { CommentApiResponse } from "@/src/types";
 
-
 interface CommentBoxProps {
   parentId?: number;
   setIsReplying?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,7 +16,6 @@ export default function CommentBox({
   setIsReplying,
   setCommentIsWritten,
 }: CommentBoxProps) {
-
   const { projectId, questionId, taskId } = useParams() as {
     projectId: string;
     questionId?: string;
@@ -28,15 +26,12 @@ export default function CommentBox({
   const pathname = usePathname();
 
   const handleSave = async () => {
-    // console.log("questionId:", questionId);
     // console.log(projectId, questionId)
     // console.log(projectId, taskId)
-    // console.log(typeof questionId)
     try {
       const requestData = { content: commentText };
       let responseData: CommentApiResponse | undefined;
-      // console.log(Number(questionId)) // 1번
-      
+
       if (pathname.includes("/questions")) {
         responseData = await registerComment(
           Number(projectId),
@@ -45,7 +40,6 @@ export default function CommentBox({
           undefined,
           parentId ? Number(parentId) : undefined,
         );
-        console.log(typeof questionId) // 2번
       } else if (pathname.includes("/tasks")) {
         responseData = await registerComment(
           Number(projectId),
@@ -55,7 +49,6 @@ export default function CommentBox({
           parentId ? Number(parentId) : undefined,
         );
       }
-
       if (responseData?.result === "SUCCESS") {
         console.log(responseData.result);
         setCommentIsWritten((prev: boolean) => !prev);

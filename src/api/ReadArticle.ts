@@ -27,7 +27,9 @@ export async function readTaskApi(
     const response = await axiosInstance.get<TaskApiResponse>(
       `${BASE_URL}/projects/${projectId}/approvals/${approvalId}`
     )
-    console.log(response.data)
+
+    // console.log(response.data)
+
     return response.data.data
   } catch (error) {
     console.log("Api 호출 실패", error)

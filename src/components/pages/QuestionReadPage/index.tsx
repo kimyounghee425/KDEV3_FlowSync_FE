@@ -30,11 +30,13 @@ export default function QuestionReadPage() {
 
   useEffect(() => {
     const loadTask = async () => {
+
       try {
         const responseData = await readQuestionApi(
           Number(projectId),
           Number(questionId),
         );
+        
         setArticle(responseData);
         setCommentList(responseData.commentList ?? []);
       } catch (err) {
