@@ -364,6 +364,7 @@ export interface InputFormData {
   onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
   isChanged?: boolean;
+  maxLength?: number;
 }
 
 // 공지사항

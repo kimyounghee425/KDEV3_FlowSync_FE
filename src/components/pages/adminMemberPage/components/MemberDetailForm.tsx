@@ -37,14 +37,26 @@ export default function MemberDetailForm({
       setIsFetching(false);
     }
   }
-
+  
   // 📌 입력값 변경 처리 및 유효성 검사 실행
   function handleChange(field: keyof MemberProps, value: string) {
-    // field: MemberProps의 key, value: string
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    let formattedValue = value;
+
+  if (field === "phoneNum") {
+    const onlyNumbers = value.replace(/[^0-9]/g, "").slice(0, 11);
+    formattedValue = onlyNumbers;
+
+    if (onlyNumbers.length > 3 && onlyNumbers.length <= 7) {
+      formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3)}`;
+    } else if (onlyNumbers.length > 7) {
+      formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3, 7)}-${onlyNumbers.slice(7, 11)}`;
+    }
+  }
+
+  setFormData((prev) => ({
+    ...prev,
+    [field]: formattedValue,
+  }));
 
     // 유효성 검사 규칙이 있는 필드만 검사
     if (field in validationRulesOfUpdatingMember) {
@@ -119,6 +131,10 @@ export default function MemberDetailForm({
     }
   }
 
+  console.log(formData.phoneNum)
+
+
+
   return (
     <>
       <InputFormLayout
@@ -159,6 +175,7 @@ export default function MemberDetailForm({
           label="연락처"
           value={formData.phoneNum}
           onChange={(e) => handleChange("phoneNum", e.target.value)}
+          maxLength={13}
           error={errors.phoneNum ?? undefined}
         />
         <InputForm

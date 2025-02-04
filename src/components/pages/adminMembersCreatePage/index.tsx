@@ -47,7 +47,29 @@ export default function AdminMembersCreatePage() {
     }
     fetchOrganization();
   }, []);
-  
+
+  function handleChange(inputName: string, value: string) {
+    console.log("맞음");
+    if (inputName === "phoneNum") {
+      const onlyNumbers = value
+        .toString()
+        .replace(/[^0-9]/g, "")
+        .slice(0, 11);
+
+      let formattedValue = onlyNumbers;
+
+      if (onlyNumbers.length > 3 && onlyNumbers.length <= 7) {
+        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3)}`;
+      } else if (onlyNumbers.length > 7) {
+        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3, 7)}-${onlyNumbers.slice(7, 11)}`;
+      }
+
+      handleInputChange(inputName, formattedValue);
+    } else {
+      handleInputChange(inputName, value);
+    }
+  }
+
   function validateInputs() {
     if (!checkAllInputs()) {
       alert("입력값을 확인하세요.");
@@ -161,7 +183,7 @@ export default function AdminMembersCreatePage() {
         placeholder="ex) 010-1234-5678"
         value={inputValues.phoneNum}
         error={inputErrors.phoneNum}
-        onChange={(e) => handleInputChange("phoneNum", e.target.value)}
+        onChange={(e) => handleChange("phoneNum", e.target.value)}
       />
       <InputForm
         id="jobRole"

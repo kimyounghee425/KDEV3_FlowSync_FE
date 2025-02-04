@@ -16,6 +16,7 @@ export default function InputForm({
   onChange,
   disabled = false, // 기본값 false 추가
   isChanged, // 부모 컴포넌트에서 전달받음
+  maxLength
 }: InputFormData) {
   const [originalValue, setOriginalValue] = useState(value); // 초기값 저장
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -140,6 +141,7 @@ export default function InputForm({
           value={value}
           onChange={onChange}
           disabled={disabled}
+          maxLength={maxLength}
         />
       )}
       {/* 에러 메시지 표시 (에러 메시지가 없는 경우에도 레이아웃 유지 위해 높이를 고정) */}
