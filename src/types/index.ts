@@ -229,6 +229,13 @@ export interface TaskApiResponse {
   data: TaskArticle;
 }
 
+export interface NoticeApiResponse {
+  code: number;
+  result: string;
+  message: string;
+  data: NoticeArticle;
+}
+
 export interface CommentApiResponse {
   code: number;
   result: string;
@@ -293,6 +300,20 @@ export interface TaskArticle {
   fileList: ArticleFile[];
   linkList: ArticleLink[];
   commentList: ArticleComment[];
+}
+
+export interface NoticeArticle {
+  id: string;
+  adminId: string;
+  title: string;
+  content: ContentBlock[];
+  category: string;
+  priority: string;
+  isDeleted: boolean;
+  regAt: string;
+  updatedAt: string;
+  fileList: ArticleFile[];
+  linkList: ArticleLink[];
 }
 
 // 게시글 첨부링크

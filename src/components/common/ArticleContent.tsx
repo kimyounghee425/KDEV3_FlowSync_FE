@@ -8,15 +8,18 @@ import {
   ArticleLink,
   ArticleFile,
   ContentBlock,
+  NoticeArticle,
 } from "@/src/types";
 import { formatDateWithTime } from "@/src/utils/formatDateUtil";
 
-interface ArticleContentProps<T extends QuestionArticle | TaskArticle> {
+interface ArticleContentProps<
+  T extends QuestionArticle | TaskArticle | NoticeArticle,
+> {
   article: T | null;
 }
 
 export default function ArticleContent<
-  T extends QuestionArticle | TaskArticle,
+  T extends QuestionArticle | TaskArticle | NoticeArticle,
 >({ article }: ArticleContentProps<T>) {
   if (!article) {
     return (
@@ -122,9 +125,9 @@ export default function ArticleContent<
         {article.title}
       </Text>
 
-      {/* 작성자, 작성 일시 */}
+      {/* 작성자, 작성 일시 (NoticeArticle인 경우 작성자 정보 숨김) */}
       <Box mb={4}>
-        <Text>작성자: {article.author}</Text>
+        {"author" in article && <Text>작성자: {article.author}</Text>}
         <Text>{formatDateWithTime(article.regAt)}</Text>
       </Box>
 

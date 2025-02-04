@@ -27,13 +27,15 @@ export default function TaskReadPage() {
   const [commentList, setCommentList] = useState<ArticleComment[]>([]);
   const [commentIsWritten, setCommentIsWritten] = useState<boolean>(false);
 
-
   useEffect(() => {
     const loadTask = async () => {
       try {
-        const responseData = await readTaskApi(Number(projectId), Number(taskId));
+        const responseData = await readTaskApi(
+          Number(projectId),
+          Number(taskId),
+        );
         setArticle(responseData);
-        setCommentList(responseData.commentList ?? [])
+        setCommentList(responseData.commentList ?? []);
       } catch (err) {
         setError(
           err instanceof Error
@@ -46,7 +48,6 @@ export default function TaskReadPage() {
     };
     loadTask();
   }, [projectId, taskId, commentIsWritten]);
-
 
   if (error) {
     return <Box>에러 발생: {error}</Box>;
@@ -78,8 +79,6 @@ export default function TaskReadPage() {
         <SignToApprove />
       </Flex>
 
-
-
       {/* 댓글 섹션 */}
       <VStack align="stretch" gap={8} mt={10}>
         <ArticleComments
@@ -91,4 +90,3 @@ export default function TaskReadPage() {
     </Box>
   );
 }
-

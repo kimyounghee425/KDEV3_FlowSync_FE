@@ -2,41 +2,30 @@
 "use client";
 
 // 외부 라이브러리
-import { Box, VStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 // 절대 경로 파일
 import ArticleContent from "@/src/components/common/ArticleContent";
-import ArticleComments from "@/src/components/common/ArticleComments";
-import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/BackButton";
-import { readQuestionApi } from "@/src/api/ReadArticle";
-
-import { Article, ArticleComment } from "@/src/types";
+import { readNoticeApi } from "@/src/api/ReadArticle";
+import { NoticeArticle } from "@/src/types";
 
 export default function QuestionReadPage() {
-  const { projectId, questionId } = useParams() as {
-    projectId: string;
-    questionId: string;
+  const { noticeId } = useParams() as {
+    noticeId: string;
   };
 
-  const [article, setArticle] = useState<Article | null>(null);
+  const [article, setArticle] = useState<NoticeArticle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [commentList, setCommentList] = useState<ArticleComment[]>([]);
-
-  const [commentIsWritten, setCommentIsWritten] = useState<boolean>(false);
 
   useEffect(() => {
     const loadTask = async () => {
       try {
-        const responseData = await readQuestionApi(
-          Number(projectId),
-          Number(questionId),
-        );
+        const responseData = await readNoticeApi(noticeId);
         setArticle(responseData);
-        setCommentList(responseData.commentList ?? []);
       } catch (err) {
         setError(
           err instanceof Error
@@ -48,7 +37,7 @@ export default function QuestionReadPage() {
       }
     };
     loadTask();
-  }, [projectId, questionId, commentIsWritten]);
+  }, [noticeId]);
 
   if (error) {
     return <Box>에러 발생: {error}</Box>;
@@ -73,15 +62,6 @@ export default function QuestionReadPage() {
 
       {/* 게시글 내용 */}
       <ArticleContent article={article} />
-
-      {/* 댓글 섹션 */}
-      <VStack align="stretch" gap={8} mt={10}>
-        <ArticleComments
-          comments={commentList}
-          setCommentIsWritten={setCommentIsWritten}
-        />
-        <CommentBox setCommentIsWritten={setCommentIsWritten} />
-      </VStack>
     </Box>
   );
 }
