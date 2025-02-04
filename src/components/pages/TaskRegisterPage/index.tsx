@@ -9,16 +9,16 @@ import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createTaskApi } from "@/src/api/RegisterArticle";
-import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSection";
 import { TaskRequestData } from "@/src/types";
+import FormSelectInput from "@/src/components/common/FormSelectInput";
 
 const progressData = [
-  { id: 1, title: "요구사항정의" },
-  { id: 2, title: "화면설계" },
-  { id: 3, title: "디자인" },
-  { id: 4, title: "퍼블리싱" },
-  { id: 5, title: "개발" },
-  { id: 6, title: "검수" },
+  { id: "1", title: "요구사항정의", value: "" },
+  { id: "2", title: "화면설계", value: "" },
+  { id: "3", title: "디자인", value: "" },
+  { id: "4", title: "퍼블리싱", value: "" },
+  { id: "5", title: "개발", value: "" },
+  { id: "6", title: "검수", value: "" },
 ];
 
 export default function TaskRegisterPage() {
@@ -57,10 +57,16 @@ export default function TaskRegisterPage() {
       <BackButton />
 
       <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
-        <ProgressStepAddSection
+        {/* <ProgressStepAddSection
           progressStepId={progressStepId}
           setProgressStepId={setProgressStepId}
-          progressData={progressData}
+          progressData={progressData || []}
+        /> */}
+        <FormSelectInput
+          label="진행 단계"
+          selectedValue={progressStepId}
+          setSelectedValue={setProgressStepId}
+          options={progressData || []}
         />
       </ArticleForm>
     </Box>

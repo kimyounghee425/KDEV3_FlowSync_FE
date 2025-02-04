@@ -24,6 +24,7 @@ export default function SearchSection({
     // URL 업데이트
     const params = new URLSearchParams(window.location.search);
     params.set("keyword", input); // 검색어 추가
+    params.set("currentPage", "1");
     router.push(`?${params.toString()}`);
   };
 

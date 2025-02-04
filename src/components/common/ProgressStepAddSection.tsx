@@ -1,10 +1,11 @@
 import React from "react";
 import { Box, Text } from "@chakra-ui/react";
+import { ProjectProgressStepProps } from "@/src/types";
 
 interface ProgressStepAddsectionProps {
   progressStepId: number;
   setProgressStepId: (newStep: number) => void;
-  progressData: { id: number; title: string }[];
+  progressData: ProjectProgressStepProps[];
 }
 
 export default function ProgressStepAddSection({

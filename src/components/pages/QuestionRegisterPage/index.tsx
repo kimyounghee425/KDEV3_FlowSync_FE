@@ -7,24 +7,37 @@ import { useParams, useRouter } from "next/navigation";
 import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
-import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSection";
 import { createQuestionApi } from "@/src/api/RegisterArticle";
-import { QuestionRequestData } from "@/src/types";
-
-const progressData = [
-  { id: 1, title: "요구사항정의" },
-  { id: 2, title: "화면설계" },
-  { id: 3, title: "디자인" },
-  { id: 4, title: "퍼블리싱" },
-  { id: 5, title: "개발" },
-  { id: 6, title: "검수" },
-];
+import { ProjectProgressStepProps, QuestionRequestData } from "@/src/types";
+import { fetchProjectQuestionProgressStep as fetchProjectQuestionProgressStepApi } from "@/src/api/projects";
+import { useFetchData } from "@/src/hook/useFetchData";
+import FormSelectInput from "@/src/components/common/FormSelectInput";
 
 export default function QuestionRegisterPage() {
   const { projectId } = useParams();
   const router = useRouter();
   const [title, setTitle] = useState<string>("");
-  const [progressStepId, setProgressStepId] = useState<number>(1);
+
+  const resolvedProjectId = Array.isArray(projectId)
+    ? projectId[0]
+    : projectId || "";
+
+  // ProgressStep 데이터 패칭
+  const { data: progressStepData } = useFetchData<
+    ProjectProgressStepProps[],
+    [string]
+  >({
+    fetchApi: fetchProjectQuestionProgressStepApi,
+    params: [resolvedProjectId],
+  });
+
+  // "ALL" 값을 가진 객체 제외
+  const filteredProgressSteps =
+    progressStepData?.filter((step) => step.value !== "ALL") || [];
+
+  const [progressStepId, setProgressStepId] = useState<number>(
+    filteredProgressSteps.length > 0 ? Number(filteredProgressSteps[0].id) : 0,
+  );
 
   const handleSave = async <T extends QuestionRequestData>(requestData: T) => {
     try {
@@ -56,10 +69,16 @@ export default function QuestionRegisterPage() {
       <BackButton />
 
       <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
-        <ProgressStepAddSection
+        {/* <ProgressStepAddSection
           progressStepId={progressStepId}
           setProgressStepId={setProgressStepId}
-          progressData={progressData}
+          progressData={filteredProgressSteps || []}
+        /> */}
+        <FormSelectInput
+          label="진행 단계"
+          selectedValue={progressStepId}
+          setSelectedValue={setProgressStepId}
+          options={filteredProgressSteps || []}
         />
       </ArticleForm>
     </Box>

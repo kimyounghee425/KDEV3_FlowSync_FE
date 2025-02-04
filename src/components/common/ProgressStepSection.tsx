@@ -70,7 +70,7 @@ export default function ProgressStepSection({
         <ProgressStepButton
           key={button.id}
           text={button.title}
-          count={button.count} // 서버에서 받아온 개수 표시
+          count={button.count || 0} // 서버에서 받아온 개수 표시
           isSelected={selectedButtonId === button.id} // 선택 상태 전달
           onClick={() => handleStatusChange(button.id)} // 클릭 핸들러 전달
         />

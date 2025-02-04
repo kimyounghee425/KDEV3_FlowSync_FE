@@ -52,7 +52,7 @@ function NoticesPageContent() {
   const router = useRouter();
 
   const keyword = searchParams?.get("keyword") || "";
-  const status = searchParams?.get("status") || "";
+  const category = searchParams?.get("category") || "";
   const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
   const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
 
@@ -74,7 +74,7 @@ function NoticesPageContent() {
   >({
     fetchApi: fetchNoticeListApi,
     keySelector: "notices",
-    params: [keyword, status, currentPage, pageSize],
+    params: [keyword, category, currentPage, pageSize],
   });
 
   const handlePageChange = (page: number) => {
@@ -107,8 +107,8 @@ function NoticesPageContent() {
           <SearchSection keyword={keyword} placeholder="제목 입력">
             <FilterSelectBox
               statusFramework={noticeStatusFramework}
-              selectedValue={status}
-              queryKey="status"
+              selectedValue={category}
+              queryKey="category"
             />
           </SearchSection>
         </Flex>
@@ -118,7 +118,7 @@ function NoticesPageContent() {
           <SearchSection keyword={keyword} placeholder="제목 입력">
             <FilterSelectBox
               statusFramework={noticeStatusFramework}
-              selectedValue={status}
+              selectedValue={category}
               queryKey="status"
             />
           </SearchSection>
