@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@/src/components/ui/radio";
 import { useForm } from "@/src/hook/useForm";
@@ -8,13 +9,45 @@ import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { defaultValuesOfMember } from "@/src/constants/defaultValues";
 import { validationRulesOfCreatingMember } from "@/src/constants/validationRules";
-import { createMember, createMemberWithFile } from "@/src/api/members";
+import { createMember } from "@/src/api/members";
+import { getOrganizationsApi } from "@/src/api/getOrganization";
+import SelectedOrganization from "@/src/components/pages/adminMembersCreatePage/components/SelectOrganization";
+
+interface OrgProps {
+  id: number;
+  type: string;
+  brNumber: string;
+  name: string;
+  brCertificateUrl: string;
+  streetAddress: string;
+  detailAddress: string;
+  phoneNumber: string;
+  status: string;
+}
 
 export default function AdminMembersCreatePage() {
   const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfMember, validationRulesOfCreatingMember);
 
+  // 업체 관련 정보
+  const [organizations, setOrganizations] = useState<OrgProps[]>([]);
+  const [selectedOrganization, setSelectedOrganization] = useState<OrgProps>();
+
+  useEffect(() => {
+    async function fetchOrganization() {
+      try {
+        const organizationData = await getOrganizationsApi();
+        // console.log("페칭출력", organizationData.data.dtoList);
+
+        setOrganizations(organizationData.data.dtoList);
+      } catch (error) {
+        console.error("업체 정보 불러오지 못함 : ", error);
+      }
+    }
+    fetchOrganization();
+  }, []);
+  
   function validateInputs() {
     if (!checkAllInputs()) {
       alert("입력값을 확인하세요.");
@@ -88,14 +121,11 @@ export default function AdminMembersCreatePage() {
         </Flex>
       </Box>
       {/* 회원 생성 페이지 - 회원 정보 입력*/}
-      <InputForm
-        id="organizationId"
-        type="text"
-        label="업체 ID"
-        placeholder="ex) 123e4567-e89b-12d3-a456-426614174000"
-        value={inputValues.organizationId}
-        error={inputErrors.organizationId}
-        onChange={(e) => handleInputChange("organizationId", e.target.value)}
+
+      <SelectedOrganization
+        organizations={organizations}
+        selectedOrganization={selectedOrganization}
+        setSelectedOrganization={setSelectedOrganization}
       />
       <InputForm
         id="name"

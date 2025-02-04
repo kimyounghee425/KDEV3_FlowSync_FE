@@ -1,3 +1,5 @@
+// 회사와 멤버 모두 선택하는 컴포넌트
+
 import { Flex, Box, Text, Button } from "@chakra-ui/react";
 import React from "react";
 
@@ -36,8 +38,8 @@ interface CustomerOrgProps {
   orgMembers: Member[];
   selectedMembers: Member[];
   setSelectedMembers: React.Dispatch<React.SetStateAction<Member[]>>;
-  devOwnerMember?: Member;
-  setDevOwnerMember?: React.Dispatch<React.SetStateAction<Member | undefined>>;
+  ownerMember?: Member;
+  setOwnerMember?: React.Dispatch<React.SetStateAction<Member | undefined>>;
 }
 
 export default function SelectOrganizationSection({
@@ -48,8 +50,8 @@ export default function SelectOrganizationSection({
   orgMembers,
   selectedMembers,
   setSelectedMembers,
-  devOwnerMember,
-  setDevOwnerMember,
+  ownerMember,
+  setOwnerMember,
 }: CustomerOrgProps) {
   // 멤버 클릭했을 때 해제하는 멤버가 오너면 오너도 해제
   const handleSelectMember = (member: Member) => {
@@ -57,8 +59,8 @@ export default function SelectOrganizationSection({
       const isAlreadySelected = prev.some((m) => m.id === member.id);
       if (isAlreadySelected) {
         // 선택한게 오너
-        if (devOwnerMember?.id === member.id && setDevOwnerMember) {
-          setDevOwnerMember(undefined);
+        if (ownerMember?.id === member.id && setOwnerMember) {
+          setOwnerMember(undefined);
         }
         return prev.filter((m) => m.id !== member.id);
       } else {
@@ -129,7 +131,7 @@ export default function SelectOrganizationSection({
                       (m) => m.id === member.id,
                     );
                     // 개발사 오너 체크
-                    const isOwner = devOwnerMember?.id === member.id;
+                    const isOwner = ownerMember?.id === member.id;
 
                     return (
                       <Box
@@ -146,9 +148,9 @@ export default function SelectOrganizationSection({
                         <Text>
                           {member.role} ({member.jobRole})
                         </Text>
-
+                        
                         {/* 오너 표시 */}
-                        {setDevOwnerMember && (
+                        {setOwnerMember && (
                           <Button
                             fontSize="xs"
                             p={1}
@@ -160,7 +162,7 @@ export default function SelectOrganizationSection({
                               e.stopPropagation();
                               if (isOwner) {
                                 // 이미 오너면 오너 상태만 해제
-                                setDevOwnerMember(undefined);
+                                setOwnerMember(undefined);
                               } else {
                                 // 멤버도 아니면 멤버 추가부터
                                 if (!isSelected) {
@@ -169,7 +171,7 @@ export default function SelectOrganizationSection({
                                     member,
                                   ]);
                                 }
-                                setDevOwnerMember(member);
+                                setOwnerMember(member);
                               }
                             }}
                           >
@@ -201,7 +203,7 @@ export default function SelectOrganizationSection({
       >
         {selectedMembers.length > 0 ? (
           selectedMembers.map((member) => {
-            const isOwner = devOwnerMember?.id === member.id;
+            const isOwner = ownerMember?.id === member.id;
 
             return (
               <Box
@@ -216,7 +218,7 @@ export default function SelectOrganizationSection({
                 onClick={() => {
                   if (isOwner) {
                     // 이미 오너면 오너 상태만 해제
-                    setDevOwnerMember?.(undefined);
+                    setOwnerMember?.(undefined);
                   } else {
                     handleSelectMember(member);
                   }

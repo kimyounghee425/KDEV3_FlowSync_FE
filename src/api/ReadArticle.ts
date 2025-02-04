@@ -1,21 +1,36 @@
 import axiosInstance from "@/src/api/axiosInstance";
-import { ApiResponse, Article } from "@/src/types"; // 타입 정의 파일 경로에 맞게 수정하세요
-
+import { QuestionApiResponse, TaskApiResponse, QuestionArticle, TaskArticle } from "@/src/types";
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function readQuestionApi(
   projectId: number,
   questionId: number,
-): Promise<Article> {
+): Promise<QuestionArticle> {
   try {
-    const response = await axiosInstance.get<ApiResponse>(
+    const response = await axiosInstance.get<QuestionApiResponse>(
       `${BASE_URL}/projects/${projectId}/questions/${questionId}`,
     );
 
-    // console.log(response.data.data.content)
+    console.log(response.data.data.content)
     return response.data.data;
   } catch (error) {
     console.error("API 호출 실패:", error);
     throw new Error("질문 데이터를 가져오는 중 문제가 발생했습니다.");
+  }
+}
+
+export async function readTaskApi(
+  projectId: number,
+  approvalId: number,
+) : Promise<TaskArticle> {
+  try {
+    const response = await axiosInstance.get<TaskApiResponse>(
+      `${BASE_URL}/projects/${projectId}/approvals/${approvalId}`
+    )
+    console.log(response.data)
+    return response.data.data
+  } catch (error) {
+    console.log("Api 호출 실패", error)
+    throw new Error("결재 데이터를 가져오는 중 문제가 발생했습니다.");
   }
 }
