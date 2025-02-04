@@ -16,7 +16,7 @@ export default function InputForm({
   onChange,
   disabled = false, // 기본값 false 추가
   isChanged, // 부모 컴포넌트에서 전달받음
-  maxLength
+  maxLength,
 }: InputFormData) {
   const [originalValue, setOriginalValue] = useState(value); // 초기값 저장
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

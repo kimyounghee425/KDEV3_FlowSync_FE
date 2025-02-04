@@ -44,21 +44,31 @@ export async function createMember(
   introduction: string,
   remark: string,
 ): Promise<CreateMemberInput> {
-  const response = await axiosInstance.post("/admins/members", {
-    role,
-    organizationId,
-    name,
-    email,
-    password,
-    phoneNum,
-    jobRole,
-    jobTitle,
-    introduction,
-    remark,
-  });
-  return response.data; // 생성된 데이터 반환
+  try {
+    const response = await axiosInstance.post("/admins/members", {
+      role,
+      organizationId,
+      name,
+      email,
+      password,
+      phoneNum,
+      jobRole,
+      jobTitle,
+      introduction,
+      remark,
+    });
+    if (response.data.code === 200 && response.data.result === "SUCCESS") {
+      return response.data; // 성공 응답 반환
+    } else {
+      // 실패 메시지 처리
+      throw new Error(response.data.message || "로그인에 실패하였습니다.");
+    }
+  } catch (error: any) {
+    console.error("API 호출 에러:", error.message || error);
+    alert("로그인에 실패했습니다. 이메일 또는 비밀번호를 다시 확인하세요.");
+    throw error;
+  }
 }
-
 // 📌 회원 생성 API (파일 업로드 O)
 export async function createMemberWithFile(
   data: CreateMemberInput,

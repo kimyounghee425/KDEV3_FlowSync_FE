@@ -2,7 +2,16 @@
 "use client";
 
 // 외부 라이브러리
-import { Box } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  DialogBody,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -59,7 +68,6 @@ export default function QuestionReadPage() {
       boxShadow="md"
     >
       <BackButton />
-
       {/* 게시글 내용 */}
       <NoticeArticleContent article={article} />
     </Box>

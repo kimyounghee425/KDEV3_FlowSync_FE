@@ -38,7 +38,7 @@ export default function AdminMembersCreatePage() {
     async function fetchOrganization() {
       try {
         const organizationData = await getOrganizationsApi();
-        // console.log("페칭출력", organizationData.data.dtoList);
+        console.log("페칭출력", organizationData.data.dtoList);
 
         setOrganizations(organizationData.data.dtoList);
       } catch (error) {
@@ -82,9 +82,13 @@ export default function AdminMembersCreatePage() {
     event.preventDefault();
     if (!validateInputs()) return;
     try {
+      console.log(
+        "업체 정보 확인 -  String(selectedOrganization?.id) ",
+        String(selectedOrganization?.id),
+      );
       const response = await createMember(
         inputValues.role,
-        inputValues.organizationId,
+        String(selectedOrganization?.id),
         inputValues.name,
         inputValues.email,
         inputValues.password,
