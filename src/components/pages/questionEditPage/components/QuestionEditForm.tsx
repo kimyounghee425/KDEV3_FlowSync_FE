@@ -12,7 +12,7 @@ import { uploadFileApi } from "@/src/api/RegisterArticle";
 
 // 수정 api 만들고 가져와야함
 
-import { Article } from "@/src/types";
+// import { QuestionArticle } from "@/src/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -162,6 +162,22 @@ export default function QuestionEditForm() {
         uploadedFileSize={uploadedFileSize}
         setUploadedFileSize={setUploadedFileSize}
       />
+
+      <Button
+        bg={"red.500"}
+        colorScheme={"red"}
+        width={"auto"}
+        px={6}
+        py={4}
+        borderRadius={"full"}
+        fontSize={"lg"}
+        fontWeight={"bold"}
+        boxShadow={"md"}
+        _hover={{ bg: "red.600" }}
+        // onClick={수정 핸들러}
+      >
+        수정
+      </Button>
     </Flex>
   );
 }

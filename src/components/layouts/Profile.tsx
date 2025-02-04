@@ -14,7 +14,6 @@ import { ChevronDown } from "lucide-react";
 import { Loading } from "@/src/components/common/Loading";
 import axiosInstance from "@/src/api/axiosInstance";
 import { getRandomProfileImage } from "@/src/utils/getRandomProfileImage";
-import { useRouter } from "next/navigation";
 
 interface UserProfileData {
   name: string;
@@ -25,7 +24,6 @@ interface UserProfileData {
 export default function Profile() {
   const [userData, setUserData] = useState<UserProfileData | null>(null);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
-  const route = useRouter();
 
   useEffect(() => {
     // 사용자 정보 가져오기
@@ -39,7 +37,10 @@ export default function Profile() {
             role: response.data.data.role,
           });
           // 랜덤 프로필 이미지 설정
-          setProfileImageUrl(getRandomProfileImage());
+          // 프로필 이미지를 외부 URL에서 가져올 때, URL 뒤에 캐싱 방지 쿼리 문자열(timestamp) 를 추가하여 브라우저 캐시 무력화
+          setProfileImageUrl(
+            `${getRandomProfileImage()}?timestamp=${Date.now()}`,
+          );
         }
       } catch (error: any) {
         console.error("사용자 데이터를 가져오지 못했습니다.", error);
@@ -57,11 +58,23 @@ export default function Profile() {
     try {
       const response = await axiosInstance.post("/logout");
       if (response.data.code === 200 && response.data.result === "SUCCESS") {
-        // 쿠키 삭제 (브라우저의 쿠키를 삭제하는 코드)
-        document.cookie =
-          "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie =
-          "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        // 브라우저의 쿠키 삭제
+        // document.cookie =
+        //   "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        // document.cookie =
+        //   "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        const clearCookies = () => {
+          const cookies = document.cookie.split("; ");
+          cookies.forEach((cookie) => {
+            const [key] = cookie.split("=");
+            document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+          });
+        };
+        clearCookies();
+
+        // 로컬 스토리지 초기화
+        localStorage.removeItem("user");
+        localStorage.removeItem("projectStatus");
 
         alert("로그아웃 되었습니다.");
         // 강제로 새로고침하면서 로그인 페이지로 이동

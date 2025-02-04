@@ -13,7 +13,7 @@ import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/BackButton";
 import { readQuestionApi } from "@/src/api/ReadArticle";
 
-import { Article, ArticleComment } from "@/src/types";
+import { QuestionArticle, ArticleComment } from "@/src/types";
 
 export default function QuestionReadPage() {
   const { projectId, questionId } = useParams() as {
@@ -21,12 +21,12 @@ export default function QuestionReadPage() {
     questionId: string;
   };
 
-  const [article, setArticle] = useState<Article | null>(null);
+  const [article, setArticle] = useState<QuestionArticle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [commentList, setCommentList] = useState<ArticleComment[]>([]);
-
   const [commentIsWritten, setCommentIsWritten] = useState<boolean>(false);
+
 
   useEffect(() => {
     const loadTask = async () => {

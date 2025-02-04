@@ -56,6 +56,7 @@ export default function ProjectForm() {
   const [selectedCustomerMembers, setSelectedCustomerMembers] = useState<
     Member[]
   >([]);
+  const [customerOwnerMember, setCustomerOwnerMember] = useState<Member | undefined>();
 
   // 개발사 관련 상태
   const [developerOrg, setDeveloperOrg] = useState<OrgProps[]>([]);
@@ -113,7 +114,7 @@ export default function ProjectForm() {
       try {
         const data = await getMembersApi(selectedDeveloperOrgId, 1, 100000);
         setDeveloperMembers(data.data.members);
-        console.log(data.data.members);
+        // console.log(data.data.members);
       } catch (error) {
         console.error(error);
         setDeveloperMembers([]);
@@ -122,7 +123,6 @@ export default function ProjectForm() {
     fetchMember();
   }, [selectedDeveloperOrgId]);
 
-  console.log(selectedMembers)
 
   // 고객사 멤버, 개발사 멤버 합쳐서 멤버 배열에 넣기.
   useEffect(() => {
@@ -142,7 +142,8 @@ export default function ProjectForm() {
       selectedDeveloperOrgId === 0 ||
       selectedCustomerMembers.length === 0 ||
       selectedDeveloperMembers.length === 0 ||
-      devOwnerMember === undefined
+      devOwnerMember === undefined ||
+      customerOwnerMember === undefined
     ) {
       alert("필수 정보를 입력해주세요.");
       return;
@@ -158,6 +159,7 @@ export default function ProjectForm() {
       startAt: startAt.replace("T", " ").split(".")[0],
       closeAt: closeAt.replace("T", " ").split(".")[0],
       devOwnerId: devOwnerMember.id,
+      customerOwnerId: customerOwnerMember.id,
       developerOrgId: Number(selectedDeveloperOrgId),
       customerOrgId: Number(selectedCustomerOrgId),
       members: selectedMembers,
@@ -173,7 +175,7 @@ export default function ProjectForm() {
     }
   };
 
-  console.log(selectedDeveloperMembers);
+  // console.log(selectedDeveloperMembers);
 
   return (
     <Flex direction="column">
@@ -197,6 +199,8 @@ export default function ProjectForm() {
             orgMembers={customerMembers}
             selectedMembers={selectedCustomerMembers}
             setSelectedMembers={setSelectedCustomerMembers}
+            ownerMember={customerOwnerMember}
+            setOwnerMember={setCustomerOwnerMember}
           />
         </Box>
         <Box>
@@ -208,8 +212,8 @@ export default function ProjectForm() {
             orgMembers={developerMembers}
             selectedMembers={selectedDeveloperMembers}
             setSelectedMembers={setSelectedDeveloperMembers}
-            devOwnerMember={devOwnerMember}
-            setDevOwnerMember={setDevOwnerMember}
+            ownerMember={devOwnerMember}
+            setOwnerMember={setDevOwnerMember}
           />
         </Box>
       </Flex>
