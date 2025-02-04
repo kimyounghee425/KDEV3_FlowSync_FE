@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Box, Container, Flex } from "@chakra-ui/react";
+import { Box, Container, Flex, IconButton, Text } from "@chakra-ui/react";
 import Header from "@/src/components/layouts/Header";
 import Sidebar from "@/src/components/layouts/Sidebar";
 import { SidebarProvider } from "@/src/context/SidebarContext";
@@ -14,24 +14,27 @@ export default function MemberAndAdminDashboardLayout({
   children,
 }: MemberAndAdminDashboardLayoutProps) {
   return (
-    <>
+    <Flex id="root" direction="column" height="100vh">
       <Header />
-      <Container
-        maxWidth={"100%"}
-        display="flex"
-        flexDirection="row"
-        margin={0}
-        padding={0}
-      >
-        <SidebarProvider>
-          <Sidebar />
-        </SidebarProvider>
-        <Flex width="100%" height="100%" align="center" justify="center">
-          <Box maxW="container.xl" width="100%" height="100%" p={10}>
-            {children}
-          </Box>
-        </Flex>
-      </Container>
-    </>
+      <Flex flex="1">
+        {/* <Header /> */}
+        <Container
+          maxWidth={"100%"}
+          display="flex"
+          flexDirection="row"
+          margin={0}
+          padding={0}
+        >
+          <SidebarProvider>
+            <Sidebar />
+          </SidebarProvider>
+          <Flex width="100%" height="100%" align="center" justify="center">
+            <Box maxW="container.xl" width="100%" height="100%" p={10}>
+              {children}
+            </Box>
+          </Flex>
+        </Container>
+      </Flex>
+    </Flex>
   );
 }

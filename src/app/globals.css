@@ -1,0 +1,78 @@
+/* 글로벌 스타일 */
+:root {
+  --header-height: 60px;
+  --sidebar-width: 250px;
+  --sidebar-width-mobile: 0px; /* 모바일에서 숨김 */
+  --login-card-max-width: 500px;
+  --login-card-min-width: 320px; /* 최소 너비 설정 */
+  --login-card-padding: 1.5rem;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* 전체 레이아웃 */
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  display: flex;
+  height: 100vh;
+}
+
+/* 헤더 스타일 */
+header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: var(--header-height);
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 10;
+}
+
+header .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+header .menu {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+header .menu span {
+  font-weight: medium;
+  cursor: pointer;
+  color: #007bff;
+}
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+  :root {
+    --login-card-max-width: 90%;
+    --login-card-min-width: 280px; /* 모바일 최소 너비 */
+    --login-card-padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --login-card-padding: 0.8rem;
+  }
+}
