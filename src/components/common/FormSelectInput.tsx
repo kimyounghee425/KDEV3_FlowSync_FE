@@ -41,7 +41,7 @@ export default function SelectInput<T extends string | number | undefined>({
           {label} 선택
         </option>
         {options.map((option) => (
-          <option key={String(option.id)} value={String(option.id)}>
+          <option key={String(option.id)} value={String(option.value)}>
             {option.title}
           </option>
         ))}

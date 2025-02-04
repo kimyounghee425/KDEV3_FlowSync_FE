@@ -37,13 +37,11 @@ export default function NoticeRegisterPage() {
     try {
       const response = await createNoticeApi({
         ...requestData,
-        ...(requestData.category !== undefined
-          ? { category: requestData.category }
-          : {}),
-        ...(requestData.priority !== undefined
-          ? { priority: requestData.priority }
-          : {}),
+        ...(requestData.category === undefined ? { category: category } : {}),
+        ...(requestData.priority === undefined ? { priority: priority } : {}),
       });
+      console.log(category);
+      console.log(priority);
       router.push(`/notices`);
     } catch (error) {
       console.error("저장 실패:", error);

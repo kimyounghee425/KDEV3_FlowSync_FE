@@ -7,10 +7,10 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 // 절대 경로 파일
-import ArticleContent from "@/src/components/common/ArticleContent";
 import BackButton from "@/src/components/common/BackButton";
 import { readNoticeApi } from "@/src/api/ReadArticle";
 import { NoticeArticle } from "@/src/types";
+import NoticeArticleContent from "@/src/components/common/NoticeArticleContent";
 
 export default function QuestionReadPage() {
   const { noticeId } = useParams() as {
@@ -61,7 +61,7 @@ export default function QuestionReadPage() {
       <BackButton />
 
       {/* 게시글 내용 */}
-      <ArticleContent article={article} />
+      <NoticeArticleContent article={article} />
     </Box>
   );
 }
