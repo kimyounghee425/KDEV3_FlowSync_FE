@@ -9,9 +9,9 @@ interface SidebarTabProps {
 
 // 관리자 메뉴 항목
 const ADMIN_MENU_ITEMS = [
-  { value: "/", title: "홈 대시보드" },
   { value: "/admin/members", title: "회원 관리" },
   { value: "/admin/organizations", title: "업체 관리" },
+  { value: "/projects/new", title: "프로젝트 생성" },
 ];
 
 export default function SidebarTab({ memberRole }: SidebarTabProps) {
@@ -26,8 +26,8 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
   // 관리자 메뉴 렌더링
   if (memberRole === "admin") {
     return (
-      <Box bg="gray.200">
-        <CardRoot>
+      <Box bg="white">
+        <CardRoot boxShadow="none" backgroundColor="transparent">
           <CardBody>
             {ADMIN_MENU_ITEMS.map((item) => (
               <Link key={item.value} href={item.value} passHref>
@@ -43,10 +43,17 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
   }
 
   return (
-    <Box bg="gray.200" height="calc(100vh - 60px)">
-      <CardRoot>
+    <Box bg="white" height="calc(100vh - 60px)">
+      <CardRoot boxShadow="none" backgroundColor="transparent">
         {/* ✅ 스크롤이 `SidebarTab` 내에서만 이루어지도록 설정 */}
-        <CardBody overflowY="auto" maxHeight="400px">
+        <CardBody
+          overflowY="auto"
+          maxHeight={{
+            base: "calc(100vh - 120px)", // 작은 화면 (모바일)
+            md: "calc(100vh - 150px)", // 중간 화면 (태블릿)
+            lg: "calc(100vh - 180px)", // 큰 화면 (데스크탑)
+          }}
+        >
           {projectList &&
             projectList.map((project) => (
               <Link

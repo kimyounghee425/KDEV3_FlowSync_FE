@@ -1,16 +1,16 @@
 "use client";
 
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import { Box, Flex, Heading, useBreakpointValue } from "@chakra-ui/react";
 import { Folder, PackageCheck, Signature, Swords, Wrench } from "lucide-react";
 import StatusCard from "@/src/components/pages/projectsPage/components/ProjectsStatusCard";
 
 // 아이콘 배열 정의
 const icons = [
-  <Folder key="1" size={40} color="gray" />,
-  <Signature key="2" size={40} color="gray" />,
-  <Swords key="3" size={40} color="gray" />,
-  <PackageCheck key="4" size={40} color="gray" />,
-  <Wrench key="5" size={40} color="gray" />,
+  <Folder key="1" size="60%" color="gray" />,
+  <Signature key="2" size="60%" color="gray" />,
+  <Swords key="3" size="60%" color="gray" />,
+  <PackageCheck key="4" size="60%" color="gray" />,
+  <Wrench key="5" size="60%" color="gray" />,
 ];
 
 // 데이터 매핑
@@ -29,6 +29,24 @@ interface ProjectsStatusCardsProps {
 export default function ProjectsStatusCards({
   title,
 }: ProjectsStatusCardsProps) {
+  // 반응형 크기 조정
+  const cardSize = useBreakpointValue({
+    base: "80px", // 모바일: 카드 크기 작게
+    sm: "100px", // 작은 태블릿: 중간 크기
+    md: "120px", // 데스크탑: 기본 크기
+  });
+
+  const fontSize = useBreakpointValue({
+    base: "sm", // 모바일: 작은 글씨
+    sm: "md", // 태블릿: 중간 글씨
+    md: "lg", // 데스크탑: 큰 글씨
+  });
+
+  const gap = useBreakpointValue({
+    base: 4, // 모바일: 좁은 간격
+    sm: 6, // 태블릿: 중간 간격
+    md: 8, // 데스크탑: 넓은 간격
+  });
   // const [data, setData] = useState<
   //   { count: number; label: string; icon: ReactNode }[]
   // >([]);
@@ -93,20 +111,22 @@ export default function ProjectsStatusCards({
 
   return (
     <Box mb="50px">
-      <Heading size="2xl" color="gray.700" mb="10px">
+      <Heading size="2xl" color="gray.700" mb="10px" textAlign="left">
         {title}
       </Heading>
+      {/* 카드 컨테이너 */}
+
       <Flex
-        wrap="wrap"
+        wrap="nowrap"
         justifyContent="center"
         alignItems="center"
-        gap={8}
-        justify="center"
+        gap={gap}
         p={8}
         border="1px solid"
         borderColor="gray.200"
         borderRadius="lg"
         boxShadow="md"
+        overflowX="hidden" // 가로 스크롤 방지
       >
         {mappedData.map((item) => (
           <StatusCard

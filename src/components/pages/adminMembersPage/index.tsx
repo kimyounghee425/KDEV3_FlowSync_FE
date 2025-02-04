@@ -108,6 +108,13 @@ function AdminMembersPageContent() {
           회원 관리
         </Heading>
         <Box display="flex" justifyContent="space-between">
+          <Button
+            variant={"surface"}
+            _hover={{ backgroundColor: "#00a8ff", color: "white" }}
+            onClick={handleMemberCreateButton}
+          >
+            신규 등록
+          </Button>
           <SearchSection keyword={keyword} placeholder="회원명 입력">
             <FilterSelectBox
               statusFramework={memberRoleFramework}
@@ -120,13 +127,6 @@ function AdminMembersPageContent() {
               queryKey="status"
             />
           </SearchSection>
-          <Button
-            variant={"surface"}
-            _hover={{ backgroundColor: "#00a8ff", color: "white" }}
-            onClick={handleMemberCreateButton}
-          >
-            신규 등록
-          </Button>
         </Box>
         <CommonTable
           headerTitle={

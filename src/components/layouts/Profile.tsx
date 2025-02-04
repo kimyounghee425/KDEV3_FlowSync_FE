@@ -101,8 +101,8 @@ export default function Profile() {
     >
       {/* Avatar와 사용자 정보 */}
       <Avatar size="sm" src={profileImageUrl || ""} name={userData.name} />
-      <Flex direction="row" align="flex-start" gap={3}>
-        <Text fontWeight="bold" fontSize="md" color="black">
+      <Flex direction="row" align="center" gap={3}>
+        <Text fontWeight="bold" fontSize="md" color="black" lineHeight="1">
           {userData.name}
         </Text>
         <Text fontSize="sm" color="gray.500">

@@ -40,8 +40,6 @@ export default function NoticeRegisterPage() {
         ...(requestData.category === undefined ? { category: category } : {}),
         ...(requestData.priority === undefined ? { priority: priority } : {}),
       });
-      console.log(category);
-      console.log(priority);
       router.push(`/notices`);
     } catch (error) {
       console.error("저장 실패:", error);
