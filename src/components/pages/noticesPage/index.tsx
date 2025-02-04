@@ -54,7 +54,7 @@ function NoticesPageContent() {
   const keyword = searchParams?.get("keyword") || "";
   const category = searchParams?.get("category") || "";
   const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
-  const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
+  const pageSize = parseInt(searchParams?.get("pageSize") || "10", 10);
 
   const { data: userInfoData } = useFetchData<UserInfoResponse, []>({
     fetchApi: fetchUserInfoApi,

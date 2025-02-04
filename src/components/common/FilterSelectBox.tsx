@@ -49,7 +49,7 @@ export default function FilterSelectBox({
       // "전체"를 선택하면, 파라미터 삭제
       params.delete(queryKey); // 필터값 제거
     }
-
+    params.set("currentPage", "1");
     // 변경된 쿼리 파라미터를 포함한 새 URL로 이동
     router.push(`?${params.toString()}`);
   };
