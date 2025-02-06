@@ -15,7 +15,6 @@ export async function fetchUserInfo(
       ...(accessToken ? { Cookie: `access=${accessToken}` } : {}), // ✅ 서버 환경에서 쿠키 강제 포함
     },
     withCredentials: true, // ✅ 클라이언트 환경에서도 쿠키 포함
-    validateStatus: (status) => status < 500, // 🔹 500 이상만 오류로 처리
   });
 
   return response.data;
@@ -31,7 +30,6 @@ export async function fetchReissueToken(
       ...(refreshToken ? { Cookie: `refresh=${refreshToken}` } : {}), // ✅ 서버 환경에서 Refresh Token 포함
     },
     withCredentials: true, // ✅ 클라이언트 환경에서도 쿠키 포함
-    validateStatus: (status) => status < 500, // 🔹 500 이상만 오류로 처리
   });
 
   return response.data;
