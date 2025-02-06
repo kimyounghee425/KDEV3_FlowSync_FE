@@ -93,7 +93,7 @@ export interface OrganizationProps {
   streetAddress: string;
   detailAddress: string;
   phoneNumber: string;
-  remark: string | null;
+  remark: string;
 }
 
 // `createOrganization` 함수에서 입력값의 타입 정의
@@ -331,7 +331,6 @@ export interface ArticleFile {
   size: number;
 }
 
-
 // 댓글
 export interface ArticleComment {
   id: number;
@@ -342,7 +341,6 @@ export interface ArticleComment {
   parentId: number;
   isParent: boolean;
 }
-
 
 // 회원/업체 생성 페이지 입력 폼 인터페이스
 export interface InputFormData {
@@ -411,7 +409,12 @@ export interface BaseArticleRequestData {
   title: string;
   content: { type: string; data: string | { src: string } }[];
   linkList: { name: string; url: string }[];
-  fileInfoList: { originalName: string; saveName: string; url: string; size: number }[];
+  fileInfoList: {
+    originalName: string;
+    saveName: string;
+    url: string;
+    size: number;
+  }[];
 }
 
 export interface QuestionRequestData extends BaseArticleRequestData {

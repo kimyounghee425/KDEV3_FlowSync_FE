@@ -30,9 +30,7 @@ export default function AdminMemberPage() {
       if (!memberId) return; // memberId가 없는 경우 API 호출 방지
 
       try {
-        console.log("Fetching member data for ID:", memberId);
         const response = await fetchMemberDetails(memberId);
-        console.log("회원 데이터 fetch 결과 - response:", response);
 
         if (!response) {
           router.replace("/404"); // 🚀 데이터가 없는 경우 404 이동
@@ -42,7 +40,7 @@ export default function AdminMemberPage() {
         setMemberData(response); // ✅ 정확한 `data` 값 저장
       } catch (error) {
         console.error("회원 데이터 조회 실패:", error);
-        router.replace("/404");
+        // router.replace("/404");
       }
     };
     getMember(); // ✅ 함수 실행

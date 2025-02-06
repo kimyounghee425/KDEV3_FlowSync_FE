@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { fetchReissueToken, fetchUserInfo } from "@/src/api/auth";
 import { UserInfoResponse } from "./types";
 
+// const ADMIN_ONLY_PAGE = ["admin", "super-admin"];
+
 /**
  * 정적 파일 요청 및 `/login` 페이지는 미들웨어 실행 제외
  */
@@ -14,7 +16,6 @@ function shouldBypassMiddleware(pathname: string): boolean {
   );
 }
 
-
 /**
  * 로그인 페이지로 리디렉트 (쿠키 삭제 후)
  */
@@ -24,7 +25,6 @@ function handleUnauthorized(request: NextRequest) {
   clearCookies(res);
   return res;
 }
-
 
 /**
  * 쿠키 삭제 함수
@@ -45,7 +45,11 @@ function clearCookies(response: NextResponse) {
 /**
  * 쿠키 설정 함수
  */
-function setAuthCookies(response: NextResponse, accessToken: string, refreshToken: string) {
+function setAuthCookies(
+  response: NextResponse,
+  accessToken: string,
+  refreshToken: string,
+) {
   response.cookies.set("access", accessToken, {
     httpOnly: true,
     secure: true,
@@ -74,7 +78,7 @@ const adminPages = ["/admin"];
  * 🔄 토큰 검증 및 리프레시 로직
  */
 async function validateAndRefreshTokens(
-  request: NextRequest
+  request: NextRequest,
 ): Promise<{ userInfo?: UserInfoResponse; response?: NextResponse }> {
   let userInfoResponse;
   const accessToken = request.cookies.get("access")?.value;
@@ -98,20 +102,21 @@ async function validateAndRefreshTokens(
       return {}; // ❌ 예기치 못한 에러 발생 시 종료
     }
   }
-  
+
   try {
     // 🔹 2. RefreshToken이 있으면 AccessToken 재발급 시도
     if (refreshToken) {
       console.log("🔄 Access Token 만료됨 → Refresh Token 사용");
       const reissueResponse = await fetchReissueToken(refreshToken);
-  
-      if (
-        reissueResponse.data?.access &&
-        reissueResponse.data?.refresh
-      ) {
+
+      if (reissueResponse.data?.access && reissueResponse.data?.refresh) {
         console.log("✅ 새 Access Token 발급 성공 → 다시 요청 진행");
-  
-        setAuthCookies(response, reissueResponse.data.access, reissueResponse.data.refresh);
+
+        setAuthCookies(
+          response,
+          reissueResponse.data.access,
+          reissueResponse.data.refresh,
+        );
 
         // 🔹 3. 재발급된 AccessToken으로 사용자 정보 가져오기
         userInfoResponse = await fetchUserInfo(reissueResponse.data.access);
@@ -119,18 +124,19 @@ async function validateAndRefreshTokens(
           return { userInfo: userInfoResponse.data, response };
         }
       } else {
-        return {}
+        return {};
       }
     }
   } catch (error: any) {
     console.error("❌ Refresh Token 사용 중 오류 발생:", error.message);
-    clearCookies(response); 
+    clearCookies(response);
   }
-  
+
   return {}; // ❌ 모든 시도 실패 시 빈 객체 반환
 }
 
 export async function middleware(request: NextRequest) {
+  // return NextResponse.next();
   // 요청 경로
   const pathname = request.nextUrl.pathname;
 
@@ -156,11 +162,14 @@ export async function middleware(request: NextRequest) {
   response?.headers.set("x-user-role", userInfo.role);
 
   // 🔹 ✅ 관리자 권한 검사를 배열을 사용하여 수행
-  if (adminPages.some((path) => pathname.startsWith(path)) && userInfo.role !== "ADMIN") {
+  if (
+    adminPages.some((path) => pathname.startsWith(path)) &&
+    userInfo.role !== "ADMIN"
+  ) {
     console.warn("🚫 권한이 부족하여 홈으로 리디렉트됨");
-    return  NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
-  
+
   return response;
 }
 

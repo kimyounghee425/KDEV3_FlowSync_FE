@@ -13,6 +13,7 @@ import {
   updateOrganization,
 } from "@/src/api/organizations";
 import styles from "@/src/components/common/InputForm.module.css";
+import { validationRulesOfUpdatingOrganization } from "@/src/constants/validationRules";
 
 export default function OrganizationDetailForm({
   organizationData,
@@ -30,12 +31,18 @@ export default function OrganizationDetailForm({
   const [isFetching, setIsFetching] = useState<boolean>(false); // ✅ 새로 렌더링 여부
   // ✅ 각 필드별 변경 상태를 관리하는 객체
   const [isChanged, setIsChanged] = useState<{ [key: string]: boolean }>({});
-  const isUpdateDisabled = Object.keys(isChanged).length === 0;
+  const isUpdateDisabled =
+    Object.keys(isChanged).length === 0 || Object.keys(errors).length > 0;
   const fileData =
     typeof formData.brCertificateUrl === "string" &&
     formData.brCertificateUrl.includes("|")
       ? formData.brCertificateUrl.split("|")
       : [null, null];
+
+  // 🔹 formData가 변경될 때만 실행되도록 설정
+  useEffect(() => {
+    validateInputs();
+  }, [formData]);
 
   useEffect(() => {
     return () => {
@@ -58,7 +65,10 @@ export default function OrganizationDetailForm({
     setIsFetching(true);
     try {
       const updatedData = await fetchOrganizationDetails(organizationId);
-      setFormData(updatedData); // ✅ 새로 불러온 데이터로 상태 업데이트
+      // ✅ 데이터가 변경되지 않더라도 리렌더링을 강제하기 위해 새로운 객체로 할당
+      setFormData({ ...updatedData });
+      // ✅ 유효성 검사 실행 (버튼 활성화 여부 및 에러 메시지 갱신)
+      validateInputs();
       setIsChanged({}); // ✅ 모든 필드 변경 상태 초기화
     } catch (error) {
       console.error("업체 데이터 갱신 실패:", error);
@@ -67,80 +77,102 @@ export default function OrganizationDetailForm({
     }
   }
 
+  function validateInputs() {
+    // 🔹 `Object.entries()`를 사용하여 모든 필드에 대한 유효성 검사 수행
+    const updatedErrors = Object.entries(
+      validationRulesOfUpdatingOrganization,
+    ).reduce(
+      (errors, [inputName, validationRule]) => {
+        if (
+          !validationRule.isValid(
+            formData[inputName as keyof OrganizationProps],
+          )
+        ) {
+          errors[inputName] = validationRule.errorMessage;
+        }
+        return errors;
+      },
+      {} as { [inputName: string]: string },
+    );
+
+    setErrors(updatedErrors); // 에러 상태 업데이트
+    return Object.keys(updatedErrors).length === 0; // 에러가 없으면 true 반환
+  }
+
+  // 📌 입력 값 변경 시 상태(formData)를 업데이트.
   function handleInputUpdate(inputName: string, value: string) {
     // 숫자만 남기기
-    const onlyNumbers = value.replace(/[^0-9]/g, "");
-    let formattedValue = onlyNumbers;
+    let formattedValue = value;
 
-    // 입력값별 하이픈 추가 규칙 적용
-    const formatWithHyphen = (value: string, pattern: number[]) => {
-      let formatted = "";
-      let index = 0;
+    if (inputName === "phoneNumber" || inputName === "brNumber") {
+      // 숫자만 남기기 (주소 입력란 제외)
+      const onlyNumbers = value.replace(/[^0-9]/g, "");
 
-      for (const length of pattern) {
-        if (index >= value.length) break; // 🔥 안전한 길이 체크 추가
-        if (index + length <= value.length) {
-          formatted +=
-            (index === 0 ? "" : "-") +
-            value.slice(index, Math.min(value.length, index + length));
-          index += length;
-        } else {
-          formatted += (index === 0 ? "" : "-") + value.slice(index);
-          break;
+      // 하이픈 추가 (전화번호, 사업자 등록번호에만 적용)
+      const formatWithHyphen = (value: string, pattern: number[]) => {
+        let formatted = "";
+        let index = 0;
+
+        for (const length of pattern) {
+          if (index >= value.length) break; // 🔥 안전한 길이 체크 추가
+          if (index + length <= value.length) {
+            formatted +=
+              (index === 0 ? "" : "-") + value.slice(index, index + length);
+            index += length;
+          } else {
+            formatted += (index === 0 ? "" : "-") + value.slice(index);
+            break;
+          }
         }
-      }
-      return formatted;
-    };
+        return formatted;
+      };
 
-    if (inputName === "phoneNumber") {
-      formattedValue = formatWithHyphen(onlyNumbers, [3, 4, 4]); // 010-1234-5678
-    } else if (inputName === "brNumber") {
-      formattedValue = formatWithHyphen(onlyNumbers, [3, 2, 5]); // 123-45-67890
+      if (inputName === "phoneNumber") {
+        formattedValue = formatWithHyphen(onlyNumbers, [3, 4, 4]); // 010-1234-5678
+      } else if (inputName === "brNumber") {
+        formattedValue = formatWithHyphen(onlyNumbers, [3, 2, 5]); // 123-45-67890
+      }
     }
 
-    setFormData((prev) => {
-      const key = inputName as keyof OrganizationProps; // 🔥 명시적으로 keyof OrganizationProps로 변환
-      if (prev[key] === formattedValue) return prev;
-      return { ...prev, [key]: formattedValue };
-    });
-    setIsChanged((prev) => {
-      if (prev[inputName]) return prev; // 🔥 이미 변경된 상태면 업데이트 안 함
-      return { ...prev, [inputName]: true };
-    });
+    // 🔹 상태 업데이트 (주소 입력란은 원본 값 유지)
+    setFormData((prev) => ({
+      ...prev,
+      [inputName]: formattedValue,
+    }));
+
+    // 🔹 변경된 상태 추적
+    setIsChanged((prev) => ({
+      ...prev,
+      [inputName]: true,
+    }));
   }
 
-  // 📌 전체 입력값 유효성 검사 (수정 버튼 활성화 여부 체크)
-  function isFormValid() {
-    return Object.values(errors).every((error) => !error);
-  }
-
-  // 📌 업체 정보 수정
+  // 📌 updateOrganization()을 호출하여 업체 정보를 수정
   async function handleUpdate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
 
-    if (!isFormValid()) {
+    if (!validateInputs()) {
       alert("입력값을 다시 확인해주세요.");
       setIsSubmitting(false);
       return;
     }
 
     try {
-      const organizationData = {
-        type: formData.type,
-        name: formData.name,
-        brNumber: formData.brNumber,
-        brCertificateUrl: formData.brCertificateUrl,
-        streetAddress: formData.streetAddress,
-        detailAddress: formData.detailAddress,
-        phoneNumber: formData.phoneNumber,
-      };
-
       const response = await updateOrganization(
         organizationId,
-        organizationData,
-        selectedFile, // 파일 전달,
+        {
+          type: formData.type,
+          name: formData.name,
+          brNumber: formData.brNumber,
+          brCertificateUrl: formData.brCertificateUrl,
+          streetAddress: formData.streetAddress,
+          detailAddress: formData.detailAddress,
+          phoneNumber: formData.phoneNumber,
+        },
+        selectedFile,
       );
+
       // 수정된 데이터만 렌더링
       refetchOrganizationData();
       setIsChanged({}); // 모든 필드 변경 상태 및 스타일 초기화

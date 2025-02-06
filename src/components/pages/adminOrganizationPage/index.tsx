@@ -15,7 +15,6 @@ export default function AdminOrganizationPage() {
       ? params.organizationId[0]
       : params.organizationId,
   );
-  console.log("organizationId: ", organizationId);
   const [organizationData, setOrganizationData] =
     useState<OrganizationProps | null>(null);
 
