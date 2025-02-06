@@ -77,7 +77,16 @@ export default function AdminMembersCreatePage() {
     }
     return true;
   }
-
+  console.log(inputValues.role,
+    inputValues.organizationId,
+    inputValues.name,
+    inputValues.email,
+    inputValues.password,
+    inputValues.phoneNum,
+    inputValues.jobRole,
+    inputValues.jobTitle,
+    inputValues.introduction,
+    inputValues.remark,)
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!validateInputs()) return;

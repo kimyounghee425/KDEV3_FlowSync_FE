@@ -12,6 +12,7 @@ import { ProjectProgressStepProps, QuestionRequestData } from "@/src/types";
 import { fetchProjectQuestionProgressStep as fetchProjectQuestionProgressStepApi } from "@/src/api/projects";
 import { useFetchData } from "@/src/hook/useFetchData";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
+import ProgressStepAddSection from "../../common/ProgressStepAddSection";
 import "./edit.css"
 
 export default function QuestionRegisterPage() {

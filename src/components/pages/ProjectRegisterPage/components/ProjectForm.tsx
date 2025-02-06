@@ -1,7 +1,7 @@
 "use client";
 
 // 외부 라이브러리
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Box, Flex, Button } from "@chakra-ui/react";
 
 // 절대 경로 파일
@@ -56,7 +56,9 @@ export default function ProjectForm() {
   const [selectedCustomerMembers, setSelectedCustomerMembers] = useState<
     Member[]
   >([]);
-  const [customerOwnerMember, setCustomerOwnerMember] = useState<Member | undefined>();
+  const [customerOwnerMember, setCustomerOwnerMember] = useState<
+    Member | undefined
+  >();
 
   // 개발사 관련 상태
   const [developerOrg, setDeveloperOrg] = useState<OrgProps[]>([]);
@@ -95,7 +97,7 @@ export default function ProjectForm() {
     async function fetchMember() {
       try {
         const data = await getMembersApi(selectedCustomerOrgId, 1, 100000);
-        setCustomerMembers(data.data.members);
+        setCustomerMembers(data.data?.members);
       } catch (error) {
         console.error(error);
         setCustomerMembers([]);
@@ -122,7 +124,6 @@ export default function ProjectForm() {
     }
     fetchMember();
   }, [selectedDeveloperOrgId]);
-
 
   // 고객사 멤버, 개발사 멤버 합쳐서 멤버 배열에 넣기.
   useEffect(() => {

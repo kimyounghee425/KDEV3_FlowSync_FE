@@ -1,7 +1,9 @@
 // 회사와 멤버 모두 선택하는 컴포넌트
 
 import { Flex, Box, Text, Button } from "@chakra-ui/react";
+import Image from "next/image";
 import React from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface OrgProps {
   id: number;
@@ -53,6 +55,8 @@ export default function SelectOrganizationSection({
   ownerMember,
   setOwnerMember,
 }: CustomerOrgProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   // 멤버 클릭했을 때 해제하는 멤버가 오너면 오너도 해제
   const handleSelectMember = (member: Member) => {
     setSelectedMembers((prev) => {
@@ -69,6 +73,23 @@ export default function SelectOrganizationSection({
     });
   };
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    // ✅ 마우스 클릭 이벤트 감지
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   // console.log(devOwnerMember)
   // console.log(selectedMembers)
 
@@ -80,7 +101,7 @@ export default function SelectOrganizationSection({
         <Flex minWidth={"700px"}>
           <Flex direction={"column"} mr={5} mb={8}>
             <Box mt={8} mb={4}>
-              <Text>{title}</Text>
+              <Text lineHeight={"2"}>{title}</Text>
             </Box>
             <Box
               h={"400px"}
@@ -114,8 +135,50 @@ export default function SelectOrganizationSection({
           {/* selectedCustomerOrgId 원래값 0 이므로 0일때 렌더링 x */}
           {selectedOrgId !== 0 && (
             <Flex direction={"column"} mb={4}>
-              <Box mt={8} mb={4}>
+              <Box
+                display={"flex"}
+                flexDirection={"row"}
+                alignItems={"center"}
+                mt={8}
+                mb={4}
+              >
                 <Text>멤버 목록</Text>
+                <Box position="relative" ref={dropdownRef}>
+                  {/* ✅ 클릭하면 드롭다운이 열리는 버튼 (이미지 버튼) */}
+                  <Button
+                    onClick={() => setIsOpen(!isOpen)}
+                    size="sm"
+                    variant="outline"
+                    border={"none"}
+                  >
+                    <Image
+                      src="/545674.png"
+                      alt="Help Icon"
+                      width={20}
+                      height={20}
+                    />
+                  </Button>
+                  {isOpen && (
+                    <Box
+                      position="absolute"
+                      top="40px" // 버튼 아래에 위치
+                      left="0"
+                      width="200px"
+                      bg="white"
+                      border="1px solid #ccc"
+                      borderRadius="8px"
+                      boxShadow="md"
+                      p="4"
+                    >
+                      <Text fontWeight="bold">Owner 란?</Text>
+                      <Text fontSize="sm" mt="2">
+                        {title === "고객사 목록"
+                          ? "고객사 멤버 중 Owner 로 정해진 사람은 결재 권한이 있습니다."
+                          : "개발사 멤버 중 Owner 로 정해진 사람은 결재 요청 권한이 있습니다"}
+                      </Text>
+                    </Box>
+                  )}
+                </Box>
               </Box>
               <Box
                 h={"400px"}
@@ -148,7 +211,7 @@ export default function SelectOrganizationSection({
                         <Text>
                           {member.role} ({member.jobRole})
                         </Text>
-                        
+
                         {/* 오너 표시 */}
                         {setOwnerMember && (
                           <Button
