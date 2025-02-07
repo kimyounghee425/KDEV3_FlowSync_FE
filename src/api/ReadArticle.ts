@@ -1,5 +1,5 @@
 import axiosInstance from "@/src/api/axiosInstance";
-import { QuestionApiResponse, TaskApiResponse, QuestionArticle, TaskArticle, NoticeArticle, NoticeApiResponse } from "@/src/types";
+import { QuestionApiResponse, ApprovalApiResponse, QuestionArticle, ApprovalArticle, NoticeArticle, NoticeApiResponse } from "@/src/types";
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function readQuestionApi(
@@ -35,12 +35,12 @@ export async function readNoticeApi(
   }
 }
 
-export async function readTaskApi(
+export async function readApprovalApi(
   projectId: number,
   approvalId: number,
-) : Promise<TaskArticle> {
+) : Promise<ApprovalArticle> {
   try {
-    const response = await axiosInstance.get<TaskApiResponse>(
+    const response = await axiosInstance.get<ApprovalApiResponse>(
       `${BASE_URL}/projects/${projectId}/approvals/${approvalId}`
     )
 

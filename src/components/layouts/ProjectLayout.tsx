@@ -2,13 +2,12 @@
 
 import { ReactNode } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import { Alert, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { Layers, List, MessageCircleQuestion } from "lucide-react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import ProjectInfoSection from "@/src/components/common/ProjectInfoSection";
-import { useFetchData } from "@/src/hook/useFetchData";
-import { fetchProjectInfo } from "@/src/api/projects";
-import { ProjectInfoProps } from "@/src/types";
+import { useProjectInfo } from "@/src/hook/useFetchData";
+import { Toaster } from "@/src/components/ui/toaster";
 
 interface ProjectLayoutProps {
   children: ReactNode;
@@ -17,7 +16,7 @@ interface ProjectLayoutProps {
 // 프로젝트 탭 메뉴
 const projectMenu = [
   {
-    value: "tasks",
+    value: "approvals",
     label: (
       <HStack>
         <List />
@@ -53,25 +52,32 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
   const resolvedProjectId = Array.isArray(projectId)
     ? projectId[0]
     : projectId || "";
-
-  const { data: projectInfo, loading: projectInfoLoading } = useFetchData<
-    ProjectInfoProps,
-    [string]
-  >({
-    fetchApi: fetchProjectInfo,
-    params: [resolvedProjectId],
-  });
+  // 프로젝트 정보 데이터 패칭
+  const {
+    data: projectInfo,
+    loading: projectInfoLoading,
+    error: projectInfoError,
+  } = useProjectInfo(resolvedProjectId);
   // 현재 탭 추출
-  const currentTab = pathname.split("/").pop(); // "tasks" | "questions" | "workflow"
+  const currentTab = pathname.split("/").pop(); // "approvals" | "questions" | "workflow"
 
   // 탭 변경 핸들러
   const handleTabChange = (details: { value: string }) => {
-    // details.value = "tasks" | "questions" | "workflow"
+    // details.value = "approvals" | "questions" | "workflow"
     router.push(`/projects/${projectId}/${details.value}`);
   };
 
   return (
     <>
+      <Toaster />
+      {projectInfoError && (
+        <Alert.Root status="error">
+          <Alert.Indicator />
+          <Alert.Title>
+            프로젝트 기본 정보를 불러오지 못했습니다. 다시 시도해주세요.
+          </Alert.Title>
+        </Alert.Root>
+      )}
       {/* 상단 영역 */}
       <Flex
         direction="column"

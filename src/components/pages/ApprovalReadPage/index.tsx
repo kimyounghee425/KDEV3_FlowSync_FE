@@ -11,28 +11,28 @@ import ArticleContent from "@/src/components/common/ArticleContent";
 import ArticleComments from "@/src/components/common/ArticleComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/BackButton";
-import { readTaskApi } from "@/src/api/ReadArticle";
-import SignToApprove from "@/src/components/pages/TaskReadPage/components/SignToApprove";
-import { ArticleComment, TaskArticle } from "@/src/types";
+import { readApprovalApi } from "@/src/api/ReadArticle";
+import SignToApprove from "@/src/components/pages/ApprovalReadPage/components/SignToApprove";
+import { ArticleComment, ApprovalArticle } from "@/src/types";
 
-export default function TaskReadPage() {
-  const { projectId, taskId } = useParams() as {
+export default function ApprovalReadPage() {
+  const { projectId, approvalId } = useParams() as {
     projectId: string;
-    taskId: string;
+    approvalId: string;
   };
 
-  const [article, setArticle] = useState<TaskArticle | null>(null);
+  const [article, setArticle] = useState<ApprovalArticle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [commentList, setCommentList] = useState<ArticleComment[]>([]);
   const [commentIsWritten, setCommentIsWritten] = useState<boolean>(false);
 
   useEffect(() => {
-    const loadTask = async () => {
+    const loadApproval = async () => {
       try {
-        const responseData = await readTaskApi(
+        const responseData = await readApprovalApi(
           Number(projectId),
-          Number(taskId),
+          Number(approvalId),
         );
         setArticle(responseData);
         setCommentList(responseData.commentList ?? []);
@@ -46,8 +46,8 @@ export default function TaskReadPage() {
         setLoading(false);
       }
     };
-    loadTask();
-  }, [projectId, taskId, commentIsWritten]);
+    loadApproval();
+  }, [projectId, approvalId, commentIsWritten]);
 
   if (error) {
     return <Box>에러 발생: {error}</Box>;

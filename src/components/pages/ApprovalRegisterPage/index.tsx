@@ -9,9 +9,9 @@ import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createTaskApi } from "@/src/api/RegisterArticle";
-import { TaskRequestData } from "@/src/types";
+import { ApprovalRequestData } from "@/src/types";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
-import "./edit.css"
+import "./edit.css";
 
 const progressData = [
   { id: "1", title: "요구사항정의", value: "" },
@@ -22,13 +22,13 @@ const progressData = [
   { id: "6", title: "검수", value: "" },
 ];
 
-export default function TaskRegisterPage() {
+export default function ApprovalRegisterPage() {
   const { projectId } = useParams();
   const router = useRouter();
   const [title, setTitle] = useState<string>("");
   const [progressStepId, setProgressStepId] = useState<number>(1);
 
-  const handleSave = async <T extends TaskRequestData>(requestData: T) => {
+  const handleSave = async <T extends ApprovalRequestData>(requestData: T) => {
     try {
       const response = await createTaskApi(Number(projectId), {
         ...requestData,

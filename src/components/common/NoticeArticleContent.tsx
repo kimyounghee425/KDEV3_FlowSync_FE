@@ -1,10 +1,10 @@
 // 외부 라이브러리
-import { Box, Text, Image, VStack } from "@chakra-ui/react";
+import { Box, Text, Image } from "@chakra-ui/react";
 
 // 절대 경로 파일
 import {
   QuestionArticle,
-  TaskArticle,
+  ApprovalArticle,
   ArticleLink,
   ArticleFile,
   ContentBlock,
@@ -13,13 +13,13 @@ import {
 import { formatDateWithTime } from "@/src/utils/formatDateUtil";
 
 interface ArticleContentProps<
-  T extends QuestionArticle | TaskArticle | NoticeArticle,
+  T extends QuestionArticle | ApprovalArticle | NoticeArticle,
 > {
   article: T | null;
 }
 
 export default function ArticleContent<
-  T extends QuestionArticle | TaskArticle | NoticeArticle,
+  T extends QuestionArticle | ApprovalArticle | NoticeArticle,
 >({ article }: ArticleContentProps<T>) {
   if (!article) {
     return (

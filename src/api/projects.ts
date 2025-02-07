@@ -1,5 +1,5 @@
 import axiosInstance from "@/src/api/axiosInstance";
-import { CommonResponseType, ProjectListResponse, ProjectProgressStepProps, ProjectQuestionListResponse, ProjectTaskListResponse } from "@/src/types";
+import { CommonResponseType, ProjectListResponse, ProjectProgressStepProps, ProjectQuestionListResponse, ProjectApprovalListResponse } from "@/src/types";
 
 /**
  * 프로젝트 목록을 가져옵니다.
@@ -9,7 +9,7 @@ import { CommonResponseType, ProjectListResponse, ProjectProgressStepProps, Proj
  * @param pageSize 페이지 크기
  * @returns 프로젝트 목록 및 페이징 정보를 담은 객체(BoardResponseProps)
  */
-export async function fetchProjectList(
+export async function fetchProjectListApi(
   keyword: string = "",
   status: string = "",
   currentPage: number,
@@ -28,7 +28,7 @@ export async function fetchProjectList(
  * @param projectId 프로젝트 식별자
  * @returns 프로젝트 상세 정보
  */
-export async function fetchProjectInfo(projectId: string) {
+export async function fetchProjectInfoApi(projectId: string) {
   const response = await axiosInstance.get(
     `/projects/${projectId}/projectInfo`,
   );
@@ -40,7 +40,7 @@ export async function fetchProjectInfo(projectId: string) {
  * @param projectId 프로젝트 식별자
  * @returns 프로젝트 진행 상황 요약(숫자 형태)
  */
-export async function fetchProjectQuestionProgressStep(projectId: string): Promise<CommonResponseType<ProjectProgressStepProps[]>> {
+export async function fetchProjectQuestionProgressStepApi(projectId: string): Promise<CommonResponseType<ProjectProgressStepProps[]>> {
   const response = await axiosInstance.get(
     `/projects/${projectId}/questions/counts`,
   );
@@ -52,9 +52,9 @@ export async function fetchProjectQuestionProgressStep(projectId: string): Promi
  * @param projectId 프로젝트 식별자
  * @returns 프로젝트 진행 상황 요약(숫자 형태)
  */
-export async function fetchProjectTaskProgressStep(projectId: string): Promise<CommonResponseType<ProjectProgressStepProps[]>> {
+export async function fetchProjectApprovalProgressStepApi(projectId: string): Promise<CommonResponseType<ProjectProgressStepProps[]>> {
   const response = await axiosInstance.get(
-    `/projects/${projectId}/tasks/counts`,
+    `/projects/${projectId}/approvals/counts`,
   );
   return response.data;
 }
@@ -79,7 +79,7 @@ export async function fetchProjectsStatusCount() {
  * @param pageSize 페이지 크기
  * @returns 게시글 목록 및 페이징 정보를 담은 데이터
  */
-export async function fetchProjectQuestionList(
+export async function fetchProjectQuestionListApi(
   projectId: string,
   keyword: string = "",
   progressStep: string = "",
@@ -109,16 +109,14 @@ export async function fetchProjectQuestionList(
  * @param pageSize 페이지 크기
  * @returns 게시글 목록 및 페이징 정보를 담은 데이터
  */
-export async function fetchProjectTaskList(
+export async function fetchProjectApprovalListApi(
   projectId: string,
   keyword: string = "",
   progressStep: string = "",
   status: string = "",
   currentPage: number,
   pageSize: number,
-): Promise<CommonResponseType<ProjectTaskListResponse>> {
-  // 실제 요청은 /projects/:projectId/tasks endpoint가 될 수도 있으나,
-  // 현재 주석 처리되어 있고, 대신 /posts endpoint를 사용 중입니다.
+): Promise<CommonResponseType<ProjectApprovalListResponse>> {
   const response = await axiosInstance.get(`/projects/${projectId}/approvals`, {
     params: {
       keyword,

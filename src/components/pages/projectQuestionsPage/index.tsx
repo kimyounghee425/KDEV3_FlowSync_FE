@@ -7,7 +7,6 @@ import {
   Button,
   createListCollection,
   Flex,
-  Spinner,
   Table,
 } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
@@ -19,7 +18,7 @@ import Pagination from "@/src/components/common/Pagination";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useProjectQuestionList } from "@/src/hook/useFetchBoardList";
-import { useProjectProgressStepData } from "@/src/hook/useFetchData";
+import { useProjectQuestionProgressStepData } from "@/src/hook/useFetchData";
 
 const questionStatusFramework = createListCollection<{
   id: string;
@@ -54,12 +53,12 @@ export default function ProjectQuestionsPage() {
   const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
   const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
 
-  // ProgressStep 데이터 패칭
+  // QuestionProgressStep 데이터 패칭
   const {
-    data: progressStepData,
-    loading: progressStepLoading,
-    error: progressStepError,
-  } = useProjectProgressStepData(resolvedProjectId);
+    data: questionProgressStepData,
+    loading: questionProgressStepLoading,
+    error: questionProgressStepError,
+  } = useProjectQuestionProgressStepData(resolvedProjectId);
   // 프로젝트 질문 게시판 목록 데이터 패칭
   const {
     data: projectQuestionList,
@@ -95,21 +94,19 @@ export default function ProjectQuestionsPage() {
   return (
     <ProjectLayout>
       {/* 프로젝트 단계 섹션 */}
-      {progressStepError ? (
+      {questionProgressStepError && (
         <Alert.Root status="error">
-          <Alert.Indicator>
-            <Spinner size="sm" />
-          </Alert.Indicator>
+          <Alert.Indicator />
           <Alert.Title>
             프로젝트 단계 정보를 불러오지 못했습니다. 다시 시도해주세요.
           </Alert.Title>
         </Alert.Root>
-      ) : (
-        <ProgressStepSection
-          progressStep={progressStepData || []}
-          loading={progressStepLoading}
-        />
       )}
+      <ProgressStepSection
+        progressStep={questionProgressStepData || []}
+        loading={questionProgressStepLoading}
+      />
+
       <Box
         direction="column"
         padding="30px 23px"
@@ -137,6 +134,14 @@ export default function ProjectQuestionsPage() {
             />
           </SearchSection>
         </Flex>
+        {projectQuestionError && (
+          <Alert.Root status="error" mt={4}>
+            <Alert.Indicator />
+            <Alert.Title>
+              프로젝트 질문 목록을 불러오지 못했습니다. 다시 시도해주세요.
+            </Alert.Title>
+          </Alert.Root>
+        )}
         {/* 
           CommonTable: 게시글 목록을 렌더링하는 공통 테이블 컴포넌트
           - headerTitle: 테이블 헤더
