@@ -26,6 +26,32 @@ function handleUnauthorized(request: NextRequest) {
   return res;
 }
 
+
+/**
+ * 쿠키 삭제 함수
+ */
+function clearCookies(response: NextResponse) {
+  response.headers.set("Set-Cookie", [
+    "access=; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=0",
+    "refresh=; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=0"
+  ].join(", "));
+}
+
+/**
+ * 쿠키 설정 함수
+ */
+function setAuthCookies(response: NextResponse, accessToken: string, refreshToken: string) {
+  response.headers.set("Set-Cookie", [
+    `access=${accessToken}; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=${30 * 60}`,
+    `refresh=${refreshToken}; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=${24 * 60 * 60}`
+  ].join(", "));
+}
+
+/**
+ * ✅ 관리자 권한이 필요한 페이지 목록
+ */
+const adminPages = ["/admin"];
+
 /**
  * 쿠키 삭제 함수
  */
@@ -78,7 +104,7 @@ const adminPages = ["/admin"];
  * 🔄 토큰 검증 및 리프레시 로직
  */
 async function validateAndRefreshTokens(
-  request: NextRequest,
+  request: NextRequest
 ): Promise<{ userInfo?: UserInfoResponse; response?: NextResponse }> {
   let userInfoResponse;
   const accessToken = request.cookies.get("access")?.value;
@@ -86,7 +112,7 @@ async function validateAndRefreshTokens(
   const response = NextResponse.next();
 
   try {
-    // 🔹 1. AccessToken 검증 (401 발생 가능)
+    // 🔹 1. AccessToken 검증
     if (accessToken) {
       userInfoResponse = await fetchUserInfo(accessToken);
       if (userInfoResponse.result === "SUCCESS") {
@@ -132,6 +158,33 @@ async function validateAndRefreshTokens(
     clearCookies(response);
   }
 
+  if(!refreshToken) {
+    console.warn("❌ Refresh Token 없음 → 로그인 페이지로 이동");
+    return {}
+  }
+  
+  try {
+    // 🔹 2. Access Token 만료 → Refresh Token으로 재발급 시도
+    console.log("🔄 Access Token 만료됨 → Refresh Token 사용");
+    const reissueResponse = await fetchReissueToken(refreshToken);
+
+    if (reissueResponse.data?.access && reissueResponse.data?.refresh) {
+      console.log("✅ 새 Access Token 발급 성공 → 다시 요청 진행");
+
+      // 쿠키에 새 AccessToken & RefreshToken 저장
+      setAuthCookies(response, reissueResponse.data.access, reissueResponse.data.refresh);
+
+      // 새 Access Token으로 유저 정보 가져오기
+      const userInfoResponse = await fetchUserInfo(reissueResponse.data.access);
+      if (userInfoResponse.result === "SUCCESS") {
+        return { userInfo: userInfoResponse.data, response };
+      }
+    }
+  } catch (error: any) {
+    console.error("❌ Refresh Token 사용 중 오류 발생:", error.message);
+    clearCookies(response);
+  }
+  
   return {}; // ❌ 모든 시도 실패 시 빈 객체 반환
 }
 
@@ -169,7 +222,6 @@ export async function middleware(request: NextRequest) {
     console.warn("🚫 권한이 부족하여 홈으로 리디렉트됨");
     return NextResponse.redirect(new URL("/", request.url));
   }
-
   return response;
 }
 

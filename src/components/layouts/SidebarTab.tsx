@@ -21,7 +21,7 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
     selectedProjectFilter === "완료 프로젝트" ? "COMPLETED" : "IN_PROGRESS";
 
   const { projectList, loading, hasMore, observerRef } =
-    useProjectInfiniteScroll(status, 2);
+    useProjectInfiniteScroll(status);
 
   // 관리자 메뉴 렌더링
   if (memberRole === "admin") {
