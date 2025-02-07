@@ -12,10 +12,9 @@ import ArticleComments from "@/src/components/common/ArticleComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/BackButton";
 import { readApprovalApi } from "@/src/api/ReadArticle";
-import SignToApprove from "@/src/components/pages/ApprovalReadPage/components/SignToApprove";
+import SignToApprove from "@/src/pages/ApprovalReadPage/components/SignToApprove";
 import { ArticleComment, ApprovalArticle } from "@/src/types";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
-
 
 export default function ApprovalReadPage() {
   const { projectId, approvalId } = useParams() as {
@@ -62,7 +61,7 @@ export default function ApprovalReadPage() {
   // const handleEdit = () => {
   //     router.push(`/projects/${projectId}/questions/${questionId}/edit`)
   //   }
-  
+
   //   const handleDelete = async() => {
   //     const confirmDelete = window.confirm("정말로 삭제하시겠습니까?")
   //     if (!confirmDelete) return;
@@ -74,8 +73,6 @@ export default function ApprovalReadPage() {
   //       alert(`삭제 중 문제가 발생했습니다 : ${error}`)
   //     }
   //   }
-
-    
 
   return (
     <Box

@@ -1,3 +1,3 @@
-import WorkFlowPage from "@/src/components/pages/WorkFlowPage";
+import WorkFlowPage from "@/src/pages/WorkFlowPage";
 
 export default WorkFlowPage;

@@ -10,7 +10,7 @@ import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
-import SignUpload from "@/src/components/pages/ApprovalRegisterPage/components/SignUpload";
+import SignUpload from "@/src/pages/ApprovalRegisterPage/components/SignUpload";
 import DropDownInfoBottom from "./DropDownInfoBottom";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -139,7 +139,7 @@ export default function ArticleForm({
       </Flex>
 
       <Box mb={5}>
-        <Flex direction={"row"} alignItems={"center"} >
+        <Flex direction={"row"} alignItems={"center"}>
           <Text>상세 내용</Text>
           <DropDownInfoBottom
             text={

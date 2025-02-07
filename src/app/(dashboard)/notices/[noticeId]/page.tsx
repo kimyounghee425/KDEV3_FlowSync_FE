@@ -1,3 +1,3 @@
-import noticeReadPage from "@/src/components/pages/NoticeReadPage";
+import noticeReadPage from "@/src/pages/NoticeReadPage";
 
 export default noticeReadPage;

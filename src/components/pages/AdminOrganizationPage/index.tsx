@@ -6,6 +6,7 @@ import { OrganizationProps } from "@/src/types";
 import { fetchOrganizationDetails } from "@/src/api/organizations";
 import OrganizationDetailForm from "@/src/components/pages/AdminOrganizationPage/components/organizationDetailForm";
 
+
 export default function AdminOrganizationPage() {
   const router = useRouter();
   const params = useParams();
