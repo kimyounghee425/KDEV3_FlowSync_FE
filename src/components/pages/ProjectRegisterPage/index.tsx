@@ -5,7 +5,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 
 import BackButton from "@/src/components/common/BackButton";
-import ProjectForm from "@/src/pages/ProjectRegisterPage/components/ProjectForm";
+import ProjectForm from "@/src/components/pages/ProjectRegisterPage/components/ProjectForm";
 
 export default function ProjectRegisterPage() {
   return (
