@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@/src/components/ui/radio";
 import { useForm } from "@/src/hook/useForm";
@@ -8,12 +9,66 @@ import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { defaultValuesOfMember } from "@/src/constants/defaultValues";
 import { validationRulesOfCreatingMember } from "@/src/constants/validationRules";
-import { createMember, createMemberWithFile } from "@/src/api/members";
+import { createMember } from "@/src/api/members";
+import { getOrganizationsApi } from "@/src/api/getOrganization";
+import SelectedOrganization from "@/src/components/pages/adminMembersCreatePage/components/SelectOrganization";
+
+interface OrgProps {
+  id: number;
+  type: string;
+  brNumber: string;
+  name: string;
+  brCertificateUrl: string;
+  streetAddress: string;
+  detailAddress: string;
+  phoneNumber: string;
+  status: string;
+}
 
 export default function AdminMembersCreatePage() {
   const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfMember, validationRulesOfCreatingMember);
+
+  // 업체 관련 정보
+  const [organizations, setOrganizations] = useState<OrgProps[]>([]);
+  const [selectedOrganization, setSelectedOrganization] = useState<OrgProps>();
+
+  useEffect(() => {
+    async function fetchOrganization() {
+      try {
+        const organizationData = await getOrganizationsApi();
+        console.log("페칭출력", organizationData.data.dtoList);
+
+        setOrganizations(organizationData.data.dtoList);
+      } catch (error) {
+        console.error("업체 정보 불러오지 못함 : ", error);
+      }
+    }
+    fetchOrganization();
+  }, []);
+
+  function handleChange(inputName: string, value: string) {
+    console.log("맞음");
+    if (inputName === "phoneNum") {
+      const onlyNumbers = value
+        .toString()
+        .replace(/[^0-9]/g, "")
+        .slice(0, 11);
+
+      let formattedValue = onlyNumbers;
+
+      if (onlyNumbers.length > 3 && onlyNumbers.length <= 7) {
+        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3)}`;
+      } else if (onlyNumbers.length > 7) {
+        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3, 7)}-${onlyNumbers.slice(7, 11)}`;
+      }
+
+      handleInputChange(inputName, formattedValue);
+    } else {
+      handleInputChange(inputName, value);
+    }
+  }
 
   function validateInputs() {
     if (!checkAllInputs()) {
@@ -22,14 +77,27 @@ export default function AdminMembersCreatePage() {
     }
     return true;
   }
-
+  console.log(inputValues.role,
+    inputValues.organizationId,
+    inputValues.name,
+    inputValues.email,
+    inputValues.password,
+    inputValues.phoneNum,
+    inputValues.jobRole,
+    inputValues.jobTitle,
+    inputValues.introduction,
+    inputValues.remark,)
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!validateInputs()) return;
     try {
+      console.log(
+        "업체 정보 확인 -  String(selectedOrganization?.id) ",
+        String(selectedOrganization?.id),
+      );
       const response = await createMember(
         inputValues.role,
-        inputValues.organizationId,
+        String(selectedOrganization?.id),
         inputValues.name,
         inputValues.email,
         inputValues.password,
@@ -88,14 +156,11 @@ export default function AdminMembersCreatePage() {
         </Flex>
       </Box>
       {/* 회원 생성 페이지 - 회원 정보 입력*/}
-      <InputForm
-        id="organizationId"
-        type="text"
-        label="업체 ID"
-        placeholder="ex) 123e4567-e89b-12d3-a456-426614174000"
-        value={inputValues.organizationId}
-        error={inputErrors.organizationId}
-        onChange={(e) => handleInputChange("organizationId", e.target.value)}
+
+      <SelectedOrganization
+        organizations={organizations}
+        selectedOrganization={selectedOrganization}
+        setSelectedOrganization={setSelectedOrganization}
       />
       <InputForm
         id="name"
@@ -131,7 +196,7 @@ export default function AdminMembersCreatePage() {
         placeholder="ex) 010-1234-5678"
         value={inputValues.phoneNum}
         error={inputErrors.phoneNum}
-        onChange={(e) => handleInputChange("phoneNum", e.target.value)}
+        onChange={(e) => handleChange("phoneNum", e.target.value)}
       />
       <InputForm
         id="jobRole"

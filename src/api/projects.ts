@@ -18,7 +18,7 @@ export async function fetchProjectList(
   const response = await axiosInstance.get("/projects", {
     params: { keyword, status, currentPage, pageSize },
   });
-  console.log(response)
+  // console.log(response)
   
   return response.data;
 }

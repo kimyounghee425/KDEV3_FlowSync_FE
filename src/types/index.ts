@@ -12,8 +12,8 @@ export interface CommonResponseWithMetaType<T> extends CommonResponseType<T> {
 }
 
 export interface ReissueResponse {
-  access: string,
-  refresh: string
+  access: string;
+  refresh: string;
 }
 
 // 서버에서 반환되는 페이징 메타데이터 타입
@@ -93,7 +93,7 @@ export interface OrganizationProps {
   streetAddress: string;
   detailAddress: string;
   phoneNumber: string;
-  remark: string | null;
+  remark: string;
 }
 
 // `createOrganization` 함수에서 입력값의 타입 정의
@@ -215,12 +215,34 @@ export interface ProjectQuestionListResponse {
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
-export interface ApiResponse {
+export interface QuestionApiResponse {
   code: number;
   result: string;
   message: string;
-  data: Article;
+  data: QuestionArticle;
 }
+
+export interface TaskApiResponse {
+  code: number;
+  result: string;
+  message: string;
+  data: TaskArticle;
+}
+
+export interface NoticeApiResponse {
+  code: number;
+  result: string;
+  message: string;
+  data: NoticeArticle;
+}
+
+export interface CommentApiResponse {
+  code: number;
+  result: string;
+  message: string;
+  data: ArticleComment;
+}
+
 // 게시글의 콘텐츠 블럭
 export interface ContentBlock {
   type: string;
@@ -228,12 +250,12 @@ export interface ContentBlock {
 }
 
 // 게시글
+
 export interface Article {
   id: number;
   number: number;
   title: string;
   content: ContentBlock[];
-  // content: ContentBlock[]; // ContentBlock 인터페이스 사용
   regAt: string;
   editAt: string;
   approverAt: string;
@@ -244,6 +266,54 @@ export interface Article {
   fileList: ArticleFile[];
   linkList: ArticleLink[];
   commentList: ArticleComment[];
+}
+
+export interface QuestionArticle {
+  id: number;
+  number: number;
+  title: string;
+  content: ContentBlock[];
+  regAt: string;
+  editAt: string;
+  approverAt: string;
+  category: string;
+  status: string;
+  deletedYn: string;
+  author: string;
+  fileList: ArticleFile[];
+  linkList: ArticleLink[];
+  commentList: ArticleComment[];
+}
+
+export interface TaskArticle {
+  id: number;
+  number: number;
+  title: string;
+  content: ContentBlock[];
+  regAt: string;
+  editAt: string;
+  approverAt: string;
+  category: string;
+  status: string;
+  deletedYn: string;
+  author: string;
+  fileList: ArticleFile[];
+  linkList: ArticleLink[];
+  commentList: ArticleComment[];
+}
+
+export interface NoticeArticle {
+  id: string;
+  adminId: string;
+  title: string;
+  content: ContentBlock[];
+  category: string;
+  priority: string;
+  isDeleted: boolean;
+  regAt: string;
+  updatedAt: string;
+  fileList: ArticleFile[];
+  linkList: ArticleLink[];
 }
 
 // 게시글 첨부링크
@@ -261,10 +331,6 @@ export interface ArticleFile {
   size: number;
 }
 
-export interface ArticleCommentsProps {
-  comments: ArticleComment[];
-}
-
 // 댓글
 export interface ArticleComment {
   id: number;
@@ -272,19 +338,8 @@ export interface ArticleComment {
   content: string;
   regAt: string;
   editAt: string;
-  deletedYn: string;
-  replies: ArticleReply[];
-}
-
-// 댓글의 답글
-export interface ArticleReply {
-  id: number;
-  author: string;
-  content: string;
-  regAt: string;
-  editAt: string;
   parentId: number;
-  deletedYn: string;
+  isParent: boolean;
 }
 
 // 회원/업체 생성 페이지 입력 폼 인터페이스
@@ -306,6 +361,8 @@ export interface InputFormData {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  isChanged?: boolean;
+  maxLength?: number;
 }
 
 // 공지사항
@@ -322,14 +379,15 @@ export interface NoticeProps {
 }
 
 export interface NoticeListResponse {
-  content: NoticeProps[];
+  notices: NoticeProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
 export interface ProjectProgressStepProps {
-  id: string,
-  title:string,
-  count: number
+  id: string;
+  title: string;
+  value: string;
+  count?: number;
 }
 
 export interface UserInfoResponse {
@@ -345,4 +403,29 @@ export interface UserInfoResponse {
   regAt: string;
   introduction: string;
   remark: string;
+}
+
+export interface BaseArticleRequestData {
+  title: string;
+  content: { type: string; data: string | { src: string } }[];
+  linkList: { name: string; url: string }[];
+  fileInfoList: {
+    originalName: string;
+    saveName: string;
+    url: string;
+    size: number;
+  }[];
+}
+
+export interface QuestionRequestData extends BaseArticleRequestData {
+  progressStepId?: number;
+}
+
+export interface TaskRequestData extends BaseArticleRequestData {
+  progressStepId?: number;
+}
+
+export interface NoticeRequestData extends BaseArticleRequestData {
+  category?: string;
+  priority?: string;
 }

@@ -2,10 +2,12 @@
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
+  Alert,
   Box,
   Button,
   createListCollection,
   Flex,
+  Spinner,
   Table,
 } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
@@ -16,16 +18,8 @@ import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import Pagination from "@/src/components/common/Pagination";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
-import { useFetchBoardList } from "@/src/hook/useFetchBoardList";
-import {
-  ProjectProgressStepProps,
-  ProjectQuestionListResponse,
-} from "@/src/types";
-import {
-  fetchProjectQuestionList as fetchProjectQuestionListApi,
-  fetchProjectQuestionProgressStep as fetchProjectQuestionProgressStepApi,
-} from "@/src/api/projects";
-import { useFetchData } from "@/src/hook/useFetchData";
+import { useProjectQuestionList } from "@/src/hook/useFetchBoardList";
+import { useProjectProgressStepData } from "@/src/hook/useFetchData";
 
 const questionStatusFramework = createListCollection<{
   id: string;
@@ -61,35 +55,25 @@ export default function ProjectQuestionsPage() {
   const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
 
   // ProgressStep 데이터 패칭
-  const { data: progressStepData, loading: progressStepLoading } = useFetchData<
-    ProjectProgressStepProps[],
-    [string]
-  >({
-    fetchApi: fetchProjectQuestionProgressStepApi,
-    params: [resolvedProjectId],
-  });
-
-  // ProjectQuestionList 데이터 패칭
+  const {
+    data: progressStepData,
+    loading: progressStepLoading,
+    error: progressStepError,
+  } = useProjectProgressStepData(resolvedProjectId);
+  // 프로젝트 질문 게시판 목록 데이터 패칭
   const {
     data: projectQuestionList,
     paginationInfo,
     loading: projectQuestionListLoading,
-  } = useFetchBoardList<
-    ProjectQuestionListResponse,
-    [string, string, string, string, number, number],
-    "projectQuestions"
-  >({
-    fetchApi: fetchProjectQuestionListApi,
-    keySelector: "projectQuestions",
-    params: [
-      resolvedProjectId,
-      keyword,
-      progressStep,
-      status,
-      currentPage,
-      pageSize,
-    ],
-  });
+    error: projectQuestionError,
+  } = useProjectQuestionList(
+    resolvedProjectId,
+    keyword,
+    progressStep,
+    status,
+    currentPage,
+    pageSize,
+  );
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(window.location.search);
@@ -103,7 +87,7 @@ export default function ProjectQuestionsPage() {
     router.push(`/projects/${projectId}/questions/${taskId}`);
   };
 
-  // 신규등록 버튼 클릭 시 - 회원 등록 페이지로 이동
+  // 신규등록 버튼 클릭 시 - 질문글 등록 페이지로 이동
   const handleProjectQuestionCreateButton = () => {
     router.push(`/projects/${projectId}/questions/new`);
   };
@@ -111,10 +95,21 @@ export default function ProjectQuestionsPage() {
   return (
     <ProjectLayout>
       {/* 프로젝트 단계 섹션 */}
-      <ProgressStepSection
-        progressStep={progressStepData || []}
-        loading={progressStepLoading}
-      />
+      {progressStepError ? (
+        <Alert.Root status="error">
+          <Alert.Indicator>
+            <Spinner size="sm" />
+          </Alert.Indicator>
+          <Alert.Title>
+            프로젝트 단계 정보를 불러오지 못했습니다. 다시 시도해주세요.
+          </Alert.Title>
+        </Alert.Root>
+      ) : (
+        <ProgressStepSection
+          progressStep={progressStepData || []}
+          loading={progressStepLoading}
+        />
+      )}
       <Box
         direction="column"
         padding="30px 23px"

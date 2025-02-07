@@ -8,31 +8,34 @@ import { useState, useEffect } from "react";
 
 // 절대 경로 파일
 import ArticleContent from "@/src/components/common/ArticleContent";
-// import ArticleComments from "@/src/components/common/ArticleComments";
+import ArticleComments from "@/src/components/common/ArticleComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/BackButton";
-import { readQuestionApi } from "@/src/api/ReadArticle";
+import { readTaskApi } from "@/src/api/ReadArticle";
 import SignToApprove from "@/src/components/pages/TaskReadPage/components/SignToApprove";
-import { Article } from "@/src/types";
+import { ArticleComment, TaskArticle } from "@/src/types";
 
 export default function TaskReadPage() {
-  const { projectId, questionId } = useParams() as {
+  const { projectId, taskId } = useParams() as {
     projectId: string;
-    questionId: string;
+    taskId: string;
   };
 
-  const [article, setArticle] = useState<Article | null>(null);
+  const [article, setArticle] = useState<TaskArticle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [commentList, setCommentList] = useState<ArticleComment[]>([]);
+  const [commentIsWritten, setCommentIsWritten] = useState<boolean>(false);
 
   useEffect(() => {
     const loadTask = async () => {
       try {
-        const data = await readQuestionApi(
+        const responseData = await readTaskApi(
           Number(projectId),
-          Number(questionId),
+          Number(taskId),
         );
-        setArticle(data);
+        setArticle(responseData);
+        setCommentList(responseData.commentList ?? []);
       } catch (err) {
         setError(
           err instanceof Error
@@ -44,7 +47,7 @@ export default function TaskReadPage() {
       }
     };
     loadTask();
-  }, [projectId, questionId]);
+  }, [projectId, taskId, commentIsWritten]);
 
   if (error) {
     return <Box>에러 발생: {error}</Box>;
@@ -78,8 +81,11 @@ export default function TaskReadPage() {
 
       {/* 댓글 섹션 */}
       <VStack align="stretch" gap={8} mt={10}>
-        {/* <ArticleComments comments={article?.commentList || []} /> */}
-        <CommentBox />
+        <ArticleComments
+          comments={commentList}
+          setCommentIsWritten={setCommentIsWritten}
+        />
+        <CommentBox setCommentIsWritten={setCommentIsWritten} />
       </VStack>
     </Box>
   );

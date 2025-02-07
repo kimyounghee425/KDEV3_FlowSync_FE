@@ -1,5 +1,6 @@
-import { CommonResponseType } from "@/src/types";
 import { useEffect, useState } from "react";
+import { CommonResponseType, ProjectProgressStepProps } from "@/src/types";
+import { fetchProjectQuestionProgressStep as fetchProjectQuestionProgressStepApi } from "@/src/api/projects";
 
 interface UseFetchDataProps<T, P extends any[]> {
   fetchApi: (...args: P) => Promise<CommonResponseType<T>>;
@@ -44,3 +45,12 @@ export function useFetchData<T, P extends any[]>({
 
   return { data, loading, error };
 }
+
+/**
+ * ✅ 프로젝트 Progress Step 데이터 패칭 훅
+ */
+export const useProjectProgressStepData = (resolvedProjectId: string) =>
+  useFetchData<ProjectProgressStepProps[], [string]>({
+    fetchApi: fetchProjectQuestionProgressStepApi,
+    params: [resolvedProjectId],
+  });

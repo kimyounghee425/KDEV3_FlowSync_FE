@@ -4,16 +4,15 @@ import React, { useEffect, useState, useRef } from "react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import { useParams } from "next/navigation";
-import { Box, Input, Text, Flex, Button, Progress } from "@chakra-ui/react";
+import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
-import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 import { readQuestionApi } from "@/src/api/ReadArticle";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
 
 // 수정 api 만들고 가져와야함
 
-import { Article } from "@/src/types";
+// import { QuestionArticle } from "@/src/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -49,9 +48,6 @@ export default function QuestionEditForm() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
 
-
-  
-
   useEffect(() => {
     const loadTask = async () => {
       try {
@@ -59,14 +55,15 @@ export default function QuestionEditForm() {
           Number(projectId),
           Number(questionId),
         );
-        console.log(responseData)
+        console.log(responseData);
         setTitle(responseData.title);
         setLinkList(responseData.linkList);
         setUploadedFiles(responseData.fileList);
 
-        const parsedContent = typeof responseData.content === "string"
-        ? JSON.parse(responseData.content)
-        : responseData.content;
+        const parsedContent =
+          typeof responseData.content === "string"
+            ? JSON.parse(responseData.content)
+            : responseData.content;
 
         if (!editorRef.current) {
           editorRef.current = new EditorJS({
@@ -165,6 +162,22 @@ export default function QuestionEditForm() {
         uploadedFileSize={uploadedFileSize}
         setUploadedFileSize={setUploadedFileSize}
       />
+
+      <Button
+        bg={"red.500"}
+        colorScheme={"red"}
+        width={"auto"}
+        px={6}
+        py={4}
+        borderRadius={"full"}
+        fontSize={"lg"}
+        fontWeight={"bold"}
+        boxShadow={"md"}
+        _hover={{ bg: "red.600" }}
+        // onClick={수정 핸들러}
+      >
+        수정
+      </Button>
     </Flex>
   );
 }

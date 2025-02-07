@@ -16,7 +16,6 @@ export default function LoginLayout({
           justify="center"
           minHeight="100vh"
           backgroundColor="gray.50"
-          padding="3"
           overflow="hidden" // 스크롤 제거
         >
           <Box
@@ -25,7 +24,6 @@ export default function LoginLayout({
             borderRadius="md"
             bg="white"
             boxShadow="lg"
-            padding="1"
           >
             {children}
           </Box>

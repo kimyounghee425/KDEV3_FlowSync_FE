@@ -1,3 +1,5 @@
+import { format, parseISO, addHours } from "date-fns";
+
 // iso 형식의 날짜를 예쁘게 포맷 후 반환
 
 export const formatDateWithTime = (dateString: string) => {
@@ -35,3 +37,10 @@ export function formatDynamicDate(dateString: string | null | undefined): string
   // 당일이면 시간(hh:mm), 그렇지 않으면 yyyy-mm-dd 형식 반환
   return isToday ? formatDateWithTime(dateString).split(" ")[1] : formatDateToISODate(dateString);
 }
+
+// 게시글, 댓글에 사용할거
+export function formattedDate(dateString: string) {
+  const date = parseISO(dateString);
+  const adjustedDate = addHours(date, 9);
+  return format(adjustedDate, "yyyy-MM-dd HH:mm");
+};

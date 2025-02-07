@@ -26,6 +26,30 @@ export const validationRulesOfCreatingOrganization = {
   },
 };
 
+// 업체 생성 페이지 - 유효성 검증 규칙
+export const validationRulesOfUpdatingOrganization = {
+  name: {
+    isValid: (value: string) => value.trim() !== "", // trim(): value에서 공백이 모두 제거된 값을 반환
+    errorMessage: "업체명을 입력하세요.",
+  },
+  brNumber: {
+    isValid: (value: string) => /^\d{3}-\d{2}-\d{5}$/.test(value),
+    errorMessage: "올바른 사업자 등록번호를 입력하세요. (예: 123-45-67890)",
+  },
+  streetAddress: {
+    isValid: (value: string) => value.trim() !== "",
+    errorMessage: "사업장 도로명 주소를 입력하세요.",
+  },
+  detailAddress: {
+    isValid: (value: string) => value.trim() !== "",
+    errorMessage: "사업장 상세 주소를 입력하세요.",
+  },
+  phoneNumber: {
+    isValid: (value: string) => /^\d{3}-\d{4}-\d{4}$/.test(value),
+    errorMessage: "올바른 전화번호를 입력하세요. (예: 010-1234-5678)",
+  },
+};
+
 // 로그인 페이지 - 유효성 검증 규칙
 export const validationRulesOfLogin = {
   email: {
@@ -43,14 +67,6 @@ export const validationRulesOfLogin = {
 // 회원 생성 페이지 - 유효성 검증 규칙
 // 입력값에 대한 검증 규칙
 export const validationRulesOfCreatingMember = {
-  organizationId: {
-    isValid: (value: string) => value.trim() !== "", // trim(): value에서 공백이 모두 제거된 값을 반환
-    errorMessage: "업체ID를 입력하세요.",
-  },
-  // organizationId: {
-  //   isValid: (value: string) => typeof value !== "number", // trim(): value에서 공백이 모두 제거된 값을 반환
-  //   errorMessage: "업체ID를 입력하세요.",
-  // },
   name: {
     isValid: (value: string) => value.trim() !== "",
     errorMessage: "회원 성함을 입력하세요.",

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 
 interface ProjectsStatusCardProps {
   count: number; // 숫자(통계 수치)
@@ -20,11 +20,41 @@ export default function ProjectsStatusCard({
   label,
   icon,
 }: ProjectsStatusCardProps) {
+  // 반응형 크기 설정
+  const cardWidth = useBreakpointValue({
+    base: "200px", // 모바일
+    sm: "220px", // 작은 태블릿
+    md: "250px", // 데스크탑
+  });
+
+  const cardHeight = useBreakpointValue({
+    base: "150px",
+    sm: "160px",
+    md: "170px",
+  });
+
+  const iconSize = useBreakpointValue({
+    base: "60px", // 작은 화면
+    sm: "70px",
+    md: "85px",
+  });
+
+  const countFontSize = useBreakpointValue({
+    base: "36px", // 작은 화면
+    sm: "40px",
+    md: "46px",
+  });
+
+  const labelFontSize = useBreakpointValue({
+    base: "16px", // 작은 화면
+    sm: "20px",
+    md: "24px",
+  });
   return (
     <Box
       background="white"
-      width="250px"
-      height="170px"
+      width={cardWidth}
+      height={cardHeight}
       border="1px solid #E2E8F0"
       borderRadius="lg"
       boxShadow="sm"
@@ -34,7 +64,7 @@ export default function ProjectsStatusCard({
         Flex 컨테이너를 사용하여, 카드 내부를 가로 방향으로 배치
         아이콘과 텍스트 영역을 나란히 보여줌
       */}
-      <Flex alignItems="center" height="100%" gap={6}>
+      <Flex alignItems="center" height="100%" gap={4}>
         {/* 
           아이콘을 담는 원형 컨테이너 
           border, 크기(w, h)를 지정해 원 모양을 만들고,
@@ -46,8 +76,8 @@ export default function ProjectsStatusCard({
           overflow="hidden"
           alignItems="center"
           justifyContent="center"
-          w="85px"
-          h="85px"
+          w={iconSize}
+          h={iconSize}
         >
           {icon}
         </Flex>
@@ -56,11 +86,11 @@ export default function ProjectsStatusCard({
           숫자(count)와 라벨(label)을 세로 방향으로 배치
           가운데 정렬하기 위해 alignItems="center" 사용
         */}
-        <Flex flexDirection={"column"} alignItems={"center"}>
-          <Text fontSize={46} fontWeight={700} color="gray.700">
+        <Flex flexDirection="column" alignItems="flex-start">
+          <Text fontSize={countFontSize} fontWeight={700} color="gray.700">
             {count}
           </Text>
-          <Text fontSize={24} fontWeight={400} color="gray.500">
+          <Text fontSize={labelFontSize} fontWeight={400} color="gray.500">
             {label}
           </Text>
         </Flex>

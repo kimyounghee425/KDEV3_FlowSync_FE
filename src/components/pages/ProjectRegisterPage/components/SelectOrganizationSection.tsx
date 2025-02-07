@@ -1,5 +1,9 @@
+// 회사와 멤버 모두 선택하는 컴포넌트
+
 import { Flex, Box, Text, Button } from "@chakra-ui/react";
+import Image from "next/image";
 import React from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface OrgProps {
   id: number;
@@ -36,8 +40,8 @@ interface CustomerOrgProps {
   orgMembers: Member[];
   selectedMembers: Member[];
   setSelectedMembers: React.Dispatch<React.SetStateAction<Member[]>>;
-  devOwnerMember?: Member;
-  setDevOwnerMember?: React.Dispatch<React.SetStateAction<Member | undefined>>;
+  ownerMember?: Member;
+  setOwnerMember?: React.Dispatch<React.SetStateAction<Member | undefined>>;
 }
 
 export default function SelectOrganizationSection({
@@ -48,17 +52,19 @@ export default function SelectOrganizationSection({
   orgMembers,
   selectedMembers,
   setSelectedMembers,
-  devOwnerMember,
-  setDevOwnerMember,
+  ownerMember,
+  setOwnerMember,
 }: CustomerOrgProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   // 멤버 클릭했을 때 해제하는 멤버가 오너면 오너도 해제
   const handleSelectMember = (member: Member) => {
     setSelectedMembers((prev) => {
       const isAlreadySelected = prev.some((m) => m.id === member.id);
       if (isAlreadySelected) {
         // 선택한게 오너
-        if (devOwnerMember?.id === member.id && setDevOwnerMember) {
-          setDevOwnerMember(undefined);
+        if (ownerMember?.id === member.id && setOwnerMember) {
+          setOwnerMember(undefined);
         }
         return prev.filter((m) => m.id !== member.id);
       } else {
@@ -66,6 +72,23 @@ export default function SelectOrganizationSection({
       }
     });
   };
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    // ✅ 마우스 클릭 이벤트 감지
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // console.log(devOwnerMember)
   // console.log(selectedMembers)
@@ -78,7 +101,7 @@ export default function SelectOrganizationSection({
         <Flex minWidth={"700px"}>
           <Flex direction={"column"} mr={5} mb={8}>
             <Box mt={8} mb={4}>
-              <Text>{title}</Text>
+              <Text lineHeight={"2"}>{title}</Text>
             </Box>
             <Box
               h={"400px"}
@@ -112,8 +135,50 @@ export default function SelectOrganizationSection({
           {/* selectedCustomerOrgId 원래값 0 이므로 0일때 렌더링 x */}
           {selectedOrgId !== 0 && (
             <Flex direction={"column"} mb={4}>
-              <Box mt={8} mb={4}>
+              <Box
+                display={"flex"}
+                flexDirection={"row"}
+                alignItems={"center"}
+                mt={8}
+                mb={4}
+              >
                 <Text>멤버 목록</Text>
+                <Box position="relative" ref={dropdownRef}>
+                  {/* ✅ 클릭하면 드롭다운이 열리는 버튼 (이미지 버튼) */}
+                  <Button
+                    onClick={() => setIsOpen(!isOpen)}
+                    size="sm"
+                    variant="outline"
+                    border={"none"}
+                  >
+                    <Image
+                      src="/545674.png"
+                      alt="Help Icon"
+                      width={20}
+                      height={20}
+                    />
+                  </Button>
+                  {isOpen && (
+                    <Box
+                      position="absolute"
+                      top="40px" // 버튼 아래에 위치
+                      left="0"
+                      width="200px"
+                      bg="white"
+                      border="1px solid #ccc"
+                      borderRadius="8px"
+                      boxShadow="md"
+                      p="4"
+                    >
+                      <Text fontWeight="bold">Owner 란?</Text>
+                      <Text fontSize="sm" mt="2">
+                        {title === "고객사 목록"
+                          ? "고객사 멤버 중 Owner 로 정해진 사람은 결재 권한이 있습니다."
+                          : "개발사 멤버 중 Owner 로 정해진 사람은 결재 요청 권한이 있습니다"}
+                      </Text>
+                    </Box>
+                  )}
+                </Box>
               </Box>
               <Box
                 h={"400px"}
@@ -129,7 +194,7 @@ export default function SelectOrganizationSection({
                       (m) => m.id === member.id,
                     );
                     // 개발사 오너 체크
-                    const isOwner = devOwnerMember?.id === member.id;
+                    const isOwner = ownerMember?.id === member.id;
 
                     return (
                       <Box
@@ -148,7 +213,7 @@ export default function SelectOrganizationSection({
                         </Text>
 
                         {/* 오너 표시 */}
-                        {setDevOwnerMember && (
+                        {setOwnerMember && (
                           <Button
                             fontSize="xs"
                             p={1}
@@ -160,7 +225,7 @@ export default function SelectOrganizationSection({
                               e.stopPropagation();
                               if (isOwner) {
                                 // 이미 오너면 오너 상태만 해제
-                                setDevOwnerMember(undefined);
+                                setOwnerMember(undefined);
                               } else {
                                 // 멤버도 아니면 멤버 추가부터
                                 if (!isSelected) {
@@ -169,7 +234,7 @@ export default function SelectOrganizationSection({
                                     member,
                                   ]);
                                 }
-                                setDevOwnerMember(member);
+                                setOwnerMember(member);
                               }
                             }}
                           >
@@ -201,7 +266,7 @@ export default function SelectOrganizationSection({
       >
         {selectedMembers.length > 0 ? (
           selectedMembers.map((member) => {
-            const isOwner = devOwnerMember?.id === member.id;
+            const isOwner = ownerMember?.id === member.id;
 
             return (
               <Box
@@ -216,7 +281,7 @@ export default function SelectOrganizationSection({
                 onClick={() => {
                   if (isOwner) {
                     // 이미 오너면 오너 상태만 해제
-                    setDevOwnerMember?.(undefined);
+                    setOwnerMember?.(undefined);
                   } else {
                     handleSelectMember(member);
                   }

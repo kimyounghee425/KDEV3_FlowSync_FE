@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { CommonResponseWithMetaType, PaginationProps } from "@/src/types";
+import { CommonResponseWithMetaType, PaginationProps, ProjectQuestionListResponse } from "@/src/types";
+import { fetchProjectQuestionList as fetchProjectQuestionListApi } from "@/src/api/projects";
 
 interface UseFetchBoardListProps<T, P extends any[], K extends keyof T> {
   fetchApi: (...args: P) => Promise<CommonResponseWithMetaType<T>>;
@@ -48,3 +49,28 @@ export function useFetchBoardList<T, P extends any[], K extends keyof T>({
 
   return { data, paginationInfo, loading, error };
 }
+
+// ProjectQuestionList 데이터 패칭
+export const useProjectQuestionList = (
+  resolvedProjectId: string,
+  keyword: string,
+  progressStep: string,
+  status: string,
+  currentPage: number,
+  pageSize: number
+) => useFetchBoardList<
+  ProjectQuestionListResponse,
+  [string, string, string, string, number, number],
+  "projectQuestions"
+>({
+  fetchApi: fetchProjectQuestionListApi,
+  keySelector: "projectQuestions",
+  params: [
+    resolvedProjectId,
+    keyword,
+    progressStep,
+    status,
+    currentPage,
+    pageSize,
+  ],
+});

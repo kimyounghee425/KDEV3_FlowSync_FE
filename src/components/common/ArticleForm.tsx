@@ -1,31 +1,17 @@
 // Question 글에 맞추어 만들어 놓음.
-
+"use client";
 // 외부 라이브러리
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
-import { useParams } from "next/navigation";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
-import ProgressStepAddSection from "@/src/components/common/ProgressStepAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
-import { usePathname } from "next/navigation";
-import {
-  createQuestionApi,
-  createTaskApi,
-  uploadFileApi,
-} from "@/src/api/RegisterArticle";
+import { uploadFileApi } from "@/src/api/RegisterArticle";
+import { BaseArticleRequestData } from "@/src/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const progressData = [
-  { id: 1, title: "요구사항정의" },
-  { id: 2, title: "화면설계" },
-  { id: 3, title: "디자인" },
-  { id: 4, title: "퍼블리싱" },
-  { id: 5, title: "개발" },
-  { id: 6, title: "검수" },
-];
 interface UploadedFilesProps {
   originalName: string;
   saveName: string;
@@ -33,34 +19,28 @@ interface UploadedFilesProps {
   size: number;
 }
 
-interface linkListProps {
+interface LinkListProps {
   name: string;
   url: string;
 }
 
-export default function ArticleForm() {
-  const { projectId } = useParams();
-  const [progressStepId, setProgressStepId] = useState<number>(1);
-  const [title, setTitle] = useState<string>("");
+interface ArticleFormProps<T extends BaseArticleRequestData> {
+  title: string;
+  setTitle: (value: string) => void;
+  handleSave: (data: T) => void;
+  children?: React.ReactNode;
+}
+
+export default function ArticleForm({
+  title,
+  setTitle,
+  handleSave,
+  children,
+}: ArticleFormProps<BaseArticleRequestData>) {
   const editorRef = useRef<EditorJS | null>(null);
-  const [linkList, setLinkList] = useState<linkListProps[]>([]);
+  const [linkList, setLinkList] = useState<LinkListProps[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
-
-  const pathname = usePathname(); // 현재 경로 가져옴
-
-  const uploadFile = async (file: File): Promise<string> => {
-    try {
-      // 서버로 파일 업로드 요청
-      const data = await uploadFileApi(file);
-
-      // 서버에서 반환된 파일 URL 반환
-      return data.url; // 서버 응답에서 URL을 반환하는 키를 확인해야 합니다
-    } catch (error) {
-      console.error("파일 업로드 실패:", error);
-      throw new Error("파일 업로드 중 문제가 발생했습니다.");
-    }
-  };
 
   useEffect(() => {
     if (!editorRef.current) {
@@ -104,56 +84,33 @@ export default function ArticleForm() {
   }, []);
 
   // 서버에 저장하는 핸들러
-  const handleSave = async () => {
+  const handleEditorSave = async () => {
     if (editorRef.current) {
       try {
         const savedData = await editorRef.current.save();
+        const content = savedData.blocks.map((block) => ({
+          type: block.type,
+          data:
+            block.type === "paragraph"
+              ? block.data.text
+              : { src: block.data.file.url },
+        }));
 
         if (!title.trim()) {
           window.alert("제목을 입력하세요.");
           return;
         }
-
-        const content = savedData.blocks.map((block) => {
-          if (block.type === "paragraph") {
-            return {
-              type: "paragraph",
-              data: block.data.text,
-            };
-          } else if (block.type === "image") {
-            return {
-              type: "image",
-              data: { src: block.data.file.url },
-            };
-          }
-          return "";
-        });
         if (content.length === 0) {
           window.alert("내용을 입력하세요.");
           return;
         }
 
-        const requestData = {
+        handleSave({
           title: title,
           content: content, // TODO 이거 백엔드 수정해야 함. 1/28
           linkList: linkList,
           fileInfoList: uploadedFiles,
-          progressStepId: progressStepId,
-        };
-
-        if (pathname.includes("/questions/new")) {
-          const response = await createQuestionApi(
-            Number(projectId),
-            requestData,
-          );
-          console.log("저장성공", response.data);
-        } else if (pathname.includes("/tasks/new")) {
-          const response = await createTaskApi(Number(projectId), requestData);
-          console.log("저장성공", response.data);
-        } else {
-          alert("잘못된 경로입니다.");
-          return;
-        }
+        });
 
         alert("저장이 완료되었습니다.");
       } catch (error) {
@@ -163,17 +120,12 @@ export default function ArticleForm() {
     }
   };
 
-  console.log(linkList);
-
   return (
     // 제목 입력
     <Flex gap={4} direction={"column"}>
+      {/* 카테고리 요소 */}
+      {children}
       <Flex align={"center"} gap={4}>
-        <ProgressStepAddSection
-          progressStepId={progressStepId}
-          setProgressStepId={setProgressStepId}
-          progressData={progressData}
-        />
         <Box flex={2}>
           <Text mb={2}>제목</Text>
           <Input
@@ -191,7 +143,7 @@ export default function ArticleForm() {
           padding="10px"
           borderRadius="5px"
           minHeight="300px"
-        ></Box>
+        />
       </Box>
 
       <LinkAddSection linkList={linkList} setLinkList={setLinkList} />
@@ -216,7 +168,7 @@ export default function ArticleForm() {
         fontWeight={"bold"}
         boxShadow={"md"}
         _hover={{ bg: "red.600" }}
-        onClick={handleSave}
+        onClick={handleEditorSave}
       >
         작성
       </Button>
