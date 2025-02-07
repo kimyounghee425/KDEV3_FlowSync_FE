@@ -1,3 +1,3 @@
-import AdminMembersPage from "@/src/pages/components/AdminMembersPage";
+import AdminMembersPage from "@/src/components/pages/AdminMembersPage";
 
 export default AdminMembersPage;
