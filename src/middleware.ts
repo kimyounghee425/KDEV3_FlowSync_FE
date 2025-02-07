@@ -185,7 +185,7 @@ export async function middleware(request: NextRequest) {
     adminPages.some((path) => pathname.startsWith(path)) &&
     userInfo.role !== "ADMIN"
   ) {
-    console.warn("🚫 권한이 부족하여 홈으로 리디렉트됨");
+    console.warn("🚫 권한이 부족하여 홈으로 리디렉트 됨");
     return NextResponse.redirect(new URL("/", request.url));
   }
   return response;
