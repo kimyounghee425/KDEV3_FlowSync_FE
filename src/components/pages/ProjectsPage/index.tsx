@@ -123,26 +123,6 @@ function ProjectsPageContent() {
           content="FlowSync로 프로젝트 관리를 한번에"
         />
       </Head>
-      {/*
-       * 프로젝트 상태 카드 컴포넌트:
-       * 프로젝트 현황(예: 진행 중, 완료 등)을 시각적으로 표시합니다.
-       * title prop으로 "프로젝트 현황"을 전달.
-       */}
-      <ProjectStatusCards title={"프로젝트 현황"} />
-      <Stack width="full">
-        {/* 페이지 최상단 제목 */}
-        <Heading size="2xl" color="gray.600">
-          프로젝트 목록
-        </Heading>
-        {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
-        <SearchSection keyword={keyword} placeholder="프로젝트명 입력">
-          <StatusSelectBox
-            statusFramework={projectStatusFramework}
-            selectedValue={status}
-            queryKey="status"
-          />
-        </SearchSection>
-      </Stack>
 
       <Box bg={bgColor} p="4" minHeight="100vh">
         <Stack spaceY="SECTION_SPACING">
