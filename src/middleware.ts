@@ -53,54 +53,6 @@ function setAuthCookies(response: NextResponse, accessToken: string, refreshToke
 const adminPages = ["/admin"];
 
 /**
- * 쿠키 삭제 함수
- */
-function clearCookies(response: NextResponse) {
-  ["access", "refresh"].forEach((cookieName) => {
-    response.cookies.set(cookieName, "", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      path: "/",
-      domain: "flowssync.com",
-      maxAge: 0, // 즉시 만료
-    });
-  });
-}
-
-/**
- * 쿠키 설정 함수
- */
-function setAuthCookies(
-  response: NextResponse,
-  accessToken: string,
-  refreshToken: string,
-) {
-  response.cookies.set("access", accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    path: "/",
-    domain: "flowssync.com",
-    maxAge: 24 * 60 * 60, // 24시간 유지
-  });
-
-  response.cookies.set("refresh", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    path: "/",
-    domain: "flowssync.com",
-    maxAge: 24 * 60 * 60, // 24시간 유지
-  });
-}
-
-/**
- * ✅ 관리자 권한이 필요한 페이지 목록
- */
-const adminPages = ["/admin"];
-
-/**
  * 🔄 토큰 검증 및 리프레시 로직
  */
 async function validateAndRefreshTokens(
