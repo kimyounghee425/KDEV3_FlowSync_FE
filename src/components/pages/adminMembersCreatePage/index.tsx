@@ -11,7 +11,7 @@ import { defaultValuesOfMember } from "@/src/constants/defaultValues";
 import { validationRulesOfCreatingMember } from "@/src/constants/validationRules";
 import { createMember } from "@/src/api/members";
 import { getOrganizationsApi } from "@/src/api/getOrganization";
-import SelectedOrganization from "@/src/components/pages/adminMembersCreatePage/components/SelectOrganization";
+import SelectedOrganization from "@/src/components/pages/AdminMembersCreatePage/components/SelectOrganization";
 
 interface OrgProps {
   id: number;
@@ -77,7 +77,8 @@ export default function AdminMembersCreatePage() {
     }
     return true;
   }
-  console.log(inputValues.role,
+  console.log(
+    inputValues.role,
     inputValues.organizationId,
     inputValues.name,
     inputValues.email,
@@ -86,7 +87,8 @@ export default function AdminMembersCreatePage() {
     inputValues.jobRole,
     inputValues.jobTitle,
     inputValues.introduction,
-    inputValues.remark,)
+    inputValues.remark,
+  );
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!validateInputs()) return;

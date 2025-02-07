@@ -1,10 +1,14 @@
 import { ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
+import { useColorModeValue } from "@/src/components/ui/color-mode";
+import { ProjectStatus } from "@/src/constants/projectStatus"; // ENUM import
 
 interface ProjectsStatusCardProps {
   count: number; // 숫자(통계 수치)
   label: string; // 카드에 표시될 라벨
   icon: ReactNode; // 카드 내부 아이콘
+  status: ProjectStatus; // 필터링할 상태 값
 }
 
 /**
@@ -19,59 +23,78 @@ export default function ProjectsStatusCard({
   count,
   label,
   icon,
+  status,
 }: ProjectsStatusCardProps) {
+  const router = useRouter();
   // 반응형 크기 설정
   const cardWidth = useBreakpointValue({
-    base: "200px", // 모바일
-    sm: "220px", // 작은 태블릿
-    md: "250px", // 데스크탑
+    base: "100px", // 모바일
+    sm: "130px", // 작은 태블릿
+    md: "180px", // 데스크탑
   });
 
   const cardHeight = useBreakpointValue({
-    base: "150px",
-    sm: "160px",
-    md: "170px",
+    base: "100px",
+    sm: "120px",
+    md: "140px",
   });
 
   const iconSize = useBreakpointValue({
-    base: "60px", // 작은 화면
-    sm: "70px",
-    md: "85px",
+    base: "2rem", // 모바일
+    sm: "2.5rem", // 작은 태블릿
+    md: "3rem", // 데스크탑
   });
 
   const countFontSize = useBreakpointValue({
-    base: "36px", // 작은 화면
-    sm: "40px",
-    md: "46px",
+    base: "1.5rem", // 모바일
+    sm: "1.75rem", // 작은 태블릿
+    md: "2rem", // 데스크탑
   });
 
   const labelFontSize = useBreakpointValue({
-    base: "16px", // 작은 화면
-    sm: "20px",
-    md: "24px",
+    base: "0.875rem", // 모바일
+    sm: "1rem", // 태블릿
+    md: "1.125rem", // 데스크탑
   });
+
+  // 다크모드 색상 설정
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const textColor = useColorModeValue("gray.700", "gray.700");
+  const hoverBgColor = useColorModeValue("gray.100", "gray.600");
+
+  // 클릭 시 필터 적용
+  const handleFilterClick = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("currentPage", "1"); // 페이지를 1로 초기화
+    if (status !== ProjectStatus.ALL) {
+      params.set("status", status);
+    } else {
+      params.delete("status"); // "전체" 선택 시 status 제거
+    }
+    router.push(`?${params.toString()}`);
+  };
+  // http://localhost:3000/?status=CONTRACT&currentPage=1
+
   return (
     <Box
       background="white"
       width={cardWidth}
       height={cardHeight}
-      border="1px solid #E2E8F0"
+      border={`1px solid ${borderColor}`}
       borderRadius="lg"
       boxShadow="sm"
       padding={4}
+      transition="all 0.3s ease"
+      _hover={{
+        backgroundColor: hoverBgColor,
+        cursor: "pointer",
+        transform: "scale(1.05)", // 살짝 확대 효과
+      }}
+      onClick={handleFilterClick} // 클릭 시 필터 적용
     >
-      {/* 
-        Flex 컨테이너를 사용하여, 카드 내부를 가로 방향으로 배치
-        아이콘과 텍스트 영역을 나란히 보여줌
-      */}
-      <Flex alignItems="center" height="100%" gap={4}>
-        {/* 
-          아이콘을 담는 원형 컨테이너 
-          border, 크기(w, h)를 지정해 원 모양을 만들고,
-          중앙 정렬을 위해 alignItems, justifyContent 사용
-        */}
+      <Flex alignItems="center" height="100%" gap={3}>
         <Flex
-          border="1px solid #E2E8F0"
+          border={`1px solid ${borderColor}`}
           borderRadius="full"
           overflow="hidden"
           alignItems="center"
@@ -81,16 +104,15 @@ export default function ProjectsStatusCard({
         >
           {icon}
         </Flex>
-
-        {/* 
-          숫자(count)와 라벨(label)을 세로 방향으로 배치
-          가운데 정렬하기 위해 alignItems="center" 사용
-        */}
-        <Flex flexDirection="column" alignItems="flex-start">
-          <Text fontSize={countFontSize} fontWeight={700} color="gray.700">
+        <Flex
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Text fontSize={countFontSize} fontWeight={700} color={textColor}>
             {count}
           </Text>
-          <Text fontSize={labelFontSize} fontWeight={400} color="gray.500">
+          <Text fontSize={labelFontSize} fontWeight={400} color={textColor}>
             {label}
           </Text>
         </Flex>

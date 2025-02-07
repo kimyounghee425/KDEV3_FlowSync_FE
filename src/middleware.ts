@@ -26,25 +26,34 @@ function handleUnauthorized(request: NextRequest) {
   return res;
 }
 
-
 /**
  * 쿠키 삭제 함수
  */
 function clearCookies(response: NextResponse) {
-  response.headers.set("Set-Cookie", [
-    "access=; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=0",
-    "refresh=; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=0"
-  ].join(", "));
+  response.headers.set(
+    "Set-Cookie",
+    [
+      "access=; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=0",
+      "refresh=; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=0",
+    ].join(", "),
+  );
 }
 
 /**
  * 쿠키 설정 함수
  */
-function setAuthCookies(response: NextResponse, accessToken: string, refreshToken: string) {
-  response.headers.set("Set-Cookie", [
-    `access=${accessToken}; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=${30 * 60}`,
-    `refresh=${refreshToken}; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=${24 * 60 * 60}`
-  ].join(", "));
+function setAuthCookies(
+  response: NextResponse,
+  accessToken: string,
+  refreshToken: string,
+) {
+  response.headers.set(
+    "Set-Cookie",
+    [
+      `access=${accessToken}; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=${30 * 60}`,
+      `refresh=${refreshToken}; Path=/; HttpOnly; Secure; SameSite=None; Domain=flowssync.com; Max-Age=${24 * 60 * 60}`,
+    ].join(", "),
+  );
 }
 
 /**
@@ -56,7 +65,7 @@ const adminPages = ["/admin"];
  * 🔄 토큰 검증 및 리프레시 로직
  */
 async function validateAndRefreshTokens(
-  request: NextRequest
+  request: NextRequest,
 ): Promise<{ userInfo?: UserInfoResponse; response?: NextResponse }> {
   let userInfoResponse;
   const accessToken = request.cookies.get("access")?.value;
@@ -110,11 +119,11 @@ async function validateAndRefreshTokens(
     clearCookies(response);
   }
 
-  if(!refreshToken) {
+  if (!refreshToken) {
     console.warn("❌ Refresh Token 없음 → 로그인 페이지로 이동");
-    return {}
+    return {};
   }
-  
+
   try {
     // 🔹 2. Access Token 만료 → Refresh Token으로 재발급 시도
     console.log("🔄 Access Token 만료됨 → Refresh Token 사용");
@@ -124,10 +133,16 @@ async function validateAndRefreshTokens(
       console.log("✅ 새 Access Token 발급 성공 → 다시 요청 진행");
 
       // 쿠키에 새 AccessToken & RefreshToken 저장
-      setAuthCookies(response, reissueResponse.data.access, reissueResponse.data.refresh);
+      setAuthCookies(
+        response,
+        reissueResponse.data.access,
+        reissueResponse.data.refresh,
+      );
 
       // 새 Access Token으로 유저 정보 가져오기
-      const userInfoResponse = await fetchUserInfoApi(reissueResponse.data.access);
+      const userInfoResponse = await fetchUserInfoApi(
+        reissueResponse.data.access,
+      );
       if (userInfoResponse.result === "SUCCESS") {
         return { userInfo: userInfoResponse.data, response };
       }
@@ -136,12 +151,11 @@ async function validateAndRefreshTokens(
     console.error("❌ Refresh Token 사용 중 오류 발생:", error.message);
     clearCookies(response);
   }
-  
+
   return {}; // ❌ 모든 시도 실패 시 빈 객체 반환
 }
 
 export async function middleware(request: NextRequest) {
-  // return NextResponse.next();
   // 요청 경로
   const pathname = request.nextUrl.pathname;
 

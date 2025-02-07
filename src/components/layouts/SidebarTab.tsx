@@ -1,7 +1,18 @@
-import { Box, CardBody, CardRoot, CardTitle, Spinner } from "@chakra-ui/react";
+"use client";
+
 import Link from "next/link";
+import { Box, Flex } from "@chakra-ui/react";
+import {
+  MenuContent,
+  MenuItem,
+  MenuRoot,
+  MenuTrigger,
+} from "@/src/components/ui/menu";
+import { ChevronDown } from "lucide-react";
+import { useColorModeValue } from "@/src/components/ui/color-mode";
 import { useSidebar } from "@/src/context/SidebarContext";
 import { useProjectInfiniteScroll } from "@/src/hook/useProjectInfiniteScroll";
+import { Loading } from "@/src/components/common/Loading"; // 기존 컴포넌트 사용
 
 interface SidebarTabProps {
   memberRole: "admin" | "member";
@@ -15,65 +26,135 @@ const ADMIN_MENU_ITEMS = [
 ];
 
 export default function SidebarTab({ memberRole }: SidebarTabProps) {
-  const { selectedProjectFilter } = useSidebar();
+  const bgColor = useColorModeValue("white", "gray.900");
+  const hoverBgColor = useColorModeValue("gray.100", "gray.700");
+  const textColor = useColorModeValue("gray.800", "white");
+  const borderColor = useColorModeValue("gray.300", "gray.700");
 
+  const { selectedProjectFilter, setSelectedProjectFilter } = useSidebar();
+  // 프로젝트 상태에 따른 데이터 가져오기
   const status =
     selectedProjectFilter === "완료 프로젝트" ? "COMPLETED" : "IN_PROGRESS";
-
   const { projectList, loading, hasMore, observerRef } =
     useProjectInfiniteScroll(status);
 
-  // 관리자 메뉴 렌더링
-  if (memberRole === "admin") {
-    return (
-      <Box bg="white">
-        <CardRoot boxShadow="none" backgroundColor="transparent">
-          <CardBody>
-            {ADMIN_MENU_ITEMS.map((item) => (
-              <Link key={item.value} href={item.value} passHref>
-                <CardTitle width="100%" mb="2" p="2">
-                  {item.title}
-                </CardTitle>
-              </Link>
-            ))}
-          </CardBody>
-        </CardRoot>
-      </Box>
-    );
-  }
-
   return (
-    <Box bg="white" height="calc(100vh - 60px)">
-      <CardRoot boxShadow="none" backgroundColor="transparent">
-        {/* ✅ 스크롤이 `SidebarTab` 내에서만 이루어지도록 설정 */}
-        <CardBody
-          overflowY="auto"
-          maxHeight={{
-            base: "calc(100vh - 120px)", // 작은 화면 (모바일)
-            md: "calc(100vh - 150px)", // 중간 화면 (태블릿)
-            lg: "calc(100vh - 180px)", // 큰 화면 (데스크탑)
-          }}
-        >
-          {projectList &&
-            projectList.map((project) => (
+    <Box
+      bg={bgColor}
+      color={textColor}
+      maxHeight="calc(100vh - 60px)"
+      borderColor={borderColor}
+    >
+      {/* 관리자 메뉴 렌더링 */}
+      {memberRole === "admin" ? (
+        <Box mb={6} borderBottom="1px solid" borderColor={borderColor}>
+          {ADMIN_MENU_ITEMS.map((item) => (
+            <Link key={item.value} href={item.value}>
+              <Box
+                p={4}
+                borderBottom="1px solid"
+                borderColor={borderColor}
+                _hover={{ bg: hoverBgColor }}
+              >
+                {item.title}
+              </Box>
+            </Link>
+          ))}
+        </Box>
+      ) : (
+        <>
+          <MenuRoot positioning={{ placement: "right-end" }}>
+            <MenuTrigger asChild>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                p={4}
+                border="1px solid"
+                borderColor={borderColor}
+                cursor="pointer"
+              >
+                <Box>
+                  {selectedProjectFilter === "진행중 프로젝트"
+                    ? "진행중 프로젝트"
+                    : "완료 프로젝트"}
+                </Box>
+                {/* ChevronDown 아이콘 */}
+                <ChevronDown />
+              </Box>
+            </MenuTrigger>
+            <MenuContent bg={bgColor} borderColor={borderColor} zIndex="10">
+              <MenuItem
+                value="진행중 프로젝트"
+                onClick={() => setSelectedProjectFilter("진행중 프로젝트")}
+                bg={
+                  selectedProjectFilter === "진행중 프로젝트"
+                    ? hoverBgColor
+                    : "transparent"
+                }
+                _hover={{ bg: hoverBgColor }}
+                fontWeight={
+                  selectedProjectFilter === "진행중 프로젝트"
+                    ? "bold"
+                    : "normal"
+                }
+              >
+                진행중 프로젝트
+              </MenuItem>
+              <MenuItem
+                value="완료 프로젝트"
+                onClick={() => setSelectedProjectFilter("완료 프로젝트")}
+                bg={
+                  selectedProjectFilter === "완료 프로젝트"
+                    ? hoverBgColor
+                    : "transparent"
+                }
+                _hover={{ bg: hoverBgColor }}
+                fontWeight={
+                  selectedProjectFilter === "진행중 프로젝트"
+                    ? "bold"
+                    : "normal"
+                }
+              >
+                완료 프로젝트
+              </MenuItem>
+            </MenuContent>
+          </MenuRoot>
+
+          <Flex flexDirection="column" justifyContent="center">
+            {projectList.map((project) => (
               <Link
                 key={project.id}
                 href={`/projects/${project.id}/tasks`}
                 passHref
               >
-                <CardTitle mb="2" p="1">
+                <Box
+                  p={4}
+                  textAlign="center"
+                  borderBottom="1px solid"
+                  borderColor={borderColor}
+                  _hover={{ bg: hoverBgColor }}
+                  overflowX="hidden" // 넘치는 텍스트 숨김
+                  whiteSpace="nowrap" // 텍스트를 한 줄로 유지
+                  textOverflow="ellipsis" // 말줄임표 처리
+                  maxWidth="250px"
+                >
                   {project.name}
-                </CardTitle>
+                </Box>
               </Link>
             ))}
+            {/* 로딩 상태 표시 */}
+            {loading && hasMore && (
+              <Box mt={4} display="flex" justifyContent="center">
+                <Loading />
+              </Box>
+            )}
+          </Flex>
 
-          {/* ✅ 로딩 상태 표시 */}
-          {loading && <Spinner size="sm" mx="auto" my="4" />}
-
-          {/* ✅ 마지막 요소 감지 (무한 스크롤) */}
+          {/* 무한 스크롤 감지 */}
           {hasMore && <div ref={observerRef} style={{ height: "10px" }} />}
-        </CardBody>
-      </CardRoot>
+        </>
+      )}
     </Box>
   );
 }

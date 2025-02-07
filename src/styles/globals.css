@@ -1,0 +1,177 @@
+/* 글로벌 스타일 */
+:root {
+  --header-height: 3rem;
+  --sidebar-width-mobile: 0px;
+  --sidebar-width: 15%;
+  --content-max-width: 85%;
+  --font-size-base: 1rem;
+  --font-size-sm: 0.875rem;
+  --font-size-lg: 1.125rem;
+  --button-primary-bg: #007bff;
+  --button-primary-hover: #0056b3;
+  --background-light: #f8f9fa;
+  --background-dark: #1a202c;
+  --text-light: #1a202c;
+  --text-dark: #f8f9fa;
+}
+
+/* 다크모드 */
+[data-theme="dark"] {
+  --background-light: #1a202c;
+  --background-dark: #2d3748;
+  --text-light: #f8f9fa;
+  --text-dark: #e2e8f0;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body */
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: var(--background-light);
+  color: var(--text-light);
+  overflow-x: hidden;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+[data-theme="dark"] body {
+  background-color: var(--background-dark);
+  color: var(--text-dark);
+}
+
+/* 헤더 */
+header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: var(--header-height);
+  background-color: var(--background-light);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 10;
+}
+
+[data-theme="dark"] header {
+  background-color: var(--background-dark);
+}
+
+/* 반응형 사이드바 */
+.sidebar {
+  flex-basis: var(--sidebar-width); /* 기본 너비를 20%로 설정 */
+  min-width: 200px; /* 최소 너비 */
+  max-width: 250px; /* 최대 너비 */
+  background-color: var(--background-light);
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+  transition: all 0.3s ease-in-out;
+}
+
+[data-theme="dark"] .sidebar {
+  background-color: var(--background-dark);
+  border-color: #4a5568;
+}
+
+#root {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+/* 메인 콘텐츠 */
+.content {
+  flex: 1;
+  min-width: 0; /* Flexbox의 자식 요소가 올바르게 너비를 계산하도록 설정 */
+  max-width: var(--content-max-width);
+  overflow-x: auto;
+  padding: 16px;
+}
+
+/* 버튼 */
+button {
+  background-color: var(--button-primary-bg);
+  color: white;
+  font-size: var(--font-size-base);
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: var(--button-primary-hover);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 스크롤바 전체 */
+::-webkit-scrollbar {
+  width: 8px; /* 세로 스크롤바 너비 */
+  height: 5px; /* 가로 스크롤바 높이 */
+}
+
+/* 스크롤 트랙 (배경) */
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+/* 스크롤 핸들 (드래그하는 부분) */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* 스크롤 핸들 hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* 다크 모드 */
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #9b59b6;
+}
+/* 반응형 (태블릿 이하) */
+@media (max-width: 1024px) {
+  .sidebar {
+    flex-basis: 250px; /* 태블릿에서는 고정된 너비 사용 */
+    max-width: 250px;
+  }
+}
+
+/* 반응형 (모바일) */
+@media (max-width: 768px) {
+  .sidebar {
+    flex-basis: var(--sidebar-width-mobile); /* 모바일에서는 고정된 너비 사용 */
+    transform: translateX(-100%);
+    position: absolute;
+    z-index: 10;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .content {
+    padding: 1rem;
+    overflow-x: auto;
+  }
+}

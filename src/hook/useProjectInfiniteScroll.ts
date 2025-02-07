@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState, useRef, useCallback } from "react";
 import { fetchProjectListApi } from "@/src/api/projects";
 import { ProjectProps } from "@/src/types";
@@ -15,6 +17,7 @@ export function useProjectInfiniteScroll(status: string) {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<HTMLDivElement | null>(null);
+  const currentRef = observerRef.current;
 
   /**
    * 새로운 프로젝트 데이터를 불러와 기존 목록에 추가하는 함수
@@ -24,7 +27,7 @@ export function useProjectInfiniteScroll(status: string) {
   const fetchMoreProjects = useCallback(
     async (page: number) => {
       if (!hasMore || loading) return;
-  
+
       setLoading(true);
 
       try {
@@ -76,7 +79,6 @@ export function useProjectInfiniteScroll(status: string) {
   //     (_, i) => i + 1,
   //   );
 
-
   //   (async () => {
   //     setLoading(true);
   //       const responses = await Promise.all(
@@ -97,7 +99,7 @@ export function useProjectInfiniteScroll(status: string) {
   //         );
   //         return [...prev, ...uniqueProjects];
   //       });
-        
+
   //       setCurrentPage(prefetchPages + 1);
   //       setLoading(false);
   //   })();
@@ -119,10 +121,15 @@ export function useProjectInfiniteScroll(status: string) {
       { threshold: 0.6 },
     );
 
-    if (observerRef.current) observer.observe(observerRef.current);
+    if (currentRef) observer.observe(currentRef);
 
-    return () => observer.disconnect();
-  }, [fetchMoreProjects, loading, currentPage]);
+    //   return () => observer.disconnect();
+    // }, [fetchMoreProjects, loading, currentPage]);
+
+    return () => {
+      if (currentRef) observer.unobserve(currentRef);
+    };
+  }, [fetchMoreProjects, loading, currentPage, hasMore]);
 
   return { projectList, loading, hasMore, observerRef };
 }

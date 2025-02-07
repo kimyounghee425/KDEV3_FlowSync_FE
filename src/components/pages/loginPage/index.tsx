@@ -1,15 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { PopoverArrow, Text, VStack } from "@chakra-ui/react";
-import {
-  PopoverBody,
-  PopoverContent,
-  PopoverRoot,
-  PopoverTitle,
-  PopoverTrigger,
-} from "@/src/components/ui/popover";
+import { Box, Text, VStack } from "@chakra-ui/react";
 import { login } from "@/src/api/auth";
 import { useForm } from "@/src/hook/useForm";
 import InputForm from "@/src/components/common/InputForm";
@@ -22,6 +15,18 @@ export default function LoginPage() {
   const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfLogin, validationRulesOfLogin);
+
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      localStorage.removeItem("user");
+    }
+
+    if (localStorage.getItem("selectedProjectFilter")) {
+      localStorage.removeItem("selectedProjectFilter");
+    }
+    // MAC 시스템 다크모드 사용자 테마 라이트로 강제 설정
+    localStorage.setItem("theme", "light");
+  }, []);
 
   function validateInputs() {
     if (!checkAllInputs()) {
@@ -62,36 +67,45 @@ export default function LoginPage() {
 
   return (
     <>
-      <PopoverRoot>
-        <PopoverTrigger asChild>
-          <button className={styles.popoverButton}>도움말</button>
-        </PopoverTrigger>
-        <PopoverContent css={{ "--popover-bg": "lightblue" }}>
-          <PopoverArrow />
-          <PopoverBody>
-            <PopoverTitle fontWeight="medium">
-              <strong>이용 가이드</strong>
-            </PopoverTitle>
-            <Text fontSize="sm" color="gray.600" whiteSpace="pre-line">
-              {`
+      {/* 로그인 가이드 (오른쪽) */}
+      <Box
+        position="absolute"
+        top="10%"
+        right="10%"
+        zIndex="10"
+        width="400px"
+        height="600px"
+        maxWidth="400px"
+        maxHeight="600px"
+        padding={6}
+        border="1px solid "
+        backgroundColor="aquamarine"
+        borderRadius="lg"
+        boxShadow="md"
+        textAlign="left"
+      >
+        <Text fontSize="md" color="gray.700" whiteSpace="pre-line">
+          {`
               * 가이드라인: 본 애플리케이션은 B2B 서비스로 관리자가 직접 회원을 등록하며, 전달받은 ID 와 PW 를 입력하여 로그인합니다.              
-              
-              [관리자 계정]
-              - ID: admin@example.com
+            
+              서비스 사용 테스트를 위한 로그인 계정을 안내 드립니다.
+
+              아래 계정으로 로그인하여 B2B 프로젝트 관리 서비스를 이용해주시면 감사하겠습니다.
+
+              [개발사] 소속 담당자 계정
+              - ID: techdom@flowsync.com
               - PW: 1111
 
-              [일반사용자(개발사) 계정]
-              - ID: developermember@example.com
+              [고객사] 소속 담당자 계정
+              - ID: devlens@flowsync.com
               - PW: 1111
 
-              [일반사용자(고객사) 계정]
-              - ID: customermember@example.com
+              [시스템 관리자] 계정
+              - ID: admin@flowsync.com
               - PW: 1111
               `}
-            </Text>
-          </PopoverBody>
-        </PopoverContent>
-      </PopoverRoot>
+        </Text>
+      </Box>
       <div className={styles.loginContainer}>
         {/* 제목 */}
         <div className={styles.loginHeader}>
@@ -139,4 +153,37 @@ export default function LoginPage() {
       </div>
     </>
   );
+}
+
+{
+  /* <PopoverRoot>
+        <PopoverTrigger asChild>
+          <button className={styles.popoverButton}>도움말</button>
+        </PopoverTrigger>
+        <PopoverContent css={{ "--popover-bg": "lightblue" }}>
+          <PopoverArrow />
+          <PopoverBody>
+            <PopoverTitle fontWeight="medium">
+              <strong>이용 가이드</strong>
+            </PopoverTitle>
+            <Text fontSize="sm" color="gray.600" whiteSpace="pre-line">
+              {`
+              * 가이드라인: 본 애플리케이션은 B2B 서비스로 관리자가 직접 회원을 등록하며, 전달받은 ID 와 PW 를 입력하여 로그인합니다.              
+              
+              [관리자 계정]
+              - ID: admin@example.com
+              - PW: 1111
+
+              [일반사용자(개발사) 계정]
+              - ID: developermember@example.com
+              - PW: 1111
+
+              [일반사용자(고객사) 계정]
+              - ID: customermember@example.com
+              - PW: 1111
+              `}
+            </Text>
+          </PopoverBody>
+        </PopoverContent>
+      </PopoverRoot> */
 }

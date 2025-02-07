@@ -3,9 +3,16 @@
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
-import { createListCollection, Heading, Stack, Table } from "@chakra-ui/react";
+import {
+  Box,
+  createListCollection,
+  Flex,
+  Heading,
+  Stack,
+  Table,
+} from "@chakra-ui/react";
 import StatusTag from "@/src/components/common/StatusTag";
-import ProjectStatusCards from "@/src/components/pages/projectsPage/components/ProjectsStatusCards";
+import ProjectStatusCards from "@/src/components/pages/ProjectsPage/components/ProjectsStatusCards";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
 import SearchSection from "@/src/components/common/SearchSection";
@@ -13,6 +20,7 @@ import StatusSelectBox from "@/src/components/common/FilterSelectBox";
 import { useProjectList } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
+import { useColorModeValue } from "@/src/components/ui/color-mode";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -37,6 +45,8 @@ const STATUS_LABELS: Record<string, string> = {
   PAUSED: "일시중단",
   DELETED: "삭제",
 };
+
+const SECTION_SPACING = 8; // 공통 간격 변수 (8px 단위)
 
 /*
  * 페이지 기본 Export
@@ -69,6 +79,9 @@ function ProjectsPageContent() {
     loading: projectListLoading,
     error: projectListError,
   } = useProjectList(keyword, status, currentPage, pageSize);
+
+  const bgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.700", "gray.200");
 
   /**
    * 페이지 변경 시 호출되는 콜백 함수
@@ -129,66 +142,89 @@ function ProjectsPageContent() {
             queryKey="status"
           />
         </SearchSection>
-        {projectListError && (
-          <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
-        )}
-        {/*
-         * 공통 테이블(CommonTable)
-         *  - headerTitle: 테이블 헤더 구성
-         *  - data: 테이블에 표시될 데이터
-         *  - loading: 로딩 상태
-         *  - renderRow: 한 줄씩 어떻게 렌더링할지 정의 (jsx 반환)
-         *  - handleRowClick: 행 클릭 이벤트 핸들러
-         */}
-        <CommonTable
-          headerTitle={
-            <Table.Row
-              backgroundColor={"#eee"}
-              css={{
-                "& > th": { textAlign: "center" },
-              }}
-            >
-              <Table.ColumnHeader>프로젝트명</Table.ColumnHeader>
-              <Table.ColumnHeader>고객사</Table.ColumnHeader>
-              <Table.ColumnHeader>개발사</Table.ColumnHeader>
-              <Table.ColumnHeader>프로젝트 관리단계</Table.ColumnHeader>
-              <Table.ColumnHeader>프로젝트 시작일</Table.ColumnHeader>
-              <Table.ColumnHeader>프로젝트 종료일</Table.ColumnHeader>
-            </Table.Row>
-          }
-          data={projectList}
-          loading={projectListLoading}
-          renderRow={(project) => (
-            <>
-              <Table.Cell>{project.name}</Table.Cell>
-              <Table.Cell>{project.customerName}</Table.Cell>
-              <Table.Cell>{project.developerName}</Table.Cell>
-              <Table.Cell>
-                <StatusTag>
-                  {STATUS_LABELS[project.status] || "알 수 없음"}
-                </StatusTag>
-              </Table.Cell>
-              <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
-              <Table.Cell>{formatDynamicDate(project.closeAt)}</Table.Cell>
-            </>
-          )}
-          handleRowClick={handleRowClick}
-        />
-        {/*
-         * 페이지네이션 컴포넌트
-         * paginationInfo: 현재 페이지, 총 페이지, 페이지 크기 등의 정보
-         * handlePageChange: 페이지 이동 시 실행될 콜백
-         */}
-        <Pagination
-          paginationInfo={
-            paginationInfo && {
-              ...paginationInfo,
-              currentPage: paginationInfo.currentPage,
-            }
-          }
-          handlePageChange={handlePageChange}
-        />
       </Stack>
+
+      <Box bg={bgColor} p="4" minHeight="100vh">
+        <Stack spaceY="SECTION_SPACING">
+          <ProjectStatusCards title={"프로젝트 현황"} />
+          <Stack spaceY="SECTION_SPACING" width="full">
+            <Flex justifyContent="space-between" alignItems="center">
+              <Heading size="2xl" color={textColor} lineHeight="base">
+                프로젝트 목록
+              </Heading>
+              {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
+              <SearchSection keyword={keyword} placeholder="프로젝트명 입력">
+                <StatusSelectBox
+                  statusFramework={projectStatusFramework}
+                  selectedValue={status}
+                  queryKey="status"
+                />
+              </SearchSection>
+            </Flex>
+            {projectListError && (
+              <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+            )}
+            {/*
+             * 공통 테이블(CommonTable)
+             *  - headerTitle: 테이블 헤더 구성
+             *  - data: 테이블에 표시될 데이터
+             *  - loading: 로딩 상태
+             *  - renderRow: 한 줄씩 어떻게 렌더링할지 정의 (jsx 반환)
+             *  - handleRowClick: 행 클릭 이벤트 핸들러
+             */}
+
+            <CommonTable
+              headerTitle={
+                <Table.Row
+                  backgroundColor={useColorModeValue("#eee", "gray.700")}
+                  css={{
+                    "& > th": { textAlign: "center" },
+                  }}
+                >
+                  <Table.ColumnHeader>프로젝트명</Table.ColumnHeader>
+                  <Table.ColumnHeader>고객사</Table.ColumnHeader>
+                  <Table.ColumnHeader>개발사</Table.ColumnHeader>
+                  <Table.ColumnHeader>프로젝트 관리단계</Table.ColumnHeader>
+                  <Table.ColumnHeader>프로젝트 시작일</Table.ColumnHeader>
+                  <Table.ColumnHeader>프로젝트 종료일</Table.ColumnHeader>
+                </Table.Row>
+              }
+              data={projectList}
+              loading={projectListLoading}
+              renderRow={(project) => (
+                <>
+                  <Table.Cell>{project.name}</Table.Cell>
+                  <Table.Cell>{project.customerName}</Table.Cell>
+                  <Table.Cell>{project.developerName}</Table.Cell>
+                  <Table.Cell>
+                    <StatusTag>
+                      {STATUS_LABELS[project.status] || "알 수 없음"}
+                    </StatusTag>
+                  </Table.Cell>
+                  <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
+                  <Table.Cell>{formatDynamicDate(project.closeAt)}</Table.Cell>
+                </>
+              )}
+              handleRowClick={handleRowClick}
+              placeholderHeight="300px" // 자리 표시자 높이
+            />
+            {/*
+             * 페이지네이션 컴포넌트
+             * paginationInfo: 현재 페이지, 총 페이지, 페이지 크기 등의 정보
+             * handlePageChange: 페이지 이동 시 실행될 콜백
+             */}
+            <Pagination
+              paginationInfo={
+                paginationInfo && {
+                  ...paginationInfo,
+                  currentPage: paginationInfo.currentPage,
+                }
+              }
+              handlePageChange={handlePageChange}
+            />
+          </Stack>
+        </Stack>
+      </Box>
     </>
   );
 }

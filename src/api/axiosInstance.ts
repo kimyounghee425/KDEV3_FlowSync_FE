@@ -39,7 +39,10 @@ axiosInstance.interceptors.response.use(
           refreshPromise = fetchReissueToken();
           const reissueResponse = await refreshPromise;
 
-          if (reissueResponse.result === "SUCCESS" && reissueResponse.data?.access) {
+          if (
+            reissueResponse.result === "SUCCESS" &&
+            reissueResponse.data?.access
+          ) {
             console.log("✅ 토큰 재발급 성공 → 기존 요청 재시도");
             return axiosInstance(originalRequest);
           } else {
@@ -61,7 +64,9 @@ axiosInstance.interceptors.response.use(
           await refreshPromise;
           return axiosInstance(originalRequest);
         } catch (error) {
-          console.error("❌ 다른 요청도 Refresh Token 재발급 실패 → 로그인 이동");
+          console.error(
+            "❌ 다른 요청도 Refresh Token 재발급 실패 → 로그인 이동",
+          );
           window.location.href = "/login";
           return Promise.reject(error);
         }
@@ -69,7 +74,7 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

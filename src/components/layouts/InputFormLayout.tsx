@@ -50,12 +50,10 @@ export default function InputFormLayout({
   return (
     <div className={styles.container}>
       <div className={styles.formWrapper}>
-        {/* 📌 페이지 타이틀 */}
-        <h1 className={styles.pageTitle}>{title}</h1>
         <form onSubmit={onSubmit}>
-          {/* 📌 페이지 입력폼 */}
-          {children}
-          {/* 📌 페이지 하단 - 등록/수정/삭제 버튼 */}
+          {/* 📌 페이지 타이틀 */}
+          <h1 className={styles.pageTitle}>{title}</h1>
+          {/* 📌 페이지 버튼 - 등록/수정/삭제 */}
           <div className={styles.buttonContainer}>
             {isDetailPage ? (
               <>
@@ -128,6 +126,8 @@ export default function InputFormLayout({
               </button>
             )}
           </div>
+          {/* 📌 페이지 입력폼 */}
+          {children}
         </form>
       </div>
     </div>

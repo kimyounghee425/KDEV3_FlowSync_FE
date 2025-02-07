@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import MemberDetailForm from "@/src/components/pages/adminMemberPage/components/MemberDetailForm";
+import MemberDetailForm from "@/src/components/pages/AdminMemberPage/components/MemberDetailForm";
 import { fetchMemberDetails } from "@/src/api/members";
 import { MemberProps } from "@/src/types";
 

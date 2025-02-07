@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { OrganizationProps } from "@/src/types";
 import { fetchOrganizationDetails } from "@/src/api/organizations";
-import OrganizationDetailForm from "./components/organizationDetailForm";
+import OrganizationDetailForm from "@/src/components/pages/AdminOrganizationPage/components/organizationDetailForm";
 
 export default function AdminOrganizationPage() {
   const router = useRouter();
