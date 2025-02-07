@@ -2,13 +2,16 @@
 "use client";
 // 외부 라이브러리
 import React, { useEffect, useRef, useState } from "react";
-import EditorJS from "@editorjs/editorjs";
-import ImageTool from "@editorjs/image";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
-import FileAddSection from "@/src/components/common/FileAddSection";
-import LinkAddSection from "@/src/components/common/LinkAddSection";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
 import { BaseArticleRequestData } from "@/src/types";
+import { usePathname } from "next/navigation";
+import EditorJS from "@editorjs/editorjs";
+import ImageTool from "@editorjs/image";
+import FileAddSection from "@/src/components/common/FileAddSection";
+import LinkAddSection from "@/src/components/common/LinkAddSection";
+import SignUpload from "@/src/components/pages/TaskRegisterPage/components/SignUpload";
+import DropDownInfoBottom from "./DropDownInfoBottom";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -41,6 +44,8 @@ export default function ArticleForm({
   const [linkList, setLinkList] = useState<LinkListProps[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
+
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!editorRef.current) {
@@ -111,8 +116,6 @@ export default function ArticleForm({
           linkList: linkList,
           fileInfoList: uploadedFiles,
         });
-
-        alert("저장이 완료되었습니다.");
       } catch (error) {
         console.error("저장 실패:", error);
         alert("저장 중 문제가 발생했습니다.");
@@ -136,7 +139,14 @@ export default function ArticleForm({
       </Flex>
 
       <Box mb={5}>
-        <Text mb={2}>상세 내용</Text>
+        <Flex direction={"row"} alignItems={"center"} >
+          <Text>상세 내용</Text>
+          <DropDownInfoBottom
+            text={
+              "사진 첨부가 가능합니다. \n 사진을 끌어다 놓거나 ➕ 버튼을 눌러 첨부하세요."
+            }
+          />
+        </Flex>
         <Box
           id="editorjs"
           border="1px solid #ccc"
@@ -155,6 +165,13 @@ export default function ArticleForm({
         uploadedFileSize={uploadedFileSize}
         setUploadedFileSize={setUploadedFileSize}
       />
+
+      {/* 결재 글일 때만 서명 업로드 */}
+      {pathname.includes("/tasks") && (
+        <Box display={"flex"} justifyContent={"center"}>
+          <SignUpload />
+        </Box>
+      )}
 
       {/* 작성 버튼 */}
       <Button

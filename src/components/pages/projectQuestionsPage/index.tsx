@@ -45,7 +45,7 @@ const STATUS_LABELS: Record<string, string> = {
   QUESTION: "질문",
   ANSWER: "답변",
 };
-
+  
 export default function ProjectQuestionsPage() {
   const { projectId } = useParams();
   const searchParams = useSearchParams();

@@ -169,6 +169,7 @@ export default function SelectOrganizationSection({
                       borderRadius="8px"
                       boxShadow="md"
                       p="4"
+                      zIndex="9999"
                     >
                       <Text fontWeight="bold">Owner 란?</Text>
                       <Text fontSize="sm" mt="2">
