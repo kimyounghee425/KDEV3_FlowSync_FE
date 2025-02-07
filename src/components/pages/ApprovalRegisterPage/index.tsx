@@ -58,11 +58,6 @@ export default function ApprovalRegisterPage() {
       <BackButton />
 
       <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
-        {/* <ProgressStepAddSection
-          progressStepId={progressStepId}
-          setProgressStepId={setProgressStepId}
-          progressData={progressData || []}
-        /> */}
         <FormSelectInput
           label="진행 단계"
           selectedValue={progressStepId}

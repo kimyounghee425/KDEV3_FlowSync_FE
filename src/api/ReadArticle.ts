@@ -1,5 +1,6 @@
 import axiosInstance from "@/src/api/axiosInstance";
 import { QuestionApiResponse, ApprovalApiResponse, QuestionArticle, ApprovalArticle, NoticeArticle, NoticeApiResponse } from "@/src/types";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function readQuestionApi(
@@ -11,7 +12,7 @@ export async function readQuestionApi(
       `${BASE_URL}/projects/${projectId}/questions/${questionId}`,
     );
 
-    console.log(response.data.data.content)
+    console.log(response.data.data.content);
     return response.data.data;
   } catch (error) {
     console.error("API 호출 실패:", error);
@@ -19,9 +20,7 @@ export async function readQuestionApi(
   }
 }
 
-export async function readNoticeApi(
-  noticeId: string,
-): Promise<NoticeArticle> {
+export async function readNoticeApi(noticeId: string): Promise<NoticeArticle> {
   try {
     const response = await axiosInstance.get<NoticeApiResponse>(
       `/notices/${noticeId}`,
@@ -44,12 +43,9 @@ export async function readApprovalApi(
       `${BASE_URL}/projects/${projectId}/approvals/${approvalId}`
     )
 
-    // console.log(response.data)
-
-    return response.data.data
+    return response.data.data;
   } catch (error) {
-    console.log("Api 호출 실패", error)
+    console.log("Api 호출 실패", error);
     throw new Error("결재 데이터를 가져오는 중 문제가 발생했습니다.");
   }
 }
-
