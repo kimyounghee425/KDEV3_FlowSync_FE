@@ -32,25 +32,39 @@ axiosInstance.interceptors.response.use(
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
+      // 🚨 리프레시 토큰 요청 중복 방지
       if (!isRefreshing) {
         isRefreshing = true;
-        refreshPromise = fetchReissueToken();
-      }
+        try {
+          refreshPromise = fetchReissueToken();
+          const reissueResponse = await refreshPromise;
 
-      try {
-        const reissueResponse = await refreshPromise;
-
-        if (reissueResponse.result === "SUCCESS" && reissueResponse.data?.access) {
-          console.log("✅ 토큰 재발급 성공 → 기존 요청 재시도");
-          return axiosInstance(originalRequest);
-        } else {
+          if (reissueResponse.result === "SUCCESS" && reissueResponse.data?.access) {
+            console.log("✅ 토큰 재발급 성공 → 기존 요청 재시도");
+            return axiosInstance(originalRequest);
+          } else {
+            console.error("❌ Refresh Token이 만료됨 → 로그인 페이지로 이동");
+            window.location.href = "/login";
+            return Promise.reject(error);
+          }
+        } catch (refreshError) {
+          console.error("❌ Refresh Token 요청 실패:", refreshError);
           window.location.href = "/login";
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
+          refreshPromise = null;
         }
-      } catch (refreshError) {
-        window.location.href = "/login";
-      } finally {
-        isRefreshing = false;
-        refreshPromise = null;
+      } else {
+        console.log("⏳ 이미 Refresh Token 요청 진행 중...");
+        try {
+          await refreshPromise;
+          return axiosInstance(originalRequest);
+        } catch (error) {
+          console.error("❌ 다른 요청도 Refresh Token 재발급 실패 → 로그인 이동");
+          window.location.href = "/login";
+          return Promise.reject(error);
+        }
       }
     }
 

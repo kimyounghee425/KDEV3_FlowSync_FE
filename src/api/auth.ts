@@ -4,12 +4,13 @@ import {
   ReissueResponse,
   UserInfoResponse,
 } from "@/src/types";
+import { axiosForMiddleware } from "@/src/api/axiosForMiddleware";
 
 // 사용자 권한 API 호출
 export async function fetchUserInfo(
   accessToken?: string,
 ): Promise<CommonResponseType<UserInfoResponse>> {
-  const response = await axiosInstance.get("/me", {
+  const response = await axiosForMiddleware.get("/me", {
     headers: {
       "Content-Type": "application/json",
       ...(accessToken ? { Cookie: `access=${accessToken}` } : {}), // ✅ 서버 환경에서 쿠키 강제 포함
@@ -24,7 +25,7 @@ export async function fetchUserInfo(
 export async function fetchReissueToken(
   refreshToken?: string,
 ): Promise<CommonResponseType<ReissueResponse>> {
-  const response = await axiosInstance.get("/reissue", {
+  const response = await axiosForMiddleware.get("/reissue", {
     headers: {
       "Content-Type": "application/json",
       ...(refreshToken ? { Cookie: `refresh=${refreshToken}` } : {}), // ✅ 서버 환경에서 Refresh Token 포함
