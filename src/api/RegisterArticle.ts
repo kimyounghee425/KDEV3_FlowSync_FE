@@ -1,5 +1,5 @@
 import axiosInstance from "@/src/api/axiosInstance";
-import { QuestionRequestData, TaskRequestData } from "@/src/types";
+import { QuestionRequestData, ApprovalRequestData } from "@/src/types";
 
 
 export async function uploadFileApi(file: File) {
@@ -22,7 +22,7 @@ export async function createQuestionApi(projectId: number, requestData: Question
   return response.data;
 }
 
-export async function createTaskApi(projectId: number, requestData: TaskRequestData) {
+export async function createTaskApi(projectId: number, requestData: ApprovalRequestData) {
   const response = await axiosInstance.post(
     `/projects/${projectId}/approvals`,
     requestData,

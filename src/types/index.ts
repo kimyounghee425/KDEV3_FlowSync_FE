@@ -174,7 +174,7 @@ export interface ProjectInfoProps {
 }
 
 // 결재글 속성
-export interface ProjectTaskProps {
+export interface ProjectApprovalProps {
   id: string;
   number: number;
   title: string;
@@ -189,8 +189,8 @@ export interface ProjectTaskProps {
   pageSize: number; // 페이지 크기
 }
 
-export interface ProjectTaskListResponse {
-  projectApprovals: ProjectTaskProps[];
+export interface ProjectApprovalListResponse {
+  projectApprovals: ProjectApprovalProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
@@ -222,11 +222,11 @@ export interface QuestionApiResponse {
   data: QuestionArticle;
 }
 
-export interface TaskApiResponse {
+export interface ApprovalApiResponse {
   code: number;
   result: string;
   message: string;
-  data: TaskArticle;
+  data: ApprovalArticle;
 }
 
 export interface NoticeApiResponse {
@@ -303,7 +303,7 @@ export interface QuestionArticle {
   commentList: ArticleComment[];
 }
 
-export interface TaskArticle {
+export interface ApprovalArticle {
   id: number;
   number: number;
   title: string;
@@ -439,7 +439,7 @@ export interface QuestionRequestData extends BaseArticleRequestData {
   progressStepId?: number;
 }
 
-export interface TaskRequestData extends BaseArticleRequestData {
+export interface ApprovalRequestData extends BaseArticleRequestData {
   progressStepId?: number;
 }
 

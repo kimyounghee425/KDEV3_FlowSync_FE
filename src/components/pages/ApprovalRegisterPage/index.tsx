@@ -5,13 +5,12 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createTaskApi } from "@/src/api/RegisterArticle";
-import { TaskRequestData } from "@/src/types";
+import { ApprovalRequestData } from "@/src/types";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
-
 import "./edit.css";
 
 const progressData = [
@@ -23,13 +22,13 @@ const progressData = [
   { id: "6", title: "검수", value: "" },
 ];
 
-export default function TaskRegisterPage() {
+export default function ApprovalRegisterPage() {
   const { projectId } = useParams();
   const router = useRouter();
   const [title, setTitle] = useState<string>("");
   const [progressStepId, setProgressStepId] = useState<number>(1);
 
-  const handleSave = async <T extends TaskRequestData>(requestData: T) => {
+  const handleSave = async <T extends ApprovalRequestData>(requestData: T) => {
     try {
       const response = await createTaskApi(Number(projectId), {
         ...requestData,
@@ -59,11 +58,6 @@ export default function TaskRegisterPage() {
       <BackButton />
 
       <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
-        {/* <ProgressStepAddSection
-          progressStepId={progressStepId}
-          setProgressStepId={setProgressStepId}
-          progressData={progressData || []}
-        /> */}
         <FormSelectInput
           label="진행 단계"
           selectedValue={progressStepId}

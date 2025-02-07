@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { fetchProjectList } from "@/src/api/projects";
+import { fetchProjectListApi } from "@/src/api/projects";
 import { ProjectProps } from "@/src/types";
 
 /**
@@ -28,7 +28,7 @@ export function useProjectInfiniteScroll(status: string) {
       setLoading(true);
 
       try {
-        const response = await fetchProjectList("", status, page, 20);
+        const response = await fetchProjectListApi("", status, page, 20);
         const newProjects = response.data.projects;
 
         if (!newProjects || newProjects.length === 0) {

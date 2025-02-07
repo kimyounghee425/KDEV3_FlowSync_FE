@@ -9,11 +9,10 @@ import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createQuestionApi } from "@/src/api/RegisterArticle";
 import { ProjectProgressStepProps, QuestionRequestData } from "@/src/types";
-import { fetchProjectQuestionProgressStep as fetchProjectQuestionProgressStepApi } from "@/src/api/projects";
+import { fetchProjectQuestionProgressStepApi } from "@/src/api/projects";
 import { useFetchData } from "@/src/hook/useFetchData";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
-import ProgressStepAddSection from "../../common/ProgressStepAddSection";
-import "./edit.css"
+import "@/src/components/pages/QuestionRegisterPage/edit.css";
 
 export default function QuestionRegisterPage() {
   const { projectId } = useParams();
@@ -71,11 +70,6 @@ export default function QuestionRegisterPage() {
       <BackButton />
 
       <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
-        {/* <ProgressStepAddSection
-          progressStepId={progressStepId}
-          setProgressStepId={setProgressStepId}
-          progressData={filteredProgressSteps || []}
-        /> */}
         <FormSelectInput
           label="진행 단계"
           selectedValue={progressStepId}

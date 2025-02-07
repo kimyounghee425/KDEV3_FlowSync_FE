@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
 import { createListCollection, Heading, Stack, Table } from "@chakra-ui/react";
-import { fetchProjectList as fetchProjectListApi } from "@/src/api/projects";
+import { fetchProjectListApi } from "@/src/api/projects";
 import StatusTag from "@/src/components/common/StatusTag";
 import ProjectStatusCards from "@/src/components/pages/projectsPage/components/ProjectsStatusCards";
 import CommonTable from "@/src/components/common/CommonTable";
