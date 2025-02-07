@@ -1,3 +1,3 @@
-import noticesPage from "@/src/pages/NoticesPage";
+import noticesPage from "@/src/components/pages/NoticesPage";
 
 export default noticesPage;
