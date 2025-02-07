@@ -1,3 +1,3 @@
-import ProjectsPage from "@/src/pages/ProjectsPage/index";
+import ProjectsPage from "@/src/components/pages/ProjectsPage/index";
 
 export default ProjectsPage;
