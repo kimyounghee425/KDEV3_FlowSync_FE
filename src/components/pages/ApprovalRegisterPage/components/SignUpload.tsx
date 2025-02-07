@@ -72,11 +72,38 @@ export default function SignUpload() {
   return (
     <Flex direction={"column"} align="center">
       <Flex direction="column" align="center">
-        <Text>결재요청자 서명</Text>
-        <Box border={"2px solid black"} borderRadius={"10px"}>
-          {signatureUrl ? (
-            <Image width={250} height={166.6} src={signatureUrl} alt="서명" />
-          ) : (
+        <Flex direction={"row"}>
+          <Flex
+            width="250px"
+            justifyContent="center"
+            alignItems="center"
+            mr="20px"
+          >
+            <Text>요청자 담당</Text>
+          </Flex>
+          <Flex width="250px" justifyContent="center" alignItems="center">
+            <Text>결재자 담당</Text>
+          </Flex>
+        </Flex>
+        <Flex direction={"row"}>
+          <Box border={"2px solid black"} borderRadius={"10px"} mr="20px">
+            {signatureUrl ? (
+              <Image width={250} height={166.6} src={signatureUrl} alt="서명" />
+            ) : (
+              <Text
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+                width={250}
+                height={166.6}
+                color="gray.500"
+              >
+                서명을 불러와 주세요
+              </Text>
+            )}
+          </Box>
+          <Box border={"2px solid black"} borderRadius={"10px"}>
             <Text
               display="flex"
               alignItems="center"
@@ -86,10 +113,10 @@ export default function SignUpload() {
               height={166.6}
               color="gray.500"
             >
-              서명을 불러와 주세요
+              결재자 서명
             </Text>
-          )}
-        </Box>
+          </Box>
+        </Flex>
       </Flex>
       <Box mb={5}>
         <canvas
@@ -104,6 +131,7 @@ export default function SignUpload() {
           }}
         />
       </Box>
+
       <Flex justifyContent={"center"} gap={4}>
         <Button onClick={bringSignature}>서명 불러오기</Button>
         <Button onClick={clearSignature}>지우기</Button>

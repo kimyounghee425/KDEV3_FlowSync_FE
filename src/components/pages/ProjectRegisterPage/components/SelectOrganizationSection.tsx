@@ -298,7 +298,7 @@ export default function SelectOrganizationSection({
             );
           })
         ) : (
-          <Text color="gray.500">선택된 멤버가 없습니다.</Text>
+          <Text color="gray.500">선택된 멤버 목록</Text>
         )}
       </Flex>
     </Flex>

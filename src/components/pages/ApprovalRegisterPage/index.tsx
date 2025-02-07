@@ -9,24 +9,35 @@ import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createTaskApi } from "@/src/api/RegisterArticle";
-import { ApprovalRequestData } from "@/src/types";
+import { ProjectProgressStepProps, ApprovalRequestData } from "@/src/types";
+import { fetchProjectQuestionProgressStepApi as fetchProjectQuestionProgressStepApi } from "@/src/api/projects";
+import { useFetchData } from "@/src/hook/useFetchData";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
 import "./edit.css";
-
-const progressData = [
-  { id: "1", title: "요구사항정의", value: "" },
-  { id: "2", title: "화면설계", value: "" },
-  { id: "3", title: "디자인", value: "" },
-  { id: "4", title: "퍼블리싱", value: "" },
-  { id: "5", title: "개발", value: "" },
-  { id: "6", title: "검수", value: "" },
-];
 
 export default function ApprovalRegisterPage() {
   const { projectId } = useParams();
   const router = useRouter();
   const [title, setTitle] = useState<string>("");
-  const [progressStepId, setProgressStepId] = useState<number>(1);
+
+  const resolvedProjectId = Array.isArray(projectId)
+    ? projectId[0]
+    : projectId || "";
+
+  const { data: progressStepData } = useFetchData<
+    ProjectProgressStepProps[],
+    [string]
+  >({
+    fetchApi: fetchProjectQuestionProgressStepApi,
+    params: [resolvedProjectId],
+  });
+
+  const filteredProgressSteps =
+    progressStepData?.filter((step) => step.value !== "ALL") || [];
+
+  const [progressStepId, setProgressStepId] = useState<number>(
+    filteredProgressSteps.length > 0 ? Number(filteredProgressSteps[0].id) : 0,
+  );
 
   const handleSave = async <T extends ApprovalRequestData>(requestData: T) => {
     try {
@@ -46,7 +57,7 @@ export default function ApprovalRegisterPage() {
 
   return (
     <Box
-      maxW="1000px"
+      maxW="1000px" 
       w={"100%"}
       mx="auto"
       mt={10}
@@ -62,7 +73,7 @@ export default function ApprovalRegisterPage() {
           label="진행 단계"
           selectedValue={progressStepId}
           setSelectedValue={setProgressStepId}
-          options={progressData || []}
+          options={filteredProgressSteps || []}
         />
       </ArticleForm>
     </Box>

@@ -10,7 +10,7 @@ import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
-import SignUpload from "@/src/components/pages/TaskRegisterPage/components/SignUpload";
+import SignUpload from "@/src/components/pages/ApprovalRegisterPage/components/SignUpload";
 import DropDownInfoBottom from "./DropDownInfoBottom";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -112,7 +112,7 @@ export default function ArticleForm({
 
         handleSave({
           title: title,
-          content: content, // TODO 이거 백엔드 수정해야 함. 1/28
+          content: content,
           linkList: linkList,
           fileInfoList: uploadedFiles,
         });

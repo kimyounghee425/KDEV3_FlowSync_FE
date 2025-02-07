@@ -98,7 +98,7 @@ function ProjectsPageContent() {
    * @param id 프로젝트 ID (백엔드 혹은 테이블에서 받아온 값)
    */
   const handleRowClick = (id: string) => {
-    router.push(`/projects/${id}/tasks`);
+    router.push(`/projects/${id}/approvals`);
   };
 
   return (

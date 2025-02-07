@@ -14,6 +14,8 @@ import BackButton from "@/src/components/common/BackButton";
 import { readApprovalApi } from "@/src/api/ReadArticle";
 import SignToApprove from "@/src/components/pages/ApprovalReadPage/components/SignToApprove";
 import { ArticleComment, ApprovalArticle } from "@/src/types";
+import DropDownMenu from "@/src/components/common/DropDownMenu";
+
 
 export default function ApprovalReadPage() {
   const { projectId, approvalId } = useParams() as {
@@ -57,6 +59,24 @@ export default function ApprovalReadPage() {
     return <Box>로딩 중...</Box>;
   }
 
+  // const handleEdit = () => {
+  //     router.push(`/projects/${projectId}/questions/${questionId}/edit`)
+  //   }
+  
+  //   const handleDelete = async() => {
+  //     const confirmDelete = window.confirm("정말로 삭제하시겠습니까?")
+  //     if (!confirmDelete) return;
+  //     try {
+  //       await deleteQuestionApi(Number(projectId), Number(questionId))
+  //       alert("게시글이 삭제되었습니다.")
+  //       router.push(`/projects/${projectId}/questions`)
+  //     } catch (error) {
+  //       alert(`삭제 중 문제가 발생했습니다 : ${error}`)
+  //     }
+  //   }
+
+    
+
   return (
     <Box
       maxW="1000px"
@@ -69,7 +89,10 @@ export default function ApprovalReadPage() {
       boxShadow="md"
     >
       <BackButton />
-
+      <Flex justifyContent="space-between">
+        <BackButton />
+        {/* <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} /> */}
+      </Flex>
       {/* 게시글 내용 */}
 
       <ArticleContent article={article} />

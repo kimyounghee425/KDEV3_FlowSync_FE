@@ -3,12 +3,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 import { readQuestionApi } from "@/src/api/ReadArticle";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
+import { editQuestionAPI } from "@/src/api/RegisterArticle";
+import { QuestionRequestData } from "@/src/types";
 
 // 수정 api 만들고 가져와야함
 
@@ -42,6 +44,7 @@ export default function QuestionEditForm() {
     projectId: string;
     questionId: string;
   };
+  const router = useRouter();
   const [title, setTitle] = useState<string>("");
   const editorRef = useRef<EditorJS | null>(null);
   const [linkList, setLinkList] = useState<linkListProps[]>([]);
@@ -131,6 +134,62 @@ export default function QuestionEditForm() {
     };
   }, [projectId, questionId]);
 
+  const handleSave = async <T extends QuestionRequestData>(requestData: T) => {
+    try {
+      const response = await editQuestionAPI(
+        Number(projectId),
+        Number(questionId),
+        {
+          ...requestData,
+          ...(requestData.progressStepId !== undefined
+            ? { progressStepId: requestData.progressStepId }
+            : {}),
+        },
+      );
+      router.push(`/projects/${projectId}/questions`);
+    } catch (error) {
+      console.error("저장 실패:", error);
+      alert("저장 중 문제가 발생했습니다.");
+    }
+  };
+
+  const handleEditorSave = async () => {
+    if (editorRef.current) {
+      try {
+        const savedData = await editorRef.current.save();
+        const content = savedData.blocks.map((block) => ({
+          type: block.type,
+          data:
+            block.type === "paragraph"
+              ? block.data.text
+              : { src: block.data.file.url },
+        }));
+
+        if (!title.trim()) {
+          window.alert("제목을 입력하세요.");
+          return;
+        }
+        if (content.length === 0) {
+          window.alert("내용을 입력하세요.");
+          return;
+        }
+
+        await handleSave({
+          title: title,
+          content: content,
+          linkList: linkList,
+          fileInfoList: uploadedFiles,
+        });
+
+        // alert("수정이 완료되었습니다.");
+        router.push(`/projects/${projectId}/questions/${questionId}`);
+      } catch (error) {
+        console.error("저장 실패:", error);
+        alert("저장 중 문제가 발생했습니다.");
+      }
+    }
+  };
+
   return (
     <Flex gap={4} direction={"column"}>
       <Flex gap={4} align={"center"}>
@@ -174,7 +233,7 @@ export default function QuestionEditForm() {
         fontWeight={"bold"}
         boxShadow={"md"}
         _hover={{ bg: "red.600" }}
-        // onClick={수정 핸들러}
+        onClick={handleEditorSave}
       >
         수정
       </Button>
