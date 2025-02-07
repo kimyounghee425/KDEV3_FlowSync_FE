@@ -8,7 +8,7 @@ import { useForm } from "@/src/hook/useForm";
 import InputForm from "@/src/components/common/InputForm";
 import { defaultValuesOfLogin } from "@/src/constants/defaultValues";
 import { validationRulesOfLogin } from "@/src/constants/validationRules";
-import styles from "@/src/components/pages/loginPage/Login.module.css";
+import styles from "@/src/components/pages/LoginPage/Login.module.css";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
