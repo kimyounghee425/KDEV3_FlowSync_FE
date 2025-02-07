@@ -10,16 +10,14 @@ import {
   Table,
 } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
-import { fetchNoticeList as fetchNoticeListApi } from "@/src/api/notices";
-import { NoticeListResponse, UserInfoResponse } from "@/src/types";
-import { useFetchBoardList } from "@/src/hook/useFetchBoardList";
+import { useNoticeList } from "@/src/hook/useFetchBoardList";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import Pagination from "@/src/components/common/Pagination";
 import { formatDateWithTime } from "@/src/utils/formatDateUtil";
-import { fetchUserInfo as fetchUserInfoApi } from "@/src/api/auth";
-import { useFetchData } from "@/src/hook/useFetchData";
+import { useUserInfo } from "@/src/hook/useFetchData";
 import CreateButton from "@/src/components/common/CreateButton";
+import ErrorAlert from "@/src/components/common/ErrorAlert";
 
 const noticeStatusFramework = createListCollection<{
   label: string;
@@ -56,26 +54,16 @@ function NoticesPageContent() {
   const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
   const pageSize = parseInt(searchParams?.get("pageSize") || "10", 10);
 
-  const { data: userInfoData } = useFetchData<UserInfoResponse, []>({
-    fetchApi: fetchUserInfoApi,
-    params: [],
-  });
+  const { data: userInfoData } = useUserInfo();
 
   const userRole = userInfoData?.role;
 
   const {
     data: noticeList,
     paginationInfo,
-    loading: noticeLoading,
-  } = useFetchBoardList<
-    NoticeListResponse,
-    [string, string, number, number],
-    "notices"
-  >({
-    fetchApi: fetchNoticeListApi,
-    keySelector: "notices",
-    params: [keyword, category, currentPage, pageSize],
-  });
+    loading: noticeListLoading,
+    error: noticeListError,
+  } = useNoticeList(keyword, category, currentPage, pageSize);
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(window.location.search);
@@ -124,7 +112,9 @@ function NoticesPageContent() {
           </SearchSection>
         </Flex>
       )}
-
+      {noticeListError && (
+        <ErrorAlert message="공지사항 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+      )}
       <CommonTable
         headerTitle={
           <Table.Row
@@ -147,7 +137,7 @@ function NoticesPageContent() {
           </Table.Row>
         }
         data={noticeList}
-        loading={noticeLoading}
+        loading={noticeListLoading}
         renderRow={(notice) => {
           const isEmergency = notice.priority === "EMERGENCY";
           return (

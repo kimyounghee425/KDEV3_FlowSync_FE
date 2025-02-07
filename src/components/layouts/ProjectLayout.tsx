@@ -7,7 +7,6 @@ import { Layers, List, MessageCircleQuestion } from "lucide-react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import ProjectInfoSection from "@/src/components/common/ProjectInfoSection";
 import { useProjectInfo } from "@/src/hook/useFetchData";
-import { Toaster } from "@/src/components/ui/toaster";
 
 interface ProjectLayoutProps {
   children: ReactNode;
@@ -69,7 +68,6 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
 
   return (
     <>
-      <Toaster />
       {projectInfoError && (
         <Alert.Root status="error">
           <Alert.Indicator />

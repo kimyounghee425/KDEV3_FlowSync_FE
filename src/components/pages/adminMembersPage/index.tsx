@@ -13,12 +13,11 @@ import {
 import StatusTag from "@/src/components/common/StatusTag";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
-import { formatDateWithTime } from "@/src/utils/formatDateUtil";
+import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
-import { MemberListResponse } from "@/src/types";
-import { useFetchBoardList } from "@/src/hook/useFetchBoardList";
-import { fetchMemberList as fetchMemberListApi } from "@/src/api/members";
+import { useMemberList } from "@/src/hook/useFetchBoardList";
+import ErrorAlert from "@/src/components/common/ErrorAlert";
 
 const memberRoleFramework = createListCollection<{
   label: string;
@@ -73,15 +72,8 @@ function AdminMembersPageContent() {
     data: memberList,
     paginationInfo,
     loading: memberListLoading,
-  } = useFetchBoardList<
-    MemberListResponse,
-    [string, string, string, number, number],
-    "members"
-  >({
-    fetchApi: fetchMemberListApi,
-    keySelector: "members",
-    params: [keyword, role, status, currentPage, pageSize],
-  });
+    error: memberListError,
+  } = useMemberList(keyword, role, status, currentPage, pageSize);
 
   // 신규등록 버튼 클릭 시 - 회원 등록 페이지로 이동
   const handleMemberCreateButton = () => {
@@ -128,6 +120,9 @@ function AdminMembersPageContent() {
             />
           </SearchSection>
         </Box>
+        {memberListError && (
+          <ErrorAlert message="공지사항 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+        )}
         <CommonTable
           headerTitle={
             <Table.Row
@@ -163,7 +158,7 @@ function AdminMembersPageContent() {
                   {STATUS_LABELS[member.status] || "알 수 없음"}
                 </StatusTag>
               </Table.Cell>
-              <Table.Cell>{formatDateWithTime(member.regAt)}</Table.Cell>
+              <Table.Cell>{formatDynamicDate(member.regAt)}</Table.Cell>
             </>
           )}
           handleRowClick={handleRowClick}

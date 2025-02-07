@@ -7,7 +7,7 @@ import {
 import { axiosForMiddleware } from "@/src/api/axiosForMiddleware";
 
 // 사용자 권한 API 호출
-export async function fetchUserInfo(
+export async function fetchUserInfoApi(
   accessToken?: string,
 ): Promise<CommonResponseType<UserInfoResponse>> {
   const response = await axiosForMiddleware.get("/me", {

@@ -9,7 +9,7 @@ import {
 } from "@/src/types";
 
 // 📌 업체 목록 Fetch API
-export async function fetchOrganizationList(
+export async function fetchOrganizationListApi(
   keyword: string = "", // 검색어
   type: string = "", // 업체타입
   status: string = "", // 활성화여부

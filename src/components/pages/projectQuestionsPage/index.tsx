@@ -2,7 +2,6 @@
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
-  Alert,
   Box,
   Button,
   createListCollection,
@@ -19,6 +18,7 @@ import ProgressStepSection from "@/src/components/common/ProgressStepSection";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useProjectQuestionList } from "@/src/hook/useFetchBoardList";
 import { useProjectQuestionProgressStepData } from "@/src/hook/useFetchData";
+import ErrorAlert from "@/src/components/common/ErrorAlert";
 
 const questionStatusFramework = createListCollection<{
   id: string;
@@ -38,7 +38,7 @@ const STATUS_LABELS: Record<string, string> = {
   QUESTION: "질문",
   ANSWER: "답변",
 };
-  
+
 export default function ProjectQuestionsPage() {
   const { projectId } = useParams();
   const searchParams = useSearchParams();
@@ -95,12 +95,7 @@ export default function ProjectQuestionsPage() {
     <ProjectLayout>
       {/* 프로젝트 단계 섹션 */}
       {questionProgressStepError && (
-        <Alert.Root status="error">
-          <Alert.Indicator />
-          <Alert.Title>
-            프로젝트 단계 정보를 불러오지 못했습니다. 다시 시도해주세요.
-          </Alert.Title>
-        </Alert.Root>
+        <ErrorAlert message="프로젝트 단계 정보를 불러오지 못했습니다. 다시 시도해주세요." />
       )}
       <ProgressStepSection
         progressStep={questionProgressStepData || []}
@@ -135,12 +130,7 @@ export default function ProjectQuestionsPage() {
           </SearchSection>
         </Flex>
         {projectQuestionError && (
-          <Alert.Root status="error" mt={4}>
-            <Alert.Indicator />
-            <Alert.Title>
-              프로젝트 질문 목록을 불러오지 못했습니다. 다시 시도해주세요.
-            </Alert.Title>
-          </Alert.Root>
+          <ErrorAlert message="프로젝트 질문 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
         {/* 
           CommonTable: 게시글 목록을 렌더링하는 공통 테이블 컴포넌트

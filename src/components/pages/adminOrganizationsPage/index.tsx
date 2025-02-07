@@ -13,11 +13,11 @@ import {
 import StatusTag from "@/src/components/common/StatusTag";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
-import { useFetchBoardList } from "@/src/hook/useFetchBoardList";
-import { OrganizationListResponse } from "@/src/types";
-import { fetchOrganizationList as fetchOrganizationListApi } from "@/src/api/organizations";
+import { useOrganizationList } from "@/src/hook/useFetchBoardList";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
+import { formatDynamicDate } from "@/src/utils/formatDateUtil";
+import ErrorAlert from "@/src/components/common/ErrorAlert";
 
 const organizationTypeFramework = createListCollection<{
   label: string;
@@ -73,15 +73,8 @@ function AdminOrganizationsPageContent() {
     data: organizationList,
     paginationInfo,
     loading: organizationListLoading,
-  } = useFetchBoardList<
-    OrganizationListResponse,
-    [string, string, string, number, number],
-    "dtoList"
-  >({
-    fetchApi: fetchOrganizationListApi,
-    keySelector: "dtoList",
-    params: [keyword, type, status, currentPage, pageSize],
-  });
+    error: organizationListError,
+  } = useOrganizationList(keyword, type, status, currentPage, pageSize);
 
   // 신규등록 버튼 클릭 시 - 업체 등록 페이지로 이동
   const handleMemberCreateButton = () => {
@@ -128,6 +121,9 @@ function AdminOrganizationsPageContent() {
             />
           </SearchSection>
         </Box>
+        {organizationListError && (
+          <ErrorAlert message="공지사항 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+        )}
         <CommonTable
           headerTitle={
             <Table.Row
@@ -142,6 +138,7 @@ function AdminOrganizationsPageContent() {
               <Table.ColumnHeader>연락처</Table.ColumnHeader>
               <Table.ColumnHeader>주소</Table.ColumnHeader>
               <Table.ColumnHeader>상태</Table.ColumnHeader>
+              <Table.ColumnHeader>등록일</Table.ColumnHeader>
             </Table.Row>
           }
           data={organizationList}
@@ -160,6 +157,7 @@ function AdminOrganizationsPageContent() {
                   {STATUS_LABELS[organization.status] || "알 수 없음"}
                 </StatusTag>
               </Table.Cell>
+              <Table.Cell>{formatDynamicDate(organization.regAt)}</Table.Cell>
             </>
           )}
           handleRowClick={handleRowClick}

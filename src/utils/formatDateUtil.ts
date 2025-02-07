@@ -17,8 +17,9 @@ export const formatDateWithTime = (dateString: string) => {
 
 export function formatDateToISODate(dateString: string | null | undefined): string {
   if (!dateString) return ""; // dateString이 null 또는 undefined이면 빈 문자열 반환
-  const date = new Date(dateString);
-  return date.toISOString().split("T")[0]; // "yyyy-mm-dd"
+
+  const givenDate = new Date(dateString.replace(" ", "T")); // "yyyy-mm-dd hh:mm" → "yyyy-mm-ddThh:mm"
+  return givenDate.toISOString().split("T")[0]; // yyyy-mm-dd
 }
 
 
@@ -26,16 +27,18 @@ export function formatDynamicDate(dateString: string | null | undefined): string
   if (!dateString) return ""; // dateString이 null 또는 undefined이면 빈 문자열 반환
 
   const now = new Date();
-  const givenDate = new Date(dateString);
+  const givenDate = new Date(dateString.replace(" ", "T")); // "yyyy-mm-dd hh:mm" → "yyyy-mm-ddThh:mm"
 
-  // 당일 여부 확인
+  // 오늘 날짜인지 확인
   const isToday =
     now.getFullYear() === givenDate.getFullYear() &&
     now.getMonth() === givenDate.getMonth() &&
     now.getDate() === givenDate.getDate();
 
-  // 당일이면 시간(hh:mm), 그렇지 않으면 yyyy-mm-dd 형식 반환
-  return isToday ? formatDateWithTime(dateString).split(" ")[1] : formatDateToISODate(dateString);
+  // 오늘이면 "hh:mm", 아니면 "yyyy-mm-dd" 반환
+  return isToday
+    ? givenDate.toTimeString().slice(0, 5) // hh:mm
+    : givenDate.toISOString().split("T")[0]; // yyyy-mm-dd
 }
 
 // 게시글, 댓글에 사용할거

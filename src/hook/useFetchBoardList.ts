@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { CommonResponseWithMetaType, PaginationProps, ProjectQuestionListResponse, ProjectApprovalListResponse } from "@/src/types";
-import { fetchProjectQuestionListApi, fetchProjectApprovalListApi } from "@/src/api/projects";
+import { CommonResponseWithMetaType, PaginationProps, ProjectQuestionListResponse, ProjectApprovalListResponse, ProjectListResponse, NoticeListResponse, OrganizationListResponse, MemberListResponse } from "@/src/types";
+import { fetchProjectQuestionListApi, fetchProjectApprovalListApi, fetchProjectListApi } from "@/src/api/projects";
 import { showToast } from "@/src/utils/showToast";
+import { fetchNoticeListApi } from "@/src/api/notices";
+import { fetchOrganizationListApi } from "@/src/api/organizations";
+import { fetchMemberListApi } from "@/src/api/members";
 
 interface UseFetchBoardListProps<T, P extends any[], K extends keyof T> {
   fetchApi: (...args: P) => Promise<CommonResponseWithMetaType<T>>;
@@ -111,3 +114,71 @@ export const useProjectApprovalList = (
     pageSize,
   ],
 });
+
+// 프로젝트 목록 패칭
+export const useProjectList = (
+  keyword: string,
+  status: string,
+  currentPage: number,
+  pageSize: number
+) => useFetchBoardList<
+ProjectListResponse,
+[string, string, number, number],
+"projects"
+>({
+fetchApi: fetchProjectListApi,
+keySelector: "projects",
+params: [keyword, status, currentPage, pageSize],
+});
+
+// 공지사항 목록 패칭
+export const useNoticeList = (
+  keyword: string,
+  status: string,
+  currentPage: number,
+  pageSize: number
+) => useFetchBoardList<
+NoticeListResponse,
+[string, string, number, number],
+"notices"
+>({
+fetchApi: fetchNoticeListApi,
+keySelector: "notices",
+params: [keyword, status, currentPage, pageSize],
+});
+
+// 회원 목록 패칭
+export const useMemberList = (
+  keyword: string,
+  role: string,
+  status: string,
+  currentPage: number,
+  pageSize: number
+) => 
+useFetchBoardList<
+    MemberListResponse,
+    [string, string, string, number, number],
+    "members"
+  >({
+    fetchApi: fetchMemberListApi,
+    keySelector: "members",
+    params: [keyword, role, status, currentPage, pageSize],
+  });
+
+// 업체 목록 패칭
+export const useOrganizationList = (
+  keyword: string,
+  type: string,
+  status: string,
+  currentPage: number,
+  pageSize: number
+) => 
+useFetchBoardList<
+    OrganizationListResponse,
+    [string, string, string, number, number],
+    "dtoList"
+  >({
+    fetchApi: fetchOrganizationListApi,
+    keySelector: "dtoList",
+    params: [keyword, type, status, currentPage, pageSize],
+  });

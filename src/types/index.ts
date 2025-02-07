@@ -88,7 +88,7 @@ export interface OrganizationProps {
   status: string;
   brNumber: string;
   name: string;
-  reg_at: string;
+  regAt: string;
   brCertificateUrl: string;
   streetAddress: string;
   detailAddress: string;

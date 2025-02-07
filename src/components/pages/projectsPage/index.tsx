@@ -4,15 +4,15 @@ import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
 import { createListCollection, Heading, Stack, Table } from "@chakra-ui/react";
-import { fetchProjectListApi } from "@/src/api/projects";
 import StatusTag from "@/src/components/common/StatusTag";
 import ProjectStatusCards from "@/src/components/pages/projectsPage/components/ProjectsStatusCards";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
 import SearchSection from "@/src/components/common/SearchSection";
 import StatusSelectBox from "@/src/components/common/FilterSelectBox";
-import { useFetchBoardList } from "@/src/hook/useFetchBoardList";
-import { ProjectListResponse } from "@/src/types";
+import { useProjectList } from "@/src/hook/useFetchBoardList";
+import ErrorAlert from "@/src/components/common/ErrorAlert";
+import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -67,15 +67,8 @@ function ProjectsPageContent() {
     data: projectList,
     paginationInfo,
     loading: projectListLoading,
-  } = useFetchBoardList<
-    ProjectListResponse,
-    [string, string, number, number],
-    "projects"
-  >({
-    fetchApi: fetchProjectListApi,
-    keySelector: "projects",
-    params: [keyword, status, currentPage, pageSize],
-  });
+    error: projectListError,
+  } = useProjectList(keyword, status, currentPage, pageSize);
 
   /**
    * 페이지 변경 시 호출되는 콜백 함수
@@ -136,6 +129,9 @@ function ProjectsPageContent() {
             queryKey="status"
           />
         </SearchSection>
+        {projectListError && (
+          <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+        )}
         {/*
          * 공통 테이블(CommonTable)
          *  - headerTitle: 테이블 헤더 구성
@@ -155,7 +151,7 @@ function ProjectsPageContent() {
               <Table.ColumnHeader>프로젝트명</Table.ColumnHeader>
               <Table.ColumnHeader>고객사</Table.ColumnHeader>
               <Table.ColumnHeader>개발사</Table.ColumnHeader>
-              <Table.ColumnHeader>프로젝트 상태</Table.ColumnHeader>
+              <Table.ColumnHeader>프로젝트 관리단계</Table.ColumnHeader>
               <Table.ColumnHeader>프로젝트 시작일</Table.ColumnHeader>
               <Table.ColumnHeader>프로젝트 종료일</Table.ColumnHeader>
             </Table.Row>
@@ -172,8 +168,8 @@ function ProjectsPageContent() {
                   {STATUS_LABELS[project.status] || "알 수 없음"}
                 </StatusTag>
               </Table.Cell>
-              <Table.Cell>{project.startAt}</Table.Cell>
-              <Table.Cell>{project.closeAt}</Table.Cell>
+              <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
+              <Table.Cell>{formatDynamicDate(project.closeAt)}</Table.Cell>
             </>
           )}
           handleRowClick={handleRowClick}

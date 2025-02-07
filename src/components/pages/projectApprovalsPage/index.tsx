@@ -2,7 +2,6 @@
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
-  Alert,
   Box,
   Button,
   Flex,
@@ -20,6 +19,7 @@ import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
 import { useProjectApprovalList } from "@/src/hook/useFetchBoardList";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
 import GuideButton from "@/src/components/common/GuideButton";
+import ErrorAlert from "@/src/components/common/ErrorAlert";
 
 const taskStatusFramework = createListCollection<{
   id: string;
@@ -92,12 +92,7 @@ export default function ProjectTasksPage() {
   return (
     <ProjectLayout>
       {approvalProgressStepError && (
-        <Alert.Root status="error">
-          <Alert.Indicator />
-          <Alert.Title>
-            프로젝트 단계 정보를 불러오지 못했습니다. 다시 시도해주세요.
-          </Alert.Title>
-        </Alert.Root>
+        <ErrorAlert message="프로젝트 단계 정보를 불러오지 못했습니다. 다시 시도해주세요." />
       )}
       {/* 프로젝트 단계 섹션 */}
       <ProgressStepSection
@@ -134,12 +129,7 @@ export default function ProjectTasksPage() {
           </SearchSection>
         </Flex>
         {projectApprovalError && (
-          <Alert.Root status="error" mt={4}>
-            <Alert.Indicator />
-            <Alert.Title>
-              프로젝트 결제 목록을 불러오지 못했습니다. 다시 시도해주세요.
-            </Alert.Title>
-          </Alert.Root>
+          <ErrorAlert message="프로젝트 결제 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
         {/* 
           CommonTable: 게시글 목록을 렌더링하는 공통 테이블 컴포넌트

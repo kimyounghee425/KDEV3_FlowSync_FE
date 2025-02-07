@@ -1,7 +1,7 @@
 import { CommonResponseType, NoticeListResponse, NoticeRequestData } from "@/src/types";
 import axiosInstance from "@/src/api/axiosInstance";
 
-export async function fetchNoticeList(
+export async function fetchNoticeListApi(
   keyword: string = "", // 검색키워드
   category: string = "", // 활성화여부
   currentPage: number,

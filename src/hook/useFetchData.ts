@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { CommonResponseType, ProjectInfoProps, ProjectProgressStepProps } from "@/src/types";
+import { CommonResponseType, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse } from "@/src/types";
 import { fetchProjectApprovalProgressStepApi, fetchProjectInfoApi, fetchProjectQuestionProgressStepApi } from "@/src/api/projects";
 import { showToast } from "@/src/utils/showToast";
+import { fetchUserInfoApi } from "@/src/api/auth";
 
 interface UseFetchDataProps<T, P extends any[]> {
   fetchApi: (...args: P) => Promise<CommonResponseType<T>>;
@@ -57,7 +58,7 @@ export function useFetchData<T, P extends any[]>({
 }
 
 /**
- * 프로젝트 Progress Step 데이터 패칭 훅
+ * 프로젝트 질문 Progress Step 데이터 패칭 훅
  */
 export const useProjectQuestionProgressStepData = (resolvedProjectId: string) =>
   useFetchData<ProjectProgressStepProps[], [string]>({
@@ -82,3 +83,8 @@ export const useProjectApprovalProgressStepData = (resolvedProjectId: string) =>
     fetchApi: fetchProjectApprovalProgressStepApi,
     params: [resolvedProjectId],
   });
+
+export const useUserInfo = () => useFetchData<UserInfoResponse, []>({
+  fetchApi: fetchUserInfoApi,
+  params: []
+});

@@ -9,7 +9,7 @@ import {
 } from "@/src/types";
 
 // 📌 회원 목록 Fetch API
-export async function fetchMemberList(
+export async function fetchMemberListApi(
   keyword: string = "", // 검색키워드
   role: string = "", // 계정타입
   status: string = "", // 활성화여부

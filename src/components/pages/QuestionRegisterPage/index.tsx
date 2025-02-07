@@ -8,12 +8,13 @@ import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createQuestionApi } from "@/src/api/RegisterArticle";
-import { ProjectProgressStepProps, QuestionRequestData } from "@/src/types";
-import { fetchProjectQuestionProgressStepApi as fetchProjectQuestionProgressStepApi } from "@/src/api/projects";
-import { useFetchData } from "@/src/hook/useFetchData";
+import { QuestionRequestData } from "@/src/types";
+import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
-import ProgressStepAddSection from "../../common/ProgressStepAddSection";
-import "./edit.css"
+import "@/src/components/pages/QuestionRegisterPage/edit.css";
+import ErrorAlert from "@/src/components/common/ErrorAlert";
+import { Loading } from "@/src/components/common/Loading";
+import "./edit.css";
 
 export default function QuestionRegisterPage() {
   const { projectId } = useParams();
@@ -25,17 +26,15 @@ export default function QuestionRegisterPage() {
     : projectId || "";
 
   // ProgressStep 데이터 패칭
-  const { data: progressStepData } = useFetchData<
-    ProjectProgressStepProps[],
-    [string]
-  >({
-    fetchApi: fetchProjectQuestionProgressStepApi,
-    params: [resolvedProjectId],
-  });
+  const {
+    data: approvalProgressStepData,
+    loading: approvalProgressStepLoading,
+    error: approvalProgressStepError,
+  } = useProjectApprovalProgressStepData(resolvedProjectId);
 
   // "ALL" 값을 가진 객체 제외
   const filteredProgressSteps =
-    progressStepData?.filter((step) => step.value !== "ALL") || [];
+    approvalProgressStepData?.filter((step) => step.value !== "ALL") || [];
 
   const [progressStepId, setProgressStepId] = useState<number>(
     filteredProgressSteps.length > 0 ? Number(filteredProgressSteps[0].id) : 0,
@@ -57,6 +56,8 @@ export default function QuestionRegisterPage() {
     }
   };
 
+  if (approvalProgressStepLoading) return <Loading />;
+
   return (
     <Box
       maxW="1000px"
@@ -71,11 +72,9 @@ export default function QuestionRegisterPage() {
       <BackButton />
 
       <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
-        {/* <ProgressStepAddSection
-          progressStepId={progressStepId}
-          setProgressStepId={setProgressStepId}
-          progressData={filteredProgressSteps || []}
-        /> */}
+        {approvalProgressStepError && (
+          <ErrorAlert message="프로젝트 질문 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+        )}
         <FormSelectInput
           label="진행 단계"
           selectedValue={progressStepId}

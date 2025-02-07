@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Provider as ChakraProvider } from "@/src/components/ui/provider";
+import { Toaster } from "@/src/components/ui/toaster";
 
 // import { MSWComponent } from "@/src/components/common/MSWComponent";
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html suppressHydrationWarning>
       <body>
         <ChakraProvider>
+          <Toaster />
           {/* {useMsw ? <MSWComponent>{children}</MSWComponent> : children} */}
           {children}
         </ChakraProvider>

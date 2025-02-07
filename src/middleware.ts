@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { fetchReissueToken, fetchUserInfo } from "@/src/api/auth";
+import { fetchReissueToken, fetchUserInfoApi } from "@/src/api/auth";
 import { UserInfoResponse } from "./types";
 
 // const ADMIN_ONLY_PAGE = ["admin", "super-admin"];
@@ -66,7 +66,7 @@ async function validateAndRefreshTokens(
   try {
     // 🔹 1. AccessToken 검증
     if (accessToken) {
-      userInfoResponse = await fetchUserInfo(accessToken);
+      userInfoResponse = await fetchUserInfoApi(accessToken);
       if (userInfoResponse.result === "SUCCESS") {
         return { userInfo: userInfoResponse.data, response };
       }
@@ -97,7 +97,7 @@ async function validateAndRefreshTokens(
         );
 
         // 🔹 3. 재발급된 AccessToken으로 사용자 정보 가져오기
-        userInfoResponse = await fetchUserInfo(reissueResponse.data.access);
+        userInfoResponse = await fetchUserInfoApi(reissueResponse.data.access);
         if (userInfoResponse.result === "SUCCESS") {
           return { userInfo: userInfoResponse.data, response };
         }
@@ -127,7 +127,7 @@ async function validateAndRefreshTokens(
       setAuthCookies(response, reissueResponse.data.access, reissueResponse.data.refresh);
 
       // 새 Access Token으로 유저 정보 가져오기
-      const userInfoResponse = await fetchUserInfo(reissueResponse.data.access);
+      const userInfoResponse = await fetchUserInfoApi(reissueResponse.data.access);
       if (userInfoResponse.result === "SUCCESS") {
         return { userInfo: userInfoResponse.data, response };
       }
