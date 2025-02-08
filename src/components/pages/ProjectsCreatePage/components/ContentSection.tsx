@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Text, Box, Textarea } from "@chakra-ui/react";
+import { Flex, Box, Textarea } from "@chakra-ui/react";
 
 interface ContentSectionProps {
   description: string;

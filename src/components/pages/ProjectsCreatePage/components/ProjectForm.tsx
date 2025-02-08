@@ -5,10 +5,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { Box, Flex, Button } from "@chakra-ui/react";
 
 // 절대 경로 파일
-import HeaderSection from "@/src/pages/ProjectRegisterPage/components/HeaderSection";
-import DateSection from "@/src/pages/ProjectRegisterPage/components/DateSection";
-import ContentSection from "@/src/pages/ProjectRegisterPage/components/ContentSection";
-import SelectOrganizationSection from "@/src/pages/ProjectRegisterPage/components/SelectOrganizationSection";
+import HeaderSection from "@/src/components/pages/ProjectsCreatePage/components/HeaderSection";
+import DateSection from "@/src/components/pages/ProjectsCreatePage/components/DateSection";
+import ContentSection from "@/src/components/pages/ProjectsCreatePage/components/ContentSection";
+import SelectOrganizationSection from "@/src/components/pages/ProjectsCreatePage/components/SelectOrganizationSection";
+
 import { getOrganizationsApi } from "@/src/api/getOrganization";
 import { getMembersApi } from "@/src/api/getMembersApi";
 import { createProjectApi } from "@/src/api/registerProject";

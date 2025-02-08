@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Flex, Text, Box, Button } from "@chakra-ui/react";
 import "./dateSection.css";
+
 interface DateSectionProps {
   startAt: string;
   closeAt: string;
@@ -46,8 +47,6 @@ export default function DateSection({
     }
   };
 
-
-  
   const getHighlightedDates = () => {
     if (!startAt || !closeAt) return [];
     const startDate = new Date(startAt);

@@ -1,3 +1,3 @@
-import noticeRegisterPage from "@/src/pages/NoticeRegisterPage";
+import NoticesNewPage from "@/src/components/pages/NoticesNewPage";
 
-export default noticeRegisterPage;
+export default NoticesNewPage;

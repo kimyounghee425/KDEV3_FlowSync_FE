@@ -1,7 +1,7 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import MemberDetailForm from "@/src/components/pages/AdminMemberPage/components/MemberDetailForm";
 import { fetchMemberDetails } from "@/src/api/members";
 import { MemberProps } from "@/src/types";

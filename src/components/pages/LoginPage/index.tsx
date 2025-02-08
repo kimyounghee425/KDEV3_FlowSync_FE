@@ -1,15 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Button, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { login } from "@/src/api/auth";
 import { useForm } from "@/src/hook/useForm";
 import InputForm from "@/src/components/common/InputForm";
 import { defaultValuesOfLogin } from "@/src/constants/defaultValues";
 import { validationRulesOfLogin } from "@/src/constants/validationRules";
 import styles from "@/src/components/pages/LoginPage/Login.module.css";
-import Image from "next/image";
 
 export const GUIDE_MESSAGE = `
   본 애플리케이션은 B2B 기업 회원 전용 서비스로 기획되었습니다. 테스트를 위한 계정 정보를 안내 드립니다.
@@ -72,7 +72,7 @@ export default function LoginPage() {
       console.log("로그인 성공:", response);
       route.push("/");
     } catch (error) {
-      alert("로그인에 실패하였습니다. 다시 시도해주세요.");
+      console.error("로그인 실패:", error);
     } finally {
       setIsLoading(false); // 로딩 상태 해제
     }
@@ -85,8 +85,8 @@ export default function LoginPage() {
         <Box className={styles.loginHeader}>
           <Box className={styles.loginLogo}>
             <Image
-              src="/flowSync_logo.png"
-              alt="FlowSync Logo"
+              src="/logo.png"
+              alt="FlowSync"
               width={500} // 너비 비율
               height={500} // 높이 비율
               className={styles.loginLogoIcon}
@@ -146,37 +146,4 @@ export default function LoginPage() {
       </Box>
     </Box>
   );
-}
-
-{
-  /* <PopoverRoot>
-        <PopoverTrigger asChild>
-          <button className={styles.popoverButton}>도움말</button>
-        </PopoverTrigger>
-        <PopoverContent css={{ "--popover-bg": "lightblue" }}>
-          <PopoverArrow />
-          <PopoverBody>
-            <PopoverTitle fontWeight="medium">
-              <strong>이용 가이드</strong>
-            </PopoverTitle>
-            <Text fontSize="sm" color="gray.600" whiteSpace="pre-line">
-              {`
-              * 가이드라인: 본 애플리케이션은 B2B 서비스로 관리자가 직접 회원을 등록하며, 전달받은 ID 와 PW 를 입력하여 로그인합니다.              
-              
-              [관리자 계정]
-              - ID: admin@example.com
-              - PW: 1111
-
-              [일반사용자(개발사) 계정]
-              - ID: developermember@example.com
-              - PW: 1111
-
-              [일반사용자(고객사) 계정]
-              - ID: customermember@example.com
-              - PW: 1111
-              `}
-            </Text>
-          </PopoverBody>
-        </PopoverContent>
-      </PopoverRoot> */
 }

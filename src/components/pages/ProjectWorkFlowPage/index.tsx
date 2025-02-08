@@ -3,7 +3,7 @@
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import GuideButton from "@/src/components/common/GuideButton";
 
-export default function WorkflowPage() {
+export default function ProjectWorkFlowPage() {
   return (
     <ProjectLayout>
       프로젝트 진척관리 페이지

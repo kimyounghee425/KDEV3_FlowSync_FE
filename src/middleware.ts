@@ -3,8 +3,6 @@ import { NextResponse } from "next/server";
 import { fetchReissueToken, fetchUserInfoApi } from "@/src/api/auth";
 import { UserInfoResponse } from "./types";
 
-// const ADMIN_ONLY_PAGE = ["admin", "super-admin"];
-
 /**
  * 정적 파일 요청 및 `/login` 페이지는 미들웨어 실행 제외
  */
@@ -12,7 +10,7 @@ function shouldBypassMiddleware(pathname: string): boolean {
   return (
     pathname.startsWith("/_next/") || // Next.js 정적 리소스
     pathname.startsWith("/static/") || // 직접 제공하는 정적 파일
-    ["/favicon.ico", "/robots.txt", "/login"].includes(pathname)
+    ["/favicon.ico", "/robots.txt"].includes(pathname)
   );
 }
 
@@ -66,7 +64,7 @@ const adminPages = ["/admin"];
  */
 async function validateAndRefreshTokens(
   request: NextRequest,
-): Promise<{ userInfo?: UserInfoResponse; response?: NextResponse }> {
+): Promise<{ userInfo?: UserInfoResponse; response: NextResponse }> {
   let userInfoResponse;
   const accessToken = request.cookies.get("access")?.value;
   const refreshToken = request.cookies.get("refresh")?.value;
@@ -86,7 +84,7 @@ async function validateAndRefreshTokens(
     } else {
       console.error("❌ AccessToken 검증 중 오류 발생:", error.message);
       clearCookies(response);
-      return {}; // ❌ 예기치 못한 에러 발생 시 종료
+      return {response}; // ❌ 예기치 못한 에러 발생 시 종료
     }
   }
 
@@ -111,7 +109,7 @@ async function validateAndRefreshTokens(
           return { userInfo: userInfoResponse.data, response };
         }
       } else {
-        return {};
+        return {response};
       }
     }
   } catch (error: any) {
@@ -121,7 +119,7 @@ async function validateAndRefreshTokens(
 
   if (!refreshToken) {
     console.warn("❌ Refresh Token 없음 → 로그인 페이지로 이동");
-    return {};
+    return {response};
   }
 
   try {
@@ -152,7 +150,7 @@ async function validateAndRefreshTokens(
     clearCookies(response);
   }
 
-  return {}; // ❌ 모든 시도 실패 시 빈 객체 반환
+  return {response}; // ❌ 모든 시도 실패 시 빈 객체 반환
 }
 
 export async function middleware(request: NextRequest) {
@@ -164,19 +162,30 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // 🔹 ✅ 액세스 토큰 & 리프레시 토큰 확인
+  const accessToken = request.cookies.get("access")?.value;
+  const refreshToken = request.cookies.get("refresh")?.value;
+
+  // 🔹 ✅ 로그인 페이지 접근 시 처리
+  if (pathname === "/login") {
+    if (accessToken || refreshToken) {
+      console.warn(
+        "🚫 이미 로그인된 사용자가 로그인 페이지에 접근 → 홈으로 이동",
+      );
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    return NextResponse.next(); // 로그인 페이지 접근 허용
+  }
+
   const { userInfo, response } = await validateAndRefreshTokens(request);
 
   if (!userInfo) {
+    clearCookies(response);
     return handleUnauthorized(request);
   }
 
-  // 🔹 ✅ 로그인한 유저가 `/login`으로 접근할 경우 차단
-  if (pathname === "/login") {
-    console.warn("🚫 로그인한 유저가 로그인 페이지에 접근 → 홈으로 이동");
-    return handleUnauthorized(request);
-  }
-
-  // `x-user-role` 헤더 추가하여 서버 컴포넌트에서 사용 가능하도록 설정
+  // `x-user-role` 헤더 추가하여  서버 컴포넌트에서 사용 가능하도록 설정
   response?.headers.set("x-user-id", userInfo.id);
   response?.headers.set("x-user-role", userInfo.role);
 

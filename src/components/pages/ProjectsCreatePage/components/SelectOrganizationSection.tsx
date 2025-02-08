@@ -1,9 +1,8 @@
 // 회사와 멤버 모두 선택하는 컴포넌트
-
-import { Flex, Box, Text, Button } from "@chakra-ui/react";
-import Image from "next/image";
 import React from "react";
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import { Flex, Box, Text, Button } from "@chakra-ui/react";
 
 interface OrgProps {
   id: number;

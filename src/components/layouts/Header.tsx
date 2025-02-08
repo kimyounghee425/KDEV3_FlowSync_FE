@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FiMenu, FiSun, FiMoon } from "react-icons/fi";
+import { FiSun, FiMoon } from "react-icons/fi";
 import { Box, Flex, IconButton, Image } from "@chakra-ui/react";
 import {
   useColorMode,
@@ -81,8 +81,8 @@ export default function Header({
             objectFit="contain"
           /> */}
           <Image
-            src="/flowSync_logo.png" // public 디렉토리의 로고 파일 경로
-            alt="FlowSync Logo"
+            src="/logo.png" // public 디렉토리의 로고 파일 경로
+            alt="FlowSync"
             height="30px" // 원하는 크기로 설정
             objectFit="contain"
           />

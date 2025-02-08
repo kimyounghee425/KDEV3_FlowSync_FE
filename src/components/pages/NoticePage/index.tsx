@@ -21,7 +21,7 @@ import { readNoticeApi } from "@/src/api/ReadArticle";
 import { NoticeArticle } from "@/src/types";
 import NoticeArticleContent from "@/src/components/common/NoticeArticleContent";
 
-export default function QuestionReadPage() {
+export default function NoticePage() {
   const { noticeId } = useParams() as {
     noticeId: string;
   };

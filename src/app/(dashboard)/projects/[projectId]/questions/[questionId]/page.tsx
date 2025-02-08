@@ -1,3 +1,3 @@
-import QuestionReadPage from "@/src/pages/QuestionReadPage";
+import ProjectQuestionPage from "@/src/components/pages/ProjectQuestionPage";
 
-export default QuestionReadPage;
+export default ProjectQuestionPage;

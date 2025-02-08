@@ -11,19 +11,18 @@ import {
   Stack,
   Table,
 } from "@chakra-ui/react";
+import { useColorModeValue } from "@/src/components/ui/color-mode";
 import StatusTag from "@/src/components/common/StatusTag";
 import ProjectStatusCards from "@/src/components/pages/ProjectsPage/components/ProjectsStatusCards";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
 import SearchSection from "@/src/components/common/SearchSection";
-import StatusSelectBox from "@/src/components/common/FilterSelectBox";
-import { useProjectList } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
-import { useColorModeValue } from "@/src/components/ui/color-mode";
-import { useUserInfo } from "@/src/hook/useFetchData";
-import CreateButton from "../../common/CreateButton";
+import CreateButton from "@/src/components/common/CreateButton";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
+import { formatDynamicDate } from "@/src/utils/formatDateUtil";
+import { useUserInfo } from "@/src/hook/useFetchData";
+import { useProjectList } from "@/src/hook/useFetchBoardList";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -116,7 +115,7 @@ function ProjectsPageContent() {
 
   // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
   const handleProjectCreateButton = () => {
-    router.push(`/projects/new`);
+    router.push(`/projects/create`);
   };
 
   return (

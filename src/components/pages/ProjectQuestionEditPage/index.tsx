@@ -4,9 +4,9 @@
 
 import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
-import QuestionEditForm from "@/src/components/pages/QuestionEditPage/components/QuestionEditForm";
+import QuestionEditForm from "@/src/components/pages/ProjectQuestionEditPage/components/QuestionEditForm";
 
-export default function QuestionRegisterPage() {
+export default function ProjectQuestionEditPage() {
   return (
     <Box
       maxW="1000px"

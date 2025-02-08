@@ -14,7 +14,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [colorMode, setColorMode] = useState("white");
+  const [colorMode, setColorMode] = useState("light");
   const [isLoaded, setIsLoaded] = useState(false);
 
   // 다크모드 색상 설정

@@ -9,9 +9,6 @@
   background-color: var(--background-color);
   color: var(--text-color);
   font-size: var(--font-size-base);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
 }
 
 /* 로그인 카드 (폼 컨테이너) */
@@ -92,9 +89,6 @@
   border-radius: 0.5rem;
   font-weight: bold;
   cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
 }
 
 .loginButton:hover {
