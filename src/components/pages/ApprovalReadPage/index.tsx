@@ -12,7 +12,7 @@ import ArticleComments from "@/src/components/common/ArticleComments";
 import CommentBox from "@/src/components/common/CommentBox";
 import BackButton from "@/src/components/common/BackButton";
 import { readApprovalApi } from "@/src/api/ReadArticle";
-import SignToApprove from "@/src/components/pages/ApprovalReadPage/components/SignToApprove";
+import SignToApprove from "@/src/pages/ApprovalReadPage/components/SignToApprove";
 import { ArticleComment, ApprovalArticle } from "@/src/types";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
 

@@ -1,3 +1,3 @@
-import ProjectQuestionsPage from "@/src/components/pages/ProjectQuestionsPage";
+import ProjectQuestionsPage from "@/src/pages/ProjectQuestionsPage";
 
 export default ProjectQuestionsPage;

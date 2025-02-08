@@ -1,3 +1,3 @@
-import ApprovalReadPage from "@/src/components/pages/ApprovalReadPage";
+import ApprovalReadPage from "@/src/pages/ApprovalReadPage";
 
 export default ApprovalReadPage;
