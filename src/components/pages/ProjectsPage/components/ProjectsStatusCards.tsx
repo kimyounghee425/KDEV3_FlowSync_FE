@@ -102,7 +102,7 @@ export default function ProjectsStatusCards({
       mb="2rem"
       width="full" // 전체 너비 사용
       mx="auto" // 가운데 정렬
-      maxWidth="var(--content-max-width)" // 공통 테이블과 같은 너비
+      // maxWidth="var(--content-max-width)" // 공통 테이블과 같은 너비
       border={`1px solid ${borderColor}`}
       borderRadius="lg"
       boxShadow="md"

@@ -243,8 +243,6 @@ export interface CommentApiResponse {
   data: ArticleComment;
 }
 
-
-
 export interface SignApiResponse {
   code: number;
   result: string;
@@ -256,10 +254,6 @@ export interface SignData {
   hasSignatures: boolean;
   signatureUrl: string;
 }
-
-
-
-
 
 // 게시글의 콘텐츠 블럭
 export interface ContentBlock {

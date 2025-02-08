@@ -1,142 +1,214 @@
-/* 전체 로그인 컨테이너 */
+/* 로그인 컨테이너 */
 .loginContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
-  position: relative; /* 기준점 설정 (Popover 버튼을 위치시키기 위함) */
-  overflow: hidden; /* 스크롤 방지 */
-  padding: 2rem; /* 여백 제거 */
-  background-color: #f8f9fa;
-}
-
-/* Popover 버튼 */
-.popoverButton {
-  position: fixed; /* 화면 고정 */
-  top: 20px; /* 화면 위에서 20px */
-  right: 20px; /* 화면 오른쪽에서 20px */
-  background-color: #007bff;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
-  z-index: 100; /* 다른 요소보다 위에 출력 */
-}
-
-.popoverButton:hover {
-  background-color: #0056b3;
-}
-
-/* 로그인 헤더 */
-.loginHeader {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.loginHeader span {
-  font-size: 5rem;
-}
-
-.loginTitle {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin: 0;
-}
-
-.loginSubtitle {
-  font-size: 1rem;
-  color: #6c757d;
-  margin-top: 8px;
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: var(--font-size-base);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* 로그인 카드 (폼 컨테이너) */
 .loginCard {
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  max-width: 450px;
-  padding: 20px;
+  max-width: 28rem;
+  min-width: 20rem;
+  padding: 2rem;
+  background-color: #ffffff;
   border: 1px solid #e1e4e8;
-  border-radius: 10px;
-  background-color: white;
+  border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 0 auto; /* 카드 위치 중앙 */
 }
 
-/* 입력 필드 공통 스타일 */
+/* 로그인 헤더 */
+.loginHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* 로고 & 서비스명 */
+.loginLogo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  line-height: base;
+  gap: 3%;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.loginLogoIcon {
+  max-width: 9%;
+}
+
+.loginLogoName {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.loginTitle {
+  font-size: 1rem;
+  color: var(--text-color);
+  opacity: 0.7; /* 0.8은 80% 불투명도 */
+  font-weight: bold;
+}
+
+/* 입력 필드 컨테이너 */
 .inputFieldContainer {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.5rem;
   width: 100%;
 }
 
-/* 입력 필드 스타일 */
-.input {
-  flex: 1;
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  transition:
-    border 0.3s,
-    background-color 0.3s;
+/* Input + Popover 버튼 */
+.inputWithButton {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%; /* 입력 필드 전체 너비를 유지 */
 }
 
-.input:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+.loginButtonContainer {
+  text-align: center;
 }
 
-.input.error {
-  border-color: #dc3545;
-  background-color: #f8d7da;
-}
-
-/* 에러 메시지 */
-.errorText {
-  font-size: 12px;
-  color: red;
-  height: 16px;
-}
-
-/* 로그인 버튼 스타일 */
+/* 로그인 버튼 */
 .loginButton {
-  width: 100%;
-  background-color: #007bff;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 5px;
-  font-size: 16px;
+  width: 50%;
+  padding: 0.75rem;
+  background-color: var(--button-bg);
+  color: var(--button-text-color);
+  border-radius: 0.5rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .loginButton:hover {
-  background-color: #0056b3;
+  background-color: var(--button-hover-bg);
 }
 
-/* 반응형 디자인 */
+/* 가이드 메시지 영역 (항상 자리 차지) */
+.guideMessage {
+  width: 100%;
+  max-width: 30rem; /* 로그인 카드 너비와 일치 */
+  height: 10rem; /* 고정된 높이 */
+  padding: 0 0.8rem;
+  margin: 1rem 0;
+  background-color: rgba(127, 255, 212, 0.1);
+  border-radius: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-light);
+}
+
+/* 📌 반응형 디자인 적용 */
+/* 태블릿 (768px 이상) */
+@media (max-width: 1024px) {
+  .loginCard {
+    max-width: 24rem;
+    padding: 1.8rem;
+  }
+
+  .loginLogoName {
+    font-size: 1.8rem;
+  }
+
+  .loginButton {
+    width: 60%;
+  }
+
+  .guideMessage {
+    max-width: 25rem;
+    height: 8rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* 모바일 (768px 이하) */
 @media (max-width: 768px) {
   .loginCard {
-    max-width: 90%;
-    padding: 16px;
+    max-width: 22rem;
+    padding: 1.5rem;
   }
 
-  .inputFieldContainer > div {
-    flex-direction: column; /* 입력 필드와 버튼을 세로로 배치 */
+  .loginLogo {
+    flex-direction: column; /* 모바일에서는 로고와 텍스트가 세로 정렬 */
+    gap: 0.5rem;
   }
 
-  .popoverButton {
-    align-self: flex-start; /* 버튼이 입력 필드 아래로 정렬 */
-    width: 100%; /* 버튼 너비를 입력 필드와 동일하게 */
+  .loginLogoIcon {
+    max-width: 20%;
+  }
+
+  .loginLogoName {
+    font-size: 1.5rem;
+  }
+
+  .loginTitle {
+    font-size: 0.9rem;
+  }
+
+  .input {
+    font-size: 0.9rem;
+    padding: 0.65rem;
+  }
+
+  .loginButton {
+    width: 70%;
+  }
+
+  .guideMessage {
+    max-width: 22rem;
+    height: auto;
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+}
+
+/* 초소형 화면 (480px 이하) */
+@media (max-width: 480px) {
+  .loginCard {
+    max-width: 20rem;
+    padding: 1.2rem;
+  }
+
+  .loginLogoIcon {
+    max-width: 25%;
+  }
+
+  .loginLogoName {
+    font-size: 1.3rem;
+  }
+
+  .loginTitle {
+    font-size: 0.8rem;
+  }
+
+  .input {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
+
+  .loginButton {
+    width: 80%;
+  }
+
+  .guideMessage {
+    max-width: 20rem;
+    font-size: 0.7rem;
+    padding: 0.4rem;
   }
 }

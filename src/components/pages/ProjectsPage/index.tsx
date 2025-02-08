@@ -21,6 +21,9 @@ import { useProjectList } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useColorModeValue } from "@/src/components/ui/color-mode";
+import { useUserInfo } from "@/src/hook/useFetchData";
+import CreateButton from "../../common/CreateButton";
+import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -80,6 +83,10 @@ function ProjectsPageContent() {
     error: projectListError,
   } = useProjectList(keyword, status, currentPage, pageSize);
 
+  // 현재 로그인 한 사용자 정보
+  const { data: loggedInUserInfo } = useUserInfo();
+  const userRole = loggedInUserInfo?.role; // 기본값 설정
+
   const bgColor = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.700", "gray.200");
 
@@ -107,6 +114,11 @@ function ProjectsPageContent() {
     router.push(`/projects/${id}/approvals`);
   };
 
+  // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
+  const handleProjectCreateButton = () => {
+    router.push(`/projects/new`);
+  };
+
   return (
     <>
       {/*
@@ -128,19 +140,34 @@ function ProjectsPageContent() {
         <Stack spaceY="SECTION_SPACING">
           <ProjectStatusCards title={"프로젝트 현황"} />
           <Stack spaceY="SECTION_SPACING" width="full">
-            <Flex justifyContent="space-between" alignItems="center">
-              <Heading size="2xl" color={textColor} lineHeight="base">
-                프로젝트 목록
-              </Heading>
-              {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
-              <SearchSection keyword={keyword} placeholder="프로젝트명 입력">
-                <StatusSelectBox
-                  statusFramework={projectStatusFramework}
-                  selectedValue={status}
-                  queryKey="status"
-                />
-              </SearchSection>
-            </Flex>
+            <Heading size="2xl" color={textColor} lineHeight="base">
+              프로젝트 목록
+            </Heading>
+            {userRole === "ADMIN" ? (
+              <Flex justifyContent="space-between" alignItems="center">
+                <CreateButton handleButton={handleProjectCreateButton} />
+                {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
+                <SearchSection keyword={keyword} placeholder="제목 입력">
+                  <FilterSelectBox
+                    statusFramework={projectStatusFramework}
+                    selectedValue={status}
+                    queryKey="category"
+                  />
+                </SearchSection>
+              </Flex>
+            ) : (
+              <Flex justifyContent="end">
+                {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
+                <SearchSection keyword={keyword} placeholder="프로젝트명 입력">
+                  <FilterSelectBox
+                    statusFramework={projectStatusFramework}
+                    selectedValue={status}
+                    queryKey="status"
+                  />
+                </SearchSection>
+              </Flex>
+            )}
+
             {projectListError && (
               <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
             )}

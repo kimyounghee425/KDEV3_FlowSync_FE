@@ -7,20 +7,16 @@
   --font-size-base: 1rem;
   --font-size-sm: 0.875rem;
   --font-size-lg: 1.125rem;
-  --button-primary-bg: #007bff;
-  --button-primary-hover: #0056b3;
+  --button-bg-light: #01e4b3;
+  --button-hover-bg-light: #018a97;
+  --button-active-bg-light: #01676e; /* 클릭 시 색상 */
+  --button-bg-dark: #6c757d;
+  --button-hover-bg-dark: #495057;
+  --button-active-bg-dark: #343a40;
   --background-light: #f8f9fa;
   --background-dark: #1a202c;
   --text-light: #1a202c;
   --text-dark: #f8f9fa;
-}
-
-/* 다크모드 */
-[data-theme="dark"] {
-  --background-light: #1a202c;
-  --background-dark: #2d3748;
-  --text-light: #f8f9fa;
-  --text-dark: #e2e8f0;
 }
 
 /* Reset */
@@ -30,20 +26,69 @@
   box-sizing: border-box;
 }
 
-/* Body */
-body {
-  font-family: "Roboto", sans-serif;
-  background-color: var(--background-light);
-  color: var(--text-light);
-  overflow-x: hidden;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
+/* 다크 모드 스타일 */
+body.light {
+  --background-color: var(--background-light);
+  --text-color: var(--text-light);
+  --button-bg: var(--button-bg-light);
+  --button-hover-bg: var(--button-hover-bg-light);
+  --button-active-bg: var(--button-active-bg-light);
 }
 
-[data-theme="dark"] body {
-  background-color: var(--background-dark);
-  color: var(--text-dark);
+body.dark {
+  --background-color: var(--background-dark);
+  --text-color: var(--text-dark);
+  --button-bg: var(--button-bg-dark);
+  --button-hover-bg: var(--button-hover-bg-dark);
+  --button-active-bg: var(--button-active-bg-dark);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+  color: var(--button-hover-bg);
+}
+
+button,
+Button {
+  font-family: inherit;
+  cursor: pointer;
+  background-color: #e5e5e5;
+  color: var(--button-text-color, #000);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition:
+    background-color 0.3s ease,
+    transform 0.1s ease;
+}
+
+button:hover,
+Button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+/* 버튼 클릭 시 효과 */
+button:active,
+Button:active {
+  background-color: var(--button-active-bg);
+  transform: scale(0.97);
 }
 
 /* 헤더 */
@@ -99,26 +144,36 @@ main {
   min-width: 0; /* Flexbox의 자식 요소가 올바르게 너비를 계산하도록 설정 */
   max-width: var(--content-max-width);
   overflow-x: auto;
-  padding: 16px;
+  padding: 1rem;
 }
 
-/* 버튼 */
-button {
-  background-color: var(--button-primary-bg);
-  color: white;
-  font-size: var(--font-size-base);
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  transition: background 0.3s;
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #6c757d;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition:
+    background-color 0.3s,
+    border 0.3s;
 }
 
-button:hover {
-  background-color: var(--button-primary-hover);
+.input:focus {
+  border-color: var(--button-hover-bg);
+  outline: none;
+  box-shadow: 0 0 0 2px #01e4b3 (0, 123, 255, 0.2);
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+.input.disabled {
+  background-color: #f0f0f0;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* 수정된 필드 연한 초록색 강조 */
+.input.changed {
+  background-color: #e8f5e9 !important;
+  border: 1px solid #01e4b3 !important;
 }
 
 /* 스크롤바 전체 */

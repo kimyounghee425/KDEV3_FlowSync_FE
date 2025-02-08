@@ -53,15 +53,17 @@ export const validationRulesOfUpdatingOrganization = {
 // 로그인 페이지 - 유효성 검증 규칙
 export const validationRulesOfLogin = {
   email: {
-    isValid: (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-    errorMessage: "올바른 이메일 주소를 입력하세요.",
+    isValid: (value: string) =>
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value) &&
+      !/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value) && // 한글 입력 방지
+      !/\s/.test(value), // 공백 입력 방지
+    errorMessage: "올바른 이메일 주소를 입력하세요. (한글 및 공백 불가)",
   },
-  // password: {
-  //   isValid: (value: string) =>
-  //     /^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$/.test(value),
-  //   errorMessage:
-  //     "영문, 숫자, 특수문자를 포함하여 최소 8자리 이상 비밀번호를 입력하시기 바랍니다.",
-  // },
+  password: {
+    isValid: (value: string) => /^(?=.*[a-zA-Z\d]).{4,}$/.test(value), // 영문 또는 숫자가 포함된 4자리 이상
+    errorMessage:
+      "영문/숫자/특수문자가 포함된 비밀번호를 4자리 이상 입력하세요.",
+  },
 };
 
 // 회원 생성 페이지 - 유효성 검증 규칙
