@@ -1,7 +1,7 @@
 "use client";
 
 // 외부 라이브러리
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Flex, Button } from "@chakra-ui/react";
 
 // 절대 경로 파일

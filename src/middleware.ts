@@ -10,7 +10,8 @@ function shouldBypassMiddleware(pathname: string): boolean {
   return (
     pathname.startsWith("/_next/") || // Next.js 정적 리소스
     pathname.startsWith("/static/") || // 직접 제공하는 정적 파일
-    ["/favicon.ico", "/robots.txt"].includes(pathname)
+    pathname === "/login" ||
+    ["/favicon.ico", "/robots.txt", "/logo.png"].includes(pathname)
   );
 }
 
@@ -84,7 +85,7 @@ async function validateAndRefreshTokens(
     } else {
       console.error("❌ AccessToken 검증 중 오류 발생:", error.message);
       clearCookies(response);
-      return {response}; // ❌ 예기치 못한 에러 발생 시 종료
+      return { response }; // ❌ 예기치 못한 에러 발생 시 종료
     }
   }
 
@@ -109,7 +110,7 @@ async function validateAndRefreshTokens(
           return { userInfo: userInfoResponse.data, response };
         }
       } else {
-        return {response};
+        return { response };
       }
     }
   } catch (error: any) {
@@ -119,7 +120,7 @@ async function validateAndRefreshTokens(
 
   if (!refreshToken) {
     console.warn("❌ Refresh Token 없음 → 로그인 페이지로 이동");
-    return {response};
+    return { response };
   }
 
   try {
@@ -150,7 +151,7 @@ async function validateAndRefreshTokens(
     clearCookies(response);
   }
 
-  return {response}; // ❌ 모든 시도 실패 시 빈 객체 반환
+  return { response }; // ❌ 모든 시도 실패 시 빈 객체 반환
 }
 
 export async function middleware(request: NextRequest) {

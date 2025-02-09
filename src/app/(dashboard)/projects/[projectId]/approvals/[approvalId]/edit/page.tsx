@@ -1,5 +1,5 @@
 export default function EditPage() {
-  return <div></div>
+  return <div></div>;
 }
 
 // "use client";

@@ -48,8 +48,6 @@ const STATUS_LABELS: Record<string, string> = {
   DELETED: "삭제",
 };
 
-const SECTION_SPACING = 8; // 공통 간격 변수 (8px 단위)
-
 /*
  * 페이지 기본 Export
  * useSearchParams() 훅 사용을 위해 Suspense로 감쌈
