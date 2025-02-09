@@ -3,8 +3,6 @@ import { NextResponse } from "next/server";
 import { fetchReissueToken, fetchUserInfoApi } from "@/src/api/auth";
 import { UserInfoResponse } from "./types";
 
-// const ADMIN_ONLY_PAGE = ["admin", "super-admin"];
-
 /**
  * 정적 파일 요청 및 `/login` 페이지는 미들웨어 실행 제외
  */

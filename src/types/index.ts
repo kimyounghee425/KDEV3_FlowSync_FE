@@ -322,7 +322,6 @@ export interface ApprovalArticle {
 
 export interface NoticeArticle {
   id: string;
-  adminId: string;
   title: string;
   content: ContentBlock[];
   category: string;

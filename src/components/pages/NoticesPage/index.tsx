@@ -14,7 +14,7 @@ import { useNoticeList } from "@/src/hook/useFetchBoardList";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import Pagination from "@/src/components/common/Pagination";
-import { formatDateWithTime } from "@/src/utils/formatDateUtil";
+import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useUserInfo } from "@/src/hook/useFetchData";
 import CreateButton from "@/src/components/common/CreateButton";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
@@ -74,7 +74,8 @@ function NoticesPageContent() {
   };
 
   const handleRowClick = (noticeId: string) => {
-    router.push(`/notices/${noticeId}`);
+    const params = new URLSearchParams(window.location.search);
+    router.push(`/notices/${noticeId}?${params.toString()}`);
   };
 
   // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
@@ -149,12 +150,12 @@ function NoticesPageContent() {
                 {notice.title}
               </Table.Cell>
               <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
-                {formatDateWithTime(notice.regAt)}
+                {formatDynamicDate(notice.regAt)}
               </Table.Cell>
               {userRole === "ADMIN" ? (
                 <>
                   <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
-                    {formatDateWithTime(notice.updatedAt)}
+                    {formatDynamicDate(notice.updatedAt)}
                   </Table.Cell>
                   <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
                     {notice.isDeleted === true ? "Y" : "N"}

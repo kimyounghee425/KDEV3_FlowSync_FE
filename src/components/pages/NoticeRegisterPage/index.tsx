@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
 import { NoticeRequestData } from "@/src/types";
-import { createNoticeApi } from "@/src/api/notices";
 import SelectInput from "@/src/components/common/FormSelectInput";
-import dynamic from "next/dynamic";
-import "./edit.css"
+import { useCreateNotice } from "@/src/hook/useMutationData";
+import ErrorAlert from "@/src/components/common/ErrorAlert";
+import "@/src/styles/edit.css";
 
 const categoryData = [
   { id: 1, title: "서비스업데이트", value: "SERVICE_UPDATE" },
@@ -33,13 +34,15 @@ export default function NoticeRegisterPage() {
   const [category, setCategory] = useState<string>("");
   const [priority, setPriority] = useState<string>("");
   const router = useRouter();
+  const { mutate: createNotice, error: noticeRegisterError } =
+    useCreateNotice();
 
-  const handleSave = async <T extends NoticeRequestData>(requestData: T) => {
+  const handleSave = async (requestData: NoticeRequestData) => {
     try {
-      const response = await createNoticeApi({
+      await createNotice({
         ...requestData,
-        ...(requestData.category === undefined ? { category: category } : {}),
-        ...(requestData.priority === undefined ? { priority: priority } : {}),
+        category: category || requestData.category,
+        priority: priority || requestData.priority,
       });
       router.push(`/notices`);
     } catch (error) {
@@ -59,6 +62,10 @@ export default function NoticeRegisterPage() {
       boxShadow="md"
     >
       <BackButton />
+
+      {noticeRegisterError && (
+        <ErrorAlert message="공지사항 저장에 실패했습니다. 다시 시도해주세요." />
+      )}
       <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
         {/* 우선순위 선택 */}
         <SelectInput

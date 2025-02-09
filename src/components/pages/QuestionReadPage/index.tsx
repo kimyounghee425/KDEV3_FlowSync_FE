@@ -2,7 +2,7 @@
 "use client";
 
 // 외부 라이브러리
-import { Flex, Box, VStack} from "@chakra-ui/react";
+import { Flex, Box, VStack } from "@chakra-ui/react";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -62,20 +62,20 @@ export default function QuestionReadPage() {
   }
 
   const handleEdit = () => {
-    router.push(`/projects/${projectId}/questions/${questionId}/edit`)
-  }
+    router.push(`/projects/${projectId}/questions/${questionId}/edit`);
+  };
 
-  const handleDelete = async() => {
-    const confirmDelete = window.confirm("정말로 삭제하시겠습니까?")
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
     if (!confirmDelete) return;
     try {
-      await deleteQuestionApi(Number(projectId), Number(questionId))
-      alert("게시글이 삭제되었습니다.")
-      router.push(`/projects/${projectId}/questions`)
+      await deleteQuestionApi(Number(projectId), Number(questionId));
+      alert("게시글이 삭제되었습니다.");
+      router.push(`/projects/${projectId}/questions`);
     } catch (error) {
-      alert(`삭제 중 문제가 발생했습니다 : ${error}`)
+      alert(`삭제 중 문제가 발생했습니다 : ${error}`);
     }
-  }
+  };
 
   return (
     <Flex
