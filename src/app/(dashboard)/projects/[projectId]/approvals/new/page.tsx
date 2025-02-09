@@ -1,6 +1,4 @@
 // 결재 게시글 생성 페이지
-import ApprovalRegisterPage from "@/src/components/pages/ApprovalRegisterPage";
+import ProjectApprovalsNewPage from "@/src/components/pages/ProjectApprovalsNewPage";
 
-export default function Page() {
-  return <ApprovalRegisterPage />;
-}
+export default ProjectApprovalsNewPage;

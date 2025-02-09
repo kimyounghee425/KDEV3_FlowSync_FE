@@ -1,19 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { FiMenu, FiSun, FiMoon } from "react-icons/fi";
+import { FiSun, FiMoon } from "react-icons/fi";
 import { Box, Flex, IconButton, Image } from "@chakra-ui/react";
 import {
   useColorMode,
   useColorModeValue,
 } from "@/src/components/ui/color-mode";
 import Profile from "@/src/components/layouts/Profile";
+import { PanelRightClose, PanelRightOpen } from "lucide-react";
 
 interface HeaderProps {
+  isSidebarOpen: boolean;
   onToggleSidebar: () => void;
 }
 
-export default function Header({ onToggleSidebar }: HeaderProps) {
+export default function Header({
+  isSidebarOpen,
+  onToggleSidebar,
+}: HeaderProps) {
   const { toggleColorMode, colorMode } = useColorMode();
   const textColor = useColorModeValue("gray.800", "white");
 
@@ -40,7 +45,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
           variant="ghost"
           _hover={{ bg: "gray.100" }}
         >
-          <FiMenu />
+          {isSidebarOpen ? <PanelRightOpen /> : <PanelRightClose />}
         </IconButton>
         <Link href="/notices">
           <Box
@@ -65,7 +70,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
         alignItems="center"
       >
         <Link href="/">
-          <Image
+          {/* <Image
             src={
               colorMode === "dark"
                 ? "https://bn-system.com/img/LOGO_SVG2.svg"
@@ -73,6 +78,12 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
             }
             alt="BN SYSTEM"
             height="40px" // Fixed height
+            objectFit="contain"
+          /> */}
+          <Image
+            src="/logo.png" // public 디렉토리의 로고 파일 경로
+            alt="FlowSync"
+            height="30px" // 원하는 크기로 설정
             objectFit="contain"
           />
         </Link>

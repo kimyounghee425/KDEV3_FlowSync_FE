@@ -10,8 +10,8 @@ import { uploadFileApi } from "@/src/api/RegisterArticle";
 import { BaseArticleRequestData } from "@/src/types";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
-import SignUpload from "@/src/components/pages/ApprovalRegisterPage/components/SignUpload";
 import DropDownInfoBottom from "@/src/components/common/DropDownInfoBottom";
+import SignUpload from "@/src/components/pages/ProjectApprovalsNewPage/components/SignUpload";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 

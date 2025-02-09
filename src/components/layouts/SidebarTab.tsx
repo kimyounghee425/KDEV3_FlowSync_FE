@@ -20,9 +20,9 @@ interface SidebarTabProps {
 
 // 관리자 메뉴 항목
 const ADMIN_MENU_ITEMS = [
-  { value: "/admin/members", title: "회원 관리" },
+  { value: "/", title: "프로젝트 관리" },
   { value: "/admin/organizations", title: "업체 관리" },
-  { value: "/projects/new", title: "프로젝트 생성" },
+  { value: "/admin/members", title: "회원 관리" },
 ];
 
 export default function SidebarTab({ memberRole }: SidebarTabProps) {

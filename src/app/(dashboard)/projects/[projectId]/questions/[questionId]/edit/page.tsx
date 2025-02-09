@@ -1,6 +1,5 @@
 import "./edit.css";
 
-import QuestionEditPage from "@/src/components/pages/QuestionEditPage";
-export default function Page() {
-  return <QuestionEditPage />;
-}
+import ProjectQuestionEditPage from "@/src/components/pages/ProjectQuestionEditPage";
+
+export default ProjectQuestionEditPage;

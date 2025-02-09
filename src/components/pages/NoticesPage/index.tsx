@@ -10,14 +10,14 @@ import {
   Table,
 } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
-import { useNoticeList } from "@/src/hook/useFetchBoardList";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import Pagination from "@/src/components/common/Pagination";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
-import { useUserInfo } from "@/src/hook/useFetchData";
 import CreateButton from "@/src/components/common/CreateButton";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
+import { useNoticeList } from "@/src/hook/useFetchBoardList";
+import { useUserInfo } from "@/src/hook/useFetchData";
 
 const noticeStatusFramework = createListCollection<{
   label: string;

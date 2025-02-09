@@ -1,3 +1,3 @@
-import ApprovalReadPage from "@/src/components/pages/ApprovalReadPage";
+import ProjectApprovalPage from "@/src/components/pages/ProjectApprovalPage";
 
-export default ApprovalReadPage;
+export default ProjectApprovalPage;

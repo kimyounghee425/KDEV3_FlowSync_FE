@@ -1,4 +1,4 @@
-import noticeRegisterPage from "@/src/components/pages/NoticeRegisterPage";
+import NoticesNewPage from "@/src/components/pages/NoticesNewPage";
 import "@/src/styles/edit.css";
 
-export default noticeRegisterPage;
+export default NoticesNewPage;

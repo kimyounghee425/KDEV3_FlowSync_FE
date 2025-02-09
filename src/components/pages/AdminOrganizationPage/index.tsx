@@ -1,11 +1,10 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { OrganizationProps } from "@/src/types";
 import { fetchOrganizationDetails } from "@/src/api/organizations";
 import OrganizationDetailForm from "@/src/components/pages/AdminOrganizationPage/components/organizationDetailForm";
-
 
 export default function AdminOrganizationPage() {
   const router = useRouter();

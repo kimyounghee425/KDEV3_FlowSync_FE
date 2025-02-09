@@ -1,9 +1,8 @@
 // 회사만 선택하는 컴포넌트
 
+import React from "react";
 import { Flex, Box, Text } from "@chakra-ui/react";
 import InputForm from "@/src/components/common/InputForm";
-
-import React from "react";
 
 interface OrgProps {
   id: number;
@@ -33,7 +32,7 @@ export default function SelectedOrganization({
   return (
     <Flex minWidth={"700px"}>
       <Flex direction={"column"} mr={5}>
-      <InputForm
+        <InputForm
           id="selectedOrganization"
           type="text"
           label="소속 업체"

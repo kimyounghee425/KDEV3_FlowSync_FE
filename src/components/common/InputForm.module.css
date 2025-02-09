@@ -16,26 +16,44 @@
   border-radius: 5px;
 }
 
+/* 🔹 입력 필드 스타일 */
 .input {
   flex: 1; /* 🔹 너비 자동 조절 */
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
+  border: 1px solid var(--input-border, #6c757d) !important; /* ⚡강제 적용 */
+  border-radius: 0.5rem;
+  font-size: 1rem;
   transition:
-    background-color 0.3s,
-    border 0.3s;
+    background-color 0.3s ease-in-out,
+    border 0.3s ease-in-out;
 }
 
+/* 🔹 입력 필드 포커스 시 */
+.input:focus {
+  border-color: var(--button-hover-bg) !important; /* ⚡강제 적용 */
+  outline: none;
+  box-shadow: 0 0 0 2px #01e4b3;
+}
+
+/* 🔹 입력 필드 에러 상태 */
+.input.error {
+  border: 1px solid red; /* ⚡강제 적용 */
+  /* background-color: #f8d7da; */
+}
+
+/* 🔹 비활성화된 입력 필드 */
 .input.disabled {
   background-color: #f0f0f0;
   color: #666;
   cursor: not-allowed;
+  border: 1px solid #ccc !important; /* ⚡강제 적용 */
 }
 
+/* 🔹 변경된 입력 필드 */
 .input.changed {
-  background-color: #e8f5e9 !important; /* 수정 시 변경된 입력 필드 연한 초록색 강조 */
-  border: 1px solid #4caf50 !important;
+  background-color: #e8f5e9 !important;
+  border: 1px solid #01e4b3 !important;
 }
 
 .label {

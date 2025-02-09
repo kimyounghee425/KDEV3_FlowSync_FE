@@ -40,7 +40,7 @@ const STATUS_LABELS: Record<string, string> = {
   ANSWER: "답변",
 };
 
-export default function ProjectTasksPage() {
+export default function ProjectApprovalsPage() {
   const { projectId } = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
