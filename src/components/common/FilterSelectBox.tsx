@@ -12,6 +12,7 @@ interface StatusSelectBoxProps {
   statusFramework: ReturnType<typeof createListCollection>;
   selectedValue: string;
   queryKey: string;
+  width?: string;
 }
 
 /**
@@ -23,6 +24,7 @@ export default function FilterSelectBox({
   statusFramework,
   selectedValue,
   queryKey,
+  width = "110px",
 }: StatusSelectBoxProps) {
   const router = useRouter();
 
@@ -58,14 +60,14 @@ export default function FilterSelectBox({
     <SelectRoot
       collection={statusFramework}
       size="md"
-      width="110px"
+      width={width}
       value={[selectedValue]}
       onValueChange={handleValueChange}
     >
       {/* 드롭다운 버튼(트리거) */}
       <SelectTrigger>
         {/* 선택된 값이 표시될 영역 */}
-        <SelectValueText />
+        <SelectValueText textAlign="center" width="100%" />
       </SelectTrigger>
 
       {/* 드롭다운 펼쳤을 때의 옵션 목록 */}

@@ -31,6 +31,8 @@ export default function NoticePage() {
 
   const { mutate: deleteNotice } = useDeleteNotice();
 
+  const isNoticeDeleted = noticeArticle?.isDeleted === "Y";
+  console.log(isNoticeDeleted);
   if (noticeLoading) {
     return <Loading />; // ✅ 공통 로딩 컴포넌트 사용
   }
@@ -64,8 +66,14 @@ export default function NoticePage() {
     >
       <Flex justifyContent="space-between">
         <BackButton />
-        <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
+        {isNoticeDeleted && (
+          <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
+        )}
       </Flex>
+
+      {isNoticeDeleted && (
+        <ErrorAlert message="이 공지사항은 삭제된 상태입니다." />
+      )}
 
       {noticeError && (
         <ErrorAlert message="공지사항 조회에 실패했습니다. 다시 시도해주세요." />

@@ -44,7 +44,7 @@ export default function CommonTable<T extends { id: string }>({
         maxWidth="none" // ✅ 너비 제한 없음
         css={{
           borderCollapse: "collapse",
-          "& th, & td": { border: "1px solid #ddd", padding: "8px" },
+          "& th, & td": { border: "1.8px solid #ddd", padding: "8px" },
         }}
       >
         {/* ✅ 테이블 헤더 */}

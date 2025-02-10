@@ -85,7 +85,6 @@ export default function ProjectApprovalPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <BackButton />
       <Flex justifyContent="space-between">
         <BackButton />
         {/* <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} /> */}

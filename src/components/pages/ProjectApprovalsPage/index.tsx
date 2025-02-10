@@ -20,7 +20,7 @@ import { useProjectApprovalList } from "@/src/hook/useFetchBoardList";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 
-const taskStatusFramework = createListCollection<{
+const approvalStatusFramework = createListCollection<{
   id: string;
   label: string;
   value: string;
@@ -49,7 +49,7 @@ export default function ProjectApprovalsPage() {
     ? projectId[0]
     : projectId || "";
   const keyword = searchParams?.get("keyword") || "";
-  const progressStep = searchParams?.get("progressStep") || "";
+  const progressStepId = searchParams?.get("progressStepId") || "";
   const status = searchParams?.get("status") || "";
   const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
   const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
@@ -70,7 +70,7 @@ export default function ProjectApprovalsPage() {
   } = useProjectApprovalList(
     resolvedProjectId,
     keyword,
-    progressStep,
+    progressStepId,
     status,
     currentPage,
     pageSize,
@@ -84,8 +84,8 @@ export default function ProjectApprovalsPage() {
     router.push(`?${params.toString()}`);
   };
 
-  const handleRowClick = (taskId: string) => {
-    router.push(`/projects/${projectId}/tasks/${taskId}`);
+  const handleRowClick = (approvalId: string) => {
+    router.push(`/projects/${projectId}/approvals/${approvalId}`);
   };
 
   return (
@@ -119,7 +119,7 @@ export default function ProjectApprovalsPage() {
           {/* 검색 섹션 */}
           <SearchSection keyword={keyword} placeholder="제목 입력">
             <StatusSelectBox
-              statusFramework={taskStatusFramework}
+              statusFramework={approvalStatusFramework}
               selectedValue={status}
               queryKey="status"
             />
@@ -144,11 +144,13 @@ export default function ProjectApprovalsPage() {
                 "& > th": { textAlign: "center" },
               }}
             >
+              <Table.ColumnHeader>진행단계</Table.ColumnHeader>
               <Table.ColumnHeader>제목</Table.ColumnHeader>
               <Table.ColumnHeader>작성자</Table.ColumnHeader>
+              <Table.ColumnHeader>결재상태</Table.ColumnHeader>
+              <Table.ColumnHeader>결재자</Table.ColumnHeader>
+              <Table.ColumnHeader>결재일</Table.ColumnHeader>
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
-              <Table.ColumnHeader>진행단계</Table.ColumnHeader>
-              <Table.ColumnHeader>결제상태</Table.ColumnHeader>
             </Table.Row>
           }
           data={projectApprovalList}
@@ -156,17 +158,17 @@ export default function ProjectApprovalsPage() {
           renderRow={(approval) => (
             <>
               <Table.Cell>
-                <StatusTag>
-                  {STATUS_LABELS[approval.category] || "알 수 없음"}
-                </StatusTag>
+                <StatusTag>{approval.progressStep.name}</StatusTag>
               </Table.Cell>
-              <Table.Cell>{"주농퐉"}</Table.Cell>
               <Table.Cell>{approval.title}</Table.Cell>
+              <Table.Cell>{approval.register.name}</Table.Cell>
               <Table.Cell>
                 <StatusTag>
                   {STATUS_LABELS[approval.status] || "알 수 없음"}
                 </StatusTag>
               </Table.Cell>
+              <Table.Cell>{approval.approvedAt || "-"}</Table.Cell>
+              <Table.Cell>{approval.approver || "-"}</Table.Cell>
               <Table.Cell>{formatDynamicDate(approval.regAt)}</Table.Cell>
             </>
           )}

@@ -23,6 +23,7 @@ import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useUserInfo } from "@/src/hook/useFetchData";
 import { useProjectList } from "@/src/hook/useFetchBoardList";
+import { ProjectProps } from "@/src/types";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -105,10 +106,14 @@ function ProjectsPageContent() {
    * 테이블 행 클릭 시 호출되는 콜백
    * - 특정 프로젝트의 상세 화면(/projects/[id]/tasks)로 이동
    *
-   * @param id 프로젝트 ID (백엔드 혹은 테이블에서 받아온 값)
+   * @param projectId 프로젝트 ID (백엔드 혹은 테이블에서 받아온 값)
    */
-  const handleRowClick = (id: string) => {
-    router.push(`/projects/${id}/approvals`);
+  const handleRowClick = (projectId: string) => {
+    const project = projectList?.find((p) => p.id === projectId);
+
+    if (project && project.clickable === 1) {
+      router.push(`/projects/${project.id}/approvals`);
+    }
   };
 
   // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
@@ -188,9 +193,19 @@ function ProjectsPageContent() {
                   <Table.ColumnHeader>프로젝트명</Table.ColumnHeader>
                   <Table.ColumnHeader>고객사</Table.ColumnHeader>
                   <Table.ColumnHeader>개발사</Table.ColumnHeader>
-                  <Table.ColumnHeader>프로젝트 관리단계</Table.ColumnHeader>
-                  <Table.ColumnHeader>프로젝트 시작일</Table.ColumnHeader>
-                  <Table.ColumnHeader>프로젝트 종료일</Table.ColumnHeader>
+                  <Table.ColumnHeader>관리단계</Table.ColumnHeader>
+                  <Table.ColumnHeader>시작일</Table.ColumnHeader>
+                  <Table.ColumnHeader>예정 마감일</Table.ColumnHeader>
+                  <Table.ColumnHeader>납품 완료일</Table.ColumnHeader>
+                  {userRole === "ADMIN" ? (
+                    <>
+                      <Table.ColumnHeader>수정일</Table.ColumnHeader>
+                      <Table.ColumnHeader>삭제여부</Table.ColumnHeader>
+                      <Table.ColumnHeader>공지사항관리</Table.ColumnHeader>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </Table.Row>
               }
               data={projectList}
@@ -202,11 +217,25 @@ function ProjectsPageContent() {
                   <Table.Cell>{project.developerName}</Table.Cell>
                   <Table.Cell>
                     <StatusTag>
-                      {STATUS_LABELS[project.status] || "알 수 없음"}
+                      {STATUS_LABELS[project.managementStep] || "알 수 없음"}
                     </StatusTag>
                   </Table.Cell>
                   <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
                   <Table.Cell>{formatDynamicDate(project.closeAt)}</Table.Cell>
+                  <Table.Cell>{formatDynamicDate(project.closeAt)}</Table.Cell>
+                  {userRole === "ADMIN" ? (
+                    <>
+                      <Table.Cell>
+                        {formatDynamicDate(project.updateAt)}
+                      </Table.Cell>
+                      <Table.Cell>{project.deletedYn}</Table.Cell>
+                      <Table.Cell
+                        onClick={(event) => event.stopPropagation()}
+                      ></Table.Cell>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </>
               )}
               handleRowClick={handleRowClick}

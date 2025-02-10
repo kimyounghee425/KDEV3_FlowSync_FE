@@ -35,8 +35,9 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
   // 프로젝트 상태에 따른 데이터 가져오기
   const status =
     selectedProjectFilter === "완료 프로젝트" ? "COMPLETED" : "IN_PROGRESS";
+
   const { projectList, loading, hasMore, observerRef } =
-    useProjectInfiniteScroll(status);
+    useProjectInfiniteScroll(memberRole === "member" ? status : "");
 
   return (
     <Box

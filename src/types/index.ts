@@ -149,11 +149,17 @@ export interface ProjectInfoProps {
 export interface ProjectProps {
   id: string; // 프로젝트 ID
   name: string; // 프로젝트 이름
-  status: string; // 계약 단계
-  startAt: string; // 시작일시
+  description: string;
+  managementStep: string;
+  regAt: string; // 등록일
+  updateAt: string; // 수정일
+  startAt: string; // 시작일
   closeAt: string; // 마감일시
-  customerName: string; // 고객사 이름
+  deletedYn: string; // 삭제여부
+  devOwnerId: string; // 개발사 대표 담당자 ID
   developerName: string; // 개발사 이름
+  customerName: string; // 고객사 이름
+  clickable: number; // 클릭 가능 여부
 }
 
 export interface ProjectListResponse {
@@ -173,20 +179,42 @@ export interface ProjectInfoProps {
   projectCloseAt: string; // 프로젝트 종료일
 }
 
+export interface ProgressStep {
+  id: string;
+  name: string;
+  description: string;
+  stepOrder: string;
+  status: string;
+  startAt: string;
+  closeAt: string;
+  projectId: string;
+}
+
+export interface Register {
+  id: string;
+  role: string;
+  name: string;
+  organizationId: string;
+  organizationName: string;
+  organizationType: string;
+}
+
 // 결재글 속성
 export interface ProjectApprovalProps {
   id: string;
-  number: number;
+  projectId: string;
+  progressStep: ProgressStep;
   title: string;
+  category: string; // 진행단계
+  status: string; // 결제 유형
+  register: Register;
   content: string;
   regAt: string;
-  editAt: string;
-  approveAt: string;
-  category: string; // 진행단계
-  status: string; // 게시글 유형
-  deletedYn: string;
-  currentPage: number; // 현재 페이지
-  pageSize: number; // 페이지 크기
+  updatedAt: string;
+  approvedAt: string;
+  approver: string;
+  cancelAt: string;
+  deleted: boolean;
 }
 
 export interface ProjectApprovalListResponse {
@@ -320,7 +348,7 @@ export interface NoticeArticle {
   content: ContentBlock[];
   category: string;
   priority: string;
-  isDeleted: boolean;
+  isDeleted: string;
   regAt: string;
   updatedAt: string;
   fileList: ArticleFile[];
@@ -398,7 +426,8 @@ export interface ProjectProgressStepProps {
   id: string;
   title: string;
   value: string;
-  count?: number;
+  count: number;
+  status: string;
 }
 
 export interface UserInfoResponse {

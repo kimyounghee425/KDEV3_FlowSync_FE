@@ -32,8 +32,7 @@ export default function ProgressStepSection({
     setSelectedButtonId(id); // 클릭된 버튼으로 상태 변경
 
     // progressData에서 선택된 단계의 value를 찾음
-    const selectedValue =
-      progressStep.find((item) => item.id === id)?.title || "";
+    const selectedValue = progressStep.find((item) => item.id === id)?.id || "";
 
     // URL 쿼리 파라미터를 수정 (progressStep 값 변경)
     const params = new URLSearchParams(window.location.search);
