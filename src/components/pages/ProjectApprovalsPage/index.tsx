@@ -18,7 +18,6 @@ import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
 import { useProjectApprovalList } from "@/src/hook/useFetchBoardList";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
-import GuideButton from "@/src/components/common/GuideButton";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 
 const taskStatusFramework = createListCollection<{
@@ -146,9 +145,10 @@ export default function ProjectApprovalsPage() {
               }}
             >
               <Table.ColumnHeader>제목</Table.ColumnHeader>
+              <Table.ColumnHeader>작성자</Table.ColumnHeader>
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
-              <Table.ColumnHeader>상태</Table.ColumnHeader>
-              <Table.ColumnHeader>유형</Table.ColumnHeader>
+              <Table.ColumnHeader>진행단계</Table.ColumnHeader>
+              <Table.ColumnHeader>결제상태</Table.ColumnHeader>
             </Table.Row>
           }
           data={projectApprovalList}

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { CommonResponseType, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse } from "@/src/types";
+import { CommonResponseType, NoticeArticle, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse } from "@/src/types";
 import { fetchProjectApprovalProgressStepApi, fetchProjectInfoApi, fetchProjectQuestionProgressStepApi } from "@/src/api/projects";
 import { showToast } from "@/src/utils/showToast";
 import { fetchUserInfoApi } from "@/src/api/auth";
+import { readNoticeApi } from "@/src/api/ReadArticle";
 
 interface UseFetchDataProps<T, P extends any[]> {
   fetchApi: (...args: P) => Promise<CommonResponseType<T>>;
@@ -66,7 +67,7 @@ export const useProjectQuestionProgressStepData = (resolvedProjectId: string) =>
     params: [resolvedProjectId],
   });
 
-  /**
+/**
  * 프로젝트 정보 데이터 패칭 훅
  */
 export const useProjectInfo = (resolvedProjectId: string) =>
@@ -75,7 +76,7 @@ export const useProjectInfo = (resolvedProjectId: string) =>
     params: [resolvedProjectId],
   });
 
-  /**
+/**
  * 결재 Progress Step 데이터 패칭 훅
  */
 export const useProjectApprovalProgressStepData = (resolvedProjectId: string) =>
@@ -84,7 +85,20 @@ export const useProjectApprovalProgressStepData = (resolvedProjectId: string) =>
     params: [resolvedProjectId],
   });
 
+/**
+ *  유저 정보 패칭 훅
+ */
 export const useUserInfo = () => useFetchData<UserInfoResponse, []>({
   fetchApi: fetchUserInfoApi,
   params: []
 });
+
+/**
+ * 공지사항 조회 훅
+ */
+export function useReadNotice(noticeId: string) {
+  return useFetchData<NoticeArticle, [string]>({
+    fetchApi: readNoticeApi,
+    params: [noticeId],
+  });
+}

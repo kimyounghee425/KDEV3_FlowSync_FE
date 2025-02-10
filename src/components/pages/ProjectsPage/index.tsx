@@ -148,7 +148,7 @@ function ProjectsPageContent() {
                   <FilterSelectBox
                     statusFramework={projectStatusFramework}
                     selectedValue={status}
-                    queryKey="category"
+                    queryKey="status"
                   />
                 </SearchSection>
               </Flex>
