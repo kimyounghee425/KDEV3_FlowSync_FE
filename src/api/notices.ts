@@ -5,11 +5,12 @@ import axiosInstance from "@/src/api/axiosInstance";
 export async function fetchNoticeListApi(
   keyword: string = "", // 검색키워드
   category: string = "", // 활성화여부
+  isDeleted: string = "",
   currentPage: number,
   pageSize: number,
 ): Promise<CommonResponseType<NoticeListResponse>> {
   const response = await axiosInstance.get("/notices", {
-    params: { keyword, category, currentPage, pageSize },
+    params: { keyword, category, isDeleted, currentPage, pageSize },
   });
   return response.data;
 }

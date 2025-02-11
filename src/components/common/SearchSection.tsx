@@ -20,10 +20,11 @@ export default function SearchSection({
 
   // 검색 버튼을 클릭하거나 엔터 입력시 데이터를 가져오는 함수
   const onSubmit = () => {
-    if (!input || keyword === input) return;
+    if (keyword === input) return;
+
     // URL 업데이트
     const params = new URLSearchParams(window.location.search);
-    params.set("keyword", input); // 검색어 추가
+    params.set("keyword", input || ""); // 검색어 추가
     params.set("currentPage", "1");
     router.push(`?${params.toString()}`);
   };

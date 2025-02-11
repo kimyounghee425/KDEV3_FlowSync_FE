@@ -34,7 +34,9 @@ export default function ArticleContent<
       ? JSON.parse(article.content)
       : article.content;
 
-  // console.log(parsedContent[0])
+  const isDeleted =
+    ("deletedYN" in article && article.deletedYN === "Y") ||
+    ("isDeleted" in article && article.isDeleted === "Y"); // 삭제 여부 확인
 
   const renderContent = (content: ContentBlock[]) => {
     return content.map((block, index) => {
@@ -119,7 +121,12 @@ export default function ArticleContent<
   // regAt 날짜 예쁘게 변환
 
   return (
-    <Box mb={4}>
+    <Box
+      mb={4}
+      style={{
+        opacity: isDeleted ? 0.5 : 1, // 삭제된 경우 흐리게 표시 (선택 사항)
+      }}
+    >
       {/* 제목 */}
       <Text fontSize="2xl" fontWeight="bold" mb={4}>
         {article.title}

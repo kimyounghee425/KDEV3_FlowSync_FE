@@ -62,7 +62,7 @@ export function useFetchBoardList<T, P extends any[], K extends keyof T>({
     fetchBoardListData(...params);
   }, [...params]);
 
-  return { data, paginationInfo, loading, error };
+  return { data, paginationInfo, loading, error, refetch: () => fetchBoardListData(...params) };
 }
 
 // ProjectQuestionList 데이터 패칭
@@ -134,17 +134,18 @@ params: [keyword, status, currentPage, pageSize],
 // 공지사항 목록 패칭
 export const useNoticeList = (
   keyword: string,
-  status: string,
+  category: string,
+  isDeleted: string,
   currentPage: number,
   pageSize: number
 ) => useFetchBoardList<
 NoticeListResponse,
-[string, string, number, number],
+[string, string, string, number, number],
 "notices"
 >({
 fetchApi: fetchNoticeListApi,
 keySelector: "notices",
-params: [keyword, status, currentPage, pageSize],
+params: [keyword, category, isDeleted, currentPage, pageSize],
 });
 
 // 회원 목록 패칭
