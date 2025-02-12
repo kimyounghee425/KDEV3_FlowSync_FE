@@ -5,7 +5,12 @@ import Image from "next/image";
 import { useParams, usePathname } from "next/navigation";
 // 절대 경로 파일
 import { ArticleComment } from "@/src/types";
-import { deleteComment } from "@/src/api/commentAPI";
+import {
+  deleteQuestionComment,
+  deleteApprovalComment,
+  editApprovalComment,
+  editQuestionComment,
+} from "@/src/api/commentAPI";
 import CommentBox from "@/src/components/common/CommentBox";
 import { formattedDate } from "@/src/utils/formatDateUtil";
 import { readQuestionApi, readApprovalApi } from "@/src/api/ReadArticle";
@@ -64,7 +69,7 @@ export default function CommentItem({
         const filteredComment = responseData.commentList.find(
           (comment: { id: number }) => comment.id === commentId,
         );
-        console.log(filteredComment?.content);
+
         return filteredComment?.content;
       } else if (pathname.includes("/approvals") && approvalId) {
         const responseData = await readApprovalApi(
@@ -74,7 +79,6 @@ export default function CommentItem({
         const filteredComment = responseData.commentList.find(
           (comment: { id: number }) => comment.id === commentId,
         );
-        console.log(filteredComment?.content);
         return filteredComment?.content;
       }
     } catch (error) {
@@ -84,34 +88,63 @@ export default function CommentItem({
   };
 
   const handleEdit = async (commentId: number) => {
+
     const existingContent = await fetchComment(commentId);
     setEditedContent(
       typeof existingContent === "string" ? existingContent : "",
     );
-    // console.log(existingContent)
     setIsEditing(true);
   };
 
   const handleUpdate = async () => {
-    // 수정 완료 api 요청
+    if (!editedContent.trim()) {
+      alert("댓글 내용을 입력하세요.");
+      return;
+    }
+    const requestData = {content : editedContent}
     try {
-      // api 머시기
-      setCommentIsWritten((prev) => !prev);
+      if (pathname.includes("/questions") && questionId) {
+        const responseData = await editQuestionComment(
+          Number(projectId),
+          Number(questionId),
+          Number(comment.id),
+          requestData,
+        );
+      } else if (pathname.includes("/approvals") && approvalId) {
+        const responseData = await editApprovalComment(
+          Number(projectId),
+          Number(approvalId),
+          Number(comment.id),
+          requestData,
+        );
+      }
       setIsEditing(false);
+      setCommentIsWritten((prev) => !prev); // 상태 변경을 트리거해서 새로고침 효과
     } catch (error) {
-      alert(`댓글 수정 중 문제가 발생했습니다. ${error}`);
+      console.error("댓글 수정 실패:", error);
+      alert("댓글 수정 중 오류가 발생했습니다.");
     }
   };
 
   const handleDelete = async (commentId: number) => {
+    // console.log(questionId)
+    // console.log(commentId)
     try {
-      const responseData = await deleteComment(
-        Number(projectId),
-        Number(questionId),
-        Number(commentId),
-      );
+      if (pathname.includes("/questions")) {
+        const responseData = await deleteQuestionComment(
+          Number(projectId),
+          Number(questionId),
+          Number(commentId),
+        );
+      } else if (pathname.includes("/approvals")) {
+        const responseData = await deleteApprovalComment(
+          Number(projectId),
+          Number(approvalId),
+          Number(commentId),
+        );
+      }
       setCommentIsWritten((prev) => !prev);
-      // console.log(responseData.result);
+
     } catch (error) {
       console.log(error);
     }
@@ -119,8 +152,9 @@ export default function CommentItem({
 
   const handleCancel = () => {
     setIsEditing(false);
-    setEditedContent(comment.content)
-  }
+
+    setEditedContent(comment.content);
+  };
 
 
   return (
@@ -161,7 +195,9 @@ export default function CommentItem({
               p={2}
               zIndex={10}
             >
-             {isEditing ? (
+
+              {isEditing ? (
+
                 ""
               ) : (
                 <Button size="xs" onClick={() => handleEdit(comment.id)}>
@@ -178,10 +214,20 @@ export default function CommentItem({
 
       {isEditing && (
         <Box>
-          <Button mt={2} mr={2} size="xs" colorScheme="blue" onClick={handleUpdate}>
+
+          <Button
+            mt={2}
+            mr={2}
+            size="xs"
+            colorScheme="blue"
+            onClick={handleUpdate}
+          >
             저장
           </Button>
-          <Button mt={2} size="xs" colorScheme="blue" onClick={handleCancel}>취소</Button>
+          <Button mt={2} size="xs" colorScheme="blue" onClick={handleCancel}>
+            취소
+          </Button>
+
         </Box>
       )}
 

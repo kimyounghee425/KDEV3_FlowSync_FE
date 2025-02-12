@@ -66,7 +66,8 @@ export default function NoticesNewPage() {
       {noticeRegisterError && (
         <ErrorAlert message="공지사항 저장에 실패했습니다. 다시 시도해주세요." />
       )}
-      <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
+      {/* progressStepId 임시 */}
+      <ArticleForm progressStepId={1} title={title} setTitle={setTitle} handleSave={handleSave}>
         {/* 우선순위 선택 */}
         <SelectInput
           label="우선순위"

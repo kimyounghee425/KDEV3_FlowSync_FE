@@ -98,6 +98,7 @@ export default function NoticeEditPage() {
       )}
       {notice && (
         <ArticleForm
+          progressStepId={1} // 임시
           initialTitle={notice.title || ""}
           initialContent={notice.content || []}
           initialLinkList={notice.linkList || []}

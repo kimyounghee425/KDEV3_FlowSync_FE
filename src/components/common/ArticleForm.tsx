@@ -67,14 +67,16 @@ export default function ArticleForm({
     initializeEditor(initialContent);
 
     return () => {
+
       if (
         editorRef.current &&
         typeof editorRef.current.destroy === "function"
       ) {
         editorRef.current.destroy();
+
       }
       editorRef.current = null;
-    };
+  };
   }, []);
 
   const initializeEditor = (content: any[] = []) => {
@@ -171,6 +173,7 @@ export default function ArticleForm({
         // 기본 데이터 객체
         const requestData: Partial<BaseArticleRequestData> = {
           title: title,
+          progressStepId: progressStepId,
           content: content,
           linkList: linkList,
           fileInfoList: uploadedFiles,

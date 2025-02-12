@@ -1,6 +1,15 @@
 import axiosInstance from "@/src/api/axiosInstance";
 
-import { CommonResponseType, ProjectListResponse, ProjectProgressStepProps, ProjectQuestionListResponse, ProjectApprovalListResponse, ProjectListSidebarResponse, ManagementStepCountMap, ProjectInfoProps } from "@/src/types";
+import {
+  CommonResponseType,
+  ProjectListResponse,
+  ProjectProgressStepProps,
+  ProjectQuestionListResponse,
+  ProjectApprovalListResponse,
+  ProjectListSidebarResponse,
+  ManagementStepCountMap,
+  ProjectInfoProps,
+} from "@/src/types";
 
 /**
  * 프로젝트 목록을 가져옵니다.
@@ -19,7 +28,7 @@ export async function fetchProjectListApi(
   const response = await axiosInstance.get("/projects", {
     params: { keyword, managementStep, currentPage, pageSize },
   });
-  
+
   return response.data;
 }
 
@@ -40,10 +49,13 @@ export async function fetchProjectListSidebarApi(
  * @param projectId 프로젝트 식별자
  * @returns 프로젝트 상세 정보
  */
-export async function fetchProjectInfoApi(projectId: string):Promise<CommonResponseType<ProjectInfoProps>>  {
+export async function fetchProjectInfoApi(
+  projectId: string,
+): Promise<CommonResponseType<ProjectInfoProps>> {
   const response = await axiosInstance.get(
     `/projects/${projectId}/project-info`,
   );
+  console.log(response.data);
   return response.data;
 }
 
@@ -88,9 +100,11 @@ export async function projectProgressStepApi(projectId: string) {
  * 예: 진행 중, 완료 등 관리단계별 프로젝트 수
  * @returns 프로젝트 관리단계 개수 정보
  */
-export async function fetchProjectsManagementStepsCountApi(): Promise<CommonResponseType<{
+export async function fetchProjectsManagementStepsCountApi(): Promise<
+  CommonResponseType<{
     managementStepCountMap: ManagementStepCountMap;
-  }>> {
+  }>
+> {
   const response = await axiosInstance.get("/projects/management-steps/count");
   return response.data;
 }

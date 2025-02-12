@@ -69,10 +69,22 @@ export default function ProjectApprovalPage() {
   }
 
   const handleEdit = () => {
+
+    if (approverSignatureUrl !== "") {
+      alert("결재가 완료된 글은 수정할 수 없습니다.");
+      return;
+    }
+
     router.push(`/projects/${projectId}/approvals/${approvalId}/edit`);
   };
 
   const handleDelete = async () => {
+
+    if (approverSignatureUrl !== "") {
+      alert("결재가 완료된 글은 삭제할 수 없습니다.");
+      return;
+    }
+
     const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
     if (!confirmDelete) return;
     try {
