@@ -172,7 +172,6 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
               </MenuItem>
             </MenuContent>
           </MenuRoot>
-
           <Flex
             flexDirection="column"
             justifyContent="center"

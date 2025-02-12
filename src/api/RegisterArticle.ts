@@ -44,7 +44,7 @@ export async function editQuestionAPI(
   questionId: number,
   requestData: QuestionRequestData,
 ) {
-  const response = await axiosInstance.post(
+  const response = await axiosInstance.put(
     `projects/${projectId}/questions/${questionId}`,
     requestData,
   );
@@ -67,14 +67,28 @@ export async function deleteQuestionApi(
   }
 }
 
+// 결재글 수정
+export async function editApprovalAPI(
+  projectId: number,
+  approvalId: number,
+  requestData: ApprovalRequestData,
+) {
+  const response = await axiosInstance.put(
+    `projects/${projectId}/approvals/${approvalId}`,
+    requestData,
+  );
+  return response.data;
+}
+
+
 // 결재글 삭제
 export async function deleteApprovalApi(
   projectId: number,
-  questionId: number,
+  approvalId: number,
 ) {
   try {
     const response = await axiosInstance.delete(
-      `projects/${projectId}/questions/${questionId}`,
+      `projects/${projectId}/approvals/${approvalId}`,
     );
     return response.data;
   } catch (error) {

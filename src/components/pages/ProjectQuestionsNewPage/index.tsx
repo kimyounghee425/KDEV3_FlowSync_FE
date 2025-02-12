@@ -2,14 +2,16 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createQuestionApi } from "@/src/api/RegisterArticle";
 import { QuestionRequestData } from "@/src/types";
+import { projectProgressStepApi } from "@/src/api/projects";
 import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
+import { useFetchData } from "@/src/hook/useFetchData";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
 import "@/src/components/pages/ProjectQuestionsNewPage/edit.css";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
@@ -25,19 +27,31 @@ export default function ProjectQuestionsNewPage() {
     : projectId || "";
 
   // ProgressStep 데이터 패칭
-  const {
-    data: approvalProgressStepData,
-    loading: approvalProgressStepLoading,
-    error: approvalProgressStepError,
-  } = useProjectApprovalProgressStepData(resolvedProjectId);
+  const { data: progressStepData } = useFetchData<
+    { id: number; name: string }[],
+    [string]
+  >({
+    fetchApi: projectProgressStepApi,
+    params: [resolvedProjectId],
+  });
 
-  // "ALL" 값을 가진 객체 제외
-  const filteredProgressSteps =
-    approvalProgressStepData?.filter((step) => step.value !== "ALL") || [];
 
-  const [progressStepId, setProgressStepId] = useState<number>(
-    filteredProgressSteps.length > 0 ? Number(filteredProgressSteps[0].id) : 0,
-  );
+  const progressStepOptions = progressStepData
+  ? progressStepData.map((step) => ({
+      id: step.id, // key 값
+      title: step.name, // 사용자에게 보이는 텍스트
+      value: String(step.id), // select 요소에서 사용할 값
+    }))
+  : [];
+
+  const [progressStepId, setProgressStepId] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+      if (progressStepOptions.length > 0 && progressStepId === undefined) {
+        setProgressStepId(progressStepOptions[0].id);
+      }
+    }, [progressStepOptions]);
+  
 
   const handleSave = async <T extends QuestionRequestData>(requestData: T) => {
     try {
@@ -55,7 +69,6 @@ export default function ProjectQuestionsNewPage() {
     }
   };
 
-  if (approvalProgressStepLoading) return <Loading />;
 
   return (
     <Box
@@ -70,15 +83,13 @@ export default function ProjectQuestionsNewPage() {
     >
       <BackButton />
 
-      <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
-        {approvalProgressStepError && (
-          <ErrorAlert message="프로젝트 질문 목록을 불러오지 못했습니다. 다시 시도해주세요." />
-        )}
+      <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave} progressStepId={progressStepId ?? 0}>
+       
         <FormSelectInput
           label="진행 단계"
           selectedValue={progressStepId}
           setSelectedValue={setProgressStepId}
-          options={filteredProgressSteps || []}
+          options={progressStepOptions}
         />
       </ArticleForm>
     </Box>

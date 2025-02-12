@@ -54,17 +54,17 @@ export default function FileAddSection({
       const file = target.files?.[0];
       if (file) {
         handleFileUpload(file);
-        if (containerRef.current) {
-          containerRef.current.appendChild(input);
-        }
       }
     };
+    document.body.appendChild(input);
     input.click();
+    document.body.removeChild(input);
   };
 
   // 파일 삭제
   const handleRemoveFile = (index: number) => {
     setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
+    setUploadedFileSize((prev) => prev.filter((_, i) => i !== index)); //
   };
 
   // 파일 크기 변환 함수
@@ -77,6 +77,9 @@ export default function FileAddSection({
     return size + "B";
   };
 
+  console.log(uploadedFiles)
+
+
   return (
     <Box mt={6}>
       <Text fontWeight="bold" mb={2}>
@@ -86,25 +89,27 @@ export default function FileAddSection({
       <Button onClick={handleAddFile} colorScheme={"blue"}>
         파일 추가
       </Button>
-      <Box display={"flex"} flexDirection={"col"}>
-        <Box
-          ref={containerRef}
-          mt={4}
-          display={"flex"}
-          flexDirection={"column"}
-        ></Box>
-
-        <Box>
-          {uploadedFiles.map((file, index) => (
-            <Box key={index} display={"flex"} alignItems={"center"} mt={4}>
-              <Text>
-                파일 이름: {file.originalName}, 파일 크기 :{" "}
-                {formatFileSize(file.size)} byte
-              </Text>
-              <Button onClick={() => handleRemoveFile(index)}>삭제</Button>
-            </Box>
-          ))}
-        </Box>
+      <Box mt={4}>
+        {uploadedFiles.map((file, index) => (
+          <Box
+            key={index}
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            mt={2}
+            p={2}
+            border="1px solid #ddd"
+            borderRadius="md"
+            width="100%"
+          >
+            <Text fontSize="sm">
+              파일 이름: {file.originalName}, 파일 크기: {formatFileSize(file.size)}
+            </Text>
+            <Button onClick={() => handleRemoveFile(index)} size="sm" colorScheme="red">
+              삭제
+            </Button>
+          </Box>
+        ))}
       </Box>
     </Box>
   );

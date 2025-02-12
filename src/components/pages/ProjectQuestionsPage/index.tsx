@@ -85,8 +85,8 @@ export default function ProjectQuestionsPage() {
     router.push(`?${params.toString()}`);
   };
 
-  const handleRowClick = (taskId: string) => {
-    router.push(`/projects/${projectId}/questions/${taskId}`);
+  const handleRowClick = (approvalId: string) => {
+    router.push(`/projects/${projectId}/questions/${approvalId}`);
   };
 
   // 신규등록 버튼 클릭 시 - 질문글 등록 페이지로 이동
