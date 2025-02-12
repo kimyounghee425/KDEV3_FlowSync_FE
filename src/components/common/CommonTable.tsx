@@ -11,6 +11,7 @@ interface CommonTableProps<T> {
   renderRow: (item: T) => ReactNode;
   handleRowClick: (id: string) => void;
   placeholderHeight?: string;
+  isClickable?: (item: T) => boolean;
 }
 
 export default function CommonTable<T extends { id: string }>({
@@ -19,6 +20,7 @@ export default function CommonTable<T extends { id: string }>({
   loading,
   renderRow,
   handleRowClick,
+  isClickable = () => true,
 }: CommonTableProps<T>) {
   // 반응형 스타일 값
   const fontSize = useBreakpointValue({ base: "sm", md: "md", lg: "lg" });
@@ -40,14 +42,14 @@ export default function CommonTable<T extends { id: string }>({
       <Table.Root
         size="sm"
         width="100%"
-        minWidth="600px" // ✅ 최소 크기 설정
-        maxWidth="none" // ✅ 너비 제한 없음
+        minWidth="600px" // 최소 크기 설정
+        maxWidth="none" // 너비 제한 없음
         css={{
           borderCollapse: "collapse",
           "& th, & td": { border: "1.8px solid #ddd", padding: "8px" },
         }}
       >
-        {/* ✅ 테이블 헤더 */}
+        {/* 테이블 헤더 */}
         <Table.Header
           css={{
             "& th": {
@@ -60,7 +62,7 @@ export default function CommonTable<T extends { id: string }>({
           {headerTitle}
         </Table.Header>
 
-        {/* ✅ 테이블 바디 */}
+        {/* 테이블 바디 */}
         <Table.Body>
           {loading ? (
             <Table.Row>
@@ -69,31 +71,39 @@ export default function CommonTable<T extends { id: string }>({
               </Table.Cell>
             </Table.Row>
           ) : (
-            data?.map((item) => (
-              <Table.Row
-                key={item.id}
-                onClick={() => handleRowClick(item.id)}
-                css={{
-                  "&:hover": {
-                    backgroundColor: "#f1f1f1", // ✅ 호버 효과 추가
-                    transition: "background 0.2s ease-in-out",
-                  },
-                  "& > td": {
-                    textAlign: "center",
-                    height: "0.8rem",
-                    fontSize: fontSize, // ✅ 반응형 폰트 크기
-                    cursor: "pointer",
-                    whiteSpace: "nowrap", // ✅ 텍스트 줄바꿈 방지
-                    overflow: "hidden", // ✅ 넘치는 텍스트 숨김
-                    textOverflow: "ellipsis", // ✅ 말줄임표 적용
-                    padding, // ✅ 반응형 패딩
-                    borderBottom: "1px solid #ddd",
-                  },
-                }}
-              >
-                {renderRow(item)}
-              </Table.Row>
-            ))
+            data?.map((item) => {
+              const isRowClickable = isClickable(item);
+              return (
+                <Table.Row
+                  key={item.id}
+                  onClick={(e) => {
+                    if (!isRowClickable)
+                      e.stopPropagation(); // 클릭 방지
+                    else handleRowClick(item.id);
+                  }}
+                  css={{
+                    "&:hover": isRowClickable
+                      ? { backgroundColor: "#f1f1f1" }
+                      : {},
+                    "& > td": {
+                      textAlign: "center",
+                      height: "0.8rem",
+                      fontSize: fontSize,
+                      cursor: isRowClickable ? "pointer" : "not-allowed", // 금지 커서
+                      opacity: isRowClickable ? 1 : 0.6, // 흐리게 처리
+                      color: isRowClickable ? "inherit" : "gray.500", // 글씨 색상 회색
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      padding,
+                      borderBottom: "1px solid #ddd",
+                    },
+                  }}
+                >
+                  {renderRow(item)}
+                </Table.Row>
+              );
+            })
           )}
         </Table.Body>
       </Table.Root>

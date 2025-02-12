@@ -35,7 +35,7 @@ interface ArticleFormProps<T extends BaseArticleRequestData> {
   title: string;
   setTitle: (value: string) => void;
   handleSave: (data: T) => void;
-  progressStepId: number;
+  progressStepId?: number;
   submitButtonLabel?: string;
   children?: React.ReactNode;
 }
@@ -67,11 +67,14 @@ export default function ArticleForm({
     initializeEditor(initialContent);
 
     return () => {
-      if (editorRef.current && typeof editorRef.current.destroy === "function") {
-          editorRef.current.destroy();
+      if (
+        editorRef.current &&
+        typeof editorRef.current.destroy === "function"
+      ) {
+        editorRef.current.destroy();
       }
       editorRef.current = null;
-  };
+    };
   }, []);
 
   const initializeEditor = (content: any[] = []) => {
@@ -165,13 +168,20 @@ export default function ArticleForm({
           return;
         }
 
-        handleSave({
+        // 기본 데이터 객체
+        const requestData: Partial<BaseArticleRequestData> = {
           title: title,
-          progressStepId: progressStepId,
           content: content,
           linkList: linkList,
           fileInfoList: uploadedFiles,
-        });
+        };
+
+        // progressStepId가 존재하는 경우만 추가
+        if (progressStepId !== undefined) {
+          requestData.progressStepId = progressStepId;
+        }
+
+        handleSave(requestData as BaseArticleRequestData);
       } catch (error) {
         console.error("저장 실패:", error);
         alert("저장 중 문제가 발생했습니다.");

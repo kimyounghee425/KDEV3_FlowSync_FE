@@ -112,7 +112,10 @@ export default function ProjectApprovalPage() {
       <ArticleContent article={article} />
 
       <Box display={"flex"} justifyContent={"center"}>
-        <SignToApprove registerSignatureUrl={registerSignatureUrl} approverSignatureUrl={approverSignatureUrl} />
+        <SignToApprove
+          registerSignatureUrl={registerSignatureUrl}
+          approverSignatureUrl={approverSignatureUrl}
+        />
       </Box>
 
       {/* 댓글 섹션 */}

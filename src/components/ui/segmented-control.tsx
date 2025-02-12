@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, For, SegmentGroup } from "@chakra-ui/react";
+import { For, SegmentGroup } from "@chakra-ui/react";
 import * as React from "react";
 
 interface Item {
@@ -61,16 +61,45 @@ export const SegmentedControl = React.forwardRef<
     <SegmentGroup.Root ref={ref} {...rest} onValueChange={onValueChange}>
       <SegmentGroup.Indicator />
       <For each={data}>
-        {(item) => (
-          <SegmentGroup.Item
-            key={item.value}
-            value={item.value}
-            disabled={item.disabled}
-          >
-            <SegmentGroup.ItemText>{item.label}</SegmentGroup.ItemText>
-            <SegmentGroup.ItemHiddenInput />
-          </SegmentGroup.Item>
-        )}
+        {(item) => {
+          const isSelected = item.value === rest.value; // 현재 선택된 값인지 확인
+
+          return (
+            <SegmentGroup.Item
+              key={item.value}
+              value={item.value}
+              disabled={item.disabled || isSelected} // 선택된 요소 비활성화
+              aria-disabled={isSelected}
+              style={{
+                padding: "8px 16px",
+                borderRadius: "8px",
+                transition: "all 0.2s ease-in-out",
+                cursor: isSelected ? "default" : "pointer", // 선택된 요소는 커서 기본값
+                fontWeight: "bold",
+                color: "inherit", // 선택된 요소도 기존 글씨 색 유지
+                opacity: isSelected ? 1 : undefined, // 선택된 요소도 투명도 변화 없음
+                backgroundColor: isSelected ? "gray.300" : "transparent", // 선택된 요소 배경 변경
+              }}
+              css={
+                isSelected
+                  ? {} // 선택된 요소는 hover, active 효과 없음
+                  : {
+                      "&:hover": {
+                        backgroundColor: "gray.200",
+                        transform: "scale(1.05)",
+                      },
+                      "&:active": {
+                        backgroundColor: "gray.400",
+                        transform: "scale(0.95)",
+                      },
+                    }
+              }
+            >
+              <SegmentGroup.ItemText>{item.label}</SegmentGroup.ItemText>
+              <SegmentGroup.ItemHiddenInput />
+            </SegmentGroup.Item>
+          );
+        }}
       </For>
     </SegmentGroup.Root>
   );

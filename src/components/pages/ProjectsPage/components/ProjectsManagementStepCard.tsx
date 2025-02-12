@@ -2,29 +2,29 @@ import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useColorModeValue } from "@/src/components/ui/color-mode";
-import { ProjectStatus } from "@/src/constants/projectStatus"; // ENUM import
+import { ProjectManagementSteps } from "@/src/constants/projectManagementSteps"; // ENUM import
 
-interface ProjectsStatusCardProps {
+interface ProjectsManagementStepCardProps {
   count: number; // 숫자(통계 수치)
   label: string; // 카드에 표시될 라벨
   icon: ReactNode; // 카드 내부 아이콘
-  status: ProjectStatus; // 필터링할 상태 값
+  managementStep: ProjectManagementSteps; // 필터링할 상태 값
 }
 
 /**
- * StatusCard 컴포넌트
+ * ManagementStepCard 컴포넌트
  * - 통계 정보(숫자, 라벨)와 아이콘을 시각적으로 보여주는 카드
  *
  * @param count 카드에 표시할 숫자
  * @param label 카드에 표시할 라벨 (ex: "프로젝트 수")
  * @param icon  카드 안에 렌더링될 아이콘 요소
  */
-export default function ProjectsStatusCard({
+export default function ProjectsManagementStepCard({
   count,
   label,
   icon,
-  status,
-}: ProjectsStatusCardProps) {
+  managementStep,
+}: ProjectsManagementStepCardProps) {
   const router = useRouter();
   // 반응형 크기 설정
   const cardWidth = useBreakpointValue({
@@ -46,15 +46,15 @@ export default function ProjectsStatusCard({
   });
 
   const countFontSize = useBreakpointValue({
-    base: "1.5rem", // 모바일
-    sm: "1.75rem", // 작은 태블릿
+    base: "1.4rem", // 모바일
+    sm: "1.7rem", // 작은 태블릿
     md: "2rem", // 데스크탑
   });
 
   const labelFontSize = useBreakpointValue({
-    base: "0.875rem", // 모바일
-    sm: "1rem", // 태블릿
-    md: "1.125rem", // 데스크탑
+    base: "0.75rem", // 모바일
+    sm: "0.9rem", // 태블릿
+    md: "1rem", // 데스크탑
   });
 
   // 다크모드 색상 설정
@@ -66,10 +66,10 @@ export default function ProjectsStatusCard({
   const handleFilterClick = () => {
     const params = new URLSearchParams(window.location.search);
     params.set("currentPage", "1"); // 페이지를 1로 초기화
-    if (status !== ProjectStatus.ALL) {
-      params.set("status", status);
+    if (managementStep !== ProjectManagementSteps.ALL) {
+      params.set("managementStep", managementStep);
     } else {
-      params.delete("status"); // "전체" 선택 시 status 제거
+      params.delete("managementStep"); // "전체" 선택 시 status 제거
     }
     router.push(`?${params.toString()}`);
   };
@@ -83,7 +83,7 @@ export default function ProjectsStatusCard({
       border={`1px solid ${borderColor}`}
       borderRadius="lg"
       boxShadow="sm"
-      padding={4}
+      padding={3}
       transition="all 0.3s ease"
       _hover={{
         backgroundColor: hoverBgColor,
@@ -112,7 +112,17 @@ export default function ProjectsStatusCard({
           <Text fontSize={countFontSize} fontWeight={700} color={textColor}>
             {count}
           </Text>
-          <Text fontSize={labelFontSize} fontWeight={400} color={textColor}>
+          {/* ✅ 줄 바꿈 방지 및 글자 생략 적용 */}
+          <Text
+            fontSize={labelFontSize}
+            fontWeight={500}
+            color={textColor}
+            maxWidth="100px" // 글자 최대 너비 설정
+            whiteSpace="nowrap" // 줄 바꿈 방지
+            overflow="hidden"
+            textOverflow="ellipsis" // 너무 길면 "..."
+            textAlign="center"
+          >
             {label}
           </Text>
         </Flex>
