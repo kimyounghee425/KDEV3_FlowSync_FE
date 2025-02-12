@@ -32,11 +32,14 @@ const questionStatusFramework = createListCollection<{
   ],
 });
 
+const CATEGORY_LABELS: Record<string, string> = {
+  QUESTION: "질문",
+  ANSWER: "답변",
+};
+
 const STATUS_LABELS: Record<string, string> = {
   WAIT: "답변대기",
   COMPLETED: "답변완료",
-  QUESTION: "질문",
-  ANSWER: "답변",
 };
 
 export default function ProjectQuestionsPage() {
@@ -148,10 +151,11 @@ export default function ProjectQuestionsPage() {
                 "& > th": { textAlign: "center" },
               }}
             >
-              <Table.ColumnHeader>카테고리</Table.ColumnHeader>
+              <Table.ColumnHeader>진행단계</Table.ColumnHeader>
+              <Table.ColumnHeader>질문유형</Table.ColumnHeader>
               <Table.ColumnHeader>작성자</Table.ColumnHeader>
               <Table.ColumnHeader>제목</Table.ColumnHeader>
-              <Table.ColumnHeader>상태</Table.ColumnHeader>
+              <Table.ColumnHeader>질문상태</Table.ColumnHeader>
               <Table.ColumnHeader>작성일</Table.ColumnHeader>
             </Table.Row>
           }
@@ -159,19 +163,20 @@ export default function ProjectQuestionsPage() {
           loading={projectQuestionListLoading}
           renderRow={(question) => (
             <>
+              <Table.Cell>{[question.progressStep.name]}</Table.Cell>
               <Table.Cell>
                 <StatusTag>
-                  {STATUS_LABELS[question.category] || "알 수 없음"}
+                  {CATEGORY_LABELS[question.category] || "알 수 없음"}
                 </StatusTag>
               </Table.Cell>
-              <Table.Cell>{"주농퐉"}</Table.Cell>
+              <Table.Cell>{question.register.name}</Table.Cell>
               <Table.Cell>{question.title}</Table.Cell>
               <Table.Cell>
                 <StatusTag>
                   {STATUS_LABELS[question.status] || "알 수 없음"}
                 </StatusTag>
               </Table.Cell>
-              <Table.Cell>{formatDynamicDate(question.regAt)}</Table.Cell>
+              <Table.Cell>{formatDynamicDate(question.createdDate)}</Table.Cell>
             </>
           )}
           handleRowClick={handleRowClick}

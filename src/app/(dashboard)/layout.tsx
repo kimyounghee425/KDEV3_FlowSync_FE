@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { useColorModeValue } from "@/src/components/ui/color-mode";
 import Header from "@/src/components/layouts/Header";
 import Sidebar from "@/src/components/layouts/Sidebar";
@@ -16,6 +16,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [colorMode, setColorMode] = useState("light");
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const sidebarWidth = useBreakpointValue({
+    base: isSidebarOpen ? "70vw" : "0",
+    md: isSidebarOpen ? "250px" : "0",
+  });
 
   // 다크모드 색상 설정
   const bgColor = useColorModeValue("white", "gray.800"); // 전체 배경색
@@ -58,15 +63,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         >
           {/* Sidebar 영역 */}
           <Box
-            width={isSidebarOpen ? "18%" : "0"}
-            transition="width 0.3s ease"
+            width={sidebarWidth} // 반응형 너비 적용
+            minWidth="50px" // 사이드바 최소 크기 지정
+            transition="width 0.3s ease-in-out"
             overflowY="auto"
             bg={bgColor}
           >
             <Sidebar
               loggedInUserRole={userRole}
               isOpen={isSidebarOpen}
-              onClose={() => setIsSidebarOpen(false)}
+              onToggle={setIsSidebarOpen}
             />
           </Box>
 
@@ -76,8 +82,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             bg={marginBgColor} // 마진 영역의 배경색 설정
             // marginX={{ base: "0", md: isSidebarOpen ? "2%" : "10%" }} // 작은 화면에서는 마진 제거
             transition="margin 0.3s ease-in-out"
-            borderRadius="lg" // 둥근 모서리 추가 (선택 사항)
-            padding={2}
+            padding={4}
           >
             <Flex
               as="main"
@@ -88,7 +93,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               overflowY="auto"
               // padding={4}
               bg={bgColor}
-              transition="flex-basis 0.3s ease"
             >
               <Box
                 width="100%"

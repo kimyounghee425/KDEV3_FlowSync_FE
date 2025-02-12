@@ -23,21 +23,23 @@ export default function StatusTag({ children }: StatusTagProps) {
       alignItems="center"
     >
       <Box
-        display="flex"
+        display="inline-flex"
         backgroundColor="#F9F9F9"
-        paddingX="8px"
-        paddingY="4px"
+        paddingX="10px"
+        paddingY="6px"
         justifyContent="center"
         alignItems="center"
         borderRadius="6px"
         color={color}
-        fontSize="14px"
+        fontSize={{ base: "12px", md: "14px", lg: "16px" }}
         fontWeight="500"
         letterSpacing="-0.28px"
-        width="110px"
-        height="35px"
+        minWidth="60px" // 최소 너비 설정 (텍스트가 너무 작아지지 않도록)
+        minHeight="30px" // 최소 높이 설정
+        flexShrink={0} // 너무 작아지는 것 방지
+        textAlign="center"
       >
-        <Text textStyle="lg">{children}</Text>
+        <Text whiteSpace="nowrap">{children}</Text>
       </Box>
     </Box>
   );

@@ -1,25 +1,23 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { fetchProjectListApi } from "@/src/api/projects";
-import { ProjectProps } from "@/src/types";
+import { fetchProjectListSidebarApi } from "@/src/api/projects";
+import { ProjectSidebarProps } from "@/src/types";
 
 /**
  * 프로젝트 목록을 무한 스크롤 방식으로 가져오는 커스텀 훅
  *
- * @param {string} status - "COMPLETED" | "INPROGRESS" (프로젝트 진행 상태)
+ * @param {string} managementStep - "COMPLETED" | "INPROGRESS" | "CONTRACT" (프로젝트 진행 상태)
  *
  * @returns {object} 프로젝트 목록, 로딩 상태, 추가 데이터 존재 여부, 감지할 요소 ref
  */
-export function useProjectInfiniteScroll(status: string) {
+export function useProjectInfiniteScroll(managementStep: string) {
   
-
-  const [projectList, setProjectList] = useState<ProjectProps[]>([]);
+  const [projectList, setProjectList] = useState<ProjectSidebarProps[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<HTMLDivElement | null>(null);
-  const currentRef = observerRef.current;
 
   /**
    * 새로운 프로젝트 데이터를 불러와 기존 목록에 추가하는 함수
@@ -28,12 +26,12 @@ export function useProjectInfiniteScroll(status: string) {
    */
   const fetchMoreProjects = useCallback(
     async (page: number) => {
-      if (!status || !hasMore || loading) return;
-
+      console.log(managementStep, hasMore, loading)
+      if (!managementStep || !hasMore || loading) return;
       setLoading(true);
 
       try {
-        const response = await fetchProjectListApi("", status, page, 20);
+        const response = await fetchProjectListSidebarApi(managementStep, page, 20);
         const newProjects = response.data.projects;
 
         if (!newProjects || newProjects.length === 0) {
@@ -58,32 +56,33 @@ export function useProjectInfiniteScroll(status: string) {
 
       }
     },
-    [status, hasMore, loading],
+    [managementStep, hasMore, loading],
   );
 
   /**
-   * `status` 변경 시 데이터 초기화
+   * `managementStep` 변경 시 데이터 초기화
    */
   useEffect(() => {
-    // status가 빈 문자열이면 초기화만 하고 API 호출 안 함
-    if (!status) {
+    // managementStep가 빈 문자열이면 초기화만 하고 API 호출 안 함
+    if (!managementStep) {
       setProjectList([]);
       setLoading(false);
-      setHasMore(false);
+      setHasMore(true);
       return;
     }
 
     setProjectList([]); // 기존 데이터 초기화
     setCurrentPage(1);
     setHasMore(true);
-    fetchMoreProjects(1); // 첫 페이지 데이터 불러오기
-  }, [status]);
+
+    fetchMoreProjects(1);
+  }, [managementStep]);
 
   /**
    *  Intersection Observer를 활용한 무한 스크롤 감지
    */
   useEffect(() => {
-    if (!status) return;
+    if (!managementStep) return;
     
     const observer = new IntersectionObserver(
       (entries) => {
@@ -91,13 +90,14 @@ export function useProjectInfiniteScroll(status: string) {
           fetchMoreProjects(currentPage);
         }
       },
-      { threshold: 0.6 },
+      { threshold: 1.0 },
     );
 
-    if (currentRef) observer.observe(currentRef);
+    const observerElement = observerRef.current;
+    if (observerElement) observer.observe(observerElement);
 
     return () => {
-      if (currentRef) observer.unobserve(currentRef);
+      if (observerElement) observer.unobserve(observerElement);// ✅ 기존 observer 정리
     };
   }, [fetchMoreProjects, loading, currentPage, hasMore]);
 

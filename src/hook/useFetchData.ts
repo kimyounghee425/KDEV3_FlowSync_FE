@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { CommonResponseType, NoticeArticle, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse } from "@/src/types";
-import { fetchProjectApprovalProgressStepApi, fetchProjectInfoApi, fetchProjectQuestionProgressStepApi } from "@/src/api/projects";
+import { CommonResponseType, ManagementStepCountMap, NoticeArticle, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse } from "@/src/types";
+import { fetchProjectApprovalProgressStepApi, fetchProjectInfoApi, fetchProjectQuestionProgressStepApi, fetchProjectsManagementStepsCountApi } from "@/src/api/projects";
 import { showToast } from "@/src/utils/showToast";
 import { fetchUserInfoApi } from "@/src/api/auth";
 import { readNoticeApi } from "@/src/api/ReadArticle";
@@ -101,4 +101,13 @@ export function useReadNotice(noticeId: string) {
     fetchApi: readNoticeApi,
     params: [noticeId],
   });
+}
+
+export function useManagementStepsCount() {
+  return useFetchData<{
+    managementStepCountMap: ManagementStepCountMap;
+  }, []> ({
+    fetchApi: fetchProjectsManagementStepsCountApi,
+    params: []
+  })
 }

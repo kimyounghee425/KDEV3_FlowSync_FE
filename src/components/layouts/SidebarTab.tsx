@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 import {
   MenuContent,
   MenuItem,
@@ -32,12 +32,26 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
   const borderColor = useColorModeValue("gray.300", "gray.700");
 
   const { selectedProjectFilter, setSelectedProjectFilter } = useSidebar();
-  // 프로젝트 상태에 따른 데이터 가져오기
-  const status =
-    selectedProjectFilter === "완료 프로젝트" ? "COMPLETED" : "IN_PROGRESS";
 
+  const managementStep = (() => {
+    switch (selectedProjectFilter) {
+      case "계약":
+        return "CONTRACT";
+      case "진행중":
+        return "IN_PROGRESS";
+      case "납품완료":
+        return "COMPLETED";
+      default:
+        return "";
+    }
+  })();
+
+  // 프로젝트 상태에 따른 데이터 가져오기
   const { projectList, loading, hasMore, observerRef } =
-    useProjectInfiniteScroll(memberRole === "member" ? status : "");
+    useProjectInfiniteScroll(memberRole === "member" ? managementStep : "");
+
+  // 반응형 크기 설정
+  const menuWidth = useBreakpointValue({ base: "100%", sm: "250px" }); // 작은 화면에서는 전체 너비, 큰 화면에서는 250px
 
   return (
     <Box
@@ -64,86 +78,150 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
         </Box>
       ) : (
         <>
-          <MenuRoot positioning={{ placement: "right-end" }}>
+          <MenuRoot positioning={{ placement: "bottom-start" }}>
             <MenuTrigger asChild>
               <Box
                 display="flex"
                 alignItems="center"
                 justifyContent="space-between"
-                p={4}
+                px={3}
+                py={2}
+                width="100%" // 부모 크기에 맞춤
+                maxWidth="200px" // 최대 크기 제한
+                minWidth="80px" // 최소 크기 설정 (너무 커지지 않게)
                 border="1px solid"
                 borderColor={borderColor}
                 cursor="pointer"
+                borderRadius="md"
               >
-                <Box>
-                  {selectedProjectFilter === "진행중 프로젝트"
-                    ? "진행중 프로젝트"
-                    : "완료 프로젝트"}
+                <Box
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                >
+                  {selectedProjectFilter || "프로젝트 필터"}
                 </Box>
                 {/* ChevronDown 아이콘 */}
                 <ChevronDown />
               </Box>
             </MenuTrigger>
-            <MenuContent bg={bgColor} borderColor={borderColor} zIndex="10">
+            <MenuContent
+              bg={bgColor}
+              borderColor={borderColor}
+              zIndex="200"
+              height="auto"
+              maxHeight="200px" // 최대 높이 설정
+              overflowY="scroll" // 내부 스크롤 활성화
+              css={{
+                "&::-webkit-scrollbar": {
+                  width: "6px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "gray.400",
+                  borderRadius: "4px",
+                },
+                "&::-webkit-scrollbar-thumb:hover": {
+                  backgroundColor: "gray.500",
+                },
+              }}
+            >
               <MenuItem
-                value="진행중 프로젝트"
-                onClick={() => setSelectedProjectFilter("진행중 프로젝트")}
+                value="계약"
+                onClick={() => setSelectedProjectFilter("계약")}
                 bg={
-                  selectedProjectFilter === "진행중 프로젝트"
+                  selectedProjectFilter === "계약"
                     ? hoverBgColor
                     : "transparent"
                 }
                 _hover={{ bg: hoverBgColor }}
                 fontWeight={
-                  selectedProjectFilter === "진행중 프로젝트"
-                    ? "bold"
-                    : "normal"
+                  selectedProjectFilter === "계약" ? "bold" : "normal"
                 }
               >
-                진행중 프로젝트
+                계약
               </MenuItem>
               <MenuItem
-                value="완료 프로젝트"
-                onClick={() => setSelectedProjectFilter("완료 프로젝트")}
+                value="진행중"
+                onClick={() => setSelectedProjectFilter("진행중")}
                 bg={
-                  selectedProjectFilter === "완료 프로젝트"
+                  selectedProjectFilter === "진행중"
                     ? hoverBgColor
                     : "transparent"
                 }
                 _hover={{ bg: hoverBgColor }}
                 fontWeight={
-                  selectedProjectFilter === "진행중 프로젝트"
-                    ? "bold"
-                    : "normal"
+                  selectedProjectFilter === "진행중" ? "bold" : "normal"
                 }
               >
-                완료 프로젝트
+                진행중
+              </MenuItem>
+              <MenuItem
+                value="납품완료"
+                onClick={() => setSelectedProjectFilter("납품완료")}
+                bg={
+                  selectedProjectFilter === "납품완료"
+                    ? hoverBgColor
+                    : "transparent"
+                }
+                _hover={{ bg: hoverBgColor }}
+                fontWeight={
+                  selectedProjectFilter === "납품완료" ? "bold" : "normal"
+                }
+              >
+                납품완료
               </MenuItem>
             </MenuContent>
           </MenuRoot>
 
-          <Flex flexDirection="column" justifyContent="center">
-            {projectList.map((project) => (
-              <Link
-                key={project.id}
-                href={`/projects/${project.id}/tasks`}
-                passHref
-              >
-                <Box
-                  p={4}
-                  textAlign="center"
-                  borderBottom="1px solid"
-                  borderColor={borderColor}
-                  _hover={{ bg: hoverBgColor }}
-                  overflowX="hidden" // 넘치는 텍스트 숨김
-                  whiteSpace="nowrap" // 텍스트를 한 줄로 유지
-                  textOverflow="ellipsis" // 말줄임표 처리
-                  maxWidth="250px"
+          <Flex
+            flexDirection="column"
+            justifyContent="center"
+            height="100%" // ✅ 높이를 명확하게 설정
+            overflowY="auto" // ✅ 내부 콘텐츠가 많을 경우 스크롤 가능하도록 설정
+            css={{
+              "&::-webkit-scrollbar": { width: "6px" },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "gray.400",
+                borderRadius: "4px",
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: "gray.500",
+              },
+            }}
+          >
+            {projectList.map((project) => {
+              const isRowClickable = Number(project.clickable) === 1;
+
+              return (
+                <Link
+                  key={project.id}
+                  href={
+                    isRowClickable ? `/projects/${project.id}/approvals` : "#"
+                  }
+                  passHref
+                  onClick={(e) => {
+                    if (!isRowClickable) e.preventDefault(); // 클릭 방지
+                  }}
                 >
-                  {project.name}
-                </Box>
-              </Link>
-            ))}
+                  <Box
+                    p={4}
+                    textAlign="center"
+                    borderBottom="1px solid"
+                    borderColor={borderColor}
+                    _hover={isRowClickable ? { bg: hoverBgColor } : {}}
+                    overflowX="hidden"
+                    whiteSpace="nowrap"
+                    textOverflow="ellipsis"
+                    maxWidth={menuWidth}
+                    cursor={isRowClickable ? "pointer" : "not-allowed"}
+                    opacity={isRowClickable ? 1 : 0.6}
+                    color={isRowClickable ? "inherit" : "gray.500"}
+                  >
+                    {project.name}
+                  </Box>
+                </Link>
+              );
+            })}
             {/* 로딩 상태 표시 */}
             {loading && hasMore && (
               <Box mt={4} display="flex" justifyContent="center">

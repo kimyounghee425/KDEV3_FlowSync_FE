@@ -2,11 +2,12 @@
 
 import { ReactNode } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { Alert, Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import { Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { Layers, List, MessageCircleQuestion } from "lucide-react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import ProjectInfoSection from "@/src/components/common/ProjectInfoSection";
 import { useProjectInfo } from "@/src/hook/useFetchData";
+import ErrorAlert from "@/src/components/common/ErrorAlert";
 
 interface ProjectLayoutProps {
   children: ReactNode;
@@ -68,13 +69,14 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
 
   return (
     <>
+      {/* 슬라이더 탭 */}
+      <SegmentedControl
+        value={currentTab}
+        onValueChange={handleTabChange}
+        items={projectMenu}
+      />
       {projectInfoError && (
-        <Alert.Root status="error">
-          <Alert.Indicator />
-          <Alert.Title>
-            프로젝트 기본 정보를 불러오지 못했습니다. 다시 시도해주세요.
-          </Alert.Title>
-        </Alert.Root>
+        <ErrorAlert message="프로젝트 기본 정보를 불러오지 못했습니다. 다시 시도해주세요." />
       )}
       {/* 상단 영역 */}
       <Flex
@@ -95,12 +97,9 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
               {projectInfo?.description}
             </Text>
           </Flex>
-          {/* 슬라이더 탭 */}
-          <SegmentedControl
-            value={currentTab}
-            onValueChange={handleTabChange}
-            items={projectMenu}
-          />
+          <Text fontWeight="500" fontSize="20px">
+            {projectInfo?.managementStep}
+          </Text>
         </Flex>
         {/* 프로젝트 정보 */}
         <ProjectInfoSection

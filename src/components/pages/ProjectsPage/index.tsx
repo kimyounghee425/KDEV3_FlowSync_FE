@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useColorModeValue } from "@/src/components/ui/color-mode";
 import StatusTag from "@/src/components/common/StatusTag";
-import ProjectStatusCards from "@/src/components/pages/ProjectsPage/components/ProjectsStatusCards";
+import ProjectsManagementStepCards from "@/src/components/pages/ProjectsPage/components/ProjectsManagementStepCards";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
 import SearchSection from "@/src/components/common/SearchSection";
@@ -23,7 +23,6 @@ import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useUserInfo } from "@/src/hook/useFetchData";
 import { useProjectList } from "@/src/hook/useFetchBoardList";
-import { ProjectProps } from "@/src/types";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -70,7 +69,7 @@ function ProjectsPageContent() {
   const router = useRouter();
 
   const keyword = searchParams?.get("keyword") || "";
-  const status = searchParams?.get("status") || "";
+  const managementStep = searchParams?.get("managementStep") || "";
   const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
   const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
 
@@ -79,7 +78,7 @@ function ProjectsPageContent() {
     paginationInfo,
     loading: projectListLoading,
     error: projectListError,
-  } = useProjectList(keyword, status, currentPage, pageSize);
+  } = useProjectList(keyword, managementStep, currentPage, pageSize);
 
   // 현재 로그인 한 사용자 정보
   const { data: loggedInUserInfo } = useUserInfo();
@@ -140,7 +139,7 @@ function ProjectsPageContent() {
 
       <Box bg={bgColor} p="4" minHeight="100vh">
         <Stack spaceY="SECTION_SPACING">
-          <ProjectStatusCards title={"프로젝트 현황"} />
+          <ProjectsManagementStepCards title={"프로젝트 현황"} />
           <Stack spaceY="SECTION_SPACING" width="full">
             <Heading size="2xl" color={textColor} lineHeight="base">
               프로젝트 목록
@@ -152,8 +151,8 @@ function ProjectsPageContent() {
                 <SearchSection keyword={keyword} placeholder="제목 입력">
                   <FilterSelectBox
                     statusFramework={projectStatusFramework}
-                    selectedValue={status}
-                    queryKey="status"
+                    selectedValue={managementStep}
+                    queryKey="managementStep"
                   />
                 </SearchSection>
               </Flex>
@@ -163,8 +162,8 @@ function ProjectsPageContent() {
                 <SearchSection keyword={keyword} placeholder="프로젝트명 입력">
                   <FilterSelectBox
                     statusFramework={projectStatusFramework}
-                    selectedValue={status}
-                    queryKey="status"
+                    selectedValue={managementStep}
+                    queryKey="managementStep"
                   />
                 </SearchSection>
               </Flex>
@@ -221,7 +220,9 @@ function ProjectsPageContent() {
                     </StatusTag>
                   </Table.Cell>
                   <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
-                  <Table.Cell>{formatDynamicDate(project.closeAt)}</Table.Cell>
+                  <Table.Cell>
+                    {formatDynamicDate(project.deadlineAt)}
+                  </Table.Cell>
                   <Table.Cell>{formatDynamicDate(project.closeAt)}</Table.Cell>
                   {userRole === "ADMIN" ? (
                     <>
@@ -239,6 +240,7 @@ function ProjectsPageContent() {
                 </>
               )}
               handleRowClick={handleRowClick}
+              isClickable={(project) => project.clickable === 1}
               placeholderHeight="300px" // 자리 표시자 높이
             />
             {/*

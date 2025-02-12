@@ -14,7 +14,6 @@ import BackButton from "@/src/components/common/BackButton";
 import { readApprovalApi } from "@/src/api/ReadArticle";
 import SignToApprove from "@/src/components/pages/ProjectApprovalPage/components/SignToApprove";
 import { ArticleComment, ApprovalArticle } from "@/src/types";
-import DropDownMenu from "@/src/components/common/DropDownMenu";
 
 export default function ProjectApprovalPage() {
   const { projectId, approvalId } = useParams() as {
