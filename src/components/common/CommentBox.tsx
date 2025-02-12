@@ -1,4 +1,4 @@
-import { Button, Textarea, Box } from "@chakra-ui/react";
+import { Button, Textarea, Box, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { registerComment } from "@/src/api/registerComment";
 import { useParams } from "next/navigation";
@@ -16,18 +16,21 @@ export default function CommentBox({
   setIsReplying,
   setCommentIsWritten,
 }: CommentBoxProps) {
-  const { projectId, questionId, taskId } = useParams() as {
+  const { projectId, questionId, approvalId } = useParams() as {
     projectId: string;
     questionId?: string;
-    taskId?: string;
+    approvalId?: string;
   };
 
   const [commentText, setCommentText] = useState<string>("");
   const pathname = usePathname();
 
   const handleSave = async () => {
-    // console.log(projectId, questionId)
-    // console.log(projectId, taskId)
+    if (!commentText.trim()) {
+      alert("댓글을 입력하세요.");
+      return;
+    }
+
     try {
       const requestData = { content: commentText };
       let responseData: CommentApiResponse | undefined;
@@ -40,12 +43,12 @@ export default function CommentBox({
           undefined,
           parentId ? Number(parentId) : undefined,
         );
-      } else if (pathname.includes("/tasks")) {
+      } else if (pathname.includes("/approvals")) {
         responseData = await registerComment(
           Number(projectId),
           requestData,
           undefined, // questionId는 undefined로 전달
-          Number(taskId),
+          Number(approvalId),
           parentId ? Number(parentId) : undefined,
         );
       }
@@ -62,12 +65,14 @@ export default function CommentBox({
 
   return (
     <Box>
+      <Text color={"gray.400"}>{`${commentText.length} / 250`}</Text>
       <Textarea
         placeholder="댓글을 입력하세요."
         onChange={(e) => setCommentText(e.target.value)}
         value={commentText}
+        maxLength={250}
       />
-      <Button mt={2} colorScheme="blue" onClick={handleSave}>
+      <Button mt={2} colorScheme="blue" onClick={handleSave} mr={4}>
         댓글 작성
       </Button>
     </Box>

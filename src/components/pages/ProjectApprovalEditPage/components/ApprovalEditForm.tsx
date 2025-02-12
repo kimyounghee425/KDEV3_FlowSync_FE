@@ -7,12 +7,26 @@ import { useParams, useRouter } from "next/navigation";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
-import { readQuestionApi } from "@/src/api/ReadArticle";
+import { readApprovalApi } from "@/src/api/ReadArticle";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
-import { editQuestionAPI } from "@/src/api/RegisterArticle";
-import { QuestionRequestData } from "@/src/types";
+import { editApprovalAPI } from "@/src/api/RegisterArticle";
+import { ApprovalRequestData } from "@/src/types";
+import EditSignUpload from "./EditSignUpload";
+
+// 수정 api 만들고 가져와야함
+
+// import { ApprovalArticle } from "@/src/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+const progressData = [
+  { id: 1, title: "요구사항정의" },
+  { id: 2, title: "화면설계" },
+  { id: 3, title: "디자인" },
+  { id: 4, title: "퍼블리싱" },
+  { id: 5, title: "개발" },
+  { id: 6, title: "검수" },
+];
 
 interface UploadedFilesProps {
   originalName: string;
@@ -26,10 +40,10 @@ interface linkListProps {
   url: string;
 }
 
-export default function QuestionEditForm() {
-  const { projectId, questionId } = useParams() as {
+export default function ApprovalEditForm() {
+  const { projectId, approvalId } = useParams() as {
     projectId: string;
-    questionId: string;
+    approvalId: string;
   };
   const router = useRouter();
   const [title, setTitle] = useState<string>("");
@@ -37,18 +51,20 @@ export default function QuestionEditForm() {
   const [linkList, setLinkList] = useState<linkListProps[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
+  const [signatureUrl, setSignatureUrl] = useState<string>("");
 
   useEffect(() => {
     const loadTask = async () => {
       try {
-        const responseData = await readQuestionApi(
+        const responseData = await readApprovalApi(
           Number(projectId),
-          Number(questionId),
+          Number(approvalId),
         );
         console.log(responseData);
         setTitle(responseData.title);
         setLinkList(responseData.linkList);
         setUploadedFiles(responseData.fileList);
+        setSignatureUrl(responseData.register.signatureUrl);
 
         const parsedContent =
           typeof responseData.content === "string"
@@ -79,7 +95,6 @@ export default function QuestionEditForm() {
                         };
                       } catch (error) {
                         console.error("파일 업로드 중 오류 발생:", error);
-                        removeEmptyImageBlocks();
                         return { success: 0 };
                       }
                     },
@@ -88,14 +103,6 @@ export default function QuestionEditForm() {
               },
             },
             placeholder: "내용을 작성하세요",
-            onReady: async () => {
-              console.log("📝 EditorJS 초기화 완료!");
-              await editorRef.current?.isReady;
-              attachImageDeleteButtons();
-            },
-            onChange: () => {
-              setTimeout(() => attachImageDeleteButtons(), 300); // 블록 변경 시 삭제 버튼 적용
-            },
           });
         }
 
@@ -128,13 +135,13 @@ export default function QuestionEditForm() {
       editorRef.current?.destroy();
       editorRef.current = null;
     };
-  }, [projectId, questionId]);
+  }, [projectId, approvalId]);
 
-  const handleSave = async <T extends QuestionRequestData>(requestData: T) => {
+  const handleSave = async <T extends ApprovalRequestData>(requestData: T) => {
     try {
-      const response = await editQuestionAPI(
+      const response = await editApprovalAPI(
         Number(projectId),
-        Number(questionId),
+        Number(approvalId),
         {
           ...requestData,
           ...(requestData.progressStepId !== undefined
@@ -142,8 +149,7 @@ export default function QuestionEditForm() {
             : {}),
         },
       );
-      alert("수정이 완료되었습니다.");
-      router.push(`/projects/${projectId}/questions`);
+      router.push(`/projects/${projectId}/approvals`);
     } catch (error) {
       console.error("저장 실패:", error);
       alert("저장 중 문제가 발생했습니다.");
@@ -179,87 +185,12 @@ export default function QuestionEditForm() {
         });
 
         // alert("수정이 완료되었습니다.");
-        router.push(`/projects/${projectId}/questions/${questionId}`);
+        router.push(`/projects/${projectId}/approvals/${approvalId}`);
       } catch (error) {
         console.error("저장 실패:", error);
         alert("저장 중 문제가 발생했습니다.");
       }
     }
-  };
-
-  const attachImageDeleteButtons = () => {
-    if (!editorRef.current) return;
-
-    const imageBlocks = document.querySelectorAll(
-      ".ce-block__content .cdx-block",
-    );
-
-    imageBlocks.forEach((block) => {
-      const blockElement = block as HTMLElement;
-      const imgElement = blockElement.querySelector(
-        "img",
-      ) as HTMLImageElement | null;
-
-      if (imgElement && !blockElement.querySelector(".image-delete-btn")) {
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "❌ 삭제";
-        deleteButton.classList.add("image-delete-btn");
-        deleteButton.style.position = "absolute";
-        deleteButton.style.top = "5px";
-        deleteButton.style.right = "5px";
-        deleteButton.style.background = "red";
-        deleteButton.style.color = "white";
-        deleteButton.style.cursor = "pointer";
-        deleteButton.style.padding = "4px 8px";
-        deleteButton.style.borderRadius = "4px";
-
-        deleteButton.onclick = () => {
-          editorRef.current?.blocks.delete(
-            editorRef.current.blocks.getCurrentBlockIndex(),
-          );
-          removeEmptyImageBlocks(); // 삭제 후 빈 블록 제거
-        };
-
-        blockElement.style.position = "relative";
-        blockElement.appendChild(deleteButton);
-      }
-    });
-  };
-
-  const removeEmptyImageBlocks = () => {
-    if (!editorRef.current) return;
-
-    const editor = editorRef.current;
-
-    editor.save().then((savedData) => {
-      const blockElements = document.querySelectorAll(".ce-block"); // DOM에서 모든 블록 찾기
-
-      blockElements.forEach((blockElement, index) => {
-        const imgElement = blockElement.querySelector("img");
-        const blockData = savedData.blocks[index];
-
-        // 이미지 블록인데 URL이 없거나 로딩 상태일 경우 삭제
-        if (
-          !imgElement &&
-          blockData.type === "image" &&
-          !blockData.data?.file?.url
-        ) {
-          console.log("🚨 빈 이미지 블록 발견 및 DOM에서 제거");
-          blockElement.remove(); // DOM에서 로딩 박스 제거
-        }
-      });
-
-      // EditorJS의 데이터 상태를 동기화 (빈 블록 필터링)
-      const newBlocks = savedData.blocks.filter(
-        (block) => block.type !== "image" || block.data?.file?.url,
-      );
-
-      // 데이터가 변경되었으면 에디터 재초기화
-      if (newBlocks.length !== savedData.blocks.length) {
-        console.log("🚨 빈 이미지 블록 제거 후 EditorJS 재초기화");
-        initializeEditor(newBlocks);
-      }
-    });
   };
 
   return (
@@ -293,6 +224,8 @@ export default function QuestionEditForm() {
         uploadedFileSize={uploadedFileSize}
         setUploadedFileSize={setUploadedFileSize}
       />
+
+      {/* <EditSignUpload signatureUrl={signatureUrl} /> */}
 
       <Button
         bg={"red.500"}

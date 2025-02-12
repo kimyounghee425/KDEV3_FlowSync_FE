@@ -126,7 +126,7 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
             {projectList.map((project) => (
               <Link
                 key={project.id}
-                href={`/projects/${project.id}/tasks`}
+                href={`/projects/${project.id}/approvals`}
                 passHref
               >
                 <Box

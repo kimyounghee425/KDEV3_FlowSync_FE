@@ -35,6 +35,7 @@ interface ArticleFormProps<T extends BaseArticleRequestData> {
   title: string;
   setTitle: (value: string) => void;
   handleSave: (data: T) => void;
+  progressStepId: number;
   submitButtonLabel?: string;
   children?: React.ReactNode;
 }
@@ -47,6 +48,7 @@ export default function ArticleForm({
   title,
   setTitle,
   handleSave,
+  progressStepId,
   submitButtonLabel = "작성",
   children,
 }: ArticleFormProps<BaseArticleRequestData>) {
@@ -65,9 +67,11 @@ export default function ArticleForm({
     initializeEditor(initialContent);
 
     return () => {
-      editorRef.current?.destroy();
+      if (editorRef.current && typeof editorRef.current.destroy === "function") {
+          editorRef.current.destroy();
+      }
       editorRef.current = null;
-    };
+  };
   }, []);
 
   const initializeEditor = (content: any[] = []) => {
@@ -163,6 +167,7 @@ export default function ArticleForm({
 
         handleSave({
           title: title,
+          progressStepId: progressStepId,
           content: content,
           linkList: linkList,
           fileInfoList: uploadedFiles,
