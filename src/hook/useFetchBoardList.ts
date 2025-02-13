@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CommonResponseWithMetaType, PaginationProps, ProjectQuestionListResponse, ProjectApprovalListResponse, ProjectListResponse, NoticeListResponse, OrganizationListResponse, MemberListResponse } from "@/src/types";
-import { fetchProjectQuestionListApi, fetchProjectApprovalListApi, fetchProjectListApi } from "@/src/api/projects";
+import { fetchProjectQuestionListApi, fetchProjectApprovalListApi, fetchProjectListApi, projectProgressStepApi } from "@/src/api/projects";
 import { showToast } from "@/src/utils/showToast";
 import { fetchNoticeListApi } from "@/src/api/notices";
 import { fetchOrganizationListApi } from "@/src/api/organizations";

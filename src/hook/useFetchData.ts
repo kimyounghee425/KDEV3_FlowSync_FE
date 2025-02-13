@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { CommonResponseType, ManagementStepCountMap, NoticeArticle, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse } from "@/src/types";
-import { fetchProjectApprovalProgressStepApi, fetchProjectInfoApi, fetchProjectQuestionProgressStepApi, fetchProjectsManagementStepsCountApi } from "@/src/api/projects";
+import { CommonResponseType, ManagementStepCountMap, NoticeArticle, ProgressStep, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse,  } from "@/src/types";
+import { fetchProjectApprovalProgressStepApi, fetchProjectInfoApi, fetchProjectQuestionProgressStepApi, fetchProjectsManagementStepsCountApi, projectProgressStepApi } from "@/src/api/projects";
 import { showToast } from "@/src/utils/showToast";
 import { fetchUserInfoApi } from "@/src/api/auth";
 import { readNoticeApi } from "@/src/api/ReadArticle";
@@ -111,3 +111,12 @@ export function useManagementStepsCount() {
     params: []
   })
 }
+
+/**
+ * 진척관리 진행단계 요약 데이터 패칭 훅
+ */
+export const useProjectProgressStepData = (projectId: string) =>
+  useFetchData<ProgressStep[], [string]>({
+    fetchApi: projectProgressStepApi,
+    params: [projectId],
+  });

@@ -181,12 +181,20 @@ function NoticesPageContent() {
             )}
           </Table.Row>
         }
-        data={noticeList}
+        data={noticeList ?? []}
         loading={noticeListLoading}
         renderRow={(notice) => {
           const isEmergency = notice.priority === "EMERGENCY";
           return (
-            <>
+            <Table.Row
+              key={notice.id}
+              onClick={() => handleRowClick(notice.id)}
+              css={{
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#f5f5f5" },
+                "& > td": { textAlign: "center" },
+              }}
+            >
               <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
                 {notice.category}
               </Table.Cell>
@@ -196,7 +204,7 @@ function NoticesPageContent() {
               <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
                 {formatDynamicDate(notice.regAt)}
               </Table.Cell>
-              {userRole === "ADMIN" ? (
+              {userRole === "ADMIN" && (
                 <>
                   <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
                     {formatDynamicDate(notice.updatedAt)}
@@ -211,13 +219,10 @@ function NoticesPageContent() {
                     />
                   </Table.Cell>
                 </>
-              ) : (
-                <></>
               )}
-            </>
+            </Table.Row>
           );
         }}
-        handleRowClick={handleRowClick}
       />
       <Pagination
         paginationInfo={

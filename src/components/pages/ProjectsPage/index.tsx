@@ -198,7 +198,6 @@ function ProjectsPageContent() {
                   <Table.ColumnHeader>납품 완료일</Table.ColumnHeader>
                   {userRole === "ADMIN" ? (
                     <>
-                      <Table.ColumnHeader>수정일</Table.ColumnHeader>
                       <Table.ColumnHeader>삭제여부</Table.ColumnHeader>
                       <Table.ColumnHeader>공지사항관리</Table.ColumnHeader>
                     </>
@@ -207,41 +206,51 @@ function ProjectsPageContent() {
                   )}
                 </Table.Row>
               }
-              data={projectList}
+              data={projectList || []}
               loading={projectListLoading}
-              renderRow={(project) => (
-                <>
-                  <Table.Cell>{project.name}</Table.Cell>
-                  <Table.Cell>{project.customerName}</Table.Cell>
-                  <Table.Cell>{project.developerName}</Table.Cell>
-                  <Table.Cell>
-                    <StatusTag>
-                      {STATUS_LABELS[project.managementStep] || "알 수 없음"}
-                    </StatusTag>
-                  </Table.Cell>
-                  <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
-                  <Table.Cell>
-                    {formatDynamicDate(project.deadlineAt)}
-                  </Table.Cell>
-                  <Table.Cell>{formatDynamicDate(project.closeAt)}</Table.Cell>
-                  {userRole === "ADMIN" ? (
-                    <>
-                      <Table.Cell>
-                        {formatDynamicDate(project.updateAt)}
-                      </Table.Cell>
-                      <Table.Cell>{project.deletedYn}</Table.Cell>
-                      <Table.Cell
-                        onClick={(event) => event.stopPropagation()}
-                      ></Table.Cell>
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </>
-              )}
-              handleRowClick={handleRowClick}
-              isClickable={(project) => project.clickable === 1}
-              placeholderHeight="300px" // 자리 표시자 높이
+              renderRow={(project) => {
+                const isRowClickable = project.clickable === 1;
+                return (
+                  <Table.Row
+                    key={project.id}
+                    onClick={() => isRowClickable && handleRowClick(project.id)}
+                    css={{
+                      "&:hover": isRowClickable
+                        ? { backgroundColor: "#f1f1f1" }
+                        : { backgroundColor: "#f8f8f8" },
+                      cursor: isRowClickable ? "pointer" : "not-allowed",
+                      opacity: isRowClickable ? 1 : 0.5,
+                      "& > td": { textAlign: "center" },
+                    }}
+                  >
+                    <Table.Cell>{project.name}</Table.Cell>
+                    <Table.Cell>{project.customerName}</Table.Cell>
+                    <Table.Cell>{project.developerName}</Table.Cell>
+                    <Table.Cell>
+                      <StatusTag>
+                        {STATUS_LABELS[project.managementStep] || "알 수 없음"}
+                      </StatusTag>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {formatDynamicDate(project.startAt)}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {formatDynamicDate(project.deadlineAt)}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {formatDynamicDate(project.closeAt)}
+                    </Table.Cell>
+                    {userRole === "ADMIN" ? (
+                      <>
+                        <Table.Cell>{project.deletedYn}</Table.Cell>
+                        <Table.Cell>관리</Table.Cell>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </Table.Row>
+                );
+              }}
             />
             {/*
              * 페이지네이션 컴포넌트

@@ -191,7 +191,6 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
             {projectList.map((project) => {
               const isRowClickable = Number(project.clickable) === 1;
 
-
               return (
                 <Link
                   key={project.id}
@@ -202,7 +201,6 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
                   onClick={(e) => {
                     if (!isRowClickable) e.preventDefault(); // 클릭 방지
                   }}
-
                 >
                   <Box
                     p={4}

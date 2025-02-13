@@ -6,11 +6,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Box, Text } from "@chakra-ui/react";
-import { Select } from "@chakra-ui/select";
 import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createTaskApi } from "@/src/api/RegisterArticle";
-import { ProjectProgressStepProps, ApprovalRequestData } from "@/src/types";
+import { ApprovalRequestData, ProgressStep } from "@/src/types";
 import { projectProgressStepApi } from "@/src/api/projects";
 import { useFetchData } from "@/src/hook/useFetchData";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
@@ -27,17 +26,14 @@ export default function ProjectApprovalsNewPage() {
     ? projectId[0]
     : projectId || "";
 
-  const { data: progressStepData } = useFetchData<
-    { id: number; name: string }[],
-    [string]
-  >({
+  const { data: progressStepData } = useFetchData<ProgressStep[], [string]>({
     fetchApi: projectProgressStepApi,
     params: [resolvedProjectId],
   });
 
   const progressStepOptions = progressStepData
     ? progressStepData.map((step) => ({
-        id: step.id, // key 값
+        id: Number(step.id), // key 값
         title: step.name, // 사용자에게 보이는 텍스트
         value: String(step.id), // select 요소에서 사용할 값
       }))

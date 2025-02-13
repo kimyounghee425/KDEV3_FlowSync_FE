@@ -141,10 +141,18 @@ function AdminOrganizationsPageContent() {
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
             </Table.Row>
           }
-          data={organizationList}
+          data={organizationList ?? []}
           loading={organizationListLoading}
           renderRow={(organization) => (
-            <>
+            <Table.Row
+              key={organization.id}
+              onClick={() => handleRowClick(organization.id)}
+              css={{
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#f5f5f5" },
+                "& > td": { textAlign: "center" },
+              }}
+            >
               <Table.Cell>
                 {TYPE_LABELS[organization.type] || "알 수 없음"}
               </Table.Cell>
@@ -158,9 +166,8 @@ function AdminOrganizationsPageContent() {
                 </StatusTag>
               </Table.Cell>
               <Table.Cell>{formatDynamicDate(organization.regAt)}</Table.Cell>
-            </>
+            </Table.Row>
           )}
-          handleRowClick={handleRowClick}
         />
         {paginationInfo && (
           <Pagination
