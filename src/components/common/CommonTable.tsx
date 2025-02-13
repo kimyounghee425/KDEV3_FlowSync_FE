@@ -1,17 +1,14 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Box, Table, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Table } from "@chakra-ui/react";
 import { SkeletonText } from "@/src/components/ui/skeleton";
 
 interface CommonTableProps<T> {
   headerTitle: ReactNode;
   data: T[] | null;
   loading: boolean;
-  renderRow: (item: T) => ReactNode;
-  handleRowClick: (id: string) => void;
-  placeholderHeight?: string;
-  isClickable?: (item: T) => boolean;
+  renderRow: (item: T, index?: number) => ReactNode;
 }
 
 export default function CommonTable<T extends { id: string }>({
@@ -19,12 +16,8 @@ export default function CommonTable<T extends { id: string }>({
   data = [],
   loading,
   renderRow,
-  handleRowClick,
-  isClickable = () => true,
 }: CommonTableProps<T>) {
   // 반응형 스타일 값
-  const fontSize = useBreakpointValue({ base: "sm", md: "md", lg: "lg" });
-  const padding = useBreakpointValue({ base: "2", md: "4" });
 
   return (
     <Box
@@ -71,39 +64,7 @@ export default function CommonTable<T extends { id: string }>({
               </Table.Cell>
             </Table.Row>
           ) : (
-            data?.map((item) => {
-              const isRowClickable = isClickable(item);
-              return (
-                <Table.Row
-                  key={item.id}
-                  onClick={(e) => {
-                    if (!isRowClickable)
-                      e.stopPropagation(); // 클릭 방지
-                    else handleRowClick(item.id);
-                  }}
-                  css={{
-                    "&:hover": isRowClickable
-                      ? { backgroundColor: "#f1f1f1" }
-                      : {},
-                    "& > td": {
-                      textAlign: "center",
-                      height: "0.8rem",
-                      fontSize: fontSize,
-                      cursor: isRowClickable ? "pointer" : "not-allowed", // 금지 커서
-                      opacity: isRowClickable ? 1 : 0.6, // 흐리게 처리
-                      color: isRowClickable ? "inherit" : "gray.500", // 글씨 색상 회색
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      padding,
-                      borderBottom: "1px solid #ddd",
-                    },
-                  }}
-                >
-                  {renderRow(item)}
-                </Table.Row>
-              );
-            })
+            data?.map((item, index) => renderRow(item, index))
           )}
         </Table.Body>
       </Table.Root>

@@ -8,7 +8,7 @@ import { Box } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createQuestionApi } from "@/src/api/RegisterArticle";
-import { QuestionRequestData } from "@/src/types";
+import { ProgressStep, QuestionRequestData } from "@/src/types";
 import { projectProgressStepApi } from "@/src/api/projects";
 import { useFetchData } from "@/src/hook/useFetchData";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
@@ -24,17 +24,14 @@ export default function ProjectQuestionsNewPage() {
     : projectId || "";
 
   // ProgressStep 데이터 패칭
-  const { data: progressStepData } = useFetchData<
-    { id: number; name: string }[],
-    [string]
-  >({
+  const { data: progressStepData } = useFetchData<ProgressStep[], [string]>({
     fetchApi: projectProgressStepApi,
     params: [resolvedProjectId],
   });
 
   const progressStepOptions = progressStepData
     ? progressStepData.map((step) => ({
-        id: step.id, // key 값
+        id: Number(step.id), // key 값
         title: step.name, // 사용자에게 보이는 텍스트
         value: String(step.id), // select 요소에서 사용할 값
       }))

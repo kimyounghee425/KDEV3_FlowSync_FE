@@ -141,10 +141,18 @@ function AdminMembersPageContent() {
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
             </Table.Row>
           }
-          data={memberList}
+          data={memberList ?? []}
           loading={memberListLoading}
           renderRow={(member) => (
-            <>
+            <Table.Row
+              key={member.id}
+              onClick={() => handleRowClick(member.id)}
+              css={{
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#f5f5f5" },
+                "& > td": { textAlign: "center" },
+              }}
+            >
               <Table.Cell>
                 {ROLE_LABELS[member.role] || "알 수 없음"}
               </Table.Cell>
@@ -159,9 +167,8 @@ function AdminMembersPageContent() {
                 </StatusTag>
               </Table.Cell>
               <Table.Cell>{formatDynamicDate(member.regAt)}</Table.Cell>
-            </>
+            </Table.Row>
           )}
-          handleRowClick={handleRowClick}
         />
         {paginationInfo && (
           <Pagination

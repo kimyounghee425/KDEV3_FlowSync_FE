@@ -159,11 +159,19 @@ export default function ProjectQuestionsPage() {
               <Table.ColumnHeader>작성일</Table.ColumnHeader>
             </Table.Row>
           }
-          data={projectQuestionList}
+          data={projectQuestionList ?? []}
           loading={projectQuestionListLoading}
           renderRow={(question) => (
-            <>
-              <Table.Cell>{[question.progressStep.name]}</Table.Cell>
+            <Table.Row
+              key={question.id}
+              onClick={() => handleRowClick(question.id)}
+              css={{
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#f5f5f5" },
+                "& > td": { textAlign: "center" },
+              }}
+            >
+              <Table.Cell>{question.progressStep.name}</Table.Cell>
               <Table.Cell>
                 <StatusTag>
                   {CATEGORY_LABELS[question.category] || "알 수 없음"}
@@ -177,9 +185,8 @@ export default function ProjectQuestionsPage() {
                 </StatusTag>
               </Table.Cell>
               <Table.Cell>{formatDynamicDate(question.createdDate)}</Table.Cell>
-            </>
+            </Table.Row>
           )}
-          handleRowClick={handleRowClick}
         />
         <Pagination
           paginationInfo={
