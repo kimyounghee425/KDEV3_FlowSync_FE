@@ -12,6 +12,7 @@ import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 import DropDownInfoBottom from "@/src/components/common/DropDownInfoBottom";
 import SignUpload from "@/src/components/pages/ProjectApprovalsNewPage/components/SignUpload";
+import DropDownInfoTop from "./DropDownInfoTop";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -56,7 +57,8 @@ export default function ArticleForm({
   const [linkList, setLinkList] = useState<LinkListProps[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
-
+  const [isDisabled, setisDisabled] = useState<boolean>(false);
+  const [isSignYes, setIsSignYes] = useState<boolean>(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -150,6 +152,7 @@ export default function ArticleForm({
   };
 
   const handleEditorSave = async () => {
+    setisDisabled(true);
     if (editorRef.current) {
       try {
         const savedData = await editorRef.current.save();
@@ -167,6 +170,10 @@ export default function ArticleForm({
         }
         if (content.length === 0) {
           window.alert("내용을 입력하세요.");
+          return;
+        }
+        if (isSignYes === false) {
+          window.alert("서명을 입력하세요")
           return;
         }
 
@@ -313,8 +320,16 @@ export default function ArticleForm({
 
       {/* 결재 글일 때만 서명 업로드 */}
       {pathname.includes("/approvals") && (
-        <Box display={"flex"} justifyContent={"center"}>
-          <SignUpload />
+        <Box>
+          <Box display={"flex"} direction={"row"} alignItems={"center"}>
+            <Text pr={2}>서명</Text>
+            <DropDownInfoBottom
+              text={`결재 글은 서명을 기입해야 작성이 가능합니다. \n "서명 불러오기" 는 기존에 저장된 서명을 불러옵니다. \n 새 서명을 기입하고 "등록" 을 누르면 기존에 저장되어 있던 서명은 삭제됩니다. `}
+            />
+          </Box>
+          <Box display={"flex"} justifyContent={"center"}>
+            <SignUpload setIsSignYes={setIsSignYes} />
+          </Box>
         </Box>
       )}
 
@@ -331,6 +346,7 @@ export default function ArticleForm({
         boxShadow={"md"}
         _hover={{ bg: "red.600" }}
         onClick={handleEditorSave}
+        disabled={isDisabled}
       >
         {submitButtonLabel}
       </Button>

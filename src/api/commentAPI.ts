@@ -14,6 +14,7 @@ export async function deleteQuestionComment(
     const response = await axiosInstance.delete(
       `${BASE_URL}/projects/${projectId}/questions/${questionId}/comments/${commentId}`,
     );
+    // console.log(projectId, questionId, commentId)
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -31,6 +32,7 @@ export async function deleteApprovalComment(
     const response = await axiosInstance.delete(
       `${BASE_URL}/projects/${projectId}/approvals/${approvalId}/comments/${commentId}`,
     );
+
     console.log(response.data);
     return response.data;
   } catch (error) {

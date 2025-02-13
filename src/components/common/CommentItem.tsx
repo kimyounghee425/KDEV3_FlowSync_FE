@@ -101,7 +101,9 @@ export default function CommentItem({
       alert("댓글 내용을 입력하세요.");
       return;
     }
-    const requestData = {content : editedContent}
+
+    const requestData = { content: editedContent };
+
     try {
       if (pathname.includes("/questions") && questionId) {
         const responseData = await editQuestionComment(
@@ -152,10 +154,8 @@ export default function CommentItem({
 
   const handleCancel = () => {
     setIsEditing(false);
-
     setEditedContent(comment.content);
   };
-
 
   return (
     <Box
@@ -172,9 +172,22 @@ export default function CommentItem({
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
             maxLength={250}
+            style={{
+              wordBreak: "break-word",
+              overflowWrap: "break-word",
+              whiteSpace: "pre-wrap",
+            }}
           />
         ) : (
-          <Text>{comment.content}</Text>
+          <Text
+            style={{
+              wordBreak: "break-word",
+              overflowWrap: "break-word",
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {comment.content}
+          </Text>
         )}
         <Box ref={dropdownRef}>
           {/* 옵션 버튼 */}
@@ -195,12 +208,11 @@ export default function CommentItem({
               p={2}
               zIndex={10}
             >
-
               {isEditing ? (
 
                 ""
               ) : (
-                <Button size="xs" onClick={() => handleEdit(comment.id)}>
+                <Button size="xs" mr={2} onClick={() => handleEdit(comment.id)}>
                   수정
                 </Button>
               )}

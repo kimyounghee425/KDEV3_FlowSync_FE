@@ -9,12 +9,10 @@ import {
   CreateProjectInput,
   ProjectListSidebarResponse,
   ProjectInfoProps,
-<<<<<<< HEAD
-  ProgressStep,
-=======
   ManagementStepCountMap,
->>>>>>> main
+  ProgressStep,
 } from "@/src/types";
+
 
 /**
  * 프로젝트 생성
@@ -73,6 +71,7 @@ export async function deleteProjectApi(
     throw error;
   }
 }
+
 
 /**
  * 프로젝트 목록을 가져옵니다.

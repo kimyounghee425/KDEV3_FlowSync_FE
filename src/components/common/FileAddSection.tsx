@@ -82,7 +82,7 @@ export default function FileAddSection({
 
   return (
     <Box mt={6}>
-      <Text fontWeight="bold" mb={2}>
+      <Text mb={2}>
         첨부 파일
       </Text>
 

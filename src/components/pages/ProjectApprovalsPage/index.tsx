@@ -87,7 +87,11 @@ export default function ProjectApprovalsPage() {
     router.push(`/projects/${projectId}/approvals/${approvalId}`);
   };
 
-  return (
+  const handleProjectApprovalCreateButton = () => {
+    router.push(`/projects/${projectId}/approvals/new`);
+  };
+
+  return ( 
     <ProjectLayout>
       {approvalProgressStepError && (
         <ErrorAlert message="프로젝트 단계 정보를 불러오지 못했습니다. 다시 시도해주세요." />
@@ -111,6 +115,7 @@ export default function ProjectApprovalsPage() {
           <Button
             variant={"surface"}
             _hover={{ backgroundColor: "#00a8ff", color: "white" }}
+            onClick={handleProjectApprovalCreateButton}
           >
             신규 등록
           </Button>

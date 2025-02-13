@@ -16,6 +16,7 @@ import SignToApprove from "@/src/components/pages/ProjectApprovalPage/components
 import { ArticleComment, ApprovalArticle } from "@/src/types";
 import { deleteApprovalApi } from "@/src/api/RegisterArticle";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
+import DropDownInfoBottom from "../../common/DropDownInfoBottom";
 
 export default function ProjectApprovalPage() {
   const { projectId, approvalId } = useParams() as {
@@ -30,10 +31,9 @@ export default function ProjectApprovalPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [commentList, setCommentList] = useState<ArticleComment[]>([]);
   const [commentIsWritten, setCommentIsWritten] = useState<boolean>(false);
-  const [registerSignatureUrl, setRegisterSignatureUrl] = useState<string>("");
-  const [approverSignatureUrl, setApproverSignatureUrl] = useState<string>("");
-
-  console.log(category);
+  const [registerSignatureUrl, setRegisterSignatureUrl] = useState<string>();
+  const [approverSignatureUrl, setApproverSignatureUrl] = useState<string>();
+  const [registerOrgId, setRegisterOrgId] = useState<number>(); // 자기 업체 글인지 확인
 
   useEffect(() => {
     const loadApproval = async () => {
@@ -47,6 +47,7 @@ export default function ProjectApprovalPage() {
         setCommentList(responseData.commentList ?? []);
         setRegisterSignatureUrl(responseData.register.signatureUrl);
         setApproverSignatureUrl(responseData.approver?.signatureUrl);
+        setRegisterOrgId(responseData.register.organizationId);
       } catch (err) {
         setError(
           err instanceof Error
@@ -68,19 +69,20 @@ export default function ProjectApprovalPage() {
     return <Box>로딩 중...</Box>;
   }
 
+  console.log(approverSignatureUrl)
   const handleEdit = () => {
 
-    if (approverSignatureUrl !== "") {
+    if (approverSignatureUrl !== undefined) {
       alert("결재가 완료된 글은 수정할 수 없습니다.");
       return;
     }
-
     router.push(`/projects/${projectId}/approvals/${approvalId}/edit`);
   };
 
   const handleDelete = async () => {
 
-    if (approverSignatureUrl !== "") {
+    if (approverSignatureUrl !== undefined) {
+
       alert("결재가 완료된 글은 삭제할 수 없습니다.");
       return;
     }
@@ -123,11 +125,20 @@ export default function ProjectApprovalPage() {
       )}
       <ArticleContent article={article} />
 
-      <Box display={"flex"} justifyContent={"center"}>
+      <Box display={"flex"} direction={"row"} alignItems={"center"}>
+        <Text fontWeight="bold" pr={2}>
+          서명
+        </Text>
+        <DropDownInfoBottom
+          text={`결재 글은 서명을 기입해야 결재가 완료됩니다. \n "서명 불러오기" 는 기존에 저장된 서명을 불러옵나다. \n 새 서명을 기입하고 "등록" 을 누르면 기존에 저장되어 있던 서명은 삭제됩니다.`}
+        />
+        </Box>
+      <Box display={"flex"} direction={"column"} justifyContent={"center"}>
         <SignToApprove
           registerSignatureUrl={registerSignatureUrl}
           approverSignatureUrl={approverSignatureUrl}
-        />
+          registerOrgId={registerOrgId}
+          />
       </Box>
 
       {/* 댓글 섹션 */}
