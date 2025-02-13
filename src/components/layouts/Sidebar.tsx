@@ -30,7 +30,7 @@ export default function Sidebar({
   }, [isMobile, onToggle]);
 
   // ✅ 반응형 사이드바 너비 설정
-  const sidebarWidth = useBreakpointValue({ base: "70vw", md: "250px" });
+  const sidebarWidth = useBreakpointValue({ base: "clamp(150px, 70vw, 200px)", md: "250px" }); // ..
 
   if (!loggedInUserRole) {
     return (
