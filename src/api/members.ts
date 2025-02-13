@@ -23,6 +23,23 @@ export async function fetchMemberListApi(
   return response.data;
 }
 
+/**
+ * 소속 업체 별 회원 목록 조회
+ * @param requestData 프로젝트 생성 페이지 입력 데이터
+ * @returns
+ */
+export async function fetchMembersWithinOrgApi(organizationId: string) {
+  try {
+    const response = await axiosInstance.get(
+      `/admins/members/member/org/${organizationId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log("멤버 목록 조회 실패 : ", error);
+    throw error;
+  }
+}
+
 // 📌 회원 상세 정보 가져오기
 export async function fetchMemberDetails(
   memberId: string,

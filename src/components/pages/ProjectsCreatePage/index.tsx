@@ -1,28 +1,28 @@
-// 프로젝트 생성 페이지
-
 "use client";
 
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import BackButton from "@/src/components/common/BackButton";
+import { usePathname } from "next/navigation";
 import ProjectForm from "@/src/components/pages/ProjectsCreatePage/components/ProjectForm";
 
 export default function ProjectsCreatePage() {
+  const pathname = usePathname();
+  const isEditPage = pathname.includes("/edit"); // URL을 기준으로 수정/생성 여부 판별
+
   return (
-    <Flex overflowX={"auto"}>
+    <Flex justifyContent="center" width="100%">
       <Box
-        transform={"scale(0.8)"}
-        maxW="1400px"
-        minW={"1400px"}
-        w="100%"
+        maxWidth="80rem" // 최대 1280px (적당한 크기)
+        width="100%"
         mx="auto"
-        mt={-150}
-        p={6}
-        borderWidth="1"
+        p="1rem"
+        borderWidth="1px"
         borderRadius="lg"
         boxShadow="md"
+        backgroundColor="white"
       >
+        {/* 🔹 BackButton & 프로젝트 상태 텍스트 (생성 / 수정) */}
         <BackButton />
-
         <ProjectForm />
       </Box>
     </Flex>

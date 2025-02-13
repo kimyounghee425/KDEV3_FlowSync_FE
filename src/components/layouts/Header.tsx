@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FiSun, FiMoon } from "react-icons/fi";
-import { Box, Flex, IconButton, Image } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Image, Text } from "@chakra-ui/react";
 import {
   useColorMode,
   useColorModeValue,
@@ -47,47 +47,25 @@ export default function Header({
         >
           {isSidebarOpen ? <PanelRightOpen /> : <PanelRightClose />}
         </IconButton>
-        <Link href="/notices">
+        <Link href="/">
           <Box
-            as="span"
-            fontSize="1rem"
-            fontWeight="medium"
-            lineHeight="60px"
-            color={colorMode === "dark" ? "gray.200" : "gray.800"}
-            cursor="pointer"
+            // position="absolute"
+            // left="50%"
+            // transform="translateX(-50%)"
+            display="flex"
+            alignItems="center"
+            gap={2}
           >
-            공지사항
+            <Image
+              src="/logo.png" // public 디렉토리의 로고 파일 경로
+              alt="FlowSync"
+              height="25px" // 원하는 크기로 설정
+              objectFit="contain"
+            />
+            <Text fontSize="1.2rem">FlowSync</Text>
           </Box>
         </Link>
       </Flex>
-
-      {/* 중앙: 로고 */}
-      <Box
-        position="absolute"
-        left="50%"
-        transform="translateX(-50%)"
-        display="flex"
-        alignItems="center"
-      >
-        <Link href="/">
-          {/* <Image
-            src={
-              colorMode === "dark"
-                ? "https://bn-system.com/img/LOGO_SVG2.svg"
-                : "https://bn-system.com/img/LOGO_SVG.svg"
-            }
-            alt="BN SYSTEM"
-            height="40px" // Fixed height
-            objectFit="contain"
-          /> */}
-          <Image
-            src="/logo.png" // public 디렉토리의 로고 파일 경로
-            alt="FlowSync"
-            height="30px" // 원하는 크기로 설정
-            objectFit="contain"
-          />
-        </Link>
-      </Box>
 
       {/* 오른쪽: 다크모드 및 프로필 */}
       <Flex align="center" gap="1rem">

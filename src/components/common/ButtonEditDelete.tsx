@@ -14,11 +14,12 @@ import {
   DialogCloseTrigger,
 } from "@/src/components/ui/dialog";
 import styles from "@/src/components/common/ActionButtons.module.css";
+import ConfirmDialogEditDelete from "./ConfirmDialogEditDelete";
 
 interface ButtonEditDeleteProps {
-  isLoading: boolean;
+  isLoading?: boolean;
   isDisabled?: boolean;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   onDelete?: (reason: string) => void;
   deleteEntityType?: string; // 삭제 대상 (회원, 업체, 프로젝트 등)
 }
@@ -35,58 +36,28 @@ export default function ButtonEditDelete({
   return (
     <div className={styles.buttonContainer}>
       {/* 수정 버튼 */}
-      <button
-        type="button"
-        className={`${styles.submitButton} ${isLoading ? styles.loading : ""}`}
-        onClick={onSubmit}
-        disabled={isLoading || isDisabled}
-        aria-busy={isLoading}
-      >
-        {isLoading ? "처리 중..." : "수정하기"}
-      </button>
+      <ConfirmDialogEditDelete
+        onConfirm={onSubmit || (() => {})}
+        title="항목 수정"
+        description="이 항목을 수정하시겠습니까?"
+        confirmText="수정"
+        cancelText="취소"
+        triggerText="수정"
+      />
 
       {/* 삭제 버튼 */}
       {onDelete && (
-        <DialogRoot role="alertdialog">
-          <DialogTrigger asChild>
-            <Button className={styles.deleteButton}>
-              {deleteEntityType} 삭제
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{deleteEntityType} 삭제</DialogTitle>
-            </DialogHeader>
-            <DialogBody>
-              <Text fontWeight="medium" mb="2">
-                {deleteEntityType} 삭제 사유를 입력하세요.
-              </Text>
-              <Input
-                placeholder={`${deleteEntityType} 삭제 사유 입력`}
-                size="sm"
-                value={deleteReason}
-                onChange={(e) => setDeleteReason(e.target.value)}
-              />
-            </DialogBody>
-            <DialogFooter>
-              <DialogActionTrigger asChild>
-                <Button variant="outline">취소</Button>
-              </DialogActionTrigger>
-              <Button
-                colorScheme="red"
-                disabled={!deleteReason.trim()}
-                opacity={deleteReason.trim() ? 1 : 0.5}
-                onClick={() => {
-                  onDelete(deleteReason);
-                  setDeleteReason("");
-                }}
-              >
-                삭제 확인
-              </Button>
-            </DialogFooter>
-            <DialogCloseTrigger />
-          </DialogContent>
-        </DialogRoot>
+        <ConfirmDialogEditDelete
+          onConfirm={() => {
+            onDelete(deleteReason);
+            setDeleteReason("");
+          }}
+          title={`${deleteEntityType} 삭제`}
+          description={`${deleteEntityType} 삭제 사유를 입력하세요.`}
+          confirmText="삭제 확인"
+          cancelText="취소"
+          triggerText={`${deleteEntityType} 삭제`}
+        />
       )}
     </div>
   );

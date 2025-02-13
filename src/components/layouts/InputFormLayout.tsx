@@ -42,7 +42,7 @@ export default function InputFormLayout({
   const isDetailPage =
     (urlPathName.includes(`/admin/members/`) ||
       urlPathName.includes(`/admin/organizations/`) ||
-      urlPathName.includes("/admin/projects/")) &&
+      urlPathName.includes("/edit")) &&
     !isCreatePage; // create가 아닌 경우만 상세 페이지로 처리
 
   const entityType = deleteEntityType || "항목"; // deleteEntityType이 undefined일 경우 삭제 버튼이 생성되지 않아서 기본값을 설정

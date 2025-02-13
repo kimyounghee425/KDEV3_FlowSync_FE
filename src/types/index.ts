@@ -3,6 +3,7 @@
 export interface CommonResponseType<T> {
   code: number; // 상태 코드
   result: string; // 요청 결과 (SUCCESS, FAILURE 등)
+  message?: string;
   data: T; // 제네릭 데이터
 }
 
@@ -131,6 +132,41 @@ export interface DeleteOriginationWithReasonResponse {
   message: string; // 응답 메시지
 }
 
+export interface CreateProjectInput {
+  name: string; // 프로젝트 이름
+  description: string;
+  detail: string;
+  managementStep: string; // 계약단계
+  startAt: string;
+  deadlineAt: string;
+  // closeAt?: string;
+  devOwnerId: string;
+  customerOwnerId: string;
+  developerOrgId: string;
+  customerOrgId: string;
+  members: string[];
+}
+
+// 반환값의 타입 정의
+export interface CreateProjectResponse {
+  success: boolean;
+  member: ProjectProps;
+}
+
+export interface ProjectInfoProps {
+  id: string; // 프로젝트 아이디
+  projectName: string; // 프로젝트명
+  description: string; // 프로젝트 설명
+  devOrgName: string; // 개발사명
+  memberName: string; // 대표 담당자 이름
+  profileImageUrl: string; // 프로필 이미지 URL
+  jobRole: string; // 직무
+  jobTitle: string; // 직급
+  phoneNum: string; // 연락처
+  startAt: string; // 프로젝트 시작일
+  closeAt: string; // 프로젝트 종료일
+}
+
 // 프로젝트 속성
 export interface ProjectProps {
   id: string; // 프로젝트 ID
@@ -149,15 +185,32 @@ export interface ProjectProps {
   clickable: number; // 클릭 가능 여부
 }
 
+// 프로젝트 상세 조회
+export interface ProjectDetailProps {
+  id: string; // 프로젝트 ID
+  name: string; // 프로젝트 이름
+  description: string;
+  detail: string;
+  managementStep: string; // 계약단계
+  startAt: string;
+  deadlineAt: string;
+  closeAt?: string;
+  devOwnerId: string;
+  customerOwnerId: string;
+  developerOrgId: string;
+  customerOrgId: string;
+  members: string[];
+}
+
 export interface ProjectListResponse {
   projects: ProjectProps[];
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
 export interface ProjectSidebarProps {
-  id: string,
-  name: string,
-  clickable: string,
+  id: string;
+  name: string;
+  clickable: string;
 }
 export interface ProjectListSidebarResponse {
   projects: ProjectSidebarProps[];
