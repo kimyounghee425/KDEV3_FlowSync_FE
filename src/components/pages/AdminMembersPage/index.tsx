@@ -18,8 +18,13 @@ import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import { useMemberList } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
-import { activateMemberApi, deactivateMemberApi } from "@/src/api/members";
+import {
+  activateMemberApi,
+  deactivateMemberApi,
+  deleteMember,
+} from "@/src/api/members";
 import { MemberProps } from "@/src/types";
+import DropDownMenu from "../../common/DropDownMenu";
 
 const memberRoleFramework = createListCollection<{
   label: string;
@@ -84,6 +89,7 @@ function AdminMembersPageContent() {
     paginationInfo,
     loading: memberListLoading,
     error: memberListError,
+    refetch,
   } = useMemberList(keyword, role, status, currentPage, pageSize);
 
   // ✅ 상태 변경을 위한 로컬 상태 추가
@@ -148,6 +154,22 @@ function AdminMembersPageContent() {
     router.push(`/admin/members/${id}`);
   };
 
+  const handleEdit = (id: string) => {
+    router.push(`/admin/members/${id}`);
+  };
+
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+    try {
+      await deleteMember(id, "");
+      alert("회원이 탈퇴 조치 되었습니다.");
+      refetch();
+    } catch (error) {
+      alert(`삭제 중 문제가 발생했습니다 : ${error}`);
+    }
+  };
+
   return (
     <>
       <Stack width="full">
@@ -176,7 +198,7 @@ function AdminMembersPageContent() {
           </SearchSection>
         </Box>
         {memberListError && (
-          <ErrorAlert message="공지사항 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+          <ErrorAlert message="회원 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
         <CommonTable
           headerTitle={
@@ -194,12 +216,21 @@ function AdminMembersPageContent() {
               <Table.ColumnHeader>연락처</Table.ColumnHeader>
               <Table.ColumnHeader>상태</Table.ColumnHeader>
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
+              <Table.ColumnHeader>관리</Table.ColumnHeader>
             </Table.Row>
           }
           data={memberData} // 로컬 상태 활용
           loading={memberListLoading}
           renderRow={(member: MemberProps) => (
-            <>
+            <Table.Row
+              key={member.id}
+              onClick={() => handleRowClick(member.id)}
+              css={{
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#f5f5f5" },
+                "& > td": { textAlign: "center" },
+              }}
+            >
               <Table.Cell>
                 {ROLE_LABELS[member.role] || "알 수 없음"}
               </Table.Cell>
@@ -223,7 +254,13 @@ function AdminMembersPageContent() {
                 )}
               </Table.Cell>
               <Table.Cell>{formatDynamicDate(member.regAt)}</Table.Cell>
-            </>
+              <Table.Cell onClick={(event) => event.stopPropagation()}>
+                <DropDownMenu
+                  onEdit={() => handleEdit(member.id)}
+                  onDelete={() => handleDelete(member.id)}
+                />
+              </Table.Cell>
+            </Table.Row>
           )}
         />
         {paginationInfo && (

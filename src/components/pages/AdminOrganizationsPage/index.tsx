@@ -122,7 +122,7 @@ function AdminOrganizationsPageContent() {
           </SearchSection>
         </Box>
         {organizationListError && (
-          <ErrorAlert message="공지사항 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+          <ErrorAlert message="업체 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
         <CommonTable
           headerTitle={
@@ -139,6 +139,7 @@ function AdminOrganizationsPageContent() {
               <Table.ColumnHeader>주소</Table.ColumnHeader>
               <Table.ColumnHeader>상태</Table.ColumnHeader>
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
+              <Table.ColumnHeader>관리</Table.ColumnHeader>
             </Table.Row>
           }
           data={organizationList ?? []}
