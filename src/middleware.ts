@@ -80,7 +80,7 @@ async function validateAndRefreshTokens(
       }
     }
   } catch (error: any) {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 || error.response?.status === 403) {
       console.warn("🔄 Access Token 만료 → Refresh Token 사용 시도");
     } else {
       console.error("❌ AccessToken 검증 중 오류 발생:", error.message);

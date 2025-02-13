@@ -3,7 +3,7 @@ import axiosInstance from "@/src/api/axiosInstance";
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function getMembersApi(
-  organizationId: number,
+  organizationId: string,
   currentPage: number,
   pageSize: number,
 ) {
@@ -14,7 +14,7 @@ export async function getMembersApi(
       `${BASE_URL}/admins/members/member/org/${organizationId}`, // params 에 orgamizationid 있는데 왜 api 주소에 또넣음?
       { params },
     );
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.log("멤버 목록 조회 실패 : ", error);
     throw error;

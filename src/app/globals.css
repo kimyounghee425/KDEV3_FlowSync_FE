@@ -68,6 +68,7 @@ button {
   @apply font-inherit cursor-pointer rounded-md border-none px-6 py-3;
   background-color: var(--button-bg, #e5e5e5);
   color: var(--button-text-color, #000);
+  padding: 2%;
 }
 
 button:hover {
@@ -192,6 +193,7 @@ main {
 [data-theme="dark"] ::-webkit-scrollbar-thumb {
   background: #9b59b6;
 }
+
 /* 반응형 (태블릿 이하) */
 @media (max-width: 1024px) {
   .sidebar {

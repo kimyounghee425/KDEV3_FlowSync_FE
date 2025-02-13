@@ -8,7 +8,14 @@ import {
   MenuRoot,
   MenuTrigger,
 } from "@/src/components/ui/menu";
-import { ChevronDown } from "lucide-react";
+import {
+  ChevronDown,
+  Home,
+  Briefcase,
+  Building,
+  Users,
+  Bell,
+} from "lucide-react";
 import { useColorModeValue } from "@/src/components/ui/color-mode";
 import { useSidebar } from "@/src/context/SidebarContext";
 import { useProjectInfiniteScroll } from "@/src/hook/useProjectInfiniteScroll";
@@ -20,9 +27,11 @@ interface SidebarTabProps {
 
 // 관리자 메뉴 항목
 const ADMIN_MENU_ITEMS = [
-  { value: "/", title: "프로젝트 관리" },
-  { value: "/admin/organizations", title: "업체 관리" },
-  { value: "/admin/members", title: "회원 관리" },
+  { value: "/", title: "홈", icon: Home },
+  { value: "/projects", title: "프로젝트 관리", icon: Briefcase },
+  { value: "/admin/organizations", title: "업체 관리", icon: Building },
+  { value: "/admin/members", title: "회원 관리", icon: Users },
+  { value: "/notices", title: "공지사항 관리", icon: Bell },
 ];
 
 export default function SidebarTab({ memberRole }: SidebarTabProps) {
@@ -67,10 +76,15 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
             <Link key={item.value} href={item.value}>
               <Box
                 p={4}
+                display="flex"
+                alignItems="center"
+                gap={3}
                 borderBottom="1px solid"
                 borderColor={borderColor}
                 _hover={{ bg: hoverBgColor }}
               >
+                {item.icon && <item.icon size={20} />}{" "}
+                {/* 선택적으로 아이콘 삽입 */}
                 {item.title}
               </Box>
             </Link>

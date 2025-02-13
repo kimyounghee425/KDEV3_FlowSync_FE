@@ -1,15 +1,74 @@
 import axiosInstance from "@/src/api/axiosInstance";
-
 import {
   CommonResponseType,
   ProjectListResponse,
   ProjectProgressStepProps,
   ProjectQuestionListResponse,
   ProjectApprovalListResponse,
+  ProjectDetailProps,
+  CreateProjectInput,
   ProjectListSidebarResponse,
-  ManagementStepCountMap,
   ProjectInfoProps,
+  ManagementStepCountMap,
 } from "@/src/types";
+
+/**
+ * 프로젝트 생성
+ * @param requestData 프로젝트 생성 페이지 입력 데이터
+ * @returns
+ */
+export async function createProjectApi(
+  requestData: any,
+): Promise<CommonResponseType<CreateProjectInput>> {
+  try {
+    const response = await axiosInstance.post("/admins/projects", requestData);
+    return response.data;
+  } catch (error) {
+    console.error("프로젝트 생성 실패", error);
+    throw error;
+  }
+}
+
+/**
+ * 프로젝트 수정
+ * @param projectId 프로젝트 ID
+ * @param requestData 프로젝트 수정 페이지 입력 데이터
+ * @returns
+ */
+export async function updateProjectApi(
+  projectId: string,
+  requestData: any,
+): Promise<CommonResponseType<CreateProjectInput>> {
+  try {
+    const response = await axiosInstance.patch(
+      `/admins/projects/${projectId}`,
+      requestData,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("프로젝트 수정 실패", error);
+    throw error;
+  }
+}
+
+/**
+ * 프로젝트 삭제
+ * @param projectId 프로젝트 ID
+ * @returns
+ */
+export async function deleteProjectApi(
+  projectId: string,
+): Promise<CommonResponseType<string>> {
+  try {
+    const response = await axiosInstance.delete(
+      `/admins/projects/${projectId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("프로젝트 삭제 실패", error);
+    throw error;
+  }
+}
 
 /**
  * 프로젝트 목록을 가져옵니다.
@@ -32,6 +91,19 @@ export async function fetchProjectListApi(
   return response.data;
 }
 
+/**
+ * (관리자 전용 페이지) 특정 프로젝트의 상세 정보를 가져옵니다.
+ * @param projectId 프로젝트 식별자
+ * @returns 프로젝트 상세 정보
+ */
+export async function fetchProjectDetailsApi(
+  projectId: string,
+): Promise<ProjectDetailProps> {
+  const response = await axiosInstance.get(`/admins/projects/${projectId}`);
+  console.log("프로젝트 상세 조회 API 호출 중 - response: ", response);
+  return response.data.data;
+}
+
 export async function fetchProjectListSidebarApi(
   managementStep: string = "",
   currentPage: number,
@@ -45,7 +117,7 @@ export async function fetchProjectListSidebarApi(
 }
 
 /**
- * 특정 프로젝트의 상세 정보를 가져옵니다.
+ * (고객사/개발사/관리자 공통 페이지) 특정 프로젝트의 요약 정보를 가져옵니다.
  * @param projectId 프로젝트 식별자
  * @returns 프로젝트 상세 정보
  */
@@ -96,11 +168,16 @@ export async function projectProgressStepApi(projectId: string) {
 }
 
 // 프로젝트 관리 단계 수정
-export async function projectManagementStepApi(projectId: string, managementStep: string) {
+export async function projectManagementStepApi(
+  projectId: string,
+  managementStep: string,
+) {
   const response = await axiosInstance.put(
-    `/projects/${projectId}/management-steps`, {},{
-      params: {managementStep}
-    }
+    `/projects/${projectId}/management-steps`,
+    {},
+    {
+      params: { managementStep },
+    },
   );
   return response.data;
 }

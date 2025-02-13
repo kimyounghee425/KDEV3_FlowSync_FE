@@ -1,75 +1,85 @@
 import React from "react";
-import { Flex, Box, Text, Input } from "@chakra-ui/react";
-import { Select } from "@chakra-ui/select";
+import { Flex, Box, Input, Text } from "@chakra-ui/react";
+
+const managementSteps = [
+  { label: "계약", value: "CONTRACT" },
+  { label: "진행중", value: "IN_PROGRESS" },
+  { label: "납품완료", value: "COMPLETED" },
+  { label: "하자보수", value: "MAINTENANCE" },
+  { label: "일시중단", value: "PAUSED" },
+  { label: "삭제", value: "DELETED" },
+];
 
 interface HeaderSectionProps {
   name: string;
-  status: string;
   managementStep: string;
   setName: (value: string) => void;
-  setStatus: (value: string) => void;
   setManagementStep: (value: string) => void;
 }
 
 export default function HeaderSection({
   name,
-  status,
   managementStep,
   setName,
-  setStatus,
   setManagementStep,
 }: HeaderSectionProps) {
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatus(e.target.value);
-  };
-
-  const handleManagementStepChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    setManagementStep(e.target.value);
-  };
-
   return (
-    <Flex direction="column">
-      <Flex direction="row" mb={4}>
-        <Flex direction="row" mr={10}>
-          <Text mb="2" mr={2}>
-            프로젝트 상태
-          </Text>
-          <Box mb="2">
-            <Select value={status} onChange={handleStatusChange}>
-              <option value={"IN_PROGRESS"}>IN_PROGRESS</option>
-              <option value={"PAUSED"}>PAUSED</option>
-              <option value={"COMPLETED"}>COMPLETED</option>
-            </Select>
-          </Box>
-        </Flex>
-        <Flex direction="row" mr={8}>
-          <Text mb="2" mr={2}>
+    <Flex direction="column" width="100%">
+      {/* 상단 행 (관리 단계 선택 + 프로젝트명 입력) */}
+      <Flex
+        direction={{ base: "column", md: "row" }} // 모바일에서는 column, PC에서는 row 유지
+        wrap="wrap"
+        width="100%"
+        gap="1rem"
+        alignItems="center"
+      >
+        {/* 드롭다운 (프로젝트 관리 단계 선택) */}
+        <Box flex="1" minWidth="12rem">
+          <Text fontSize="1rem" fontWeight="bold" mb="0.5rem">
             프로젝트 관리 단계
           </Text>
-          <Box>
-            <Select
-              value={managementStep}
-              onChange={handleManagementStepChange}
-            >
-              <option value={"CONTRACT"}>CONTRACT</option>
-              <option value={"IN_PROGRESS"}>IN_PROGRESS</option>
-              <option value={"COMPLETED"}>COMPLETED</option>
-              <option value={"MAINTENANCE"}>MAINTENANCE</option>
-            </Select>
-          </Box>
-        </Flex>
-      </Flex>
+          <select
+            value={managementStep}
+            onChange={(e) => setManagementStep(e.target.value)}
+            style={{
+              width: "100%",
+              height: "3rem",
+              padding: "0.75rem",
+              borderRadius: "0.5rem",
+              border: "0.0625rem solid #ccc",
+              backgroundColor: "white",
+              cursor: "pointer",
+              fontSize: "1rem",
+              lineHeight: "1.5rem",
+            }}
+          >
+            {managementSteps.map((step) => (
+              <option key={step.value} value={step.value}>
+                {step.label}
+              </option>
+            ))}
+          </select>
+        </Box>
 
-      <Box>
-        <Input
-          placeholder="프로젝트 이름 입력"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          mb="4"
-        />
-      </Box>
+        {/* 프로젝트명 입력 */}
+        <Box flex="4" minWidth="12rem">
+          <Text fontSize="1rem" fontWeight="bold" mb="0.5rem">
+            프로젝트명
+          </Text>
+          <Input
+            placeholder="프로젝트명을 입력하세요."
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            width="100%"
+            height="3rem"
+            padding="0.75rem"
+            borderRadius="0.5rem"
+            border="1px solid #ccc"
+            fontSize="1rem"
+            lineHeight="1.5rem"
+          />
+        </Box>
+      </Flex>
     </Flex>
   );
 }

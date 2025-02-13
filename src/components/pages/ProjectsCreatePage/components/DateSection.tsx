@@ -1,8 +1,7 @@
 import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Flex, Text, Box, Button } from "@chakra-ui/react";
-import "./dateSection.css";
+import { Flex, Text, Box, Input } from "@chakra-ui/react";
 
 interface DateSectionProps {
   startAt: string;
@@ -17,22 +16,10 @@ export default function DateSection({
   setStartAt,
   setCloseAt,
 }: DateSectionProps) {
-  // iso 형식 예쁘게 변형
-  const formatDate = (isoString: string): string => {
-    if (!isoString) {
-      return "----. --. --.";
-    }
-    const date = new Date(isoString);
-    return date.toLocaleString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "2-digit",
-      weekday: "long",
-    });
-  };
-
   const handleStartDateChange = (date: Date | null) => {
     if (date) {
+      console.log("선택한 시작일:", date); // ✅ 선택한 날짜 확인
+      console.log("ISO 변환 값:", date.toISOString()); // ✅ 변환된 값 확인
       setStartAt(date.toISOString());
       if (!closeAt || new Date(closeAt) < date) {
         setCloseAt("");
@@ -43,125 +30,89 @@ export default function DateSection({
   const handleCloseDateChange = (date: Date | null) => {
     if (date) {
       if (startAt && new Date(startAt) > date) return; // 종료일이 등록일보다 빠를 수 없음
+      console.log("선택한 종료일:", date); // ✅ 선택한 날짜 확인
+      console.log("ISO 변환 값:", date.toISOString()); // ✅ 변환된 값 확인
       setCloseAt(date.toISOString());
     }
   };
 
-  const getHighlightedDates = () => {
-    if (!startAt || !closeAt) return [];
-    const startDate = new Date(startAt);
-    const endDate = new Date(closeAt);
-    const dateArray = [];
-    const currentDate = new Date(startDate);
-
-    while (currentDate <= endDate) {
-      dateArray.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    return dateArray;
-  };
-
   return (
-    <Flex direction={"row"} alignItems={"center"} mb={4}>
-      <Flex direction={"row"} justifyContent={"center"} gap={10}>
-        {/* 등록 일시 선택 달력 */}
-        <Box>
-          <Text fontWeight="bold" mb={2}>
-            프로젝트 등록 일시
+    <Flex direction="column" width="100%">
+      {/* 상단 행 (시작일 & 종료일) */}
+      <Flex
+        direction={{ base: "column", md: "row" }} // 모바일에서는 column, PC에서는 row 유지
+        wrap="wrap"
+        justifyContent="space-between"
+        maxWidth="100%" // ✅ 프로젝트 상세 내용과 너비 동일하게 설정
+        width="100%"
+        gap="1rem"
+        alignItems="center"
+      >
+        {/* 시작일 선택 */}
+        <Box flex="1" minWidth="12rem" width="100%">
+          <Text fontSize="1rem" fontWeight="bold" mb="0.5rem">
+            프로젝트 시작일
           </Text>
-          <DatePicker
-            className="custom-calender"
-            selected={startAt ? new Date(startAt) : null}
-            onChange={handleStartDateChange}
-            highlightDates={getHighlightedDates()}
-            dayClassName={(date) => {
-              if (!startAt || !closeAt) return "";
-
-              const startDate = new Date(startAt).toDateString();
-              const currentDate = date.toDateString();
-
-              if (currentDate === startDate) return "highlight-start";
-
-              if (new Date(startAt) <= date && date <= new Date(closeAt)) {
-                return "highlight-range";
+          <Box width="100%">
+            <DatePicker
+              selected={startAt ? new Date(startAt) : null}
+              onChange={handleStartDateChange}
+              dateFormat="yyyy-MM-dd"
+              minDate={new Date()}
+              popperPlacement="bottom-start"
+              calendarClassName="datepicker-calendar" // ✅ 캘린더 스타일 추가 가능
+              wrapperClassName="datepicker-wrapper" // ✅ Wrapper 스타일 적용
+              customInput={
+                <Input
+                  placeholder="날짜를 선택하세요"
+                  value={
+                    startAt ? new Date(startAt).toLocaleDateString("ko-KR") : ""
+                  }
+                  readOnly
+                  width="100%"
+                  height="3rem"
+                  padding="0.75rem"
+                  borderRadius="0.5rem"
+                  border="1px solid #ccc"
+                  lineHeight="1.5rem"
+                />
               }
-
-              return "";
-            }}
-            todayButton="오늘로 이동"
-            inline
-          />
+            />
+          </Box>
         </Box>
 
-        {/* 종료 일시 선택 달력 */}
-        <Box>
-          <Text fontWeight="bold" mb={2}>
-            프로젝트 종료 일시
+        {/* 종료일 선택 */}
+        <Box flex="1" minWidth="12rem" width="100%">
+          <Text fontSize="1rem" fontWeight="bold" mb="0.5rem">
+            프로젝트 종료일
           </Text>
-          <DatePicker
-            className="custom-calender"
-            selected={closeAt ? new Date(closeAt) : null}
-            onChange={handleCloseDateChange}
-            minDate={startAt ? new Date(startAt) : undefined} // 종료일은 등록일 이후만 가능
-            highlightDates={getHighlightedDates()}
-            dayClassName={(date) => {
-              if (!startAt || !closeAt) return "";
-
-              const endDate = new Date(closeAt).toDateString();
-              const currentDate = date.toDateString();
-
-              if (currentDate === endDate) return "highlight-end";
-              if (new Date(startAt) <= date && date <= new Date(closeAt)) {
-                return "highlight-range";
+          <Box width="100%">
+            <DatePicker
+              selected={closeAt ? new Date(closeAt) : null}
+              onChange={handleCloseDateChange}
+              dateFormat="yyyy-MM-dd"
+              minDate={new Date()}
+              popperPlacement="bottom-start"
+              calendarClassName="datepicker-calendar" // ✅ 캘린더 스타일 추가 가능
+              wrapperClassName="datepicker-wrapper" // ✅ Wrapper 스타일 적용
+              customInput={
+                <Input
+                  placeholder="날짜를 선택하세요"
+                  value={
+                    closeAt ? new Date(closeAt).toLocaleDateString("ko-KR") : ""
+                  }
+                  readOnly
+                  width="100%"
+                  height="3rem"
+                  padding="0.75rem"
+                  borderRadius="0.5rem"
+                  border="1px solid #ccc"
+                  lineHeight="1.5rem"
+                />
               }
-
-              return "";
-            }}
-            todayButton="오늘로 이동"
-            inline
-          />
+            />
+          </Box>
         </Box>
-      </Flex>
-
-      {/* 선택된 날짜 표시 */}
-      <Flex direction={"column"} alignItems={"center"} ml={20}>
-        <Box
-          border="2px solid blue"
-          borderRadius={"lg"}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          p={3}
-          mb={10}
-          width="200px"
-        >
-          <Text>등록 일시</Text>
-          <Text>{formatDate(startAt)}</Text>
-        </Box>
-
-        <Box
-          border="2px solid grey"
-          borderRadius={"lg"}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          p={3}
-          mb={5}
-          width="200px"
-        >
-          <Text>종료 일시</Text>
-          <Text>{formatDate(closeAt)}</Text>
-        </Box>
-
-        <Button
-          borderRadius={"lg"}
-          onClick={() => {
-            setStartAt("");
-            setCloseAt("");
-          }}
-        >
-          초기화
-        </Button>
       </Flex>
     </Flex>
   );

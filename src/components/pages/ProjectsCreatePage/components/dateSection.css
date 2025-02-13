@@ -31,9 +31,9 @@
   position: relative;
 }
 .react-datepicker__day-names {
-  display: flex; 
+  display: flex;
   justify-content: space-between;
-  padding: 0 5px; 
+  padding: 0 5px;
 }
 
 /* 일요일 빨갛게 */
@@ -71,4 +71,14 @@
   border-bottom-left-radius: 0 !important;
   border-top-right-radius: 50px !important;
   border-bottom-right-radius: 50px !important;
+}
+
+/* DatePicker Wrapper의 너비 조정 */
+.datepicker-wrapper {
+  width: 100% !important;
+}
+
+/* DatePicker 내부 input-container 강제 확장 */
+.react-datepicker__input-container {
+  width: 100% !important;
 }

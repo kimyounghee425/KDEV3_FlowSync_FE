@@ -12,7 +12,6 @@ import { ProjectSidebarProps } from "@/src/types";
  * @returns {object} 프로젝트 목록, 로딩 상태, 추가 데이터 존재 여부, 감지할 요소 ref
  */
 export function useProjectInfiniteScroll(managementStep: string) {
-  
   const [projectList, setProjectList] = useState<ProjectSidebarProps[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -26,12 +25,16 @@ export function useProjectInfiniteScroll(managementStep: string) {
    */
   const fetchMoreProjects = useCallback(
     async (page: number) => {
-      console.log(managementStep, hasMore, loading)
+      console.log(managementStep, hasMore, loading);
       if (!managementStep || !hasMore || loading) return;
       setLoading(true);
 
       try {
-        const response = await fetchProjectListSidebarApi(managementStep, page, 20);
+        const response = await fetchProjectListSidebarApi(
+          managementStep,
+          page,
+          20,
+        );
         const newProjects = response.data.projects;
 
         if (!newProjects || newProjects.length === 0) {
@@ -53,7 +56,6 @@ export function useProjectInfiniteScroll(managementStep: string) {
         setHasMore(false); // 오류 발생 시 무한 요청 방지
       } finally {
         setLoading(false);
-
       }
     },
     [managementStep, hasMore, loading],
@@ -83,7 +85,7 @@ export function useProjectInfiniteScroll(managementStep: string) {
    */
   useEffect(() => {
     if (!managementStep) return;
-    
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !loading) {
@@ -97,7 +99,7 @@ export function useProjectInfiniteScroll(managementStep: string) {
     if (observerElement) observer.observe(observerElement);
 
     return () => {
-      if (observerElement) observer.unobserve(observerElement);// ✅ 기존 observer 정리
+      if (observerElement) observer.unobserve(observerElement); // ✅ 기존 observer 정리
     };
   }, [fetchMoreProjects, loading, currentPage, hasMore]);
 

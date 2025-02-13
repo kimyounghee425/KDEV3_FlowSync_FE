@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
 import {
   Box,
+  Button,
   createListCollection,
   Flex,
   Heading,
@@ -67,7 +68,6 @@ export default function ProjectsPage() {
 function ProjectsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const keyword = searchParams?.get("keyword") || "";
   const managementStep = searchParams?.get("managementStep") || "";
   const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
@@ -115,8 +115,16 @@ function ProjectsPageContent() {
     }
   };
 
-  // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
+  //s 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
   const handleProjectCreateButton = () => {
+    router.push(`/projects/create`);
+  };
+  // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
+  const handleEditClick = (id: string) => {
+    router.push(`/projects/${id}/edit`);
+  };
+  // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
+  const handleProjectDeleteButton = () => {
     router.push(`/projects/create`);
   };
 
