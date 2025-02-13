@@ -85,10 +85,11 @@ export default function OrganizationDetailForm({
       (errors, [inputName, validationRule]) => {
         if (
           !validationRule.isValid(
-            formData[inputName as keyof OrganizationProps],
+            formData?.[inputName as keyof OrganizationProps] ?? "",
           )
         ) {
-          errors[inputName] = validationRule.errorMessage;
+          errors[inputName as keyof OrganizationProps] =
+            validationRule.errorMessage;
         }
         return errors;
       },

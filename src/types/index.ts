@@ -33,7 +33,7 @@ export interface MemberProps {
   organizationId: string; // 소속 업체 ID
   organizationName: string; // 소속 업체 이름
   role: "ADMIN" | "MEMBER"; // 역할 (Enum)
-  status: "ACTIVE" | "INACTIVE"; // 상태 (Enum)
+  status: "ACTIVE" | "INACTIVE" | "DELETED"; // 상태 (Enum)
   email: string; // 회원 이메일
   name: string; // 회원 이름
   phoneNum: string; // 연락처
@@ -76,6 +76,20 @@ export interface DeleteMemberResponse {
   message: string; // 응답 메시지
 }
 
+// 🔹 회원 상태 활성화로 변경 응답 타입 정의
+export interface ActivateMemberResponse {
+  code: number; // HTTP 상태 코드
+  result: "SUCCESS" | "FAIL"; // 결과 상태
+  message: string; // 응답 메시지
+}
+
+// 🔹 회원 상태 비활성화로 변경 응답 타입 정의
+export interface DeactivateMemberResponse {
+  code: number; // HTTP 상태 코드
+  result: "SUCCESS" | "FAIL"; // 결과 상태
+  message: string; // 응답 메시지
+}
+
 export interface LoginFormData {
   label: string;
   id: string;
@@ -89,12 +103,12 @@ export interface OrganizationProps {
   status: string;
   brNumber: string;
   name: string;
-  regAt: string;
+  regAt?: string;
   brCertificateUrl: string;
   streetAddress: string;
   detailAddress: string;
   phoneNumber: string;
-  remark: string;
+  remark?: string;
 }
 
 // `createOrganization` 함수에서 입력값의 타입 정의

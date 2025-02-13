@@ -13,7 +13,6 @@ import {
   ProgressStep,
 } from "@/src/types";
 
-
 /**
  * 프로젝트 생성
  * @param requestData 프로젝트 생성 페이지 입력 데이터
@@ -71,7 +70,6 @@ export async function deleteProjectApi(
     throw error;
   }
 }
-
 
 /**
  * 프로젝트 목록을 가져옵니다.
@@ -163,7 +161,9 @@ export async function fetchProjectApprovalProgressStepApi(
 }
 
 // 프로젝트 단계 정보
-export async function projectProgressStepApi(projectId: string): Promise<CommonResponseType<ProgressStep[]>> {
+export async function projectProgressStepApi(
+  projectId: string,
+): Promise<CommonResponseType<ProgressStep[]>> {
   const response = await axiosInstance.get(
     `/projects/${projectId}/progress-steps`,
   );

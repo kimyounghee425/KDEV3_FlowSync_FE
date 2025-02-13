@@ -149,9 +149,6 @@ export default function Profile() {
         }}
       >
         {/* 드롭다운 메뉴 */}
-        <MenuItem asChild value="마이페이지">
-          <Link href={"/"}>마이페이지</Link>
-        </MenuItem>
         <MenuItem
           asChild
           value="로그아웃"

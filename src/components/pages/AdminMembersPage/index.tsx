@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
@@ -10,7 +10,7 @@ import {
   Stack,
   Table,
 } from "@chakra-ui/react";
-import StatusTag from "@/src/components/common/StatusTag";
+import { Switch } from "@/src/components/ui/switch";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
@@ -18,6 +18,8 @@ import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import { useMemberList } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
+import { activateMemberApi, deactivateMemberApi } from "@/src/api/members";
+import { MemberProps } from "@/src/types";
 
 const memberRoleFramework = createListCollection<{
   label: string;
@@ -38,6 +40,7 @@ const memberStatusFramework = createListCollection<{
     { label: "전체", value: "" },
     { label: "활성화", value: "ACTIVE" },
     { label: "비활성화", value: "INACTIVE" },
+    { label: "삭제됨", value: "DELETED" },
   ],
 });
 
@@ -49,7 +52,15 @@ const ROLE_LABELS: Record<string, string> = {
 const STATUS_LABELS: Record<string, string> = {
   ACTIVE: "활성화",
   INACTIVE: "비활성화",
+  DELETED: "삭제됨",
 };
+
+// const renderStatusSwitch = (status: string) => {
+//   if (status === "DELETED") {
+//     return <Switch disabled>Activate Chakra</Switch>; // 삭제된 경우, 비활성화된 Switch
+//   }
+//   return <Switch checked={status === "ACTIVE"} />;
+// };
 
 export default function AdminMembersPage() {
   return (
@@ -74,6 +85,50 @@ function AdminMembersPageContent() {
     loading: memberListLoading,
     error: memberListError,
   } = useMemberList(keyword, role, status, currentPage, pageSize);
+
+  // ✅ 상태 변경을 위한 로컬 상태 추가
+  const [memberData, setMemberData] = useState<MemberProps[]>([]);
+  useEffect(() => {
+    if (memberList) {
+      setMemberData(memberList);
+    }
+  }, [memberList]);
+  const [loadingId, setLoadingId] = useState<string | null>(null); // ✅ 특정 회원의 Switch 로딩 상태
+
+  // ✅ 회원 상태 변경 핸들러 (API 호출 및 UI 반영)
+  const handleStatusChange = async (
+    memberId: string,
+    currentStatus: string,
+  ) => {
+    setLoadingId(memberId); // ✅ 변경 중인 ID 설정 (로딩 표시)
+
+    try {
+      if (currentStatus === "ACTIVE") {
+        await deactivateMemberApi(memberId); // 비활성화 API 호출
+      } else {
+        await activateMemberApi(memberId); // 활성화 API 호출
+      }
+
+      alert("회원 상태가 변경되었습니다.");
+
+      // ✅ API 호출 후 로컬 상태 업데이트 (UI 즉시 반영)
+      setMemberData((prevMembers) =>
+        (prevMembers || []).map((member) =>
+          member.id === memberId
+            ? {
+                ...member,
+                status: currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+              }
+            : member,
+        ),
+      );
+    } catch (error) {
+      console.error("회원 상태 변경 실패:", error);
+      alert("회원 상태 변경 중 오류가 발생했습니다.");
+    } finally {
+      setLoadingId(null); // ✅ 로딩 해제
+    }
+  };
 
   // 신규등록 버튼 클릭 시 - 회원 등록 페이지로 이동
   const handleMemberCreateButton = () => {
@@ -141,18 +196,10 @@ function AdminMembersPageContent() {
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
             </Table.Row>
           }
-          data={memberList ?? []}
+          data={memberData} // 로컬 상태 활용
           loading={memberListLoading}
-          renderRow={(member) => (
-            <Table.Row
-              key={member.id}
-              onClick={() => handleRowClick(member.id)}
-              css={{
-                cursor: "pointer",
-                "&:hover": { backgroundColor: "#f5f5f5" },
-                "& > td": { textAlign: "center" },
-              }}
-            >
+          renderRow={(member: MemberProps) => (
+            <>
               <Table.Cell>
                 {ROLE_LABELS[member.role] || "알 수 없음"}
               </Table.Cell>
@@ -161,13 +208,22 @@ function AdminMembersPageContent() {
               <Table.Cell>{`${member.jobRole} | ${member.jobTitle}`}</Table.Cell>
               <Table.Cell>{member.email}</Table.Cell>
               <Table.Cell>{member.phoneNum}</Table.Cell>
-              <Table.Cell>
-                <StatusTag>
-                  {STATUS_LABELS[member.status] || "알 수 없음"}
-                </StatusTag>
+              <Table.Cell onClick={(event) => event.stopPropagation()}>
+                {member.status === "DELETED" ? (
+                  <Switch disabled />
+                ) : (
+                  <Switch
+                    checked={member.status === "ACTIVE"}
+                    onChange={(event) => {
+                      event.stopPropagation();
+                      handleStatusChange(member.id, member.status);
+                    }}
+                    disabled={loadingId === member.id} // ✅ 상태 변경 시 로딩 적용
+                  />
+                )}
               </Table.Cell>
               <Table.Cell>{formatDynamicDate(member.regAt)}</Table.Cell>
-            </Table.Row>
+            </>
           )}
         />
         {paginationInfo && (

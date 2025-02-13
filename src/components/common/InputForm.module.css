@@ -20,7 +20,8 @@
 .input {
   flex: 1; /* 🔹 너비 자동 조절 */
   width: 100%;
-  padding: 10px;
+  height: 3.5rem;
+  padding: 0.8rem;
   border: 1px solid var(--input-border, #6c757d) !important; /* ⚡강제 적용 */
   border-radius: 0.5rem;
   font-size: 1rem;
@@ -64,7 +65,7 @@
 
 .required {
   color: red;
-  margin-left: 5px;
+  margin-left: 0.3rem;
 }
 
 .errorText {

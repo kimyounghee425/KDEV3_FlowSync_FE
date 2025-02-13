@@ -1,8 +1,10 @@
 import axiosInstance from "@/src/api/axiosInstance";
 import {
+  ActivateMemberResponse,
   CommonResponseType,
   CreateMemberInput,
   CreateMemberResponse,
+  DeactivateMemberResponse,
   DeleteMemberResponse,
   MemberListResponse,
   MemberProps,
@@ -135,6 +137,34 @@ export async function deleteMember(
       { reason }, // 🔹 요청 바디에 탈퇴 사유 추가
     );
     return response.data; // ✅ 응답 데이터 반환
+  } catch (error) {
+    throw error; // 🚨 에러 발생 시 throw
+  }
+}
+
+export async function activateMemberApi(
+  memberId: string,
+): Promise<ActivateMemberResponse> {
+  try {
+    console.log("활성화 API 호출 전 - memberId: ", memberId);
+    const response = await axiosInstance.post(
+      `/admins/members/activate?memberId=${memberId}`,
+    );
+    console.log("활성화 API 호출 후 - response: ", response);
+    return response.data;
+  } catch (error) {
+    throw error; // 🚨 에러 발생 시 throw
+  }
+}
+
+export async function deactivateMemberApi(
+  memberId: string,
+): Promise<DeactivateMemberResponse> {
+  try {
+    const response = await axiosInstance.post(
+      `/admins/members/deactivate?memberId=${memberId}`,
+    );
+    return response.data;
   } catch (error) {
     throw error; // 🚨 에러 발생 시 throw
   }
