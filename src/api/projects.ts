@@ -9,8 +9,8 @@ import {
   CreateProjectInput,
   ProjectListSidebarResponse,
   ProjectInfoProps,
-  ManagementStepCountMap,
   ProgressStep,
+  ManagementStepCountMap,
 } from "@/src/types";
 
 /**
@@ -257,4 +257,23 @@ export async function fetchProjectApprovalListApi(
     },
   });
   return response.data;
+}
+
+/**
+ * 특정 프로젝트 진행 단계의 날짜를 업데이트합니다.
+ * @param projectId 프로젝트 ID
+ * @param progressStepId 진행 단계 ID
+ * @param requestData 업데이트할 시작일 및 마감일 데이터
+ * @returns 업데이트된 진행 단계 정보
+ */
+export async function updateProjectProgressStepApi(
+  projectId: string,
+  progressStepId: string,
+  requestData: { startAt: string; deadlineAt: string }
+): Promise<CommonResponseType<ProgressStep>> {
+    const response = await axiosInstance.put(
+      `/projects/${projectId}/progress-steps/${progressStepId}/plans`,
+      requestData
+    );
+    return response.data;
 }

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { showToast } from "@/src/utils/showToast";
-import { CommonResponseType, NoticeRequestData } from "@/src/types";
+import { CommonResponseType, NoticeRequestData, ProgressStep } from "@/src/types";
 import { createNoticeApi, deleteNoticeApi, editNoticeApi } from "@/src/api/notices";
+import { updateProjectProgressStepApi } from "@/src/api/projects";
 
 interface UseMutationDataProps<T, P extends any[]> {
   mutationApi: (...args: P) => Promise<CommonResponseType<T>>;
@@ -73,5 +74,14 @@ export function useEditNotice() {
 export function useDeleteNotice() {
   return useMutationData<void, [string]>({
     mutationApi: deleteNoticeApi,
+  });
+}
+
+/**
+ * 프로젝트 진행 단계 날짜 업데이트 훅
+ */
+export function useUpdateProjectProgressStep() {
+  return useMutationData<ProgressStep, [string, string, { startAt: string; deadlineAt: string }]>({
+    mutationApi: updateProjectProgressStepApi,
   });
 }
