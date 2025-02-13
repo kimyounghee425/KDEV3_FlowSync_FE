@@ -95,6 +95,16 @@ export async function projectProgressStepApi(projectId: string) {
   return response.data;
 }
 
+// 프로젝트 관리 단계 수정
+export async function projectManagementStepApi(projectId: string, managementStep: string) {
+  const response = await axiosInstance.put(
+    `/projects/${projectId}/management-steps`, {},{
+      params: {managementStep}
+    }
+  );
+  return response.data;
+}
+
 /**
  * 프로젝트 관리단계별 개수를 가져옵니다.
  * 예: 진행 중, 완료 등 관리단계별 프로젝트 수

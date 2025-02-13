@@ -6,8 +6,8 @@ import { Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { Layers, List, MessageCircleQuestion } from "lucide-react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import ProjectInfoSection from "@/src/components/common/ProjectInfoSection";
-import { useProjectInfo } from "@/src/hook/useFetchData";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
+import { useProjectInfoContext } from "@/src/context/ProjectInfoContext";
 
 interface ProjectLayoutProps {
   children: ReactNode;
@@ -44,20 +44,26 @@ const projectMenu = [
   },
 ];
 
+const MANAGEMENT_STEP_LABELS: Record<string, string> = {
+  CONTRACT: "계약",
+  IN_PROGRESS: "진행중",
+  COMPLETED: "납품완료",
+  MAINTENANCE: "하자보수",
+  PAUSED: "일시중단",
+  DELETED: "삭제",
+};
+
 export function ProjectLayout({ children }: ProjectLayoutProps) {
   const router = useRouter();
   const { projectId } = useParams();
   const pathname = usePathname();
 
-  const resolvedProjectId = Array.isArray(projectId)
-    ? projectId[0]
-    : projectId || "";
   // 프로젝트 정보 데이터 패칭
   const {
     data: projectInfo,
     loading: projectInfoLoading,
     error: projectInfoError,
-  } = useProjectInfo(resolvedProjectId);
+  } = useProjectInfoContext();
   // 현재 탭 추출
   const currentTab = pathname.split("/").pop(); // "approvals" | "questions" | "workflow"
 
@@ -98,7 +104,7 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
             </Text>
           </Flex>
           <Text fontWeight="500" fontSize="20px">
-            {projectInfo?.managementStep}
+            {MANAGEMENT_STEP_LABELS[projectInfo?.managementStep || ""]}
           </Text>
         </Flex>
         {/* 프로젝트 정보 */}

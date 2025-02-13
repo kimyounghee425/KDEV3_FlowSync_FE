@@ -110,17 +110,13 @@ async function validateAndRefreshTokens(
           return { userInfo: userInfoResponse.data, response };
         }
       } else {
+        console.warn("❌ Refresh Token 없음 → 로그인 페이지로 이동");
         return { response };
       }
     }
   } catch (error: any) {
     console.error("❌ Refresh Token 사용 중 오류 발생:", error.message);
     clearCookies(response);
-  }
-
-  if (!refreshToken) {
-    console.warn("❌ Refresh Token 없음 → 로그인 페이지로 이동");
-    return { response };
   }
 
   try {

@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 
-interface layoutProps {
+interface LayoutProps {
   children: ReactNode;
 }
 
-export default function layout({ children }: layoutProps) {
+export default function Layout({ children }: LayoutProps) {
   return <div>{children}</div>;
 }

@@ -55,34 +55,34 @@ export function useFetchData<T, P extends any[]>({
     fetchData(...params);
   }, [...params]);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch: () => fetchData(...params) };
 }
 
 /**
  * 프로젝트 질문 Progress Step 데이터 패칭 훅
  */
-export const useProjectQuestionProgressStepData = (resolvedProjectId: string) =>
+export const useProjectQuestionProgressStepData = (projectId: string) =>
   useFetchData<ProjectProgressStepProps[], [string]>({
     fetchApi: fetchProjectQuestionProgressStepApi,
-    params: [resolvedProjectId],
+    params: [projectId],
   });
 
 /**
  * 프로젝트 정보 데이터 패칭 훅
  */
-export const useProjectInfo = (resolvedProjectId: string) =>
+export const useProjectInfo = (projectId: string) =>
   useFetchData<ProjectInfoProps, [string]>({
     fetchApi: fetchProjectInfoApi,
-    params: [resolvedProjectId],
+    params: [projectId],
   });
 
 /**
  * 결재 Progress Step 데이터 패칭 훅
  */
-export const useProjectApprovalProgressStepData = (resolvedProjectId: string) =>
+export const useProjectApprovalProgressStepData = (projectId: string) =>
   useFetchData<ProjectProgressStepProps[], [string]>({
     fetchApi: fetchProjectApprovalProgressStepApi,
-    params: [resolvedProjectId],
+    params: [projectId],
   });
 
 /**

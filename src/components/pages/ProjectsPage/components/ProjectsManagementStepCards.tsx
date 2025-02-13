@@ -29,13 +29,13 @@ const icons = [
   <OctagonX key="7" size="60%" color="black" />,
 ];
 
-interface ProjectsStatusCardsProps {
+interface ProjectsManagementStepCardsProps {
   title: string;
 }
 // 프로젝트 현황을 하나 보여주는 카드
-export default function ProjectsStatusCards({
+export default function ProjectsManagementStepCards({
   title,
-}: ProjectsStatusCardsProps) {
+}: ProjectsManagementStepCardsProps) {
   const {
     data: managementStepsCountData,
     loading: managementStepsCountLoading,
@@ -118,9 +118,6 @@ export default function ProjectsStatusCards({
       width="full" // 전체 너비 사용
       mx="auto" // 가운데 정렬
       // maxWidth="var(--content-max-width)" // 공통 테이블과 같은 너비
-      border={`1px solid ${borderColor}`}
-      borderRadius="lg"
-      boxShadow="md"
       bg={bgColor} // 다크모드 배경색
       transition="all 0.3s ease-in-out"
     >
@@ -128,14 +125,13 @@ export default function ProjectsStatusCards({
       <Heading size="2xl" color={textColor} mb="10px" textAlign="left">
         {title}
       </Heading>
-
       {managementStepsCountError && (
         <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
       )}
       {/* 카드 컨테이너 */}
       <Flex
         wrap="nowrap"
-        justifyContent="space-between"
+        justifyContent="center"
         alignItems="center"
         gap={gap}
         p={4}

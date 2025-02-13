@@ -11,11 +11,11 @@ interface SearchSectionProps {
 }
 
 export default function SearchSection({
-  keyword,
+  keyword = "",
   placeholder = "검색어를 입력하세요",
   children,
 }: SearchSectionProps) {
-  const [input, setInput] = useState<string>();
+  const [input, setInput] = useState<string>("");
   const router = useRouter();
 
   // 검색 버튼을 클릭하거나 엔터 입력시 데이터를 가져오는 함수
