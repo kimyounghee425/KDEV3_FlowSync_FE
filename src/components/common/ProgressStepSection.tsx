@@ -19,7 +19,7 @@ export default function ProgressStepSection({
   loading,
 }: ProgressStepSectionProps) {
   // 화면 크기에 따라 `gap` 동적 조절 (작은 화면일수록 간격 좁게)
-  const gapValue = useBreakpointValue({ base: 2, md: 4, lg: 8 });
+  const gapValue = useBreakpointValue({ base: 2, md: 4, lg: 12 });
 
   // 현재 선택된 버튼 id 상태 (기본값은 progressData의 첫 번째 항목)
   const [selectedButtonId, setSelectedButtonId] = useState<string>(
@@ -52,11 +52,12 @@ export default function ProgressStepSection({
   return (
     <Flex
       alignItems="center"
-      justifyContent="center"
+      justifyContent="flex-start"
       width="100%"
-      px={3}
-      py={2}
-      gap={gapValue}
+      paddingX="2rem"
+      paddingY="1rem"
+      gap="1rem"
+      // gap={gapValue}
       border="1px solid"
       borderColor="gray.200"
       borderRadius="lg"

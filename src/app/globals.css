@@ -1,14 +1,14 @@
 /* 글로벌 스타일 */
 :root {
-  --header-height: 3rem;
+  --header-height: 4rem;
   --sidebar-width-mobile: 0px;
   --sidebar-width: 15%;
   --content-max-width: 85%;
   --font-size-base: 1rem;
   --font-size-sm: 0.875rem;
   --font-size-lg: 1.125rem;
-  --button-bg-light: #01e4b3;
-  --button-hover-bg-light: #018a97;
+  --button-bg-light: #50c6ab;
+  --button-hover-bg-light: #21bdb4;
   --button-active-bg-light: #01676e; /* 클릭 시 색상 */
   --button-bg-dark: #6c757d;
   --button-hover-bg-dark: #495057;
@@ -42,17 +42,17 @@ html {
 }
 
 /* Reset */
-* {
+/* * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
+} */
 
 /* 다크 모드 스타일 */
 body.light {
   --background-color: var(--background-light);
   --text-color: var(--text-light);
-  --button-bg: var(--button-bg-light);
+  /* --button-bg: var(--button-bg-light); */
   --button-hover-bg: var(--button-hover-bg-light);
   --button-active-bg: var(--button-active-bg-light);
 }
@@ -60,14 +60,14 @@ body.light {
 body.dark {
   --background-color: var(--background-dark);
   --text-color: var(--text-dark);
-  --button-bg: var(--button-bg-dark);
+  /* --button-bg: var(--button-bg-dark); */
   --button-hover-bg: var(--button-hover-bg-dark);
   --button-active-bg: var(--button-active-bg-dark);
 }
 
 body {
-  margin: 0;
-  padding: 0;
+  /* margin: 0;
+  padding: 0; */
   font-family: "Roboto", sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -88,13 +88,16 @@ a:hover {
 
 button {
   @apply font-inherit cursor-pointer rounded-md border-none px-6 py-3;
-  background-color: var(--button-bg, #e5e5e5);
-  color: var(--button-text-color, #000);
+  /* background-color: var(--button-bg-light); */
+  /* font-weight: bold; */
+  color: #000;
   padding: 0.5rem;
+  transition: all 1s;
 }
 
 button:hover {
-  background-color: var(--button-hover-bg);
+  /* color: #323232; */
+  /* background-color: var(--button-hover-bg-light); */
 }
 
 /* 버튼 클릭 시 효과 */

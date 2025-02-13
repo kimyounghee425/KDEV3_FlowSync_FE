@@ -24,6 +24,7 @@ import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useUserInfo } from "@/src/hook/useFetchData";
 import { useProjectList } from "@/src/hook/useFetchBoardList";
+import DropDownMenu from "../../common/DropDownMenu";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -207,7 +208,7 @@ function ProjectsPageContent() {
                   {userRole === "ADMIN" ? (
                     <>
                       <Table.ColumnHeader>삭제여부</Table.ColumnHeader>
-                      <Table.ColumnHeader>공지사항관리</Table.ColumnHeader>
+                      <Table.ColumnHeader>관리</Table.ColumnHeader>
                     </>
                   ) : (
                     <></>
@@ -246,12 +247,21 @@ function ProjectsPageContent() {
                       {formatDynamicDate(project.deadlineAt)}
                     </Table.Cell>
                     <Table.Cell>
-                      {formatDynamicDate(project.closeAt)}
+                      {formatDynamicDate(project.closeAt) === ""
+                        ? "-"
+                        : formatDynamicDate(project.closeAt)}
                     </Table.Cell>
                     {userRole === "ADMIN" ? (
                       <>
                         <Table.Cell>{project.deletedYn}</Table.Cell>
-                        <Table.Cell>관리</Table.Cell>
+                        <Table.Cell
+                          onClick={(event) => event.stopPropagation()}
+                        >
+                          <DropDownMenu
+                          // onEdit={() => handleEdit(notice.id)}
+                          // onDelete={() => handleDelete(notice.id)}
+                          />
+                        </Table.Cell>
                       </>
                     ) : (
                       <></>

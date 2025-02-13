@@ -87,7 +87,7 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
       {/* 상단 영역 */}
       <Flex
         direction="column"
-        padding="30px 23px"
+        padding="30px 23px 15px 23px"
         gap="8px"
         border="1px solid"
         borderColor="gray.200"
@@ -95,16 +95,27 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
         boxShadow="md"
         mb="30px"
       >
-        <Flex justifyContent={"space-between"}>
+        <Flex
+          justifyContent={"space-between"}
+          alignItems="center"
+          // height="4rem"
+        >
           {/* 프로젝트 제목 및 설명 */}
-          <Flex gap="10px">
-            <Heading size={"4xl"}>{projectInfo?.projectName}</Heading>
+          <Flex gap="10px" alignItems="center">
+            <Heading size={"4xl"} paddingLeft="1.5rem">
+              {projectInfo?.projectName}
+            </Heading>
             <Text fontWeight="500" color="#BBB" fontSize="20px">
               {projectInfo?.description}
             </Text>
           </Flex>
-          <Text fontWeight="500" fontSize="20px">
-            {MANAGEMENT_STEP_LABELS[projectInfo?.managementStep || ""]}
+          <Text
+            fontWeight="bold"
+            fontSize="20px"
+            paddingRight="2rem"
+            color="#0c9ae0"
+          >
+            &bull; {MANAGEMENT_STEP_LABELS[projectInfo?.managementStep || ""]}
           </Text>
         </Flex>
         {/* 프로젝트 정보 */}

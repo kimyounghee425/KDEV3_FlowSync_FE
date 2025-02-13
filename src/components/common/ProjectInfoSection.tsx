@@ -19,11 +19,30 @@ export default function ProjectInfoSection({
     return <Loading />;
   }
   return (
-    <Box p={3} borderWidth="1px" borderRadius="lg" boxShadow="sm" bg="white">
+    <Box
+      p={3}
+      // borderWidth="1px"
+      border="none"
+      borderRadius="lg"
+      // boxShadow="sm"
+      bg="white"
+      // boxSizing="content-box"
+    >
       <VStack align="stretch" gap={2}>
         {/* 개발사 정보 */}
-        <Box p={2} borderRadius="md" bg="gray.50">
-          <Text fontSize="sm" fontWeight="bold" mb={1}>
+        <Box
+          p={2}
+          borderRadius="md"
+          bg="gray.50"
+          boxSizing="content-box"
+          padding="1rem"
+        >
+          <Text
+            fontSize="1.1rem"
+            paddingBottom="0.5rem"
+            fontWeight="bold"
+            mb={1}
+          >
             🔧 개발사 정보
           </Text>
           <HStack justifyContent="space-between">
@@ -50,8 +69,20 @@ export default function ProjectInfoSection({
         </Box>
 
         {/* 고객사 정보 */}
-        <Box p={2} borderRadius="md" bg="gray.50">
-          <Text fontSize="sm" fontWeight="bold" mb={1}>
+        <Box
+          p={2}
+          borderRadius="md"
+          bg="gray.50"
+          boxSizing="content-box"
+          padding="1rem"
+        >
+          <Text
+            fontSize="1.1rem"
+            paddingBottom="0.5rem"
+            fontWeight="bold"
+            mb={1}
+          >
+            {" "}
             🏢 고객사 정보
           </Text>
           <HStack justifyContent="space-between">
@@ -78,11 +109,23 @@ export default function ProjectInfoSection({
         </Box>
 
         {/* 프로젝트 일정 정보 */}
-        <Box p={2} borderRadius="md" bg="gray.50">
-          <Text fontSize="sm" fontWeight="bold" mb={1}>
+        <Box
+          p={2}
+          borderRadius="md"
+          bg="gray.50"
+          boxSizing="content-box"
+          padding="1rem"
+        >
+          <Text
+            fontSize="1.1rem"
+            paddingBottom="0.5rem"
+            fontWeight="bold"
+            mb={1}
+          >
+            {" "}
             📅 프로젝트 일정
           </Text>
-          <VStack align="start" gap={1}>
+          <VStack align="start" gap="0.3rem">
             <Text fontSize="sm">
               🚀 시작일: {formatDynamicDate(projectInfo?.startAt) || "정보없음"}
             </Text>

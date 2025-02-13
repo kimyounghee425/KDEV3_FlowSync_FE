@@ -10,6 +10,7 @@ interface ProjectsManagementStepCardProps {
   onClick: () => void;
   isSelected: boolean; // 선택 여부
   isDisabled?: boolean; // 비활성화 여부
+  isThin?: boolean;
 }
 
 /**
@@ -21,19 +22,20 @@ export default function ProjectsManagementStepCard({
   icon,
   onClick,
   isSelected,
+  isThin = false,
   isDisabled = false,
 }: ProjectsManagementStepCardProps) {
   // 반응형 크기 설정
   const cardWidth = useBreakpointValue({
-    base: "100px", // 모바일
+    base: "100px", // 모바일;
     sm: "130px", // 작은 태블릿
     md: "180px", // 데스크탑
   });
 
   const cardHeight = useBreakpointValue({
-    base: "100px",
-    sm: "120px",
-    md: "140px",
+    base: isThin ? "20px" : "100px",
+    sm: isThin ? "40px" : "120px",
+    md: isThin ? "60px" : "140px",
   });
 
   const iconSize = useBreakpointValue({

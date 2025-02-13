@@ -39,6 +39,11 @@ const STATUS_LABELS: Record<string, string> = {
   REJECTED: "반려",
 };
 
+const CATEGORY_LABELS: Record<string, string> = {
+  NORMAL_REQUEST: "일반결재",
+  COMPLETE_REQUEST: "완료결재",
+};
+
 export default function ProjectApprovalsPage() {
   const { projectId } = useParams();
   const searchParams = useSearchParams();
@@ -91,7 +96,7 @@ export default function ProjectApprovalsPage() {
     router.push(`/projects/${projectId}/approvals/new`);
   };
 
-  return ( 
+  return (
     <ProjectLayout>
       {approvalProgressStepError && (
         <ErrorAlert message="프로젝트 단계 정보를 불러오지 못했습니다. 다시 시도해주세요." />
@@ -111,9 +116,12 @@ export default function ProjectApprovalsPage() {
         boxShadow="md"
         mb="30px"
       >
-        <Flex justifyContent={"space-between"}>
+        <Flex justifyContent={"space-between"} paddingX="0.3rem">
           <Button
             variant={"surface"}
+            backgroundColor="#00a8ff"
+            color="white"
+            border="none"
             _hover={{ backgroundColor: "#00a8ff", color: "white" }}
             onClick={handleProjectApprovalCreateButton}
           >
@@ -172,7 +180,9 @@ export default function ProjectApprovalsPage() {
             >
               <Table.Cell>{approval.progressStep.name}</Table.Cell>
               <Table.Cell>
-                <StatusTag>{approval.category}</StatusTag>
+                <StatusTag>
+                  {CATEGORY_LABELS[approval.category] || "알 수 없음"}
+                </StatusTag>
               </Table.Cell>
               <Table.Cell>{approval.title}</Table.Cell>
               <Table.Cell>{approval.register.name}</Table.Cell>

@@ -205,101 +205,104 @@ export default function ProjectForm({
   }, [formData]);
 
   return (
-    <InputFormLayout
-      title={isEditMode ? "프로젝트 상세 조회" : "프로젝트 생성"}
-      onSubmit={handleSubmit}
-      isLoading={isSubmitting}
-      isDisabled={false} // 버튼 비활성화 조건 추가
-      onDelete={isEditMode ? handleDelete : undefined}
-      deleteEntityType="프로젝트"
-    >
-      <Flex
-        width="100%"
-        gap="1rem"
-        alignItems="center"
-        padding="1rem"
-        marginTop="1rem"
+    <Flex width="100%" justifyContent="center">
+      <InputFormLayout
+        title={isEditMode ? "프로젝트 상세 조회" : "프로젝트 생성"}
+        onSubmit={handleSubmit}
+        isLoading={isSubmitting}
+        isDisabled={false} // 버튼 비활성화 조건 추가
+        onDelete={isEditMode ? handleDelete : undefined}
+        deleteEntityType="프로젝트"
       >
-        {/* 프로젝트 헤더 (관리 단계, 프로젝트명, 시작일, 종료일) */}
-        <Box flex="1">
-          <HeaderSection
-            name={formData.name}
-            managementStep={formData.managementStep}
-            setName={(name) => setFormData((prev) => ({ ...prev, name }))}
-            setManagementStep={(step) =>
-              setFormData((prev) => ({ ...prev, managementStep: step }))
+        <Flex
+          width="100%"
+          gap="1rem"
+          justifyContent="center"
+          alignItems="center"
+          padding="1rem"
+          marginTop="1rem"
+        >
+          {/* 프로젝트 헤더 (관리 단계, 프로젝트명, 시작일, 종료일) */}
+          <Box flex="1">
+            <HeaderSection
+              name={formData.name}
+              managementStep={formData.managementStep}
+              setName={(name) => setFormData((prev) => ({ ...prev, name }))}
+              setManagementStep={(step) =>
+                setFormData((prev) => ({ ...prev, managementStep: step }))
+              }
+            />
+          </Box>
+          <Box flex="1">
+            <DateSection
+              startAt={formData.startAt}
+              closeAt={formData.deadlineAt} // ✅ 기존 closeAt → deadlineAt 사용
+              setStartAt={(date) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  startAt: date ? convertToKST(new Date(date)) : prev.startAt,
+                }));
+              }}
+              setCloseAt={(date) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  deadlineAt: date
+                    ? convertToKST(new Date(date))
+                    : prev.deadlineAt,
+                }));
+              }}
+            />
+          </Box>
+        </Flex>
+
+        {/* 프로젝트 설명 (description & detail) */}
+        <Flex width="100%">
+          <ContentSection
+            description={formData.description}
+            detail={formData.detail}
+            setDetail={(detail) => setFormData((prev) => ({ ...prev, detail }))}
+            setDescription={(description) =>
+              setFormData((prev) => ({ ...prev, description }))
             }
           />
-        </Box>
-        <Box flex="1">
-          <DateSection
-            startAt={formData.startAt}
-            closeAt={formData.deadlineAt} // ✅ 기존 closeAt → deadlineAt 사용
-            setStartAt={(date) => {
-              setFormData((prev) => ({
-                ...prev,
-                startAt: date ? convertToKST(new Date(date)) : prev.startAt,
-              }));
-            }}
-            setCloseAt={(date) => {
-              setFormData((prev) => ({
-                ...prev,
-                deadlineAt: date
-                  ? convertToKST(new Date(date))
-                  : prev.deadlineAt,
-              }));
-            }}
+        </Flex>
+
+        {/* 고객사 및 개발사 선택 */}
+        <Flex direction="column" gap="1rem" marginBottom="1.5rem">
+          <OrganizationSelector
+            title="고객사 지정"
+            organizationType="CUSTOMER"
+            selectedOrganizationId={formData.customerOrgId}
+            setSelectedOrganizationId={(id) =>
+              setFormData((prev) => ({ ...prev, customerOrgId: id }))
+            }
+            selectedOrganizationName={selectedCustomerOrgName}
+            setSelectedOrganizationName={setSelectedCustomerOrgName}
+            selectedMembers={selectedCustomerMembers}
+            setSelectedMembers={setSelectedCustomerMembers}
+            ownerId={formData.customerOwnerId}
+            setOwnerId={(id) =>
+              setFormData((prev) => ({ ...prev, customerOwnerId: id }))
+            }
           />
-        </Box>
-      </Flex>
-
-      {/* 프로젝트 설명 (description & detail) */}
-      <Flex width="100%">
-        <ContentSection
-          description={formData.description}
-          detail={formData.detail}
-          setDetail={(detail) => setFormData((prev) => ({ ...prev, detail }))}
-          setDescription={(description) =>
-            setFormData((prev) => ({ ...prev, description }))
-          }
-        />
-      </Flex>
-
-      {/* 고객사 및 개발사 선택 */}
-      <Flex direction="column" gap="1rem" marginBottom="1.5rem">
-        <OrganizationSelector
-          title="고객사 지정"
-          organizationType="CUSTOMER"
-          selectedOrganizationId={formData.customerOrgId}
-          setSelectedOrganizationId={(id) =>
-            setFormData((prev) => ({ ...prev, customerOrgId: id }))
-          }
-          selectedOrganizationName={selectedCustomerOrgName}
-          setSelectedOrganizationName={setSelectedCustomerOrgName}
-          selectedMembers={selectedCustomerMembers}
-          setSelectedMembers={setSelectedCustomerMembers}
-          ownerId={formData.customerOwnerId}
-          setOwnerId={(id) =>
-            setFormData((prev) => ({ ...prev, customerOwnerId: id }))
-          }
-        />
-        <OrganizationSelector
-          title="개발사 지정"
-          organizationType="DEVELOPER"
-          selectedOrganizationId={formData.developerOrgId}
-          setSelectedOrganizationId={(id) =>
-            setFormData((prev) => ({ ...prev, developerOrgId: id }))
-          }
-          selectedOrganizationName={selectedDeveloperOrgName}
-          setSelectedOrganizationName={setSelectedDeveloperOrgName}
-          selectedMembers={selectedDeveloperMembers}
-          setSelectedMembers={setSelectedDeveloperMembers}
-          ownerId={formData.devOwnerId}
-          setOwnerId={(id) =>
-            setFormData((prev) => ({ ...prev, devOwnerId: id }))
-          }
-        />
-      </Flex>
-    </InputFormLayout>
+          <OrganizationSelector
+            title="개발사 지정"
+            organizationType="DEVELOPER"
+            selectedOrganizationId={formData.developerOrgId}
+            setSelectedOrganizationId={(id) =>
+              setFormData((prev) => ({ ...prev, developerOrgId: id }))
+            }
+            selectedOrganizationName={selectedDeveloperOrgName}
+            setSelectedOrganizationName={setSelectedDeveloperOrgName}
+            selectedMembers={selectedDeveloperMembers}
+            setSelectedMembers={setSelectedDeveloperMembers}
+            ownerId={formData.devOwnerId}
+            setOwnerId={(id) =>
+              setFormData((prev) => ({ ...prev, devOwnerId: id }))
+            }
+          />
+        </Flex>
+      </InputFormLayout>
+    </Flex>
   );
 }

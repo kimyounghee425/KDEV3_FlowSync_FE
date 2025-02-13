@@ -14,7 +14,7 @@ import {
   DialogActionTrigger,
   DialogCloseTrigger,
 } from "@/src/components/ui/dialog"; // Chakra UI Dialog
-import { Button, Input, Text } from "@chakra-ui/react";
+import { Button, Flex, Input, Text } from "@chakra-ui/react";
 import styles from "@/src/components/layouts/InputFormLayout.module.css";
 
 export default function InputFormLayout({
@@ -52,80 +52,84 @@ export default function InputFormLayout({
       <div className={styles.formWrapper}>
         <form onSubmit={onSubmit}>
           {/* 📌 페이지 타이틀 */}
-          <h1 className={styles.pageTitle}>{title}</h1>
-          {/* 📌 페이지 버튼 - 등록/수정/삭제 */}
-          <div className={styles.buttonContainer}>
-            {isDetailPage ? (
-              <>
-                {/* 수정 버튼 */}
+          <Flex justifyContent="space-between" alignItems="center">
+            <h1 className={styles.pageTitle} style={{ marginBottom: "0px" }}>
+              {title}
+            </h1>
+            <div className={styles.buttonContainer}>
+              {isDetailPage ? (
+                <>
+                  {/* 수정 버튼 */}
+                  <button
+                    type="submit"
+                    className={`${styles.submitButton} ${
+                      isLoading ? styles.loading : ""
+                    }`}
+                    disabled={isLoading || isDisabled}
+                    aria-busy={isLoading}
+                  >
+                    {isLoading ? "처리 중..." : "수정하기"}
+                  </button>
+                  {/* 삭제 버튼 - 차크라 UI Dialog 컴포넌트 이용 */}
+                  {onDelete && ( // 삭제 핸들러가 존재하는 경우만 표시
+                    <DialogRoot role="alertdialog">
+                      <DialogTrigger asChild>
+                        <Button className={styles.deleteButton}>
+                          {entityType} 삭제
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>{entityType} 삭제</DialogTitle>
+                        </DialogHeader>
+                        <DialogBody>
+                          <Text fontWeight="medium" mb="2">
+                            {entityType} 삭제 사유를 입력하세요.
+                          </Text>
+                          <Input
+                            placeholder={`${entityType} 삭제 사유 입력`}
+                            size="sm"
+                            value={deleteReason}
+                            onChange={(e) => setDeleteReason(e.target.value)} // 입력값 업데이트
+                          />
+                        </DialogBody>
+                        <DialogFooter>
+                          <DialogActionTrigger asChild>
+                            <Button variant="outline">취소</Button>
+                          </DialogActionTrigger>
+                          <Button
+                            colorScheme="red"
+                            disabled={!deleteReason.trim()} // 삭제 사유 입력 전까지 비활성화
+                            opacity={deleteReason.trim() ? 1 : 0.5} // 비활성화 시 흐린 색상 적용
+                            onClick={() => {
+                              onDelete(deleteReason);
+                              setDeleteReason(""); // 입력값 초기화
+                            }}
+                          >
+                            삭제 확인
+                          </Button>
+                        </DialogFooter>
+                        <DialogCloseTrigger />
+                      </DialogContent>
+                    </DialogRoot>
+                  )}
+                </>
+              ) : (
+                /* 신규 등록 버튼 */
                 <button
                   type="submit"
                   className={`${styles.submitButton} ${
                     isLoading ? styles.loading : ""
                   }`}
-                  disabled={isLoading || isDisabled}
+                  disabled={isLoading}
                   aria-busy={isLoading}
                 >
-                  {isLoading ? "처리 중..." : "수정하기"}
+                  {isLoading ? "처리 중..." : "등록하기"}
                 </button>
-                {/* 삭제 버튼 - 차크라 UI Dialog 컴포넌트 이용 */}
-                {onDelete && ( // 삭제 핸들러가 존재하는 경우만 표시
-                  <DialogRoot role="alertdialog">
-                    <DialogTrigger asChild>
-                      <Button className={styles.deleteButton}>
-                        {entityType} 삭제
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>{entityType} 삭제</DialogTitle>
-                      </DialogHeader>
-                      <DialogBody>
-                        <Text fontWeight="medium" mb="2">
-                          {entityType} 삭제 사유를 입력하세요.
-                        </Text>
-                        <Input
-                          placeholder={`${entityType} 삭제 사유 입력`}
-                          size="sm"
-                          value={deleteReason}
-                          onChange={(e) => setDeleteReason(e.target.value)} // 입력값 업데이트
-                        />
-                      </DialogBody>
-                      <DialogFooter>
-                        <DialogActionTrigger asChild>
-                          <Button variant="outline">취소</Button>
-                        </DialogActionTrigger>
-                        <Button
-                          colorScheme="red"
-                          disabled={!deleteReason.trim()} // 삭제 사유 입력 전까지 비활성화
-                          opacity={deleteReason.trim() ? 1 : 0.5} // 비활성화 시 흐린 색상 적용
-                          onClick={() => {
-                            onDelete(deleteReason);
-                            setDeleteReason(""); // 입력값 초기화
-                          }}
-                        >
-                          삭제 확인
-                        </Button>
-                      </DialogFooter>
-                      <DialogCloseTrigger />
-                    </DialogContent>
-                  </DialogRoot>
-                )}
-              </>
-            ) : (
-              /* 신규 등록 버튼 */
-              <button
-                type="submit"
-                className={`${styles.submitButton} ${
-                  isLoading ? styles.loading : ""
-                }`}
-                disabled={isLoading}
-                aria-busy={isLoading}
-              >
-                {isLoading ? "처리 중..." : "등록하기"}
-              </button>
-            )}
-          </div>
+              )}
+            </div>
+          </Flex>
+          {/* 📌 페이지 버튼 - 등록/수정/삭제 */}
           {/* 📌 페이지 입력폼 */}
           {children}
         </form>

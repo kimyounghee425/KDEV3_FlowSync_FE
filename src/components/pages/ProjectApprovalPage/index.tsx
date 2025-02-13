@@ -69,9 +69,8 @@ export default function ProjectApprovalPage() {
     return <Box>로딩 중...</Box>;
   }
 
-  console.log(approverSignatureUrl)
+  console.log(approverSignatureUrl);
   const handleEdit = () => {
-
     if (approverSignatureUrl !== undefined) {
       alert("결재가 완료된 글은 수정할 수 없습니다.");
       return;
@@ -80,9 +79,7 @@ export default function ProjectApprovalPage() {
   };
 
   const handleDelete = async () => {
-
     if (approverSignatureUrl !== undefined) {
-
       alert("결재가 완료된 글은 삭제할 수 없습니다.");
       return;
     }
@@ -108,7 +105,11 @@ export default function ProjectApprovalPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <Flex justifyContent="space-between">
+      <Flex
+        justifyContent="space-between"
+        marginBottom="1rem"
+        alignItems="center"
+      >
         <BackButton />
         {/* <Image src={signatureUrl} alt="signature" width="100px" height="auto" /> */}
         <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
@@ -132,13 +133,13 @@ export default function ProjectApprovalPage() {
         <DropDownInfoBottom
           text={`결재 글은 서명을 기입해야 결재가 완료됩니다. \n "서명 불러오기" 는 기존에 저장된 서명을 불러옵나다. \n 새 서명을 기입하고 "등록" 을 누르면 기존에 저장되어 있던 서명은 삭제됩니다.`}
         />
-        </Box>
+      </Box>
       <Box display={"flex"} direction={"column"} justifyContent={"center"}>
         <SignToApprove
           registerSignatureUrl={registerSignatureUrl}
           approverSignatureUrl={approverSignatureUrl}
           registerOrgId={registerOrgId}
-          />
+        />
       </Box>
 
       {/* 댓글 섹션 */}

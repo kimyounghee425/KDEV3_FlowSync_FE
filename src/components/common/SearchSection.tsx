@@ -61,10 +61,10 @@ export default function SearchSection({
             onKeyDown={onKeyDown}
             width="300px"
           />
-          <Button variant={"surface"} onClick={onSubmit}>
+          <Button width="80px" variant={"surface"} onClick={onSubmit}>
             검색
           </Button>
-          <Button variant={"outline"} onClick={resetSearch}>
+          <Button width="80px" variant={"outline"} onClick={resetSearch}>
             초기화
           </Button>
         </HStack>

@@ -15,15 +15,18 @@ export const formatDateWithTime = (dateString: string) => {
   return `${year}.${month}.${day} ${hours}:${minutes}`;
 };
 
-export function formatDateToISODate(dateString: string | null | undefined): string {
+export function formatDateToISODate(
+  dateString: string | null | undefined,
+): string {
   if (!dateString) return ""; // dateString이 null 또는 undefined이면 빈 문자열 반환
 
   const givenDate = new Date(dateString.replace(" ", "T")); // "yyyy-mm-dd hh:mm" → "yyyy-mm-ddThh:mm"
   return givenDate.toISOString().split("T")[0]; // yyyy-mm-dd
 }
 
-
-export function formatDynamicDate(dateString: string | null | undefined): string {
+export function formatDynamicDate(
+  dateString: string | null | undefined,
+): string {
   if (!dateString) return ""; // dateString이 null 또는 undefined이면 빈 문자열 반환
 
   const now = new Date();
@@ -46,4 +49,4 @@ export function formattedDate(dateString: string) {
   const date = parseISO(dateString);
   const adjustedDate = addHours(date, 9);
   return format(adjustedDate, "yyyy-MM-dd HH:mm");
-};
+}

@@ -16,18 +16,22 @@ export default function ProgressStepButton({
   return (
     <Button
       onClick={onClick}
-      width="164px"
+      width="11%"
       height="48px"
       padding="14px 16px"
-      justifyContent="space-between"
+      justifyContent="center"
       alignItems="center"
       borderRadius="4px"
       bg="white"
       color="black"
+      overflow="hidden"
       border={isSelected ? "2px solid #D62A1C" : "1px solid #E5E5EC"} // 클릭 상태에 따라 테두리 변경
+      textAlign="center"
     >
-      <Text>{text}</Text>
-      <Text color={isSelected ? "#D62A1C" : "black"}>{count}건</Text>{" "}
+      {/* <Text>{text}</Text> */}
+      <Text color={isSelected ? "#D62A1C" : "black"}>
+        {text} {count}건
+      </Text>{" "}
       {/* 텍스트 색상 변경 */}
     </Button>
   );

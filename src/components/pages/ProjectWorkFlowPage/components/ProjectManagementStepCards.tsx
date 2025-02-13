@@ -132,18 +132,25 @@ export default function ProjectsManagementStepCards({
       bg={bgColor}
       transition="all 0.3s ease-in-out"
     >
-      <Heading size="2xl" color={textColor} mb="10px" textAlign="left">
+      <Heading
+        size="2xl"
+        color={textColor}
+        mb="10px"
+        textAlign="left"
+        paddingX="0.3rem"
+      >
         {title}
       </Heading>
       <Flex
         wrap="nowrap"
-        justifyContent="center"
+        justifyContent="flex-start"
         alignItems="center"
-        p={4}
+        paddingX="32px"
+        paddingY={4}
         border={`1px solid ${borderColor}`}
         borderRadius="lg"
         boxShadow="md"
-        gap={8}
+        gap={4}
         bg={bgColor}
       >
         {mappedData.map((item) => {
@@ -160,6 +167,7 @@ export default function ProjectsManagementStepCards({
               }
               isSelected={isCurrentStep}
               isDisabled={isCurrentStep} // 비활성화된 경우 클릭, hover 제거
+              isThin={true}
             />
           );
         })}
