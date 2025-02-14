@@ -92,7 +92,7 @@ export async function updateOrganization(
   return response.data;
 }
 
-// 📌 회원 삭제 (탈퇴 사유 포함 ver.)
+// 📌 업체 삭제 (탈퇴 사유 포함 ver.)
 export async function deleteOriginationWithReason(
   organizationId: string,
   reason: string,

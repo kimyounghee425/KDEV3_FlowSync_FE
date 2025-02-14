@@ -18,6 +18,8 @@ import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
+import DropDownMenu from "@/src/components/common/DropDownMenu";
+import { deleteOriginationWithReason } from "@/src/api/organizations";
 
 const organizationTypeFramework = createListCollection<{
   label: string;
@@ -94,6 +96,22 @@ function AdminOrganizationsPageContent() {
     router.push(`/admin/organizations/${id}`);
   };
 
+  const handleEdit = (id: string) => {
+    router.push(`/admin/organizations/${id}`);
+  };
+
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+    try {
+      await deleteOriginationWithReason(id, "");
+      alert("업체가 삭제 조치 되었습니다.");
+      router.refresh();
+    } catch (error) {
+      alert(`삭제 중 문제가 발생했습니다 : ${error}`);
+    }
+  };
+
   return (
     <>
       <Stack width="full">
@@ -154,19 +172,21 @@ function AdminOrganizationsPageContent() {
                 "& > td": { textAlign: "center" },
               }}
             >
-              <Table.Cell>
-                {TYPE_LABELS[organization.type] || "알 수 없음"}
-              </Table.Cell>
+              <Table.Cell>{TYPE_LABELS[organization.type]}</Table.Cell>
               <Table.Cell>{organization.name}</Table.Cell>
               <Table.Cell>{organization.brNumber}</Table.Cell>
               <Table.Cell>{organization.phoneNumber}</Table.Cell>
               <Table.Cell>{`${organization.streetAddress} ${organization.detailAddress}`}</Table.Cell>
               <Table.Cell>
-                <StatusTag>
-                  {STATUS_LABELS[organization.status] || "알 수 없음"}
-                </StatusTag>
+                <StatusTag>{STATUS_LABELS[organization.status]}</StatusTag>
               </Table.Cell>
               <Table.Cell>{formatDynamicDate(organization.regAt)}</Table.Cell>
+              <Table.Cell onClick={(event) => event.stopPropagation()}>
+                <DropDownMenu
+                  onEdit={() => handleEdit(organization.id)}
+                  onDelete={() => handleDelete(organization.id)}
+                />
+              </Table.Cell>
             </Table.Row>
           )}
         />

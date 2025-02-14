@@ -33,6 +33,13 @@ const ADMIN_MENU_ITEMS = [
   { value: "/notices", title: "공지사항 관리", icon: Bell },
 ];
 
+// 고객사/개발사 메뉴 항목
+const MEMBER_MENU_ITEMS = [
+  // { value: "/", title: "홈", icon: Briefcase },
+  { value: "/", title: "홈", icon: Home },
+  { value: "/notices", title: "공지사항", icon: Bell },
+];
+
 export default function SidebarTab({ memberRole }: SidebarTabProps) {
   const bgColor = useColorModeValue("white", "gray.900");
   const hoverBgColor = useColorModeValue("gray.100", "gray.700");
@@ -91,6 +98,25 @@ export default function SidebarTab({ memberRole }: SidebarTabProps) {
         </Box>
       ) : (
         <>
+          <Box mb={6} borderBottom="1px solid" borderColor={borderColor}>
+            {MEMBER_MENU_ITEMS.map((item) => (
+              <Link key={item.value} href={item.value}>
+                <Box
+                  p={4}
+                  display="flex"
+                  alignItems="center"
+                  gap={3}
+                  borderBottom="1px solid"
+                  borderColor={borderColor}
+                  _hover={{ bg: hoverBgColor }}
+                >
+                  {item.icon && <item.icon size={20} />}{" "}
+                  {/* 선택적으로 아이콘 삽입 */}
+                  {item.title}
+                </Box>
+              </Link>
+            ))}
+          </Box>
           <MenuRoot positioning={{ placement: "bottom-start" }}>
             <MenuTrigger asChild>
               <Box
