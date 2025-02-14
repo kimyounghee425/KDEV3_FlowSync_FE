@@ -10,7 +10,14 @@ import {
   MemberProps,
 } from "@/src/types";
 
-// 📌 회원 목록 Fetch API
+/**
+ * 회원 전체 목록을 가져옵니다.
+ * @param keyword 검색어 (기본값: "")
+ * @param filter 필터링 값 (기본값: "")
+ * @param currentPage 현재 페이지 번호
+ * @param pageSize 페이지 크기
+ * @returns 회원 목록 및 페이징 정보를 담은 객체
+ */
 export async function fetchMemberListApi(
   keyword: string = "", // 검색키워드
   role: string = "", // 계정타입
@@ -21,6 +28,32 @@ export async function fetchMemberListApi(
   const response = await axiosInstance.get("/admins/members", {
     params: { keyword, role, status, currentPage, pageSize },
   });
+
+  return response.data;
+}
+
+/**
+ * 업체 별 소속 회원 전체 목록을 가져옵니다.
+ * @param keyword 검색어 (기본값: "")
+ * @param filter 필터링 값 (기본값: "")
+ * @param currentPage 현재 페이지 번호
+ * @param pageSize 페이지 크기
+ * @returns 회원 목록 및 페이징 정보를 담은 객체
+ */
+export async function fetchOrganizationMemberListApi(
+  organizationId: string,
+  keyword: string = "", // 검색키워드
+  role: string = "", // 계정타입
+  status: string = "", // 활성화여부
+  currentPage: number,
+  pageSize: number,
+): Promise<CommonResponseType<MemberListResponse>> {
+  const response = await axiosInstance.get(
+    `/admins/members/member/org/${organizationId}`,
+    {
+      params: { organizationId, keyword, role, status, currentPage, pageSize },
+    },
+  );
 
   return response.data;
 }

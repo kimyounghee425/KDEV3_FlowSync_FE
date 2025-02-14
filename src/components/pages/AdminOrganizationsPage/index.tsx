@@ -22,6 +22,7 @@ import ErrorAlert from "@/src/components/common/ErrorAlert";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
 import { deleteOriginationWithReason } from "@/src/api/organizations";
 import { useUpdateOrganizationStatus } from "@/src/hook/useMutationData";
+// import StatusTag from "../../common/StatusTag";
 
 const organizationTypeFramework = createListCollection<{
   label: string;
@@ -175,7 +176,7 @@ function AdminOrganizationsPageContent() {
             <Table.Row
               backgroundColor={"#eee"}
               css={{
-                "& > th": { textAlign: "center" },
+                "& > th": { textAlign: "center", whiteSpace: "nowrap" },
               }}
             >
               <Table.ColumnHeader>업체유형</Table.ColumnHeader>
@@ -183,8 +184,8 @@ function AdminOrganizationsPageContent() {
               <Table.ColumnHeader>사업자등록번호</Table.ColumnHeader>
               <Table.ColumnHeader>연락처</Table.ColumnHeader>
               <Table.ColumnHeader>주소</Table.ColumnHeader>
-              <Table.ColumnHeader>상태</Table.ColumnHeader>
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
+              <Table.ColumnHeader>상태</Table.ColumnHeader>
               <Table.ColumnHeader>관리</Table.ColumnHeader>
             </Table.Row>
           }
@@ -227,6 +228,11 @@ function AdminOrganizationsPageContent() {
                 )}
               </Table.Cell>
               <Table.Cell>{formatDynamicDate(organization.regAt)}</Table.Cell>
+              {/* <Table.Cell>
+                <StatusTag>
+                  {STATUS_LABELS[organization.status] || "-"}
+                </StatusTag>
+              </Table.Cell> */}
               <Table.Cell onClick={(event) => event.stopPropagation()}>
                 <DropDownMenu
                   onEdit={() => handleEdit(organization.id)}

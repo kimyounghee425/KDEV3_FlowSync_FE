@@ -11,6 +11,7 @@ import {
   ProjectInfoProps,
   ProgressStep,
   ManagementStepCountMap,
+  OrganizationProjectListResponse,
 } from "@/src/types";
 
 
@@ -90,6 +91,68 @@ export async function fetchProjectListApi(
   const response = await axiosInstance.get("/projects", {
     params: { keyword, managementStep, currentPage, pageSize },
   });
+
+  return response.data;
+}
+
+/**
+ * 업체 별 참여 중 프로젝트 목록을 가져옵니다.
+ * @param keyword 검색어 (기본값: "")
+ * @param filter 필터링 값 (기본값: "")
+ * @param currentPage 현재 페이지 번호
+ * @param pageSize 페이지 크기
+ * @returns 프로젝트 목록 및 페이징 정보를 담은 객체(BoardResponseProps)
+ */
+export async function fetchOrganizationProjectListApi(
+  organizationId: string,
+  keyword: string = "",
+  managementStep: string = "",
+  currentPage: number,
+  pageSize: number,
+): Promise<CommonResponseType<OrganizationProjectListResponse>> {
+  const response = await axiosInstance.get(
+    `/admins/organizations/${organizationId}/projects`,
+    {
+      params: {
+        organizationId,
+        keyword,
+        managementStep,
+        currentPage,
+        pageSize,
+      },
+    },
+  );
+
+  return response.data;
+}
+
+/**
+ * 회원 별 참여 중 프로젝트 목록을 가져옵니다.
+ * @param keyword 검색어 (기본값: "")
+ * @param filter 필터링 값 (기본값: "")
+ * @param currentPage 현재 페이지 번호
+ * @param pageSize 페이지 크기
+ * @returns 프로젝트 목록 및 페이징 정보를 담은 객체(BoardResponseProps)
+ */
+export async function fetchMemberProjectListApi(
+  memberId: string,
+  keyword: string = "",
+  managementStep: string = "",
+  currentPage: number,
+  pageSize: number,
+): Promise<CommonResponseType<OrganizationProjectListResponse>> {
+  const response = await axiosInstance.get(
+    `/admins/members/${memberId}/projects`,
+    {
+      params: {
+        memberId,
+        keyword,
+        managementStep,
+        currentPage,
+        pageSize,
+      },
+    },
+  );
 
   return response.data;
 }
@@ -271,11 +334,11 @@ export async function fetchProjectApprovalListApi(
 export async function updateProjectProgressStepApi(
   projectId: string,
   progressStepId: string,
-  requestData: { startAt: string; deadlineAt: string }
+  requestData: { startAt: string; deadlineAt: string },
 ): Promise<CommonResponseType<ProgressStep>> {
-    const response = await axiosInstance.put(
-      `/projects/${projectId}/progress-steps/${progressStepId}/plans`,
-      requestData
-    );
-    return response.data;
+  const response = await axiosInstance.put(
+    `/projects/${projectId}/progress-steps/${progressStepId}/plans`,
+    requestData,
+  );
+  return response.data;
 }

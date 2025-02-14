@@ -8,6 +8,8 @@ interface SearchSectionProps {
   keyword: string;
   placeholder?: string;
   children?: ReactNode;
+  keywordName?: string;
+  currentPageName?: string;
 }
 
 export default function SearchSection({

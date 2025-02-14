@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const sidebarWidth = useBreakpointValue({
     base: isSidebarOpen ? "70vw" : "0",
-    md: isSidebarOpen ? "250px" : "0",
+    md: isSidebarOpen ? "10vw" : "0",
   });
 
   // 다크모드 색상 설정
@@ -80,9 +80,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <Box
             flex={1}
             bg={marginBgColor} // 마진 영역의 배경색 설정
-            // marginX={{ base: "0", md: isSidebarOpen ? "2%" : "10%" }} // 작은 화면에서는 마진 제거
             transition="margin 0.3s ease-in-out"
-            padding={4}
+            paddingY="1rem"
+            paddingX="2rem"
+            overflowY="auto"
           >
             <Flex
               as="main"
@@ -94,11 +95,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               // padding={4}
               bg={bgColor}
             >
-              <Box
-                width="100%"
-                maxWidth="var(--content-max-width)"
-                bg={bgColor}
-              >
+              <Box maxWidth="var(--content-max-width)" bg={bgColor}>
                 {children}
               </Box>
             </Flex>
