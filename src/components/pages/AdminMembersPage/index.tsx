@@ -24,7 +24,7 @@ import {
   deleteMember,
 } from "@/src/api/members";
 import { MemberProps } from "@/src/types";
-import DropDownMenu from "../../common/DropDownMenu";
+import DropDownMenu from "@/src/components/common/DropDownMenu";
 
 const memberRoleFramework = createListCollection<{
   label: string;

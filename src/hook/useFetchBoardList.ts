@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react";
-import { CommonResponseWithMetaType, PaginationProps, ProjectQuestionListResponse, ProjectApprovalListResponse, ProjectListResponse, NoticeListResponse, OrganizationListResponse, MemberListResponse } from "@/src/types";
-import { fetchProjectQuestionListApi, fetchProjectApprovalListApi, fetchProjectListApi, projectProgressStepApi } from "@/src/api/projects";
+import {
+  CommonResponseWithMetaType,
+  PaginationProps,
+  ProjectQuestionListResponse,
+  ProjectApprovalListResponse,
+  ProjectListResponse,
+  NoticeListResponse,
+  OrganizationListResponse,
+  MemberListResponse,
+} from "@/src/types";
+import {
+  fetchProjectQuestionListApi,
+  fetchProjectApprovalListApi,
+  fetchProjectListApi,
+  projectProgressStepApi,
+} from "@/src/api/projects";
 import { showToast } from "@/src/utils/showToast";
 import { fetchNoticeListApi } from "@/src/api/notices";
 import { fetchOrganizationListApi } from "@/src/api/organizations";
@@ -42,8 +56,11 @@ export function useFetchBoardList<T, P extends any[], K extends keyof T>({
     } catch (err: any) {
       console.error("Error fetching data:", err);
       // ✅ 서버 응답에서 message 필드가 있는 경우 해당 메시지 사용
-      const errorMessage = err.response?.data?.message || err.message || "데이터를 불러오는 중 오류가 발생했습니다.";
-      
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "데이터를 불러오는 중 오류가 발생했습니다.";
+
       // ✅ 토스트로 사용자에게 알림
       showToast({
         title: "요청 실패",
@@ -62,7 +79,13 @@ export function useFetchBoardList<T, P extends any[], K extends keyof T>({
     fetchBoardListData(...params);
   }, [...params]);
 
-  return { data, paginationInfo, loading, error, refetch: () => fetchBoardListData(...params) };
+  return {
+    data,
+    paginationInfo,
+    loading,
+    error,
+    refetch: () => fetchBoardListData(...params),
+  };
 }
 
 // ProjectQuestionList 데이터 패칭
@@ -72,23 +95,24 @@ export const useProjectQuestionList = (
   progressStep: string,
   status: string,
   currentPage: number,
-  pageSize: number
-) => useFetchBoardList<
-  ProjectQuestionListResponse,
-  [string, string, string, string, number, number],
-  "projectQuestions"
->({
-  fetchApi: fetchProjectQuestionListApi,
-  keySelector: "projectQuestions",
-  params: [
-    resolvedProjectId,
-    keyword,
-    progressStep,
-    status,
-    currentPage,
-    pageSize,
-  ],
-});
+  pageSize: number,
+) =>
+  useFetchBoardList<
+    ProjectQuestionListResponse,
+    [string, string, string, string, number, number],
+    "projectQuestions"
+  >({
+    fetchApi: fetchProjectQuestionListApi,
+    keySelector: "projectQuestions",
+    params: [
+      resolvedProjectId,
+      keyword,
+      progressStep,
+      status,
+      currentPage,
+      pageSize,
+    ],
+  });
 
 // ProjectTaskList 데이터 패칭
 export const useProjectApprovalList = (
@@ -97,39 +121,41 @@ export const useProjectApprovalList = (
   progressStep: string,
   status: string,
   currentPage: number,
-  pageSize: number
-) => useFetchBoardList<
-  ProjectApprovalListResponse,
-  [string, string, string, string, number, number],
-  "projectApprovals"
->({
-  fetchApi: fetchProjectApprovalListApi,
-  keySelector: "projectApprovals",
-  params: [
-    resolvedProjectId,
-    keyword,
-    progressStep,
-    status,
-    currentPage,
-    pageSize,
-  ],
-});
+  pageSize: number,
+) =>
+  useFetchBoardList<
+    ProjectApprovalListResponse,
+    [string, string, string, string, number, number],
+    "projectApprovals"
+  >({
+    fetchApi: fetchProjectApprovalListApi,
+    keySelector: "projectApprovals",
+    params: [
+      resolvedProjectId,
+      keyword,
+      progressStep,
+      status,
+      currentPage,
+      pageSize,
+    ],
+  });
 
 // 프로젝트 목록 패칭
 export const useProjectList = (
   keyword: string,
   status: string,
   currentPage: number,
-  pageSize: number
-) => useFetchBoardList<
-ProjectListResponse,
-[string, string, number, number],
-"projects"
->({
-fetchApi: fetchProjectListApi,
-keySelector: "projects",
-params: [keyword, status, currentPage, pageSize],
-});
+  pageSize: number,
+) =>
+  useFetchBoardList<
+    ProjectListResponse,
+    [string, string, number, number],
+    "projects"
+  >({
+    fetchApi: fetchProjectListApi,
+    keySelector: "projects",
+    params: [keyword, status, currentPage, pageSize],
+  });
 
 // 공지사항 목록 패칭
 export const useNoticeList = (
@@ -137,16 +163,17 @@ export const useNoticeList = (
   category: string,
   isDeleted: string,
   currentPage: number,
-  pageSize: number
-) => useFetchBoardList<
-NoticeListResponse,
-[string, string, string, number, number],
-"notices"
->({
-fetchApi: fetchNoticeListApi,
-keySelector: "notices",
-params: [keyword, category, isDeleted, currentPage, pageSize],
-});
+  pageSize: number,
+) =>
+  useFetchBoardList<
+    NoticeListResponse,
+    [string, string, string, number, number],
+    "notices"
+  >({
+    fetchApi: fetchNoticeListApi,
+    keySelector: "notices",
+    params: [keyword, category, isDeleted, currentPage, pageSize],
+  });
 
 // 회원 목록 패칭
 export const useMemberList = (
@@ -154,9 +181,9 @@ export const useMemberList = (
   role: string,
   status: string,
   currentPage: number,
-  pageSize: number
-) => 
-useFetchBoardList<
+  pageSize: number,
+) =>
+  useFetchBoardList<
     MemberListResponse,
     [string, string, string, number, number],
     "members"
@@ -172,9 +199,9 @@ export const useOrganizationList = (
   type: string,
   status: string,
   currentPage: number,
-  pageSize: number
-) => 
-useFetchBoardList<
+  pageSize: number,
+) =>
+  useFetchBoardList<
     OrganizationListResponse,
     [string, string, string, number, number],
     "dtoList"
