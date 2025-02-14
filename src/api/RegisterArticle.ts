@@ -2,15 +2,19 @@ import axiosInstance from "@/src/api/axiosInstance";
 import { QuestionRequestData, ApprovalRequestData } from "@/src/types";
 
 export async function uploadFileApi(file: File) {
-  const formData = new FormData();
-  formData.append("file", file);
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
 
-  const response = await axiosInstance.post("/file", formData, {
-    headers: {
-      "Content-type": "multipart/form-data",
-    },
-  });
-  return response.data;
+    const response = await axiosInstance.post("/file", formData, {
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 // 질문글 생성
@@ -30,7 +34,6 @@ export async function createTaskApi(
   projectId: number,
   requestData: ApprovalRequestData,
 ) {
-
   const response = await axiosInstance.post(
     `/projects/${projectId}/approvals`,
     requestData,
@@ -52,10 +55,7 @@ export async function editQuestionAPI(
 }
 
 // 질문글 삭제
-export async function deleteQuestionApi(
-  projectId: number,
-  questionId: number,
-) {
+export async function deleteQuestionApi(projectId: number, questionId: number) {
   try {
     const response = await axiosInstance.delete(
       `projects/${projectId}/questions/${questionId}`,
@@ -80,12 +80,8 @@ export async function editApprovalAPI(
   return response.data;
 }
 
-
 // 결재글 삭제
-export async function deleteApprovalApi(
-  projectId: number,
-  approvalId: number,
-) {
+export async function deleteApprovalApi(projectId: number, approvalId: number) {
   try {
     const response = await axiosInstance.delete(
       `projects/${projectId}/approvals/${approvalId}`,

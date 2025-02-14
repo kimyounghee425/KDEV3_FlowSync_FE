@@ -1,5 +1,10 @@
-import { CommonResponseType, NoticeListResponse, NoticeRequestData } from "@/src/types";
+import {
+  CommonResponseType,
+  NoticeListResponse,
+  NoticeRequestData,
+} from "@/src/types";
 import axiosInstance from "@/src/api/axiosInstance";
+import { headers } from "next/headers";
 
 // 공지사항 생성
 export async function fetchNoticeListApi(
@@ -14,17 +19,20 @@ export async function fetchNoticeListApi(
   });
   return response.data;
 }
-export async function createNoticeApi( requestData: NoticeRequestData ) {
-  const response = await axiosInstance.post(
-    `/admins/notices`,
-    requestData,
-  );
+export async function createNoticeApi(requestData: NoticeRequestData) {
+  const response = await axiosInstance.post(`/admins/notices`, requestData, {
+    headers: {
+      "Content-type": "multipart/form-data",
+    },
+  });
   return response.data;
 }
 
-
 // 공지사항 수정
-export async function editNoticeApi(noticeId: string, requestData: NoticeRequestData ) {
+export async function editNoticeApi(
+  noticeId: string,
+  requestData: NoticeRequestData,
+) {
   const response = await axiosInstance.put(
     `/admins/notices/${noticeId}`,
     requestData,
@@ -33,11 +41,7 @@ export async function editNoticeApi(noticeId: string, requestData: NoticeRequest
 }
 
 // 공지사항 삭제
-export async function deleteNoticeApi(
-  noticeId: string,
-) {
-    const response = await axiosInstance.delete(
-      `admins/notices/${noticeId}`,
-    );
-    return response.data;
+export async function deleteNoticeApi(noticeId: string) {
+  const response = await axiosInstance.delete(`admins/notices/${noticeId}`);
+  return response.data;
 }

@@ -3,7 +3,7 @@
 // 외부 라이브러리
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
+import { Box, Input, Text, Flex, Button, Textarea } from "@chakra-ui/react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
@@ -150,6 +150,7 @@ export default function ArticleForm({
 
   const handleEditorSave = async () => {
     setisDisabled(true);
+    setTimeout(() => setisDisabled(false), 2000);
     if (editorRef.current) {
       try {
         const savedData = await editorRef.current.save();
@@ -280,9 +281,18 @@ export default function ArticleForm({
         <Box flex={2}>
           <Text mb={2}>제목</Text>
           <Input
+            type="text"
             placeholder="제목을 입력하세요."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            maxHeight={"200px"}
+            maxLength={80}
+            style={{
+              overflow: "hidden",
+              resize: "none", // 크기 조절 방지
+              minHeight: "40px", // 최소 높이
+              height: "40px", // 기본 높이
+            }}
           />
         </Box>
       </Flex>
