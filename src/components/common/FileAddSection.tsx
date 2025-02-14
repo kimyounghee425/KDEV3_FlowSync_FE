@@ -38,7 +38,7 @@ export default function FileAddSection({
       setUploadedFileSize((prev) => [...prev, responseFileData.size]);
     } catch (error) {
       console.error("파일 업로드 실패:", error);
-      alert("파일 업로드 중 문제가 발생했습니다.");
+      alert("업로드 파일 용량은 10MB 를 초과할 수 없습니다.");
       return null;
     }
   };

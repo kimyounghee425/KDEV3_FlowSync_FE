@@ -5,6 +5,7 @@ import { Flex, Box, Text, Button, Input } from "@chakra-ui/react";
 import { MemberProps, OrganizationProps } from "@/src/types";
 import { getOrganizationsApi } from "@/src/api/getOrganization";
 import { fetchMembersWithinOrgApi } from "@/src/api/members";
+import DropDownInfoBottom from "@/src/components/common/DropDownInfoBottom";
 
 interface OrganizationSelectorProps {
   title: string;
@@ -322,29 +323,18 @@ export default function OrganizationSelector({
 
               {/* 모달창 우측 회원 목록 */}
               <Box flex="1">
-                <Text fontWeight="bold" mb="0.5rem">
-                  멤버 선택
-                </Text>
-
-                <Box
-                  position="absolute"
-                  top="40px" // 버튼 아래에 위치
-                  left="0"
-                  width="200px"
-                  bg="white"
-                  border="1px solid #ccc"
-                  borderRadius="8px"
-                  boxShadow="md"
-                  p="4"
-                  zIndex="9999"
-                >
-                  <Text fontWeight="bold">Owner 란?</Text>
-                  <Text fontSize="sm" mt="2">
-                    {title === "고객사 목록"
-                      ? "고객사 멤버 중 Owner 로 정해진 사람은 결재 권한이 있습니다."
-                      : "개발사 멤버 중 Owner 로 정해진 사람은 결재 요청 권한이 있습니다"}
+                <Flex direction="row" alignItems="center">
+                  <Text fontWeight="bold" mb="0.5rem">
+                    멤버 선택
                   </Text>
-                </Box>
+                  <Box mb="0.5rem" ml="0.5rem">
+                    {organizationType === "CUSTOMER" ? (
+                      <DropDownInfoBottom text="고객사 멤버 중 Owner 로 정해진 사람은 결재 요청 권한이 있습니다" />
+                    ) : (
+                      <DropDownInfoBottom text="개발사 멤버 중 Owner 로 정해진 사람은 결재 요청 권한이 있습니다" />
+                    )}
+                  </Box>
+                </Flex>
 
                 <Box
                   border="1px solid #ccc"

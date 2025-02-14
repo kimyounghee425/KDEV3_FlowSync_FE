@@ -137,7 +137,9 @@ export default function ProjectForm({
   };
 
   // 📌 **프로젝트 생성/수정 API 호출**
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent) => {
+    event?.preventDefault();
+
     if (
       !formData.name ||
       !formData.startAt ||
@@ -208,7 +210,7 @@ export default function ProjectForm({
     <Flex width="100%" justifyContent="center">
       <InputFormLayout
         title={isEditMode ? "프로젝트 상세 조회" : "프로젝트 생성"}
-        onSubmit={handleSubmit}
+        onSubmit={(event) => handleSubmit(event)}
         isLoading={isSubmitting}
         isDisabled={false} // 버튼 비활성화 조건 추가
         onDelete={isEditMode ? handleDelete : undefined}

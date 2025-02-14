@@ -17,10 +17,18 @@ export default function InputForm({
   disabled = false, // 기본값 false 추가
   isChanged,
   maxLength,
+  onKeyDown,
 }: InputFormData) {
   const [originalValue, setOriginalValue] = useState(value); // 초기값 저장
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
+
+  // 비번 입력할 땐 스페이스 입력 방지
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (type === "password" && e.key === " ") {
+      e.preventDefault(); // ✅ 스페이스 입력 차단
+    }
+  };
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (onChange) {
@@ -142,6 +150,7 @@ export default function InputForm({
           onChange={onChange}
           disabled={disabled}
           maxLength={maxLength}
+          onKeyDown={handleKeyDown}
         />
       )}
       {/* 에러 메시지 표시 (에러 메시지가 없는 경우에도 레이아웃 유지 위해 높이를 고정) */}

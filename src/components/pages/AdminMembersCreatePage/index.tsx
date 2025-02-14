@@ -102,18 +102,26 @@ export default function AdminMembersCreatePage() {
     }
     return true;
   }
-  console.log(
-    inputValues.role,
-    inputValues.organizationId,
-    inputValues.name,
-    inputValues.email,
-    inputValues.password,
-    inputValues.phoneNum,
-    inputValues.jobRole,
-    inputValues.jobTitle,
-    inputValues.introduction,
-    inputValues.remark,
-  );
+  // console.log(
+  //   inputValues.role,
+  //   inputValues.organizationId,
+  //   inputValues.name,
+  //   inputValues.email,
+  //   inputValues.password,
+  //   inputValues.phoneNum,
+  //   inputValues.jobRole,
+  //   inputValues.jobTitle,
+  //   inputValues.introduction,
+  //   inputValues.remark,
+  // );
+
+  // 입력값 공백 다듬기
+  const formattedData = (input: string) => {
+    return input.replace(/\s{2,}/g, " ").trim();
+  }
+  
+
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!validateInputs()) return;
@@ -123,16 +131,16 @@ export default function AdminMembersCreatePage() {
         String(selectedOrganization?.id),
       );
       const response = await createMember(
-        inputValues.role,
+        formattedData(inputValues.role),
         selectedOrganizationId,
-        inputValues.name,
+        formattedData(inputValues.name),
         inputValues.email,
         inputValues.password,
         inputValues.phoneNum,
-        inputValues.jobRole,
-        inputValues.jobTitle,
-        inputValues.introduction,
-        inputValues.remark,
+        formattedData(inputValues.jobRole),
+        formattedData(inputValues.jobTitle),
+        formattedData(inputValues.introduction),
+        formattedData(inputValues.remark),
       );
 
       // 회원 등록 API(2) - 파일 업로드 O
@@ -147,6 +155,12 @@ export default function AdminMembersCreatePage() {
       alert("회원 등록에 실패했습니다. 다시 시도해주세요.");
     }
   }
+
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === " ") {
+      e.preventDefault(); // ✅ 스페이스바 입력 차단
+    }
+  };
 
   return (
     <InputFormLayout

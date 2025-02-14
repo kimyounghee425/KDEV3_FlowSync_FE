@@ -209,6 +209,7 @@ export default function OrganizationDetailForm({
         isDisabled={isUpdateDisabled} // 버튼 비활성화 조건 추가
         onDelete={handleDelete}
         deleteEntityType="업체" // 삭제 대상 선택 ("회원" | "업체" | "프로젝트")
+        
       >
         {/* 수정 불가 필드 */}
         <Box>

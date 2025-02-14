@@ -498,6 +498,7 @@ export interface InputFormData {
   disabled?: boolean;
   isChanged?: boolean;
   maxLength?: number;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 // 공지사항

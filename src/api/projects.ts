@@ -13,6 +13,7 @@ import {
   ManagementStepCountMap,
 } from "@/src/types";
 
+
 /**
  * 프로젝트 생성
  * @param requestData 프로젝트 생성 페이지 입력 데이터
@@ -70,6 +71,7 @@ export async function deleteProjectApi(
     throw error;
   }
 }
+
 
 /**
  * 프로젝트 목록을 가져옵니다.
