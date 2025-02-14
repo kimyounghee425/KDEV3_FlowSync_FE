@@ -159,6 +159,7 @@ function ProjectsPageContent() {
                 {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
                 <SearchSection keyword={keyword} placeholder="제목 입력">
                   <FilterSelectBox
+                    placeholder="관리단계"
                     statusFramework={projectStatusFramework}
                     selectedValue={managementStep}
                     queryKey="managementStep"
@@ -170,6 +171,7 @@ function ProjectsPageContent() {
                 {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
                 <SearchSection keyword={keyword} placeholder="프로젝트명 입력">
                   <FilterSelectBox
+                    placeholder="관리단계"
                     statusFramework={projectStatusFramework}
                     selectedValue={managementStep}
                     queryKey="managementStep"

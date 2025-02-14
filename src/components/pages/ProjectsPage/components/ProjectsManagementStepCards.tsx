@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Box, Flex, Heading, useBreakpointValue } from "@chakra-ui/react";
 import {
   Folder,
@@ -36,6 +38,12 @@ interface ProjectsManagementStepCardsProps {
 export default function ProjectsManagementStepCards({
   title,
 }: ProjectsManagementStepCardsProps) {
+  const router = useRouter();
+  // 현재 선택된 관리 단계 상태
+  const [selectedStep, setSelectedStep] = useState<ProjectManagementSteps>(
+    ProjectManagementSteps.ALL,
+  );
+
   const {
     data: managementStepsCountData,
     loading: managementStepsCountLoading,
@@ -53,6 +61,18 @@ export default function ProjectsManagementStepCards({
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const textColor = useColorModeValue("gray.700", "gray.200");
+
+  const handleStepClick = (step: ProjectManagementSteps) => {
+    setSelectedStep(step);
+    const params = new URLSearchParams(window.location.search);
+    params.set("currentPage", "1");
+    if (step !== ProjectManagementSteps.ALL) {
+      params.set("managementStep", step);
+    } else {
+      params.delete("managementStep");
+    }
+    router.push(`?${params.toString()}`);
+  };
 
   // 백엔드에서 받은 데이터
   const managementStepCountMap =
@@ -148,7 +168,8 @@ export default function ProjectsManagementStepCards({
             count={item.count}
             label={item.label}
             icon={item.icon}
-            managementStep={item.managementStepValue} // 필터링할 상태 값 추가
+            isSelected={selectedStep === item.managementStepValue}
+            onClick={() => handleStepClick(item.managementStepValue)}
           />
         ))}
       </Flex>

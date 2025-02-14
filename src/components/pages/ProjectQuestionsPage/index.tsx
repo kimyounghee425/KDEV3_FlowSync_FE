@@ -126,6 +126,7 @@ export default function ProjectQuestionsPage() {
           {/* 검색 섹션 */}
           <SearchSection keyword={keyword} placeholder="제목 입력">
             <FilterSelectBox
+              placeholder="질문상태"
               statusFramework={questionStatusFramework}
               selectedValue={status}
               queryKey="status"

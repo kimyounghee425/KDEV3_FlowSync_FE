@@ -9,6 +9,7 @@ import {
   Heading,
   Stack,
   Table,
+  Text,
 } from "@chakra-ui/react";
 import { Switch } from "@/src/components/ui/switch";
 import CommonTable from "@/src/components/common/CommonTable";
@@ -52,12 +53,6 @@ const memberStatusFramework = createListCollection<{
 const ROLE_LABELS: Record<string, string> = {
   ADMIN: "관리자",
   MEMBER: "일반회원",
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  ACTIVE: "활성화",
-  INACTIVE: "비활성화",
-  DELETED: "삭제됨",
 };
 
 // const renderStatusSwitch = (status: string) => {
@@ -132,7 +127,7 @@ function AdminMembersPageContent() {
       console.error("회원 상태 변경 실패:", error);
       alert("회원 상태 변경 중 오류가 발생했습니다.");
     } finally {
-      setLoadingId(null); // ✅ 로딩 해제
+      setLoadingId(null); // 로딩 해제
     }
   };
 
@@ -196,11 +191,13 @@ function AdminMembersPageContent() {
               statusFramework={memberRoleFramework}
               selectedValue={role}
               queryKey="role"
+              placeholder="역할"
             />
             <FilterSelectBox
               statusFramework={memberStatusFramework}
               selectedValue={status}
               queryKey="status"
+              placeholder="활성화 여부"
             />
           </SearchSection>
         </Box>
@@ -248,7 +245,7 @@ function AdminMembersPageContent() {
               <Table.Cell>{member.phoneNum}</Table.Cell>
               <Table.Cell onClick={(event) => event.stopPropagation()}>
                 {member.status === "DELETED" ? (
-                  <Switch disabled />
+                  <Text color="red">삭제됨</Text>
                 ) : (
                   <Switch
                     checked={member.status === "ACTIVE"}

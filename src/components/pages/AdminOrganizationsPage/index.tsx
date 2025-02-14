@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
@@ -9,8 +9,9 @@ import {
   Heading,
   Stack,
   Table,
+  Text,
 } from "@chakra-ui/react";
-import StatusTag from "@/src/components/common/StatusTag";
+import { Switch } from "@/src/components/ui/switch";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
 import { useOrganizationList } from "@/src/hook/useFetchBoardList";
@@ -20,6 +21,7 @@ import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
 import { deleteOriginationWithReason } from "@/src/api/organizations";
+import { useUpdateOrganizationStatus } from "@/src/hook/useMutationData";
 
 const organizationTypeFramework = createListCollection<{
   label: string;
@@ -48,11 +50,6 @@ const TYPE_LABELS: Record<string, string> = {
   DEVELOPER: "개발사",
 };
 
-const STATUS_LABELS: Record<string, string> = {
-  ACTIVE: "활성화",
-  INACTIVE: "비활성화",
-};
-
 export default function AdminOrganizationsPage() {
   return (
     <Suspense>
@@ -76,7 +73,24 @@ function AdminOrganizationsPageContent() {
     paginationInfo,
     loading: organizationListLoading,
     error: organizationListError,
+    refetch,
   } = useOrganizationList(keyword, type, status, currentPage, pageSize);
+
+  const [loadingId, setLoadingId] = useState<string | null>(null); // 특정 업체의 Switch 로딩 상태
+
+  // 업체 상태 변경 훅
+  const { mutate: updateOrganizationStatus } = useUpdateOrganizationStatus();
+
+  // 업체 상태 변경 핸들러
+  const handleStatusChange = async (organizationId: string) => {
+    setLoadingId(organizationId);
+    try {
+      await updateOrganizationStatus(organizationId);
+      refetch();
+    } finally {
+      setLoadingId(null);
+    }
+  };
 
   // 신규등록 버튼 클릭 시 - 업체 등록 페이지로 이동
   const handleMemberCreateButton = () => {
@@ -131,11 +145,13 @@ function AdminOrganizationsPageContent() {
               statusFramework={organizationTypeFramework}
               selectedValue={type}
               queryKey="type"
+              placeholder="업체유형"
             />
             <FilterSelectBox
               statusFramework={OrganizationStatusFramework}
               selectedValue={status}
               queryKey="status"
+              placeholder="활성화 여부"
             />
           </SearchSection>
         </Box>
@@ -143,6 +159,18 @@ function AdminOrganizationsPageContent() {
           <ErrorAlert message="업체 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
         <CommonTable
+          columnsWidth={
+            <>
+              <Table.Column htmlWidth="8%" />
+              <Table.Column htmlWidth="12%" />
+              <Table.Column htmlWidth="12%" />
+              <Table.Column htmlWidth="12%" />
+              <Table.Column htmlWidth="30%" />
+              <Table.Column htmlWidth="12%" />
+              <Table.Column htmlWidth="8%" />
+              <Table.Column htmlWidth="6%" />
+            </>
+          }
           headerTitle={
             <Table.Row
               backgroundColor={"#eee"}
@@ -169,16 +197,34 @@ function AdminOrganizationsPageContent() {
               css={{
                 cursor: "pointer",
                 "&:hover": { backgroundColor: "#f5f5f5" },
-                "& > td": { textAlign: "center" },
+                "& > td": {
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                },
               }}
             >
               <Table.Cell>{TYPE_LABELS[organization.type]}</Table.Cell>
               <Table.Cell>{organization.name}</Table.Cell>
               <Table.Cell>{organization.brNumber}</Table.Cell>
               <Table.Cell>{organization.phoneNumber}</Table.Cell>
-              <Table.Cell>{`${organization.streetAddress} ${organization.detailAddress}`}</Table.Cell>
               <Table.Cell>
-                <StatusTag>{STATUS_LABELS[organization.status]}</StatusTag>
+                {`${organization.streetAddress} ${organization.detailAddress}`}
+              </Table.Cell>
+              <Table.Cell onClick={(event) => event.stopPropagation()}>
+                {organization.status === "DELETED" ? (
+                  <Text color="red">삭제됨</Text>
+                ) : (
+                  <Switch
+                    checked={organization.status === "ACTIVE"}
+                    onChange={(event) => {
+                      event.stopPropagation();
+                      handleStatusChange(organization.id);
+                    }}
+                    disabled={loadingId === organization.id} // ✅ 상태 변경 시 로딩 적용
+                  />
+                )}
               </Table.Cell>
               <Table.Cell>{formatDynamicDate(organization.regAt)}</Table.Cell>
               <Table.Cell onClick={(event) => event.stopPropagation()}>

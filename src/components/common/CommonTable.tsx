@@ -5,6 +5,7 @@ import { Box, Table } from "@chakra-ui/react";
 import { SkeletonText } from "@/src/components/ui/skeleton";
 
 interface CommonTableProps<T> {
+  columnsWidth?: ReactNode;
   headerTitle: ReactNode;
   data: T[] | null;
   loading: boolean;
@@ -12,6 +13,7 @@ interface CommonTableProps<T> {
 }
 
 export default function CommonTable<T extends { id: string }>({
+  columnsWidth,
   headerTitle,
   data = [],
   loading,
@@ -39,22 +41,14 @@ export default function CommonTable<T extends { id: string }>({
         maxWidth="none" // 너비 제한 없음
         css={{
           borderCollapse: "collapse",
-          // "& th, & td": { border: "1.8px solid #ddd", padding: "8px" },
-          "& th, & td": { padding: "8px" },
-          "& th": { padding: "16px" },
+          tableLayout: "fixed",
+          "& th, & td": { padding: "0.5rem" },
+          "& th": { padding: "1rem" },
         }}
       >
-        {/* 테이블 헤더 */}
-        <Table.Header
-          css={{
-            "& th": {
-              textAlign: "center",
-              fontWeight: "bold",
-            },
-          }}
-        >
-          {headerTitle}
-        </Table.Header>
+        <Table.ColumnGroup>{columnsWidth}</Table.ColumnGroup>
+
+        <Table.Header>{headerTitle}</Table.Header>
 
         {/* 테이블 바디 */}
         <Table.Body>

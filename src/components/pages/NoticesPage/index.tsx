@@ -142,6 +142,7 @@ function NoticesPageContent() {
               statusFramework={noticeStatusFramework}
               selectedValue={category}
               queryKey="category"
+              placeholder="카테고리"
               width="120px"
             />
           </SearchSection>
@@ -154,6 +155,7 @@ function NoticesPageContent() {
               statusFramework={noticeStatusFramework}
               selectedValue={category}
               queryKey="category"
+              placeholder="카테고리"
               width="120px"
             />
           </SearchSection>
@@ -183,6 +185,7 @@ function NoticesPageContent() {
                       statusFramework={noticeIsDeletedFramework}
                       selectedValue={isDeleted}
                       queryKey="isDeleted"
+                      placeholder="삭제여부"
                       width="150px"
                     />
                   </Flex>

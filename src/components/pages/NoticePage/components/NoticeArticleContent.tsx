@@ -2,25 +2,16 @@
 import { Box, Text, Image, VStack, Separator } from "@chakra-ui/react";
 
 // 절대 경로 파일
-import {
-  QuestionArticle,
-  ApprovalArticle,
-  ArticleLink,
-  ArticleFile,
-  ContentBlock,
-  NoticeArticle,
-} from "@/src/types";
+import { ArticleFile, ContentBlock, NoticeArticle } from "@/src/types";
 import { formatDateWithTime } from "@/src/utils/formatDateUtil";
 
-interface ArticleContentProps<
-  T extends QuestionArticle | ApprovalArticle | NoticeArticle,
-> {
+interface ArticleContentProps<T extends NoticeArticle> {
   article: T | null;
 }
 
-export default function ArticleContent<
-  T extends QuestionArticle | ApprovalArticle | NoticeArticle,
->({ article }: ArticleContentProps<T>) {
+export default function ArticleContent<T extends NoticeArticle>({
+  article,
+}: ArticleContentProps<T>) {
   if (!article) {
     return (
       <Box>
@@ -65,29 +56,6 @@ export default function ArticleContent<
     });
   };
 
-  // 링크 렌더링
-  const renderLinks = (links: ArticleLink[]) => {
-    return links.map((link, index) => {
-      const url =
-        link.url.startsWith("http://") || link.url.startsWith("https://")
-          ? link.url
-          : `https://${link.url}`;
-
-      return (
-        <Box
-          key={index}
-          mb={2}
-          cursor="pointer"
-          color={"blue"}
-          onClick={() => window.open(url, "_blank")}
-          _hover={{ textDecoration: "underline" }}
-        >
-          <Text fontWeight="normal">{link.name}</Text>
-        </Box>
-      );
-    });
-  };
-
   // 첨부파일 렌더링
   const renderFiles = (files: ArticleFile[]) => {
     if (!files || files.length === 0) {
@@ -121,8 +89,6 @@ export default function ArticleContent<
     });
   };
 
-  // regAt 날짜 예쁘게 변환
-
   return (
     <Box
       mb={4}
@@ -135,9 +101,7 @@ export default function ArticleContent<
         {article.title}
       </Text>
 
-      {/* 작성자, 작성 일시 (NoticeArticle인 경우 작성자 정보 숨김) */}
       <Box mb={4}>
-        {"author" in article && <Text>작성자: {article.author}</Text>}
         <Text>{formatDateWithTime(article.regAt)}</Text>
       </Box>
 

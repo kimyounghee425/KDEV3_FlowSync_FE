@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { useRouter } from "next/navigation";
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useColorModeValue } from "@/src/components/ui/color-mode";
 import { ProjectManagementSteps } from "@/src/constants/projectManagementSteps"; // ENUM import
@@ -8,7 +7,8 @@ interface ProjectsManagementStepCardProps {
   count: number; // 숫자(통계 수치)
   label: string; // 카드에 표시될 라벨
   icon: ReactNode; // 카드 내부 아이콘
-  managementStep: ProjectManagementSteps; // 필터링할 상태 값
+  isSelected?: boolean;
+  onClick: () => void;
 }
 
 /**
@@ -23,9 +23,9 @@ export default function ProjectsManagementStepCard({
   count,
   label,
   icon,
-  managementStep,
+  isSelected = false,
+  onClick,
 }: ProjectsManagementStepCardProps) {
-  const router = useRouter();
   // 반응형 크기 설정
   const cardWidth = useBreakpointValue({
     base: "100px", // 모바일
@@ -62,22 +62,9 @@ export default function ProjectsManagementStepCard({
   const textColor = useColorModeValue("gray.700", "gray.700");
   const hoverBgColor = useColorModeValue("gray.100", "gray.600");
 
-  // 클릭 시 필터 적용
-  const handleFilterClick = () => {
-    const params = new URLSearchParams(window.location.search);
-    params.set("currentPage", "1"); // 페이지를 1로 초기화
-    if (managementStep !== ProjectManagementSteps.ALL) {
-      params.set("managementStep", managementStep);
-    } else {
-      params.delete("managementStep"); // "전체" 선택 시 status 제거
-    }
-    router.push(`?${params.toString()}`);
-  };
-  // http://localhost:3000/?status=CONTRACT&currentPage=1
-
   return (
     <Box
-      background="white"
+      background={isSelected ? "blue.100" : "white"}
       width={cardWidth}
       height={cardHeight}
       border={`1px solid ${borderColor}`}
@@ -90,7 +77,7 @@ export default function ProjectsManagementStepCard({
         cursor: "pointer",
         transform: "scale(1.05)", // 살짝 확대 효과
       }}
-      onClick={handleFilterClick} // 클릭 시 필터 적용
+      onClick={onClick} // 클릭 시 필터 적용
     >
       <Flex alignItems="center" height="100%" gap={3}>
         <Flex

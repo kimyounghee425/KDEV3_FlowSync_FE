@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { showToast } from "@/src/utils/showToast";
-import { CommonResponseType, NoticeRequestData, ProgressStep } from "@/src/types";
+import { CommonResponseType, NoticeRequestData, OrganizationProps, ProgressStep } from "@/src/types";
 import { createNoticeApi, deleteNoticeApi, editNoticeApi } from "@/src/api/notices";
 import { updateProjectProgressStepApi } from "@/src/api/projects";
+import { changeOrganizationStatusApi } from "@/src/api/organizations";
 
 interface UseMutationDataProps<T, P extends any[]> {
   mutationApi: (...args: P) => Promise<CommonResponseType<T>>;
@@ -84,4 +85,13 @@ export function useUpdateProjectProgressStep() {
   return useMutationData<ProgressStep, [string, string, { startAt: string; deadlineAt: string }]>({
     mutationApi: updateProjectProgressStepApi,
   });
+}
+
+/**
+ * 조직 상태 변경 훅
+ */
+export function useUpdateOrganizationStatus() {
+  return useMutationData<OrganizationProps, [string]> ({
+    mutationApi: changeOrganizationStatusApi,
+  })
 }
