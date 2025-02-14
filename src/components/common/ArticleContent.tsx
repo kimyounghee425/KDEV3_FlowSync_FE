@@ -8,18 +8,15 @@ import {
   ArticleLink,
   ArticleFile,
   ContentBlock,
-  NoticeArticle,
 } from "@/src/types";
 import { formatDateWithTime } from "@/src/utils/formatDateUtil";
 
-interface ArticleContentProps<
-  T extends QuestionArticle | ApprovalArticle | NoticeArticle,
-> {
+interface ArticleContentProps<T extends QuestionArticle | ApprovalArticle> {
   article: T | null;
 }
 
 export default function ArticleContent<
-  T extends QuestionArticle | ApprovalArticle | NoticeArticle,
+  T extends QuestionArticle | ApprovalArticle,
 >({ article }: ArticleContentProps<T>) {
   if (!article) {
     return (

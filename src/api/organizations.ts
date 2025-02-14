@@ -107,3 +107,13 @@ export async function deleteOriginationWithReason(
     throw error; // 🚨 에러 발생 시 throw
   }
 }
+
+export async function changeOrganizationStatusApi(
+  organizationId: string,
+): Promise<CommonResponseType<OrganizationProps>> {
+    const response = await axiosInstance.post(
+      `/admins/organizations/${organizationId}/changeStatus`,
+    );
+
+    return response.data;
+}

@@ -448,7 +448,6 @@ export interface NoticeArticle {
   regAt: string;
   updatedAt: string;
   fileList: ArticleFile[];
-  linkList: ArticleLink[];
 }
 
 // 게시글 첨부링크
