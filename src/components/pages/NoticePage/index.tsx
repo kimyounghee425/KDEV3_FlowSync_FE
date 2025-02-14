@@ -7,7 +7,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 // 절대 경로 파일
 import BackButton from "@/src/components/common/BackButton";
-import NoticeArticleContent from "@/src/components/common/NoticeArticleContent";
+import NoticeArticleContent from "@/src/components/pages/NoticePage/components/NoticeArticleContent";
 import { useReadNotice } from "@/src/hook/useFetchData";
 import { Loading } from "@/src/components/common/Loading";
 import ErrorAlert from "@/src/components/common/ErrorAlert";

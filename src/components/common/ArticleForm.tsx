@@ -12,7 +12,6 @@ import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 import DropDownInfoBottom from "@/src/components/common/DropDownInfoBottom";
 import SignUpload from "@/src/components/pages/ProjectApprovalsNewPage/components/SignUpload";
-import DropDownInfoTop from "./DropDownInfoTop";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -69,16 +68,14 @@ export default function ArticleForm({
     initializeEditor(initialContent);
 
     return () => {
-
       if (
         editorRef.current &&
         typeof editorRef.current.destroy === "function"
       ) {
         editorRef.current.destroy();
-
       }
       editorRef.current = null;
-  };
+    };
   }, []);
 
   const initializeEditor = (content: any[] = []) => {
@@ -172,8 +169,8 @@ export default function ArticleForm({
           window.alert("내용을 입력하세요.");
           return;
         }
-        if (isSignYes === false) {
-          window.alert("서명을 입력하세요")
+        if (pathname.includes("/approvals") && isSignYes === false) {
+          window.alert("서명을 입력하세요");
           return;
         }
 
@@ -308,7 +305,9 @@ export default function ArticleForm({
         />
       </Box>
 
-      <LinkAddSection linkList={linkList} setLinkList={setLinkList} />
+      {!pathname.includes("/notices") && (
+        <LinkAddSection linkList={linkList} setLinkList={setLinkList} />
+      )}
 
       {/* 파일 입력 */}
       <FileAddSection

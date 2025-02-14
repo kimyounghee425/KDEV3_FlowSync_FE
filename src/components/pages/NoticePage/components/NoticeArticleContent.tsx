@@ -1,5 +1,5 @@
 // 외부 라이브러리
-import { Box, Text, Image } from "@chakra-ui/react";
+import { Box, Text, Image, VStack, Separator } from "@chakra-ui/react";
 
 // 절대 경로 파일
 import {
@@ -90,13 +90,16 @@ export default function ArticleContent<
 
   // 첨부파일 렌더링
   const renderFiles = (files: ArticleFile[]) => {
+    if (!files || files.length === 0) {
+      return <Text color="gray.500">첨부된 파일이 없습니다.</Text>;
+    }
     return files.map((file, index) => {
       const fileName = file.originalName;
       return (
         <Box key={index} mb={4}>
           <a
             href={file.url}
-            target="blank"
+            target="_blank"
             download={fileName}
             style={{
               color: "blue",
@@ -140,6 +143,15 @@ export default function ArticleContent<
 
       {/* 본문 내용 */}
       <Box mb={4}>{renderContent(parsedContent)}</Box>
+
+      {/* 첨부 파일 */}
+      <Box mb={4}>
+        <Text fontWeight="bold" mb={2}>
+          첨부 파일
+        </Text>
+        <VStack align="start">{renderFiles(article.fileList)}</VStack>
+        <Separator mb={6} size={"lg"} />
+      </Box>
     </Box>
   );
 }
