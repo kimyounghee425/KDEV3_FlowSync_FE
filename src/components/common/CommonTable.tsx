@@ -47,14 +47,12 @@ export default function CommonTable<T extends { id: string }>({
         }}
       >
         <Table.ColumnGroup>{columnsWidth}</Table.ColumnGroup>
-
         <Table.Header>{headerTitle}</Table.Header>
-
         {/* 테이블 바디 */}
         <Table.Body>
           {loading ? (
             <Table.Row>
-              <Table.Cell colSpan={7} textAlign="center">
+              <Table.Cell colSpan={7}>
                 <SkeletonText noOfLines={5} gap="4" />
               </Table.Cell>
             </Table.Row>

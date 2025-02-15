@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { FiSun, FiMoon } from "react-icons/fi";
 import { Box, Flex, IconButton, Image, Text } from "@chakra-ui/react";
 import {
   useColorMode,
@@ -19,7 +18,7 @@ export default function Header({
   isSidebarOpen,
   onToggleSidebar,
 }: HeaderProps) {
-  const { toggleColorMode, colorMode } = useColorMode();
+  const { colorMode } = useColorMode();
   const textColor = useColorModeValue("gray.800", "white");
 
   return (
@@ -67,17 +66,8 @@ export default function Header({
         </Link>
       </Flex>
 
-      {/* 오른쪽: 다크모드 및 프로필 */}
-      <Flex align="center" gap="1rem">
-        <IconButton
-          aria-label="Toggle Dark Mode"
-          onClick={toggleColorMode}
-          variant="ghost"
-        >
-          {colorMode === "dark" ? <FiSun /> : <FiMoon />}
-        </IconButton>
-        <Profile />
-      </Flex>
+      {/* 오른쪽: 프로필 */}
+      <Profile />
     </Flex>
   );
 }

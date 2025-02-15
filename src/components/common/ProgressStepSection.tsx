@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Flex, useBreakpointValue } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import ProgressStepButton from "@/src/components/common/ProgressStepButton";
 import { Loading } from "@/src/components/common/Loading";
 import { ProjectProgressStepProps } from "@/src/types";
@@ -54,17 +54,12 @@ export default function ProgressStepSection({
 
   return (
     <Flex
+      marginY="1rem"
       alignItems="center"
-      justifyContent="flex-start"
+      justifyContent="center"
       width="100%"
-      paddingX="2rem"
       paddingY="1rem"
-      gap="1rem"
-      border="1px solid"
-      borderColor="gray.200"
-      borderRadius="lg"
-      boxShadow="md"
-      mb="30px"
+      gap="1.5rem"
       flexWrap="nowrap"
       overflowX="auto"
       whiteSpace="nowrap"

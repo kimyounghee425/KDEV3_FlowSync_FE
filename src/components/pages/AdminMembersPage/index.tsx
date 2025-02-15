@@ -205,6 +205,19 @@ function AdminMembersPageContent() {
           <ErrorAlert message="회원 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
         <CommonTable
+          columnsWidth={
+            <>
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="20%" />
+              <Table.Column htmlWidth="12%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="5%" />
+              <Table.Column htmlWidth="5%" />
+            </>
+          }
           headerTitle={
             <Table.Row
               backgroundColor={"#eee"}
@@ -218,8 +231,8 @@ function AdminMembersPageContent() {
               <Table.ColumnHeader>직무 | 직책</Table.ColumnHeader>
               <Table.ColumnHeader>이메일</Table.ColumnHeader>
               <Table.ColumnHeader>연락처</Table.ColumnHeader>
-              <Table.ColumnHeader>상태</Table.ColumnHeader>
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
+              <Table.ColumnHeader>상태</Table.ColumnHeader>
               <Table.ColumnHeader>관리</Table.ColumnHeader>
             </Table.Row>
           }
@@ -232,7 +245,12 @@ function AdminMembersPageContent() {
               css={{
                 cursor: "pointer",
                 "&:hover": { backgroundColor: "#f5f5f5" },
-                "& > td": { textAlign: "center" },
+                "& > td": {
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                },
               }}
             >
               <Table.Cell>
@@ -243,6 +261,7 @@ function AdminMembersPageContent() {
               <Table.Cell>{`${member.jobRole} | ${member.jobTitle}`}</Table.Cell>
               <Table.Cell>{member.email}</Table.Cell>
               <Table.Cell>{member.phoneNum}</Table.Cell>
+              <Table.Cell>{formatDynamicDate(member.regAt)}</Table.Cell>
               <Table.Cell onClick={(event) => event.stopPropagation()}>
                 {member.status === "DELETED" ? (
                   <Text color="red">삭제됨</Text>
@@ -257,7 +276,6 @@ function AdminMembersPageContent() {
                   />
                 )}
               </Table.Cell>
-              <Table.Cell>{formatDynamicDate(member.regAt)}</Table.Cell>
               <Table.Cell onClick={(event) => event.stopPropagation()}>
                 <DropDownMenu
                   onEdit={() => handleEdit(member.id)}

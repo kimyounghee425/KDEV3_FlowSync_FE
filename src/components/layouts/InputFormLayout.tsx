@@ -14,7 +14,7 @@ import {
   DialogActionTrigger,
   DialogCloseTrigger,
 } from "@/src/components/ui/dialog"; // Chakra UI Dialog
-import { Button, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import styles from "@/src/components/layouts/InputFormLayout.module.css";
 
 export default function InputFormLayout({
@@ -52,13 +52,15 @@ export default function InputFormLayout({
       <div className={styles.formWrapper}>
         <form onSubmit={onSubmit}>
           {/* 📌 페이지 타이틀 */}
-          <Flex justifyContent="space-between" alignItems="center">
-            <h1 className={styles.pageTitle} style={{ marginBottom: "0px" }}>
-              {title}
-            </h1>
-            <div className={styles.buttonContainer}>
+          <Flex
+            className={styles.pageTitle}
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <h1>{title}</h1>
+            <Box className={styles.buttonContainer}>
               {isDetailPage ? (
-                <>
+                <Flex gap="1rem">
                   {/* 수정 버튼 */}
                   <button
                     type="submit"
@@ -68,15 +70,15 @@ export default function InputFormLayout({
                     disabled={isLoading || isDisabled}
                     aria-busy={isLoading}
                   >
-                    {isLoading ? "처리 중..." : "수정하기"}
+                    {isLoading ? "처리 중..." : `${entityType} 수정`}
                   </button>
                   {/* 삭제 버튼 - 차크라 UI Dialog 컴포넌트 이용 */}
                   {onDelete && ( // 삭제 핸들러가 존재하는 경우만 표시
                     <DialogRoot role="alertdialog">
                       <DialogTrigger asChild>
-                        <Button className={styles.deleteButton}>
+                        <button className={styles.deleteButton}>
                           {entityType} 삭제
-                        </Button>
+                        </button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
@@ -113,7 +115,7 @@ export default function InputFormLayout({
                       </DialogContent>
                     </DialogRoot>
                   )}
-                </>
+                </Flex>
               ) : (
                 /* 신규 등록 버튼 */
                 <button
@@ -127,7 +129,7 @@ export default function InputFormLayout({
                   {isLoading ? "처리 중..." : "등록하기"}
                 </button>
               )}
-            </div>
+            </Box>
           </Flex>
           {/* 📌 페이지 버튼 - 등록/수정/삭제 */}
           {/* 📌 페이지 입력폼 */}

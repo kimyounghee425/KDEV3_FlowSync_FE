@@ -10,7 +10,6 @@ import {
   Wrench,
 } from "lucide-react";
 import ProjectsManagementStepCard from "@/src/components/pages/ProjectWorkFlowPage/components/ProjectsManagementStepCard";
-import { useColorModeValue } from "@/src/components/ui/color-mode";
 import { ProjectManagementSteps } from "@/src/constants/projectManagementSteps";
 import ConfirmDialog from "@/src/components/common/ConfirmDialog";
 import { projectManagementStepApi } from "@/src/api/projects";
@@ -39,9 +38,9 @@ export default function ProjectsManagementStepCards({
   const [selectedStep, setSelectedStep] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const bgColor = useColorModeValue("white", "gray.800");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
-  const textColor = useColorModeValue("gray.700", "gray.200");
+  // const bgColor = useColorModeValue("white", "gray.800");
+  // const borderColor = useColorModeValue("gray.200", "gray.700");
+  // const textColor = useColorModeValue("gray.700", "gray.200");
 
   const { data, refetch } = useProjectInfoContext();
   const currentManagementStep = data?.managementStep; // 현재 프로젝트 단계
@@ -125,33 +124,21 @@ export default function ProjectsManagementStepCards({
   };
 
   return (
-    <Box
-      mb="2rem"
+    <Flex
+      margin="2rem 1rem 3rem 1.3rem"
       width="full"
-      mx="auto"
-      bg={bgColor}
+      alignItems="center"
+      gap="3rem"
       transition="all 0.3s ease-in-out"
     >
-      <Heading
-        size="2xl"
-        color={textColor}
-        mb="10px"
-        textAlign="left"
-        paddingX="0.3rem"
-      >
-        {title}
-      </Heading>
+      <Box>
+        <Heading fontSize="1.3rem">{title}</Heading>
+      </Box>
       <Flex
         wrap="nowrap"
-        justifyContent="flex-start"
+        justifyContent="center"
         alignItems="center"
-        paddingX="32px"
-        paddingY={4}
-        border={`1px solid ${borderColor}`}
-        borderRadius="lg"
-        boxShadow="md"
-        gap={4}
-        bg={bgColor}
+        gap="2rem"
       >
         {mappedData.map((item) => {
           const isCurrentStep = item.step === currentManagementStep;
@@ -182,6 +169,6 @@ export default function ProjectsManagementStepCards({
         cancelText="취소"
         isLoading={isLoading}
       />
-    </Box>
+    </Flex>
   );
 }

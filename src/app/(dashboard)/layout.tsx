@@ -17,7 +17,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const sidebarWidth = useBreakpointValue({
     base: isSidebarOpen ? "70vw" : "0",
-    md: isSidebarOpen ? "250px" : "0",
+    md: isSidebarOpen ? "10vw" : "0",
   });
 
   // 현재 로그인 한 사용자 정보

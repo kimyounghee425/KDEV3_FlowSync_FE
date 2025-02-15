@@ -98,7 +98,7 @@ export default function ConfirmDialog({
             onClick={onConfirm}
             loading={isLoading}
             loadingText="처리 중..."
-            colorScheme="blue"
+            // colorScheme="blue"
             disabled={isLoading}
             style={{
               width: "100%", // 버튼을 더 길게 설정

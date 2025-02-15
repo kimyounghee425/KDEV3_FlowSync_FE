@@ -1,11 +1,11 @@
 .container {
-  max-width: 80%;
+  max-width: 80vh;
 }
 
 .pageTitle {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
 .buttonContainer {
@@ -16,17 +16,18 @@
   margin-top: 20px;
 }
 
-.submitButton {
-  background-color: #007bff;
+.submitButton,
+.deleteButton {
   color: white;
-  padding: 10px 15px;
+  padding: 0.5rem;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
   border-radius: 5px;
-  transition:
-    background-color 0.3s,
-    opacity 0.3s;
+  transition: background-color 0.3s;
+}
+.submitButton {
+  background-color: #007bff;
 }
 /* 수정하기 버튼 활성화 상태 */
 .submitButton:hover {
@@ -34,9 +35,7 @@
 }
 /* 수정하기 버튼 비활성화 상태 */
 .submitButton:disabled {
-  background-color: #a0aec0; /* 회색 */
   cursor: not-allowed;
-  opacity: 0.5;
 }
 
 /* 수정하기 버튼 비활성화 상태에서는 hover 효과 제거 */
@@ -46,16 +45,8 @@
 
 .deleteButton {
   background-color: #dc3545;
-  color: white;
-  padding: 8px 12px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-  right: 0; /* 수정하기 버튼 우측 끝에 배치 */
 }
 
 .deleteButton:hover {
-  background-color: #c82333;
+  background-color: #a0aec0;
 }

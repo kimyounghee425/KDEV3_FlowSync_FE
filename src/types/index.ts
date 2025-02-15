@@ -221,6 +221,18 @@ export interface ProjectListResponse {
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
+// 업체 별 참여 중 프로젝트 목록 조회 API 응답 결과
+export interface OrganizationProjectListResponse {
+  dtoList: ProjectProps[];
+  meta: PaginationProps; // 페이지네이션 메타 정보
+}
+
+// 회원 별 참여 중 프로젝트 목록 조회 API 응답 결과
+export interface MemberProjectListResponse {
+  dtoList: ProjectProps[];
+  meta: PaginationProps; // 페이지네이션 메타 정보
+}
+
 export interface ProjectSidebarProps {
   id: string;
   name: string;
@@ -265,6 +277,7 @@ export interface ProgressStep {
   deadlineAt: string;
   projectId: string;
   relatedApprovalId: string;
+  approver: Approver;
 }
 
 export interface Register {

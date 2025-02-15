@@ -1,12 +1,23 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { Box, Flex, HStack } from "@chakra-ui/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import {
+  Box,
+  createListCollection,
+  Flex,
+  Heading,
+  HStack,
+  Stack,
+  Table,
+  Tabs,
+  useTabs,
+} from "@chakra-ui/react";
+import { Switch } from "@/src/components/ui/switch";
 import { Radio, RadioGroup } from "@/src/components/ui/radio";
 import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
-import { OrganizationProps } from "@/src/types";
+import { MemberProps, OrganizationProps } from "@/src/types";
 import {
   deleteOriginationWithReason,
   fetchOrganizationDetails,
@@ -14,6 +25,78 @@ import {
 } from "@/src/api/organizations";
 import styles from "@/src/components/common/InputForm.module.css";
 import { validationRulesOfUpdatingOrganization } from "@/src/constants/validationRules";
+import {
+  useOrganizationMemberList,
+  useOrganizationProjectList,
+} from "@/src/hook/useFetchBoardList";
+import SearchSection from "@/src/components/common/SearchSection";
+import FilterSelectBox from "@/src/components/common/FilterSelectBox";
+import ErrorAlert from "@/src/components/common/ErrorAlert";
+import CommonTable from "@/src/components/common/CommonTable";
+import StatusTag from "@/src/components/common/StatusTag";
+import { formatDynamicDate } from "@/src/utils/formatDateUtil";
+import { useColorModeValue } from "@/src/components/ui/color-mode";
+import Pagination from "@/src/components/common/Pagination";
+import {
+  activateMemberApi,
+  deactivateMemberApi,
+  deleteMember,
+} from "@/src/api/members";
+import DropDownMenu from "@/src/components/common/DropDownMenu";
+import { SegmentedControl } from "@/src/components/ui/segmented-control";
+import { LuFolder, LuSquareCheck, LuUser } from "react-icons/lu";
+
+const memberRoleFramework = createListCollection<{
+  label: string;
+  value: string;
+}>({
+  items: [
+    { label: "전체", value: "" },
+    { label: "관리자", value: "ADMIN" },
+    { label: "일반회원", value: "MEMBER" },
+  ],
+});
+
+const memberStatusFramework = createListCollection<{
+  label: string;
+  value: string;
+}>({
+  items: [
+    { label: "전체", value: "" },
+    { label: "활성화", value: "ACTIVE" },
+    { label: "비활성화", value: "INACTIVE" },
+    { label: "삭제됨", value: "DELETED" },
+  ],
+});
+
+const ROLE_LABELS: Record<string, string> = {
+  ADMIN: "관리자",
+  MEMBER: "일반회원",
+};
+
+const projectStatusFramework = createListCollection<{
+  label: string;
+  value: string;
+}>({
+  items: [
+    { label: "전체", value: "" },
+    { label: "계약", value: "CONTRACT" },
+    { label: "진행중", value: "IN_PROGRESS" },
+    { label: "납품완료", value: "COMPLETED" },
+    { label: "하자보수", value: "MAINTENANCE" },
+    { label: "일시중단", value: "PAUSED" },
+    { label: "삭제", value: "DELETED" },
+  ],
+});
+
+const STATUS_LABELS: Record<string, string> = {
+  CONTRACT: "계약",
+  IN_PROGRESS: "진행중",
+  COMPLETED: "납품완료",
+  MAINTENANCE: "하자보수",
+  PAUSED: "일시중단",
+  DELETED: "삭제",
+};
 
 export default function OrganizationDetailForm({
   organizationData,
@@ -38,12 +121,16 @@ export default function OrganizationDetailForm({
     formData.brCertificateUrl.includes("|")
       ? formData.brCertificateUrl.split("|")
       : [null, null];
+  const tabs = useTabs({
+    defaultValue: "members",
+  });
 
   // 🔹 formData가 변경될 때만 실행되도록 설정
   useEffect(() => {
     validateInputs();
   }, [formData]);
 
+  // 첨부된 파일 불러오기
   useEffect(() => {
     return () => {
       if (
@@ -77,6 +164,7 @@ export default function OrganizationDetailForm({
     }
   }
 
+  // 📌 입력 값 유효성 검사
   function validateInputs() {
     // 🔹 `Object.entries()`를 사용하여 모든 필드에 대한 유효성 검사 수행
     const updatedErrors = Object.entries(
@@ -201,7 +289,7 @@ export default function OrganizationDetailForm({
   }
 
   return (
-    <>
+    <Flex direction="column" width="80vh" justifyContent="center" gap="1rem">
       <InputFormLayout
         title="▹ 업체 상세 조회"
         onSubmit={handleUpdate}
@@ -209,168 +297,626 @@ export default function OrganizationDetailForm({
         isDisabled={isUpdateDisabled} // 버튼 비활성화 조건 추가
         onDelete={handleDelete}
         deleteEntityType="업체" // 삭제 대상 선택 ("회원" | "업체" | "프로젝트")
-        
       >
-        {/* 수정 불가 필드 */}
-        <Box>
-          <Flex direction="row" align="center" mb={4}>
-            <span
-              style={{
-                fontSize: "14px",
-                fontWeight: "bold",
-                color: "#4A5568",
+        <Flex direction="column" gap="0.1rem">
+          {/* 수정 불가 필드 (업체 유형) */}
+          <Flex gap={4} align="center">
+            <Box>
+              <Flex direction="row" align="center" mb={4}>
+                <span
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    color: "#4A5568",
+                  }}
+                >
+                  업체 유형을 선택하세요
+                </span>
+                <span
+                  style={{
+                    color: "red",
+                    marginLeft: "4px",
+                    marginRight: "24px",
+                  }}
+                >
+                  *
+                </span>
+                <RadioGroup
+                  value={formData.type}
+                  onValueChange={(e) => handleInputUpdate("type", e.value)}
+                >
+                  <HStack gap={6}>
+                    <Radio value="CUSTOMER" disabled>
+                      고객사
+                    </Radio>
+                    <Radio value="DEVELOPER" disabled>
+                      개발사
+                    </Radio>
+                  </HStack>
+                </RadioGroup>
+              </Flex>
+            </Box>
+          </Flex>
+          {/* 업체명 및 사업자 등록번호 */}
+          <Flex gap={4} align="center">
+            {/* 업체명 (수정 불가) */}
+            <Box flex="2">
+              <InputForm
+                id="name"
+                type="text"
+                label="업체명"
+                value={formData.name}
+                disabled
+              />
+            </Box>
+            {/* 대표자 연락처 입력 */}
+            <Box flex="1">
+              <InputForm
+                id="phoneNumber"
+                type="tel"
+                label="대표자 연락처"
+                value={formData.phoneNumber}
+                onChange={(e) =>
+                  handleInputUpdate("phoneNumber", e.target.value)
+                }
+                error={errors.phoneNumber ?? undefined} // 에러 null 값을 undefined로 변환 (이하 동일)
+                isChanged={!!isChanged["phoneNumber"]}
+              />
+            </Box>
+            <Box flex="1"></Box>
+          </Flex>
+          {/* 대표자 연락처 및 사업자 등록증 첨부 */}
+          <Flex gap={4} align="center">
+            {/* 사업자 등록번호 입력 */}
+            <Box flex="1">
+              <InputForm
+                id="brNumber"
+                type="text"
+                label="사업자 등록번호"
+                placeholder="ex) 123-45-67890"
+                value={formData.brNumber}
+                error={errors.brNumber ?? undefined} // 에러 null 값을 undefined로 변환 (이하 동일)
+                onChange={(e) => handleInputUpdate("brNumber", e.target.value)}
+                isChanged={!!isChanged["brNumber"]}
+              />
+            </Box>
+            {/* 사업자 등록증 파일 첨부 */}
+            <Box flex="1" className={styles.inputFieldContainer}>
+              <label htmlFor="businessLicense" className={styles.label}>
+                사업자 등록증 첨부
+                <span className={styles.required}>*</span>
+              </label>
+              <>
+                <div className={styles.fileUploadContainer}>
+                  {/* ✅ 파일 첨부 버튼 */}
+                  <input
+                    type="file"
+                    id="businessLicense"
+                    className={styles.fileInputHidden}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setSelectedFile(file);
+                        setFormData((prev) => ({
+                          ...prev,
+                          brCertificateUrl: `${file.name}|${URL.createObjectURL(file)}`,
+                        }));
+                        // 파일이 변경된 경우 isChanged에 반영
+                        setIsChanged((prev) => ({
+                          ...prev,
+                          brCertificateUrl: true, // 파일 변경 감지 추가
+                        }));
+                      }
+                    }}
+                  />
+                  <label
+                    htmlFor="businessLicense"
+                    className={styles.fileUploadButton}
+                  >
+                    파일 첨부
+                  </label>
+                  {/* 파일명 출력 및 클릭 시 새 탭에서 열기 */}
+                  {formData.brCertificateUrl ? (
+                    (() => {
+                      const fileData =
+                        typeof formData.brCertificateUrl === "string" &&
+                        formData.brCertificateUrl.includes("|")
+                          ? formData.brCertificateUrl.split("|")
+                          : [formData.brCertificateUrl, null];
+
+                      const fileName = fileData[0]
+                        ? fileData[0].replace(/^\d+_/, "")
+                        : "파일을 선택하세요";
+                      const fileUrl = fileData[1] || formData.brCertificateUrl;
+
+                      return fileUrl ? (
+                        <a
+                          href={fileUrl.split("|").pop()}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.selectedFileName}
+                        >
+                          ✔ {fileName}
+                        </a>
+                      ) : (
+                        <span
+                          className={styles.selectedFileName}
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                          ✔ {fileName}
+                        </span>
+                      );
+                    })()
+                  ) : (
+                    <span
+                      className={styles.selectedFileName}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      파일을 선택하세요
+                    </span>
+                  )}
+                </div>
+              </>
+              <span className={styles.errorText}> </span>
+            </Box>
+          </Flex>
+          {/* 사업장 주소 조회 및 입력 */}
+          <Flex gap={4} align="center">
+            {/* 사업장 주소(도로명) 검색 */}
+            <Box flex="1">
+              <InputForm
+                id="streetAddress"
+                type="address"
+                label="사업장 도로명 주소"
+                value={formData.streetAddress}
+                onChange={(e) =>
+                  handleInputUpdate("streetAddress", e.target.value)
+                }
+                error={errors.streetAddress ?? undefined} // 에러 null 값을 undefined로 변환 (이하 동일)
+                isChanged={!!isChanged["streetAddress"]}
+              />
+            </Box>
+            {/* 사업장 주소 상세 입력 */}
+            <Box flex="1">
+              <InputForm
+                id="detailAddress"
+                type="text"
+                label="사업장 상세 주소"
+                value={formData.detailAddress}
+                onChange={(e) =>
+                  handleInputUpdate("detailAddress", e.target.value)
+                }
+                error={errors.detailAddress ?? undefined} // 에러 null 값을 undefined로 변환 (이하 동일)
+                isChanged={!!isChanged["detailAddress"]}
+              />
+            </Box>
+          </Flex>
+          <Flex gap={4} align="center"></Flex>
+        </Flex>
+      </InputFormLayout>
+
+      <Stack align="flex-start">
+        <Tabs.RootProvider value={tabs}>
+          <Tabs.List>
+            <Tabs.Trigger
+              value="members"
+              onClick={() => {
+                const params = new URLSearchParams();
+                params.set("tab", "members"); // ✅ 탭 값만 유지, 나머지 초기화
+                route.push(`?${params.toString()}`);
               }}
             >
-              업체 유형을 선택하세요
-            </span>
-            <span
-              style={{ color: "red", marginLeft: "4px", marginRight: "24px" }}
+              <LuUser />
+              소속 회원
+            </Tabs.Trigger>
+            <Tabs.Trigger
+              value="projects"
+              onClick={() => {
+                const params = new URLSearchParams();
+                params.set("tab", "projects"); // ✅ 탭 값만 유지, 나머지 초기화
+                route.push(`?${params.toString()}`);
+              }}
             >
-              *
-            </span>
-            <RadioGroup
-              value={formData.type}
-              onValueChange={(e) => handleInputUpdate("type", e.value)}
-            >
-              <HStack gap={6}>
-                <Radio value="CUSTOMER" disabled>
-                  고객사
-                </Radio>
-                <Radio value="DEVELOPER" disabled>
-                  개발사
-                </Radio>
-              </HStack>
-            </RadioGroup>
-          </Flex>
-        </Box>
-        <InputForm
-          id="name"
-          type="text"
-          label="업체명"
-          value={formData.name}
-          disabled
-        />
-        {/* 수정 가능 필드 */}
-        <Flex gap={4} align="center">
-          <Box flex="1">
-            <InputForm
-              id="brNumber"
-              type="text"
-              label="사업자 등록번호"
-              placeholder="ex) 123-45-67890"
-              value={formData.brNumber}
-              error={errors.brNumber ?? undefined} // 에러 null 값을 undefined로 변환 (이하 동일)
-              onChange={(e) => handleInputUpdate("brNumber", e.target.value)}
-              isChanged={!!isChanged["brNumber"]}
+              <LuFolder />
+              참여 중 프로젝트
+            </Tabs.Trigger>
+          </Tabs.List>
+
+          <Suspense>
+            <Tabs.Content value="members">
+              {/* 업체 별 소속 회원 목록 조회 */}
+              <OrganizationMemberList organizationId={organizationId} />
+            </Tabs.Content>
+            <Tabs.Content value="projects">
+              {/* 업체 별 참여 중 프로젝트 목록 조회 */}
+              <OrganizationProjectList organizationId={organizationId} />
+            </Tabs.Content>
+          </Suspense>
+        </Tabs.RootProvider>
+      </Stack>
+    </Flex>
+  );
+}
+
+// 업체 별 소속 회원 목록 조회
+function OrganizationMemberList({
+  organizationId,
+}: {
+  organizationId: string;
+}) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const keyword = searchParams?.get("keyword") || "";
+  const memberRole = searchParams?.get("memberRole") || "";
+  const memberStatus = searchParams?.get("memberStatus") || "";
+  const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
+  const memberPageSize = parseInt(
+    searchParams?.get("memberPageSize") || "10",
+    5,
+  );
+
+  const {
+    data: memberList,
+    paginationInfo,
+    loading: memberListLoading,
+    error: memberListError,
+    refetch,
+  } = useOrganizationMemberList(
+    organizationId,
+    keyword,
+    memberRole,
+    memberStatus,
+    currentPage,
+    memberPageSize,
+  );
+
+  // ✅ 상태 변경을 위한 로컬 상태 추가
+  const [memberData, setMemberData] = useState<MemberProps[]>([]);
+  useEffect(() => {
+    if (memberList) {
+      setMemberData(memberList);
+    }
+  }, [memberList]);
+
+  const [loadingId, setLoadingId] = useState<string | null>(null); // ✅ 특정 회원의 Switch 로딩 상태
+
+  // ✅ 회원 상태 변경 핸들러 (API 호출 및 UI 반영)
+  const handleStatusChange = async (
+    memberId: string,
+    currentStatus: string,
+  ) => {
+    setLoadingId(memberId); // ✅ 변경 중인 ID 설정 (로딩 표시)
+    try {
+      if (currentStatus === "ACTIVE") {
+        await deactivateMemberApi(memberId); // 비활성화 API 호출
+      } else {
+        await activateMemberApi(memberId); // 활성화 API 호출
+      }
+      alert("회원 상태가 변경되었습니다.");
+      // ✅ API 호출 후 로컬 상태 업데이트 (UI 즉시 반영)
+      setMemberData((prevMembers) =>
+        (prevMembers || []).map((member) =>
+          member.id === memberId
+            ? {
+                ...member,
+                memberStatus:
+                  currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+              }
+            : member,
+        ),
+      );
+      refetch();
+    } catch (error) {
+      console.error("회원 상태 변경 실패:", error);
+      alert("회원 상태 변경 중 오류가 발생했습니다.");
+    } finally {
+      setLoadingId(null); // ✅ 로딩 해제
+    }
+  };
+
+  const handleMemberPageChange = (page: number) => {
+    const params = new URLSearchParams(window.location.search);
+    // 쿼리스트링 업데이트
+    params.set("currentPage", page.toString());
+    // URL 업데이트
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleRowClick = (memberId: string) => {
+    const member = memberList?.find((m) => m.id === memberId);
+    if (member) {
+      router.push(`/admin/members/${member.id}`);
+    }
+  };
+
+  const handleEdit = (memberId: string) => {
+    const member = memberList?.find((m) => m.id === memberId);
+    if (member) {
+      router.push(`/admin/members/${member.id}`);
+    }
+  };
+
+  const handleDelete = async (memberId: string) => {
+    const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+    try {
+      await deleteMember(memberId, "");
+      alert("회원이 탈퇴 조치 되었습니다.");
+      refetch();
+    } catch (error) {
+      alert(`삭제 중 문제가 발생했습니다 : ${error}`);
+    }
+  };
+
+  return (
+    <>
+      <Stack width="full">
+        <Flex justifyContent="end">
+          {/* 회원 검색/필터 섹션 (검색창, 필터 옵션 등) */}
+          <SearchSection
+            keyword={keyword}
+            placeholder="회원명 입력"
+            keywordName="keyword"
+            currentPageName="currentPage"
+          >
+            <FilterSelectBox
+              statusFramework={memberRoleFramework}
+              selectedValue={memberRole}
+              placeholder="역할"
+              queryKey="memberRole"
+              width="100px"
             />
-          </Box>
-          <Box flex="1" className={styles.inputFieldContainer}>
-            <label htmlFor="businessLicense" className={styles.label}>
-              사업자 등록증 첨부
-              <span className={styles.required}>*</span>
-            </label>
-            <>
-              <div className={styles.fileUploadContainer}>
-                {/* ✅ 파일 첨부 버튼 */}
-                <input
-                  type="file"
-                  id="businessLicense"
-                  className={styles.fileInputHidden}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setSelectedFile(file);
-                      setFormData((prev) => ({
-                        ...prev,
-                        brCertificateUrl: `${file.name}|${URL.createObjectURL(file)}`,
-                      }));
-                      // 파일이 변경된 경우 isChanged에 반영
-                      setIsChanged((prev) => ({
-                        ...prev,
-                        brCertificateUrl: true, // 파일 변경 감지 추가
-                      }));
-                    }
-                  }}
-                />
-                <label
-                  htmlFor="businessLicense"
-                  className={styles.fileUploadButton}
-                >
-                  파일 첨부
-                </label>
-                {/* 파일명 출력 및 클릭 시 새 탭에서 열기 */}
-                {formData.brCertificateUrl ? (
-                  (() => {
-                    const fileData =
-                      typeof formData.brCertificateUrl === "string" &&
-                      formData.brCertificateUrl.includes("|")
-                        ? formData.brCertificateUrl.split("|")
-                        : [formData.brCertificateUrl, null];
-
-                    const fileName = fileData[0]
-                      ? fileData[0].replace(/^\d+_/, "")
-                      : "파일을 선택하세요";
-                    const fileUrl = fileData[1] || formData.brCertificateUrl;
-
-                    return fileUrl ? (
-                      <a
-                        href={fileUrl.split("|").pop()}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.selectedFileName}
-                      >
-                        ✔ {fileName}
-                      </a>
-                    ) : (
-                      <span
-                        className={styles.selectedFileName}
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                        ✔ {fileName}
-                      </span>
-                    );
-                  })()
-                ) : (
-                  <span
-                    className={styles.selectedFileName}
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    파일을 선택하세요
-                  </span>
-                )}
-              </div>
-            </>
-            <span className={styles.errorText}> </span>
-          </Box>
+            <FilterSelectBox
+              statusFramework={memberStatusFramework}
+              selectedValue={memberStatus}
+              placeholder="활성화 여부"
+              queryKey="memberStatus"
+              width="150px"
+            />
+          </SearchSection>
         </Flex>
-        <InputForm
-          id="streetAddress"
-          type="address"
-          label="사업장 도로명 주소"
-          value={formData.streetAddress}
-          onChange={(e) => handleInputUpdate("streetAddress", e.target.value)}
-          error={errors.streetAddress ?? undefined} // 에러 null 값을 undefined로 변환 (이하 동일)
-          isChanged={!!isChanged["streetAddress"]}
+        {memberListError && (
+          <ErrorAlert message="회원 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+        )}
+        <CommonTable
+          columnsWidth={
+            <>
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="12%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="10%" />
+            </>
+          }
+          headerTitle={
+            <Table.Row
+              backgroundColor={"#eee"}
+              css={{
+                "& > th": { textAlign: "center" },
+              }}
+            >
+              <Table.ColumnHeader>역할</Table.ColumnHeader>
+              <Table.ColumnHeader>회원명</Table.ColumnHeader>
+              <Table.ColumnHeader>직무 | 직책</Table.ColumnHeader>
+              <Table.ColumnHeader>이메일</Table.ColumnHeader>
+              <Table.ColumnHeader>연락처</Table.ColumnHeader>
+              <Table.ColumnHeader>등록일</Table.ColumnHeader>
+              <Table.ColumnHeader>활성화 여부</Table.ColumnHeader>
+              <Table.ColumnHeader>관리</Table.ColumnHeader>
+            </Table.Row>
+          }
+          data={memberList || []}
+          loading={memberListLoading}
+          renderRow={(member) => {
+            return (
+              <Table.Row
+                key={member.id}
+                onClick={() => handleRowClick(member.id)}
+                css={{
+                  cursor: "pointer",
+                  "&:hover": { backgroundColor: "#f5f5f5" },
+                  "& > td": {
+                    textAlign: "center",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  },
+                }}
+              >
+                <Table.Cell>
+                  {ROLE_LABELS[member.role] || "알 수 없음"}
+                </Table.Cell>
+                <Table.Cell>{member.name}</Table.Cell>
+                <Table.Cell>{`${member.jobRole} | ${member.jobTitle}`}</Table.Cell>
+                <Table.Cell>{member.email}</Table.Cell>
+                <Table.Cell>{member.phoneNum}</Table.Cell>
+                <Table.Cell>{formatDynamicDate(member.regAt)}</Table.Cell>
+                <Table.Cell onClick={(event) => event.stopPropagation()}>
+                  {member.status === "DELETED" ? (
+                    <Switch disabled />
+                  ) : (
+                    <Switch
+                      checked={member.status === "ACTIVE"}
+                      onChange={(event) => {
+                        event.stopPropagation();
+                        handleStatusChange(member.id, member.status);
+                      }}
+                      disabled={loadingId === member.id} // ✅ 상태 변경 시 로딩 적용
+                    />
+                  )}
+                </Table.Cell>
+                <Table.Cell onClick={(event) => event.stopPropagation()}>
+                  <DropDownMenu
+                    onEdit={() => handleEdit(member.id)}
+                    onDelete={() => handleDelete(member.id)}
+                  />
+                </Table.Cell>
+              </Table.Row>
+            );
+          }}
         />
-        <InputForm
-          id="detailAddress"
-          type="text"
-          label="사업장 상세 주소"
-          value={formData.detailAddress}
-          onChange={(e) => handleInputUpdate("detailAddress", e.target.value)}
-          error={errors.detailAddress ?? undefined} // 에러 null 값을 undefined로 변환 (이하 동일)
-          isChanged={!!isChanged["detailAddress"]}
+        {/*
+         * 페이지네이션 컴포넌트
+         * paginationInfo: 현재 페이지, 총 페이지, 페이지 크기 등의 정보
+         * handleMemberPageChange: 페이지 이동 시 실행될 콜백
+         */}
+        <Pagination
+          paginationInfo={
+            paginationInfo && {
+              ...paginationInfo,
+              currentPage: paginationInfo.currentPage,
+            }
+          }
+          handlePageChange={handleMemberPageChange}
         />
-        <InputForm
-          id="phoneNumber"
-          type="tel"
-          label="대표자 연락처"
-          value={formData.phoneNumber}
-          onChange={(e) => handleInputUpdate("phoneNumber", e.target.value)}
-          error={errors.phoneNumber ?? undefined} // 에러 null 값을 undefined로 변환 (이하 동일)
-          isChanged={!!isChanged["phoneNumber"]}
+      </Stack>
+    </>
+  );
+}
+
+// 업체 별 참여 중 프로젝트 목록 조회
+function OrganizationProjectList({
+  organizationId,
+}: {
+  organizationId: string;
+}) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const keyword = searchParams?.get("keyword") || "";
+  const managementStep = searchParams?.get("managementStep") || "";
+  const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
+  const pageSize = parseInt(searchParams?.get("pageSize") || "10", 5);
+
+  const {
+    data: projectList,
+    paginationInfo,
+    loading: projectListLoading,
+    error: projectListError,
+  } = useOrganizationProjectList(
+    organizationId,
+    keyword,
+    managementStep,
+    currentPage,
+    pageSize,
+  );
+
+  /**
+   * 페이지 변경 시 호출되는 콜백 함수
+   * - 쿼리 파라미터를 갱신하고, fetchProjectList를 다시 호출합니다.
+   *
+   * @param page 새로 이동할 페이지 번호
+   */
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(window.location.search);
+    // 쿼리스트링 업데이트
+    params.set("currentPage", page.toString());
+    // URL 업데이트
+    router.push(`?${params.toString()}`);
+  };
+
+  /**
+   * 테이블 행 클릭 시 호출되는 콜백
+   * - 특정 프로젝트의 상세 화면(/projects/[id]/tasks)로 이동
+   *
+   * @param projectId 프로젝트 ID (백엔드 혹은 테이블에서 받아온 값)
+   */
+  const handleRowClick = (projectId: string) => {
+    const project = projectList?.find((p) => p.id === projectId);
+    if (project) {
+      router.push(`/projects/${project.id}/questions`);
+    }
+  };
+
+  return (
+    <>
+      <Stack width="full">
+        <Flex justifyContent="end">
+          {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
+          <SearchSection keyword={keyword} placeholder="프로젝트명 입력">
+            <FilterSelectBox
+              statusFramework={projectStatusFramework}
+              selectedValue={managementStep}
+              placeholder="관리단계"
+              queryKey="managementStep"
+              width="150px"
+            />
+          </SearchSection>
+        </Flex>
+        {projectListError && (
+          <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+        )}
+        <CommonTable
+          columnsWidth={
+            <>
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="12%" />
+              <Table.Column htmlWidth="12%" />
+              <Table.Column htmlWidth="12%" />
+              <Table.Column htmlWidth="12%" />
+            </>
+          }
+          headerTitle={
+            <Table.Row
+              backgroundColor={useColorModeValue("#eee", "gray.700")}
+              css={{
+                "& > th": { textAlign: "center" },
+              }}
+            >
+              <Table.ColumnHeader>프로젝트명</Table.ColumnHeader>
+              <Table.ColumnHeader>고객사</Table.ColumnHeader>
+              <Table.ColumnHeader>개발사</Table.ColumnHeader>
+              <Table.ColumnHeader>관리 단계</Table.ColumnHeader>
+              <Table.ColumnHeader>시작일</Table.ColumnHeader>
+              <Table.ColumnHeader>예상 마감일</Table.ColumnHeader>
+              <Table.ColumnHeader>납품 완료일</Table.ColumnHeader>
+            </Table.Row>
+          }
+          data={projectList || []}
+          loading={projectListLoading}
+          renderRow={(project) => {
+            return (
+              <Table.Row
+                key={project.id}
+                onClick={() => handleRowClick(project.id)}
+                css={{
+                  "&:hover": { backgroundColor: "#f1f1f1" },
+                  cursor: "pointer",
+                  opacity: 1,
+                  "& > td": { textAlign: "center" },
+                }}
+              >
+                <Table.Cell>{project.name}</Table.Cell>
+                <Table.Cell>{project.customerName}</Table.Cell>
+                <Table.Cell>{project.developerName}</Table.Cell>
+                <Table.Cell>
+                  <StatusTag>{STATUS_LABELS[project.managementStep]}</StatusTag>
+                </Table.Cell>
+                <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
+                <Table.Cell>{formatDynamicDate(project.deadlineAt)}</Table.Cell>
+                <Table.Cell>
+                  {formatDynamicDate(project.closeAt) === ""
+                    ? "-"
+                    : formatDynamicDate(project.closeAt)}
+                </Table.Cell>
+              </Table.Row>
+            );
+          }}
         />
-      </InputFormLayout>
+        <Pagination
+          paginationInfo={
+            paginationInfo && {
+              ...paginationInfo,
+              currentPage: paginationInfo.currentPage,
+            }
+          }
+          handlePageChange={handlePageChange}
+        />
+      </Stack>
     </>
   );
 }

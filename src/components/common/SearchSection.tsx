@@ -8,6 +8,8 @@ interface SearchSectionProps {
   keyword: string;
   placeholder?: string;
   children?: ReactNode;
+  keywordName?: string;
+  currentPageName?: string;
 }
 
 export default function SearchSection({
@@ -49,7 +51,7 @@ export default function SearchSection({
   };
 
   return (
-    <Box mb="10px">
+    <Box mb="0.8rem">
       <Flex gap={4} alignItems="center" justifyContent="end">
         <HStack>
           {children}
@@ -59,12 +61,18 @@ export default function SearchSection({
             value={input}
             onChange={onChangeSearch}
             onKeyDown={onKeyDown}
-            width="300px"
+            width="23rem"
           />
-          <Button width="80px" variant={"surface"} onClick={onSubmit}>
+          <Button width="4rem" variant={"surface"} onClick={onSubmit}>
             검색
           </Button>
-          <Button width="80px" variant={"outline"} onClick={resetSearch}>
+          <Button
+            width="4rem"
+            padding={"1.2rem"}
+            border={"1px solid #e4e4e7"}
+            backgroundColor="white"
+            onClick={resetSearch}
+          >
             초기화
           </Button>
         </HStack>

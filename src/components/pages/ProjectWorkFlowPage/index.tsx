@@ -3,10 +3,9 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import "react-datepicker/dist/react-datepicker.css";
-import { Heading, Table, Button, Flex } from "@chakra-ui/react";
+import { Heading, Table, Flex } from "@chakra-ui/react";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import ProjectsManagementStepCards from "@/src/components/pages/ProjectWorkFlowPage/components/ProjectManagementStepCards";
-import { useColorModeValue } from "@/src/components/ui/color-mode";
 import CommonTable from "@/src/components/common/CommonTable";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { useProjectProgressStepData } from "@/src/hook/useFetchData";
@@ -40,8 +39,6 @@ export default function ProjectWorkFlowPage() {
   } = useProjectProgressStepData(projectId as string);
 
   const { mutate: updateProgressStep } = useUpdateProjectProgressStep();
-
-  const textColor = useColorModeValue("gray.700", "gray.200");
 
   // 날짜 상태 관리
   const [dates, setDates] = useState<
@@ -81,122 +78,129 @@ export default function ProjectWorkFlowPage() {
   };
 
   return (
-    <>
-      <ProjectLayout>
-        <ProjectsManagementStepCards title={"관리 단계 변경"} />
-      </ProjectLayout>
-
-      <Heading
-        size="2xl"
-        color={textColor}
-        lineHeight="base"
-        paddingLeft="0.3rem"
-        paddingBottom="0.7rem"
-      >
-        진행단계 요약
-      </Heading>
-      {progressStepError && (
-        <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
-      )}
-
-      {/*
-       * 공통 테이블(CommonTable)
-       *  - headerTitle: 테이블 헤더 구성
-       *  - data: 테이블에 표시될 데이터
-       *  - loading: 로딩 상태
-       *  - renderRow: 한 줄씩 어떻게 렌더링할지 정의 (jsx 반환)
-       *  - handleRowClick: 행 클릭 이벤트 핸들러
-       */}
-      <CommonTable
-        headerTitle={
-          <Table.Row
-            backgroundColor={useColorModeValue("#eee", "gray.700")}
-            css={{
-              "& > th": { textAlign: "center" },
-            }}
-          >
-            <Table.ColumnHeader>순서</Table.ColumnHeader>
-            <Table.ColumnHeader>진행단계명</Table.ColumnHeader>
-            <Table.ColumnHeader>날짜지정(시작일-완료예정일)</Table.ColumnHeader>
-            <Table.ColumnHeader>종료일시</Table.ColumnHeader>
-            <Table.ColumnHeader>승인자</Table.ColumnHeader>
-            <Table.ColumnHeader>로그</Table.ColumnHeader>
-          </Table.Row>
-        }
-        data={progressStepList ?? []}
-        loading={progressStepLoading}
-        renderRow={(progressStep, index = 0) => {
-          const isRowClickable = !!progressStep.relatedApprovalId;
-
-          return (
+    <ProjectLayout>
+      <ProjectsManagementStepCards title={"관리 단계 변경"} />
+      <Flex direction="column" marginX="1rem">
+        <Heading
+          lineHeight="base"
+          paddingBottom="0.7rem"
+          fontSize="1.3rem"
+          marginLeft="0.3rem"
+        >
+          진행단계 요약
+        </Heading>
+        {progressStepError && (
+          <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
+        )}
+        {/*
+         * 공통 테이블(CommonTable)
+         *  - headerTitle: 테이블 헤더 구성
+         *  - data: 테이블에 표시될 데이터
+         *  - loading: 로딩 상태
+         *  - renderRow: 한 줄씩 어떻게 렌더링할지 정의 (jsx 반환)
+         *  - handleRowClick: 행 클릭 이벤트 핸들러
+         */}
+        <CommonTable
+          columnsWidth={
+            <>
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="20%" />
+              <Table.Column htmlWidth="20%" />
+              <Table.Column htmlWidth="20%" />
+              <Table.Column htmlWidth="20%" />
+              <Table.Column htmlWidth="10%" />
+            </>
+          }
+          headerTitle={
             <Table.Row
-              key={progressStep.id}
-              onClick={(event) => {
-                if (isRowClickable) {
-                  router.push(
-                    `/projects/${resolvedProjectId}/approvals/${progressStep.relatedApprovalId}`,
-                  );
-                }
-                event.stopPropagation();
-              }}
+              backgroundColor="#eee"
               css={{
-                cursor: isRowClickable ? "pointer" : "default",
-                "&:hover": isRowClickable ? { backgroundColor: "#f5f5f5" } : {},
-                "& > td": { textAlign: "center" },
+                "& > th": { textAlign: "center", whiteSpace: "nowrap" },
               }}
             >
-              <Table.Cell>{index + 1}</Table.Cell>
-              <Table.Cell>{progressStep.name}</Table.Cell>
-              <Table.Cell>
-                <Flex>
-                  <DateSection
-                    startAt={
-                      dates[progressStep.id]?.startAt ??
-                      (progressStep.startAt
-                        ? new Date(progressStep.startAt)
-                        : null)
-                    }
-                    closeAt={
-                      dates[progressStep.id]?.deadlineAt ??
-                      (progressStep.deadlineAt
-                        ? new Date(progressStep.deadlineAt)
-                        : null)
-                    }
-                    setStartAt={(value) =>
-                      handleDateChange(progressStep.id, "startAt", value)
-                    }
-                    setCloseAt={(value) =>
-                      handleDateChange(progressStep.id, "deadlineAt", value)
-                    }
-                  />
-                  <Button
-                    colorPalette="gray.100"
-                    variant="surface"
-                    size="sm"
-                    onClick={() => handleSaveDates(progressStep.id)}
-                    disabled={
-                      !dates[progressStep.id]?.startAt ||
-                      !dates[progressStep.id]?.deadlineAt
-                    }
-                  >
-                    저장
-                  </Button>
-                </Flex>
-              </Table.Cell>
-              <Table.Cell>{progressStep.closeAt || "-"}</Table.Cell>
-              <Table.Cell>{progressStep.relatedApprovalId || "-"}</Table.Cell>
-              <Table.Cell>
-                <CustomModal title="결제 로그" triggerText="로그">
-                  <ProjectLogTable
-                    projectId={resolvedProjectId}
-                    progressStepId={progressStep.id}
-                  />
-                </CustomModal>
-              </Table.Cell>
+              <Table.ColumnHeader>순서</Table.ColumnHeader>
+              <Table.ColumnHeader>진행 단계명</Table.ColumnHeader>
+              <Table.ColumnHeader>작업 시작일</Table.ColumnHeader>
+              <Table.ColumnHeader>완료 예정일</Table.ColumnHeader>
+              <Table.ColumnHeader>결재 담당자</Table.ColumnHeader>
+              <Table.ColumnHeader>로그</Table.ColumnHeader>
             </Table.Row>
-          );
-        }}
-      />
-    </>
+          }
+          data={progressStepList ?? []}
+          loading={progressStepLoading}
+          renderRow={(progressStep, index = 0) => {
+            const isRowClickable = !!progressStep.relatedApprovalId;
+
+            return (
+              <Table.Row
+                key={progressStep.id}
+                onClick={(event) => {
+                  if (isRowClickable) {
+                    router.push(
+                      `/projects/${resolvedProjectId}/approvals/${progressStep.relatedApprovalId}`,
+                    );
+                  }
+                  event.stopPropagation();
+                }}
+                css={{
+                  cursor: isRowClickable ? "pointer" : "default",
+                  "&:hover": isRowClickable
+                    ? { backgroundColor: "#f5f5f5" }
+                    : {},
+                  "& > td": {
+                    textAlign: "center",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  },
+                }}
+              >
+                <Table.Cell>{index + 1}</Table.Cell>
+                <Table.Cell>{progressStep.name}</Table.Cell>
+                <Table.Cell>
+                  <Flex direction="row">
+                    <DateSection
+                      dateTime={
+                        dates[progressStep.id]?.startAt ??
+                        (progressStep.startAt
+                          ? new Date(progressStep.startAt)
+                          : null)
+                      }
+                      setDateTime={(value) =>
+                        handleDateChange(progressStep.id, "startAt", value)
+                      }
+                    />
+                  </Flex>
+                </Table.Cell>
+                <Table.Cell>
+                  <Flex direction="row">
+                    <DateSection
+                      dateTime={
+                        dates[progressStep.id]?.deadlineAt ??
+                        (progressStep.deadlineAt
+                          ? new Date(progressStep.deadlineAt)
+                          : null)
+                      }
+                      setDateTime={(value) =>
+                        handleDateChange(progressStep.id, "deadlineAt", value)
+                      }
+                    />
+                  </Flex>
+                </Table.Cell>
+                <Table.Cell>{progressStep.approver?.name || "-"}</Table.Cell>
+                <Table.Cell>
+                  <CustomModal title="결제 로그" triggerText="로그">
+                    <ProjectLogTable
+                      projectId={resolvedProjectId}
+                      progressStepId={progressStep.id}
+                    />
+                  </CustomModal>
+                </Table.Cell>
+              </Table.Row>
+            );
+          }}
+        />
+      </Flex>
+    </ProjectLayout>
   );
 }

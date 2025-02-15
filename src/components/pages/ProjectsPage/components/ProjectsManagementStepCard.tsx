@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useColorModeValue } from "@/src/components/ui/color-mode";
-import { ProjectManagementSteps } from "@/src/constants/projectManagementSteps"; // ENUM import
 
 interface ProjectsManagementStepCardProps {
   count: number; // 숫자(통계 수치)

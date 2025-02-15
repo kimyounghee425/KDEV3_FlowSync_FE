@@ -18,11 +18,11 @@ export default function ProgressStepButton({
     <Button
       onClick={onClick}
       width="11%"
-      height="48px"
-      padding="14px 16px"
+      height="3rem"
+      padding="1rem"
       justifyContent="center"
       alignItems="center"
-      borderRadius="4px"
+      borderRadius="1rem"
       bg="white"
       color="black"
       border={isSelected ? "2px solid blue.500" : "1px solid #E5E5EC"} // 선택 상태일 때 테두리 변경

@@ -335,7 +335,6 @@ export default function OrganizationSelector({
                     )}
                   </Box>
                 </Flex>
-
                 <Box
                   border="1px solid #ccc"
                   borderRadius="0.5rem"
