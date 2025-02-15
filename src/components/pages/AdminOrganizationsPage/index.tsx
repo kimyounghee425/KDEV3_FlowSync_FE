@@ -212,6 +212,8 @@ function AdminOrganizationsPageContent() {
               <Table.Cell>
                 {`${organization.streetAddress} ${organization.detailAddress}`}
               </Table.Cell>
+              <Table.Cell>{formatDynamicDate(organization.regAt)}</Table.Cell>
+
               <Table.Cell onClick={(event) => event.stopPropagation()}>
                 {organization.status === "DELETED" ? (
                   <Text color="red">삭제됨</Text>
@@ -226,12 +228,6 @@ function AdminOrganizationsPageContent() {
                   />
                 )}
               </Table.Cell>
-              <Table.Cell>{formatDynamicDate(organization.regAt)}</Table.Cell>
-              {/* <Table.Cell>
-                <StatusTag>
-                  {STATUS_LABELS[organization.status] || "-"}
-                </StatusTag>
-              </Table.Cell> */}
               <Table.Cell onClick={(event) => event.stopPropagation()}>
                 <DropDownMenu
                   onEdit={() => handleEdit(organization.id)}

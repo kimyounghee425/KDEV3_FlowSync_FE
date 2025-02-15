@@ -23,7 +23,6 @@ export default function AdminMembersCreatePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const modalRef = useRef<HTMLDivElement | null>(null);
-
   const [organizations, setOrganizations] = useState<OrganizationProps[]>([]);
   const [selectedOrganization, setSelectedOrganization] =
     useState<OrganizationProps>();
@@ -95,6 +94,7 @@ export default function AdminMembersCreatePage() {
     }
   }
 
+  // 유효성 검사
   function validateInputs() {
     if (!checkAllInputs()) {
       alert("입력값을 확인하세요.");
@@ -102,34 +102,17 @@ export default function AdminMembersCreatePage() {
     }
     return true;
   }
-  // console.log(
-  //   inputValues.role,
-  //   inputValues.organizationId,
-  //   inputValues.name,
-  //   inputValues.email,
-  //   inputValues.password,
-  //   inputValues.phoneNum,
-  //   inputValues.jobRole,
-  //   inputValues.jobTitle,
-  //   inputValues.introduction,
-  //   inputValues.remark,
-  // );
 
   // 입력값 공백 다듬기
-  const formattedData = (input: string) => {
+  function formattedData(input: string) {
     return input.replace(/\s{2,}/g, " ").trim();
   }
-  
 
-
+  // 등록 버튼 클릭 후 회원 등록 API 호출
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!validateInputs()) return;
     try {
-      console.log(
-        "업체 정보 확인 -  String(selectedOrganization?.id) ",
-        String(selectedOrganization?.id),
-      );
       const response = await createMember(
         formattedData(inputValues.role),
         selectedOrganizationId,
@@ -142,65 +125,56 @@ export default function AdminMembersCreatePage() {
         formattedData(inputValues.introduction),
         formattedData(inputValues.remark),
       );
-
-      // 회원 등록 API(2) - 파일 업로드 O
-      // const file = null; // 파일이 있을 경우에만 처리
-      // const response = await createMemberWithFile(memberData, file);
-
-      console.log("회원 등록 성공 - response: ", response);
       alert("회원이 성공적으로 등록되었습니다.");
       route.push("/admin/members");
     } catch (error) {
-      console.error("회원 등록 중 오류 발생:", error);
       alert("회원 등록에 실패했습니다. 다시 시도해주세요.");
     }
   }
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === " ") {
-      e.preventDefault(); // ✅ 스페이스바 입력 차단
-    }
-  };
-
   return (
     <InputFormLayout
-      title="▹ 회원 등록"
+      title="회원 등록"
       onSubmit={handleSubmit}
       isLoading={false}
     >
       {/* 회원 생성 페이지 - 회원 유형 선택*/}
       <Box>
         <Flex direction="row" align="center" mb={4}>
-          <span
-            style={{
-              fontSize: "1rem",
-              fontWeight: "bold",
-              color: "#4A5568",
-            }}
-          >
-            회원 유형을 선택하세요
-          </span>
-          <span
-            style={{
-              color: "red",
-              marginLeft: "0.5rem",
-              marginRight: "1.5rem",
-            }}
-          >
-            *
-          </span>
-          <RadioGroup
-            value={inputValues.role}
-            onValueChange={(e) => handleInputChange("role", e.value)}
-          >
-            <HStack gap={6}>
-              <Radio value="MEMBER">일반 회원</Radio>
-              <Radio value="ADMIN">관리자</Radio>
-            </HStack>
-          </RadioGroup>
+          <Box>
+            <span
+              style={{
+                fontSize: "1rem",
+                fontWeight: "bold",
+                color: "#4A5568",
+              }}
+            >
+              회원 유형을 선택하세요
+            </span>
+            <span
+              style={{
+                color: "red",
+                marginLeft: "0.5rem",
+                marginRight: "1.5rem",
+              }}
+            >
+              *
+            </span>
+          </Box>
+          <Box>
+            <RadioGroup
+              value={inputValues.role}
+              defaultValue="MEMBER"
+              onValueChange={(e) => handleInputChange("role", e.value)}
+            >
+              <HStack gap={6}>
+                <Radio value="MEMBER">일반 회원</Radio>
+                <Radio value="ADMIN">관리자</Radio>
+              </HStack>
+            </RadioGroup>
+          </Box>
         </Flex>
       </Box>
-      {/* 회원 생성 페이지 - 회원 정보 입력*/}
 
       <Flex
         direction="row"
@@ -209,6 +183,7 @@ export default function AdminMembersCreatePage() {
         gap="1rem"
         align="center"
       >
+        {/* 회원명 입력 */}
         <Box flex="1">
           <InputForm
             id="name"
@@ -220,7 +195,7 @@ export default function AdminMembersCreatePage() {
             onChange={(e) => handleInputChange("name", e.target.value)}
           />
         </Box>
-        {/* 입력창 (고객사/개발사를 선택하세요) */}
+        {/* 고객사/개발사 선택 모달 */}
         <Box flex="1" display="flex" flexDirection="column">
           <Flex>
             <Text fontWeight="bold" mb="0.5rem">
@@ -242,7 +217,7 @@ export default function AdminMembersCreatePage() {
             height="3.2rem"
           />
         </Box>
-        {/* 모달 */}
+        {/* 모달 OPEN 시 */}
         {isModalOpen && (
           <Box
             ref={modalRef}
@@ -316,7 +291,7 @@ export default function AdminMembersCreatePage() {
           </Box>
         )}
       </Flex>
-
+      {/* 로그인 이메일 입력 */}
       <InputForm
         id="email"
         type="email"
@@ -326,6 +301,7 @@ export default function AdminMembersCreatePage() {
         error={inputErrors.email}
         onChange={(e) => handleInputChange("email", e.target.value)}
       />
+      {/* 로그인 패스워드 입력 */}
       <InputForm
         id="password"
         type="password"
@@ -335,6 +311,7 @@ export default function AdminMembersCreatePage() {
         error={inputErrors.password}
         onChange={(e) => handleInputChange("password", e.target.value)}
       />
+      {/* 연락처 입력 */}
       <InputForm
         id="phoneNum"
         type="tel"
@@ -344,6 +321,7 @@ export default function AdminMembersCreatePage() {
         error={inputErrors.phoneNum}
         onChange={(e) => handleChange("phoneNum", e.target.value)}
       />
+      {/* 직무 입력 */}
       <InputForm
         id="jobRole"
         type="text"
@@ -353,6 +331,7 @@ export default function AdminMembersCreatePage() {
         error={inputErrors.jobRole}
         onChange={(e) => handleInputChange("jobRole", e.target.value)}
       />
+      {/* 직함 입력 */}
       <InputForm
         id="jobTitle"
         type="text"
@@ -362,6 +341,7 @@ export default function AdminMembersCreatePage() {
         error={inputErrors.jobTitle}
         onChange={(e) => handleInputChange("jobTitle", e.target.value)}
       />
+      {/* 회원소개 입력 */}
       <InputForm
         id="introduction"
         type="text"
@@ -371,6 +351,7 @@ export default function AdminMembersCreatePage() {
         error={inputErrors.introduction}
         onChange={(e) => handleInputChange("introduction", e.target.value)}
       />
+      {/* 회원 특이사항 입력 */}
       <InputForm
         id="remark"
         type="text"

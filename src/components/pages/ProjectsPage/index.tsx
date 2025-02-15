@@ -11,7 +11,6 @@ import {
   Stack,
   Table,
 } from "@chakra-ui/react";
-import { useColorModeValue } from "@/src/components/ui/color-mode";
 import StatusTag from "@/src/components/common/StatusTag";
 import ProjectsManagementStepCards from "@/src/components/pages/ProjectsPage/components/ProjectsManagementStepCards";
 import CommonTable from "@/src/components/common/CommonTable";
@@ -84,9 +83,6 @@ function ProjectsPageContent() {
   const { data: loggedInUserInfo } = useUserInfo();
   const userRole = loggedInUserInfo?.role; // 기본값 설정
 
-  const bgColor = useColorModeValue("white", "gray.800");
-  const textColor = useColorModeValue("gray.700", "gray.200");
-
   /**
    * 페이지 변경 시 호출되는 콜백 함수
    * - 쿼리 파라미터를 갱신하고, fetchProjectList를 다시 호출합니다.
@@ -145,11 +141,11 @@ function ProjectsPageContent() {
         />
       </Head>
 
-      <Box bg={bgColor} minHeight="100vh">
+      <Box p="4" minHeight="100vh">
         <Stack spaceY="SECTION_SPACING">
           <ProjectsManagementStepCards title={"프로젝트 현황"} />
           <Stack spaceY="SECTION_SPACING" width="full">
-            <Heading size="2xl" color={textColor} lineHeight="base">
+            <Heading fontSize="1.5rem" lineHeight="base">
               프로젝트 목록
             </Heading>
             {userRole === "ADMIN" ? (
@@ -162,6 +158,7 @@ function ProjectsPageContent() {
                     statusFramework={projectStatusFramework}
                     selectedValue={managementStep}
                     queryKey="managementStep"
+                    width="150px"
                   />
                 </SearchSection>
               </Flex>
@@ -174,6 +171,7 @@ function ProjectsPageContent() {
                     statusFramework={projectStatusFramework}
                     selectedValue={managementStep}
                     queryKey="managementStep"
+                    width="150px"
                   />
                 </SearchSection>
               </Flex>
@@ -194,7 +192,6 @@ function ProjectsPageContent() {
             <CommonTable
               headerTitle={
                 <Table.Row
-                  backgroundColor={useColorModeValue("#eee", "gray.700")}
                   css={{
                     "& > th": { textAlign: "center" },
                   }}

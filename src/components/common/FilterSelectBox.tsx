@@ -26,7 +26,7 @@ export default function FilterSelectBox({
   selectedValue,
   queryKey,
   placeholder,
-  width = "110px",
+  width = "150px",
 }: StatusSelectBoxProps) {
   const router = useRouter();
 
@@ -68,9 +68,9 @@ export default function FilterSelectBox({
     >
       {/* 드롭다운 버튼(트리거) */}
       <SelectTrigger
-        border={"1px solid #e4e4e7"}
-        borderRadius="0.3rem"
-        height="2.45rem"
+        _hover={{
+          backgroundColor: "#6c757d",
+        }}
       >
         {/* 선택된 값이 표시될 영역 */}
         <SelectValueText

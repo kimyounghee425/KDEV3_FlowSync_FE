@@ -289,7 +289,7 @@ export default function OrganizationDetailForm({
   }
 
   return (
-    <Flex direction="column" width="80vh" justifyContent="center" gap="1rem">
+    <>
       <InputFormLayout
         title="▹ 업체 상세 조회"
         onSubmit={handleUpdate}
@@ -534,7 +534,7 @@ export default function OrganizationDetailForm({
           </Suspense>
         </Tabs.RootProvider>
       </Stack>
-    </Flex>
+    </>
   );
 }
 
