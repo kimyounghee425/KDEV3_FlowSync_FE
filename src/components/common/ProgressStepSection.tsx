@@ -51,18 +51,12 @@ export default function ProgressStepSection({
 
   return (
     <Flex
+      marginY="1rem"
       alignItems="center"
-      justifyContent="flex-start"
+      justifyContent="center"
       width="100%"
-      paddingX="2rem"
       paddingY="1rem"
-      gap="1rem"
-      // gap={gapValue}
-      border="1px solid"
-      borderColor="gray.200"
-      borderRadius="lg"
-      boxShadow="md"
-      mb="30px"
+      gap="1.5rem"
       flexWrap="nowrap"
       overflowX="auto"
       whiteSpace="nowrap"

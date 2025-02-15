@@ -67,7 +67,11 @@ export default function FilterSelectBox({
       onValueChange={handleValueChange}
     >
       {/* 드롭다운 버튼(트리거) */}
-      <SelectTrigger>
+      <SelectTrigger
+        border={"1px solid #e4e4e7"}
+        borderRadius="0.3rem"
+        height="2.45rem"
+      >
         {/* 선택된 값이 표시될 영역 */}
         <SelectValueText
           textAlign="center"

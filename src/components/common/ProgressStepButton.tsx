@@ -17,15 +17,15 @@ export default function ProgressStepButton({
     <Button
       onClick={onClick}
       width="11%"
-      height="48px"
-      padding="14px 16px"
+      height="3rem"
+      padding="1rem"
       justifyContent="center"
       alignItems="center"
-      borderRadius="4px"
+      borderRadius="1rem"
       bg="white"
       color="black"
       overflow="hidden"
-      border={isSelected ? "2px solid #D62A1C" : "1px solid #E5E5EC"} // 클릭 상태에 따라 테두리 변경
+      border={isSelected ? "1px solid #D62A1C" : "3px solid #E5E5EC"} // 클릭 상태에 따라 테두리 변경
       textAlign="center"
     >
       {/* <Text>{text}</Text> */}

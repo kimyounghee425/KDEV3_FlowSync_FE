@@ -277,6 +277,7 @@ export interface ProgressStep {
   deadlineAt: string;
   projectId: string;
   relatedApprovalId: string;
+  approver: Approver;
 }
 
 export interface Register {

@@ -105,19 +105,13 @@ export default function ProjectQuestionsPage() {
         loading={questionProgressStepLoading}
       />
 
-      <Box
-        direction="column"
-        padding="30px 23px"
-        gap="8px"
-        border="1px solid"
-        borderColor="gray.200"
-        borderRadius="lg"
-        boxShadow="md"
-        mb="30px"
-      >
-        <Flex justifyContent={"space-between"}>
+      <Box direction="column" paddingX="1rem" gap="8px" mb="30px">
+        <Flex justifyContent={"space-between"} paddingX="0.3rem">
           <Button
             variant={"surface"}
+            backgroundColor="#00a8ff"
+            color="white"
+            border="none"
             _hover={{ backgroundColor: "#00a8ff", color: "white" }}
             onClick={handleProjectQuestionCreateButton}
           >
@@ -126,10 +120,11 @@ export default function ProjectQuestionsPage() {
           {/* 검색 섹션 */}
           <SearchSection keyword={keyword} placeholder="제목 입력">
             <FilterSelectBox
-              placeholder="질문상태"
+              placeholder="답변 여부"
               statusFramework={questionStatusFramework}
               selectedValue={status}
               queryKey="status"
+              width="130px"
             />
           </SearchSection>
         </Flex>

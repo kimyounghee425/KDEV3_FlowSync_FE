@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
 import {
   Box,
-  Button,
   createListCollection,
   Flex,
   Heading,

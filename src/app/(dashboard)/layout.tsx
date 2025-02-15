@@ -48,7 +48,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <SidebarProvider>
       <Flex
         direction="column"
-        minHeight="100vh"
+        minHeight="100%"
         bg={bgColor}
         transition="background-color 0.3s"
       >

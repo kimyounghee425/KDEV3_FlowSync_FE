@@ -2,12 +2,13 @@
 
 import { ReactNode } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { Layers, List, MessageCircleQuestion } from "lucide-react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import ProjectInfoSection from "@/src/components/common/ProjectInfoSection";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { useProjectInfoContext } from "@/src/context/ProjectInfoContext";
+import ProjectInfoSection222 from "../common/ProjectInfoSection222";
 
 interface ProjectLayoutProps {
   children: ReactNode;
@@ -74,58 +75,75 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
   };
 
   return (
-    <>
-      {/* 슬라이더 탭 */}
-      <SegmentedControl
-        value={currentTab}
-        onValueChange={handleTabChange}
-        items={projectMenu}
-      />
+    <Flex direction="column" marginTop="1rem">
       {projectInfoError && (
         <ErrorAlert message="프로젝트 기본 정보를 불러오지 못했습니다. 다시 시도해주세요." />
       )}
-      {/* 상단 영역 */}
+      {/* 프로젝트 및 업체 정보 */}
       <Flex
         direction="column"
-        padding="30px 23px 15px 23px"
-        gap="8px"
-        border="1px solid"
-        borderColor="gray.200"
-        borderRadius="lg"
-        boxShadow="md"
-        mb="30px"
+        gap="1rem"
+        padding="1.2rem"
+        border="1px solid #b8b1b1"
+        borderRadius="1.5rem"
+        marginBottom="2rem"
       >
         <Flex
-          justifyContent={"space-between"}
+          direction="row"
+          gap="3rem"
           alignItems="center"
-          // height="4rem"
+          justifyContent="space-between"
         >
-          {/* 프로젝트 제목 및 설명 */}
-          <Flex gap="10px" alignItems="center">
-            <Heading size={"4xl"} paddingLeft="1.5rem">
+          <Box flex="1.1">
+            <Heading fontSize="1.5rem" paddingLeft="0.5rem">
               {projectInfo?.projectName}
             </Heading>
-            <Text fontWeight="500" color="#BBB" fontSize="20px">
-              {projectInfo?.description}
-            </Text>
-          </Flex>
-          <Text
-            fontWeight="bold"
-            fontSize="20px"
-            paddingRight="2rem"
-            color="#0c9ae0"
-          >
-            &bull; {MANAGEMENT_STEP_LABELS[projectInfo?.managementStep || ""]}
-          </Text>
+          </Box>
+          {/* 프로젝트 정보 */}
+          <ProjectInfoSection222
+            projectInfo={projectInfo}
+            loading={projectInfoLoading}
+          />
         </Flex>
-        {/* 프로젝트 정보 */}
-        <ProjectInfoSection
-          projectInfo={projectInfo}
-          loading={projectInfoLoading}
-        />
+        <Text fontSize="1rem" fontStyle="italic" paddingLeft="0.5rem">
+          {projectInfo?.description}
+        </Text>
       </Flex>
 
-      {children}
-    </>
+      {/* 게시판 탭, 관리 단계 표시 */}
+      <Flex
+        direction="row"
+        justifyContent={"space-between"}
+        alignItems="center"
+      >
+        {/* 슬라이더 탭 */}
+        <SegmentedControl
+          value={currentTab}
+          onValueChange={handleTabChange}
+          items={projectMenu}
+        />
+        <Text
+          fontWeight="bold"
+          fontSize="1rem"
+          paddingRight="1rem"
+          color="#0c9ae0"
+        >
+          &bull; {MANAGEMENT_STEP_LABELS[projectInfo?.managementStep || ""]}{" "}
+          단계
+        </Text>
+      </Flex>
+
+      <Flex
+        direction="column"
+        gap="1rem"
+        padding="1.2rem"
+        border="1px solid #b8b1b1"
+        borderRadius="0.8rem"
+        height="fit-content"
+        minHeight="500px"
+      >
+        {children}
+      </Flex>
+    </Flex>
   );
 }
