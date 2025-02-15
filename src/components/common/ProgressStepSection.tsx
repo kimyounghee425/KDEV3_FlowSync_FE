@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import ProgressStepButton from "@/src/components/common/ProgressStepButton";
 import { Loading } from "@/src/components/common/Loading";
@@ -18,13 +18,16 @@ export default function ProgressStepSection({
   progressStep,
   loading,
 }: ProgressStepSectionProps) {
-  // 화면 크기에 따라 `gap` 동적 조절 (작은 화면일수록 간격 좁게)
-  const gapValue = useBreakpointValue({ base: 2, md: 4, lg: 12 });
-
   // 현재 선택된 버튼 id 상태 (기본값은 progressData의 첫 번째 항목)
   const [selectedButtonId, setSelectedButtonId] = useState<string>(
     progressStep.length > 0 ? progressStep[0].id : "",
   );
+
+  useEffect(() => {
+    if (progressStep.length > 0 && !selectedButtonId) {
+      setSelectedButtonId(progressStep[0].id);
+    }
+  }, [progressStep]);
 
   const handleStatusChange = (id: string) => {
     // 이미 선택된 버튼이라면 아무 동작도 하지 않음
@@ -57,7 +60,6 @@ export default function ProgressStepSection({
       paddingX="2rem"
       paddingY="1rem"
       gap="1rem"
-      // gap={gapValue}
       border="1px solid"
       borderColor="gray.200"
       borderRadius="lg"

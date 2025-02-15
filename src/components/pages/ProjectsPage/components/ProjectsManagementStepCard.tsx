@@ -72,11 +72,15 @@ export default function ProjectsManagementStepCard({
       boxShadow="sm"
       padding={3}
       transition="all 0.3s ease"
-      _hover={{
-        backgroundColor: hoverBgColor,
-        cursor: "pointer",
-        transform: "scale(1.05)", // 살짝 확대 효과
-      }}
+      _hover={
+        isSelected
+          ? {}
+          : {
+              backgroundColor: hoverBgColor,
+              cursor: "pointer",
+              transform: "scale(1.05)", // 살짝 확대 효과
+            }
+      }
       onClick={onClick} // 클릭 시 필터 적용
     >
       <Flex alignItems="center" height="100%" gap={3}>

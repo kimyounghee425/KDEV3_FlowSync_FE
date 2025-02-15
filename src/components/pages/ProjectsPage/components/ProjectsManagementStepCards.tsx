@@ -63,6 +63,9 @@ export default function ProjectsManagementStepCards({
   const textColor = useColorModeValue("gray.700", "gray.200");
 
   const handleStepClick = (step: ProjectManagementSteps) => {
+    if (step === selectedStep) {
+      return;
+    }
     setSelectedStep(step);
     const params = new URLSearchParams(window.location.search);
     params.set("currentPage", "1");

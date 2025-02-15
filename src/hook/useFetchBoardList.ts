@@ -13,7 +13,6 @@ import {
   fetchProjectQuestionListApi,
   fetchProjectApprovalListApi,
   fetchProjectListApi,
-  projectProgressStepApi,
 } from "@/src/api/projects";
 import { showToast } from "@/src/utils/showToast";
 import { fetchNoticeListApi } from "@/src/api/notices";

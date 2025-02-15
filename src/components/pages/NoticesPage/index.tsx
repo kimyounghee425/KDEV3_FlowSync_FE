@@ -120,11 +120,8 @@ function NoticesPageContent() {
     if (!confirmDelete) return;
     try {
       await deleteNotice(noticeId);
-      alert("공지사항이 삭제되었습니다.");
       refetch();
-    } catch (error) {
-      alert(`삭제 중 문제가 발생했습니다 : ${error}`);
-    }
+    } catch (error) {}
   };
 
   return (
@@ -165,6 +162,17 @@ function NoticesPageContent() {
         <ErrorAlert message="공지사항 목록을 불러오지 못했습니다. 다시 시도해주세요." />
       )}
       <CommonTable
+        columnsWidth={
+          <>
+            <Table.Column htmlWidth="10%" />
+            <Table.Column htmlWidth="10%" />
+            <Table.Column htmlWidth="30%" />
+            <Table.Column htmlWidth="10%" />
+            <Table.Column htmlWidth="10%" />
+            <Table.Column htmlWidth="10%" />
+            <Table.Column htmlWidth="5%" />
+          </>
+        }
         headerTitle={
           <Table.Row
             backgroundColor={"#eee"}
@@ -208,7 +216,12 @@ function NoticesPageContent() {
               css={{
                 cursor: "pointer",
                 "&:hover": { backgroundColor: "#f5f5f5" },
-                "& > td": { textAlign: "center" },
+                "& > td": {
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                },
               }}
             >
               <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>

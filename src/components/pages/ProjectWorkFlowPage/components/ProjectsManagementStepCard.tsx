@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
-import { useColorModeValue } from "@/src/components/ui/color-mode";
 import { ProjectManagementSteps } from "@/src/constants/projectManagementSteps"; // ENUM import
 
 interface ProjectsManagementStepCardProps {
@@ -44,33 +43,27 @@ export default function ProjectsManagementStepCard({
     md: "3rem", // 데스크탑
   });
 
-  // 다크모드 색상 설정
-  const borderColor = useColorModeValue("gray.200", "gray.600");
-  const textColor = useColorModeValue("gray.700", "gray.700");
-  const hoverBgColor = useColorModeValue("gray.100", "gray.600");
-  const selectedBgColor = useColorModeValue("blue.100", "blue.900");
-
   return (
     <Box
-      background={isSelected ? selectedBgColor : "white"}
+      background={isSelected ? "blue.100" : "white"}
       width={cardWidth}
       height={cardHeight}
-      border={`1px solid ${borderColor}`}
+      border={`1px solid gray.200`}
       borderRadius="lg"
       boxShadow="sm"
       padding={3}
       transition="all 0.3s ease"
       _hover={
         !isDisabled
-          ? { backgroundColor: hoverBgColor, transform: "scale(1.05)" }
+          ? { backgroundColor: "gray.100", transform: "scale(1.05)" }
           : undefined
       }
-      cursor={isDisabled ? "not-allowed" : "pointer"}
+      cursor={isDisabled ? "default" : "pointer"}
       onClick={isDisabled ? undefined : onClick} // 클릭 방지
     >
       <Flex alignItems="center" height="100%" gap={3}>
         <Flex
-          border={`1px solid ${borderColor}`}
+          border={`1px solid gray.200`}
           borderRadius="full"
           overflow="hidden"
           alignItems="center"
@@ -89,7 +82,7 @@ export default function ProjectsManagementStepCard({
           <Text
             fontSize="md"
             fontWeight={500}
-            color={textColor}
+            color="gray.700"
             maxWidth="100px" // 글자 최대 너비 설정
             whiteSpace="nowrap" // 줄 바꿈 방지
             overflow="hidden"

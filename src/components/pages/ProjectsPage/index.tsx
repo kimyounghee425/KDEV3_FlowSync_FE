@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
 import {
   Box,
-  Button,
   createListCollection,
   Flex,
   Heading,
@@ -116,7 +115,7 @@ function ProjectsPageContent() {
     }
   };
 
-  //s 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
+  // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
   const handleProjectCreateButton = () => {
     router.push(`/projects/create`);
   };
@@ -125,8 +124,8 @@ function ProjectsPageContent() {
     router.push(`/projects/${id}/edit`);
   };
   // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
-  const handleProjectDeleteButton = () => {
-    router.push(`/projects/create`);
+  const handleProjectDeleteButton = (id: string) => {
+    router.push(`/projects/${id}/delete`);
   };
 
   return (
@@ -146,7 +145,7 @@ function ProjectsPageContent() {
         />
       </Head>
 
-      <Box bg={bgColor} p="4" minHeight="100vh">
+      <Box bg={bgColor} minHeight="100vh">
         <Stack spaceY="SECTION_SPACING">
           <ProjectsManagementStepCards title={"프로젝트 현황"} />
           <Stack spaceY="SECTION_SPACING" width="full">
@@ -260,8 +259,10 @@ function ProjectsPageContent() {
                           onClick={(event) => event.stopPropagation()}
                         >
                           <DropDownMenu
-                          // onEdit={() => handleEdit(notice.id)}
-                          // onDelete={() => handleDelete(notice.id)}
+                            onEdit={() => handleEditClick(project.id)}
+                            onDelete={() =>
+                              handleProjectDeleteButton(project.id)
+                            }
                           />
                         </Table.Cell>
                       </>

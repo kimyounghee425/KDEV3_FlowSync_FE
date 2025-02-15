@@ -95,18 +95,38 @@ button {
   transition: all 1s;
 }
 
-button:hover {
-  /* color: #323232; */
-  /* background-color: var(--button-hover-bg-light); */
+/* 📌 입력 필드 */
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 0.5rem;
+  font-size: var(--font-size-base);
+  background-color: var(--input-bg);
+  transition:
+    background-color 0.3s,
+    border 0.3s;
 }
 
-/* 버튼 클릭 시 효과 */
-button:active {
-  background-color: var(--button-active-bg);
-  transform: scale(0.97);
+.input:focus {
+  border-color: var(--input-focus-border);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
 
-/* 헤더 */
+.input.disabled {
+  background-color: #f0f0f0;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* 📌 수정된 필드 강조 (연한 파란색) */
+.input.changed {
+  background-color: #e3f2fd !important;
+  border: 1px solid var(--primary-color) !important;
+}
+
+/* 📌 헤더 */
 header {
   position: sticky;
   top: 0;

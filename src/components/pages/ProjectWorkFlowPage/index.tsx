@@ -170,7 +170,8 @@ export default function ProjectWorkFlowPage() {
                     }
                   />
                   <Button
-                    colorScheme="blue"
+                    colorPalette="gray.100"
+                    variant="surface"
                     size="sm"
                     onClick={() => handleSaveDates(progressStep.id)}
                     disabled={
