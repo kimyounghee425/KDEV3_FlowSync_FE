@@ -55,16 +55,6 @@ button {
   transition: background-color 0.3s ease-in-out;
 }
 
-button:hover {
-  background-color: var(--primary-hover-color);
-}
-
-/* 버튼 클릭 시 효과 */
-button:active {
-  background-color: var(--primary-active-color);
-  transform: scale(0.98);
-}
-
 /* 📌 입력 필드 */
 .input {
   width: 100%;

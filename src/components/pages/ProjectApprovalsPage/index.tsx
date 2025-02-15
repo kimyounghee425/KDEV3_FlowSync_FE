@@ -122,7 +122,7 @@ export default function ProjectApprovalsPage() {
           {/* 검색 섹션 */}
           <SearchSection keyword={keyword} placeholder="제목 입력">
             <StatusSelectBox
-              placeholder="결재 여부"
+              placeholder="결재상태"
               statusFramework={approvalStatusFramework}
               selectedValue={status}
               queryKey="status"
