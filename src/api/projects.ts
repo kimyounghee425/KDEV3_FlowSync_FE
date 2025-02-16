@@ -12,8 +12,8 @@ import {
   ProgressStep,
   ManagementStepCountMap,
   OrganizationProjectListResponse,
-  CompletionHistory,
   CompletionHistoryListResponse,
+  ProgressStepOrder,
 } from "@/src/types";
 
 
@@ -333,7 +333,7 @@ export async function fetchProjectApprovalListApi(
  * @param requestData 업데이트할 시작일 및 마감일 데이터
  * @returns 업데이트된 진행 단계 정보
  */
-export async function updateProjectProgressStepApi(
+export async function updateProjectProgressStepScheduleApi(
   projectId: string,
   progressStepId: string,
   requestData: { startAt: string; deadlineAt: string },
@@ -355,5 +355,22 @@ export async function getCompletionRequestsApi(
       params: condition
     }
   )
+  return response.data;
+}
+
+/**
+ * 프로젝트 진행 단계 순서 업데이트 API
+ * @param projectId 프로젝트 ID
+ * @param steps 업데이트할 진행 단계 리스트
+ * @returns API 응답 데이터
+ */
+export async function updateProjectProgressStepOrderApi(
+  projectId: string,
+  steps: ProgressStepOrder[],
+): Promise<CommonResponseType<void>> {
+  const response = await axiosInstance.put(
+    `/projects/${projectId}/progress-steps/order`,
+    { steps },
+  );
   return response.data;
 }

@@ -614,3 +614,7 @@ export interface Actor {
   organizationType: string;
 }
 
+export interface ProgressStepOrder {
+  id: string; 
+  order: number;
+}

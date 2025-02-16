@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { showToast } from "@/src/utils/showToast";
-import { CommonResponseType, NoticeRequestData, OrganizationProps, ProgressStep } from "@/src/types";
+import { CommonResponseType, NoticeRequestData, OrganizationProps, ProgressStep, ProgressStepOrder } from "@/src/types";
 import { createNoticeApi, deleteNoticeApi, editNoticeApi } from "@/src/api/notices";
-import { updateProjectProgressStepApi } from "@/src/api/projects";
+import { updateProjectProgressStepScheduleApi, updateProjectProgressStepOrderApi } from "@/src/api/projects";
 import { changeOrganizationStatusApi } from "@/src/api/organizations";
 
 interface UseMutationDataProps<T, P extends any[]> {
@@ -91,9 +91,9 @@ export function useDeleteNotice() {
 /**
  * 프로젝트 진행 단계 날짜 업데이트 훅
  */
-export function useUpdateProjectProgressStep() {
+export function useUpdateProjectProgressStepSchedule() {
   return useMutationData<ProgressStep, [string, string, { startAt: string; deadlineAt: string }]>({
-    mutationApi: updateProjectProgressStepApi,
+    mutationApi: updateProjectProgressStepScheduleApi,
   });
 }
 
@@ -104,4 +104,13 @@ export function useUpdateOrganizationStatus() {
   return useMutationData<OrganizationProps, [string]> ({
     mutationApi: changeOrganizationStatusApi,
   })
+}
+
+/**
+ * 프로젝트 진행 단계 순서 업데이트 훅
+ */
+export function useUpdateProjectProgressStepOrder() {
+  return useMutationData<void, [string, ProgressStepOrder[]]>({
+    mutationApi: updateProjectProgressStepOrderApi,
+  });
 }

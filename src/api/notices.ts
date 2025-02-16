@@ -4,7 +4,6 @@ import {
   NoticeRequestData,
 } from "@/src/types";
 import axiosInstance from "@/src/api/axiosInstance";
-import { headers } from "next/headers";
 
 // 공지사항 생성
 export async function fetchNoticeListApi(

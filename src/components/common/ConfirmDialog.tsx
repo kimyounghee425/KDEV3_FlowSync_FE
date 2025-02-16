@@ -95,6 +95,8 @@ export default function ConfirmDialog({
         >
           {/* 확인 버튼 (더 길고 가독성 좋게) */}
           <Button
+            backgroundColor="#00a8ff"
+            color="white"
             onClick={onConfirm}
             loading={isLoading}
             loadingText="처리 중..."
@@ -111,7 +113,8 @@ export default function ConfirmDialog({
           {/* 취소 버튼 (더 길고 가독성 좋게) */}
           <DialogActionTrigger asChild>
             <Button
-              variant="outline"
+              variant={"outline"}
+              border={"1px solid"}
               onClick={onClose}
               disabled={isLoading}
               style={{

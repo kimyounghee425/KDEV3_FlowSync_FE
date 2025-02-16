@@ -12,9 +12,10 @@ import { useProjectProgressStepData } from "@/src/hook/useFetchData";
 import DateSection from "@/src/components/pages/ProjectWorkFlowPage/components/DateSection";
 import CustomModal from "@/src/components/pages/ProjectWorkFlowPage/components/CustomModal";
 import ProjectLogTable from "@/src/components/pages/ProjectWorkFlowPage/components/ProjectLogTable";
-import { useUpdateProjectProgressStep } from "@/src/hook/useMutationData";
+import { useUpdateProjectProgressStepSchedule } from "@/src/hook/useMutationData";
 import { formatDate } from "@/src/utils/formatDateUtil";
 import Link from "next/link";
+import DraggableProgressSteps from "@/src/components/pages/ProjectWorkFlowPage/components/DraggableProgressStep";
 
 export default function ProjectWorkFlowPage() {
   const { projectId } = useParams();
@@ -30,7 +31,8 @@ export default function ProjectWorkFlowPage() {
   } = useProjectProgressStepData(projectId as string);
 
   // 진행단계 시작일자-예정완료일자 수정 요청
-  const { mutate: updateProgressStep } = useUpdateProjectProgressStep();
+  const { mutate: updateProgressStepShedule } =
+    useUpdateProjectProgressStepSchedule();
 
   // 초기 날짜 데이터를 저장할 상태
   const [initialDates, setInitialDates] = useState<
@@ -76,7 +78,7 @@ export default function ProjectWorkFlowPage() {
     if (!stepDates?.startAt && !stepDates?.deadlineAt) return;
 
     try {
-      await updateProgressStep(resolvedProjectId, progressStepId, {
+      await updateProgressStepShedule(resolvedProjectId, progressStepId, {
         startAt: formatDate(stepDates.startAt),
         deadlineAt: formatDate(stepDates.deadlineAt),
       });
@@ -94,6 +96,18 @@ export default function ProjectWorkFlowPage() {
   return (
     <ProjectLayout>
       <ProjectsManagementStepCards title={"관리 단계 변경"} />
+
+      <Heading
+        lineHeight="base"
+        paddingBottom="0.7rem"
+        fontSize="1.3rem"
+        marginLeft="1.3rem"
+      >
+        진행 단계 커스텀
+      </Heading>
+      {/* ✅ 진행단계 커스텀 (드래그앤드롭) 추가 */}
+      <DraggableProgressSteps projectId={resolvedProjectId} />
+
       <Flex direction="column" marginX="1rem">
         <Heading
           lineHeight="base"
@@ -103,6 +117,7 @@ export default function ProjectWorkFlowPage() {
         >
           진행단계 요약
         </Heading>
+
         {progressStepError && (
           <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
