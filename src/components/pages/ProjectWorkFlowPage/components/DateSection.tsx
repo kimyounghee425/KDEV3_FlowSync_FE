@@ -3,17 +3,36 @@
 import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Flex, Text, Box, Input } from "@chakra-ui/react";
+import { Flex, Box, Input } from "@chakra-ui/react";
 
 interface DateSectionProps {
   dateTime?: Date | null;
   setDateTime?: (value: Date | null) => void;
+  minDate?: Date | null;
 }
 
 export default function DateSection({
   dateTime,
   setDateTime,
+  minDate,
 }: DateSectionProps) {
+  // `minDate`가 존재하면 초와 밀리초 제거 (시간 비교를 위해)
+  const adjustedMinDate = minDate
+    ? new Date(minDate.setSeconds(0, 0))
+    : new Date();
+
+  // 같은 날짜인지 확인
+  const isSameDay =
+    dateTime && minDate
+      ? dateTime.toDateString() === minDate.toDateString()
+      : false;
+
+  // ✅ 같은 날짜이면 `startAt` 이후의 시간만 선택 가능
+  const minTime = isSameDay
+    ? (minDate ?? undefined)
+    : new Date(0, 0, 0, 0, 0, 0);
+  const maxTime = new Date(0, 0, 0, 23, 59, 59); // 하루 끝 (23:59:59)까지 선택 가능
+
   return (
     <Flex direction="column" width="100%">
       {/* 날짜 선택 UI */}
@@ -38,7 +57,8 @@ export default function DateSection({
               showTimeSelect // 시간 선택 활성화
               timeFormat="HH:mm" // 4시간제 포맷
               timeIntervals={60} // 10분 단위 선택
-              minDate={new Date()}
+              minDate={adjustedMinDate} // startAt보다 과거 선택 불가
+              {...(isSameDay && { minTime, maxTime })} // ✅ 같은 날짜면 시간도 제한
               popperPlacement="bottom-start"
               customInput={
                 <Input

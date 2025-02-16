@@ -28,6 +28,16 @@ export function useMutationData<T, P extends any[]>({ mutationApi }: UseMutation
     try {
       const response = await mutationApi(...args);
       setError(null);
+
+      // 성공 메시지가 있으면 토스트 띄우기
+      if (response.message) {
+        showToast({
+          title: "요청 성공",
+          description: response.message,
+          type: "success",
+          duration: 3000,
+        });
+      }
       return response;
     } catch (err: any) {
       console.error("API 요청 실패:", err);

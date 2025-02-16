@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Box, Flex, Heading, useBreakpointValue } from "@chakra-ui/react";
 import {
   Folder,
@@ -39,10 +39,21 @@ export default function ProjectsManagementStepCards({
   title,
 }: ProjectsManagementStepCardsProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   // 현재 선택된 관리 단계 상태
   const [selectedStep, setSelectedStep] = useState<ProjectManagementSteps>(
-    ProjectManagementSteps.ALL,
+    (searchParams.get("managementStep") as ProjectManagementSteps) ||
+      ProjectManagementSteps.ALL,
   );
+
+  useEffect(() => {
+    // ✅ URL의 managementStep이 바뀌면 selectedStep을 업데이트
+    const newStep =
+      (searchParams.get("managementStep") as ProjectManagementSteps) ||
+      ProjectManagementSteps.ALL;
+    setSelectedStep(newStep);
+  }, [searchParams]); // ✅ searchParams 변경 시 실행
 
   const {
     data: managementStepsCountData,

@@ -34,14 +34,14 @@ const noticeStatusFramework = createListCollection<{
   ],
 });
 
-const noticeIsDeletedFramework = createListCollection<{
+const noticeStatusOptions = createListCollection<{
   label: string;
   value: string;
 }>({
   items: [
-    { label: "전체 보기", value: "" },
+    { label: "모든 공지", value: "" },
+    { label: "게시중", value: "N" },
     { label: "삭제된 공지", value: "Y" },
-    { label: "삭제되지 않은 공지", value: "N" },
   ],
 });
 
@@ -58,9 +58,13 @@ const PRIORITY_LABELS: Record<string, string> = {
 };
 
 const EMERGENCY_STYLE = {
-  fontSize: "lg",
   fontWeight: "bold",
   color: "red",
+};
+
+const NOTICE_STATUS_LABELS: Record<string, string> = {
+  Y: "삭제됨",
+  N: "게시중",
 };
 
 export default function NoticesPage() {
@@ -170,7 +174,7 @@ function NoticesPageContent() {
             <Table.Column htmlWidth="10%" />
             <Table.Column htmlWidth="10%" />
             <Table.Column htmlWidth="10%" />
-            <Table.Column htmlWidth="5%" />
+            <Table.Column htmlWidth="10%" />
           </>
         }
         headerTitle={
@@ -190,15 +194,15 @@ function NoticesPageContent() {
                 <Table.ColumnHeader>
                   <Flex justifyContent="center" alignItems="center">
                     <FilterSelectBox
-                      statusFramework={noticeIsDeletedFramework}
+                      statusFramework={noticeStatusOptions}
                       selectedValue={isDeleted}
                       queryKey="isDeleted"
-                      placeholder="삭제여부"
+                      placeholder="게시여부"
                       width="150px"
                     />
                   </Flex>
                 </Table.ColumnHeader>
-                <Table.ColumnHeader>공지사항관리</Table.ColumnHeader>
+                <Table.ColumnHeader>관리</Table.ColumnHeader>
               </>
             ) : (
               <></>
@@ -242,7 +246,7 @@ function NoticesPageContent() {
                     {formatDynamicDate(notice.updatedAt)}
                   </Table.Cell>
                   <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
-                    {notice.isDeleted}
+                    {NOTICE_STATUS_LABELS[notice.isDeleted]}
                   </Table.Cell>
                   <Table.Cell onClick={(event) => event.stopPropagation()}>
                     <DropDownMenu

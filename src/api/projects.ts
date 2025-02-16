@@ -12,6 +12,8 @@ import {
   ProgressStep,
   ManagementStepCountMap,
   OrganizationProjectListResponse,
+  CompletionHistory,
+  CompletionHistoryListResponse,
 } from "@/src/types";
 
 
@@ -277,7 +279,7 @@ export async function fetchProjectsManagementStepsCountApi(): Promise<
 export async function fetchProjectQuestionListApi(
   projectId: string,
   keyword: string = "",
-  progressStep: string = "",
+  progressStepId: string = "",
   status: string = "",
   currentPage: number,
   pageSize: number,
@@ -285,7 +287,7 @@ export async function fetchProjectQuestionListApi(
   const response = await axiosInstance.get(`/projects/${projectId}/questions`, {
     params: {
       keyword,
-      progressStep,
+      progressStepId,
       status,
       currentPage,
       pageSize,
@@ -340,5 +342,18 @@ export async function updateProjectProgressStepApi(
     `/projects/${projectId}/progress-steps/${progressStepId}/plans`,
     requestData,
   );
+  return response.data;
+}
+
+export async function getCompletionRequestsApi(
+  projectId: string,
+  condition: {progressStepId: string, currentPage: number, pageSize: number}
+): Promise<CommonResponseType<CompletionHistoryListResponse>> {
+  const response = await axiosInstance.get(
+    `/projects/${projectId}/approvals/histories/completion-requests`,
+    {
+      params: condition
+    }
+  )
   return response.data;
 }

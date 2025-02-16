@@ -22,12 +22,12 @@ export default function ProgressStepButton({
       padding="1rem"
       justifyContent="center"
       alignItems="center"
-      borderRadius="1rem"
-      bg="white"
+      borderRadius="4px"
+      bg={isSelected ? "blue.100" : "white"}
       color="black"
       border={isSelected ? "2px solid blue.500" : "1px solid #E5E5EC"} // 선택 상태일 때 테두리 변경
-      cursor={isSelected ? "default" : "pointer"} // 선택된 상태에서는 커서 변경
-      _hover={isSelected ? {} : { backgroundColor: "gray.100" }} // 선택된 상태에서는 hover 효과 제거
+      cursor={isSelected ? "default" : "pointer"} // ✅ 선택된 상태에서는 커서 변경
+      _hover={isSelected ? {} : { backgroundColor: "gray.100" }} // ✅ 선택된 상태에서는 hover 효과 제거
     >
       {/* <Text>{text}</Text> */}
       <Text fontWeight="bold">

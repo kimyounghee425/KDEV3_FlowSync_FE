@@ -158,7 +158,7 @@ function ProjectsPageContent() {
                     statusFramework={projectStatusFramework}
                     selectedValue={managementStep}
                     queryKey="managementStep"
-                    width="150px"
+                    width="120px"
                   />
                 </SearchSection>
               </Flex>
@@ -171,7 +171,7 @@ function ProjectsPageContent() {
                     statusFramework={projectStatusFramework}
                     selectedValue={managementStep}
                     queryKey="managementStep"
-                    width="150px"
+                    width="120px"
                   />
                 </SearchSection>
               </Flex>
@@ -190,10 +190,24 @@ function ProjectsPageContent() {
              */}
 
             <CommonTable
+              columnsWidth={
+                <>
+                  <Table.Column htmlWidth="20%" />
+                  <Table.Column htmlWidth="15%" />
+                  <Table.Column htmlWidth="15%" />
+                  <Table.Column htmlWidth="10%" />
+                  <Table.Column htmlWidth="10%" />
+                  <Table.Column htmlWidth="10%" />
+                  <Table.Column htmlWidth="10%" />
+                  <Table.Column htmlWidth="5%" />
+                  <Table.Column htmlWidth="5%" />
+                </>
+              }
               headerTitle={
                 <Table.Row
+                  backgroundColor="#eee"
                   css={{
-                    "& > th": { textAlign: "center" },
+                    "& > th": { textAlign: "center", whiteSpace: "nowrap" },
                   }}
                 >
                   <Table.ColumnHeader>프로젝트명</Table.ColumnHeader>
@@ -227,7 +241,12 @@ function ProjectsPageContent() {
                         : { backgroundColor: "#f8f8f8" },
                       cursor: isRowClickable ? "pointer" : "not-allowed",
                       opacity: isRowClickable ? 1 : 0.5,
-                      "& > td": { textAlign: "center" },
+                      "& > td": {
+                        textAlign: "center",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      },
                     }}
                   >
                     <Table.Cell>{project.name}</Table.Cell>

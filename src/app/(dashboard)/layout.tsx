@@ -56,7 +56,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           isSidebarOpen={isSidebarOpen}
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         />
-        <Flex direction="row" flex={1} overflow="hidden" justify="center">
+        <Flex direction="row" flex={1} justify="center">
           {/* 사이드바 */}
           <Sidebar
             loggedInUserRole={userRole}

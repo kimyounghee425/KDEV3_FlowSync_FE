@@ -142,11 +142,23 @@ export default function ProjectApprovalsPage() {
           - handleRowClick: 행 클릭 시 동작
         */}
         <CommonTable
+          columnsWidth={
+            <>
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="25%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="10%" />
+            </>
+          }
           headerTitle={
             <Table.Row
               backgroundColor={"#eee"}
               css={{
-                "& > th": { textAlign: "center" },
+                "& > th": { textAlign: "center", whiteSpace: "nowrap" },
               }}
             >
               <Table.ColumnHeader>진행단계</Table.ColumnHeader>
@@ -168,7 +180,12 @@ export default function ProjectApprovalsPage() {
               css={{
                 cursor: "pointer",
                 "&:hover": { backgroundColor: "#f5f5f5" },
-                "& > td": { textAlign: "center" },
+                "& > td": {
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                },
               }}
             >
               <Table.Cell>{approval.progressStep.name}</Table.Cell>

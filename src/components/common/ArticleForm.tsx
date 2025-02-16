@@ -3,7 +3,7 @@
 // 외부 라이브러리
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Box, Input, Text, Flex, Button, Textarea } from "@chakra-ui/react";
+import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
