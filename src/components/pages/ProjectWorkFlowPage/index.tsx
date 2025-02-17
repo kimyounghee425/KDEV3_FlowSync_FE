@@ -97,14 +97,6 @@ export default function ProjectWorkFlowPage() {
     <ProjectLayout>
       <ProjectsManagementStepCards title={"관리 단계 변경"} />
 
-      <Heading
-        lineHeight="base"
-        paddingBottom="0.7rem"
-        fontSize="1.3rem"
-        marginLeft="1.3rem"
-      >
-        진행 단계 커스텀
-      </Heading>
       {/* ✅ 진행단계 커스텀 (드래그앤드롭) 추가 */}
       <DraggableProgressSteps projectId={resolvedProjectId} />
 

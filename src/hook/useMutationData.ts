@@ -2,7 +2,7 @@ import { useState } from "react";
 import { showToast } from "@/src/utils/showToast";
 import { CommonResponseType, NoticeRequestData, OrganizationProps, ProgressStep, ProgressStepOrder } from "@/src/types";
 import { createNoticeApi, deleteNoticeApi, editNoticeApi } from "@/src/api/notices";
-import { updateProjectProgressStepScheduleApi, updateProjectProgressStepOrderApi } from "@/src/api/projects";
+import { updateProjectProgressStepScheduleApi, updateProjectProgressStepOrderApi, createProjectProgressStepApi, deleteProjectProgressStepApi } from "@/src/api/projects";
 import { changeOrganizationStatusApi } from "@/src/api/organizations";
 
 interface UseMutationDataProps<T, P extends any[]> {
@@ -52,7 +52,7 @@ export function useMutationData<T, P extends any[]>({ mutationApi }: UseMutation
       });
 
       setError(errorMessage);
-      throw new Error(errorMessage);
+      return null;
     } finally {
       setLoading(false);
     }
@@ -112,5 +112,23 @@ export function useUpdateOrganizationStatus() {
 export function useUpdateProjectProgressStepOrder() {
   return useMutationData<void, [string, ProgressStepOrder[]]>({
     mutationApi: updateProjectProgressStepOrderApi,
+  });
+}
+
+/**
+ * 프로젝트 진행 단계 추가 훅
+ */
+export function useCreateProjectProgressStep() {
+  return useMutationData<{ id: string; title: string }, [string, string]>({
+    mutationApi: createProjectProgressStepApi,
+  });
+}
+
+/**
+ * 프로젝트 진행 단계 삭제 훅
+ */
+export function useDeleteProjectProgressStep() {
+  return useMutationData<void, [string, string]>({
+    mutationApi: deleteProjectProgressStepApi,
   });
 }

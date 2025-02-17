@@ -374,3 +374,30 @@ export async function updateProjectProgressStepOrderApi(
   );
   return response.data;
 }
+
+/**
+ * 프로젝트 진행 단계 추가 API
+ */
+export async function createProjectProgressStepApi(
+  projectId: string,
+  stepName: string
+): Promise<CommonResponseType<{ id: string; title: string }>> {
+  const response = await axiosInstance.post(
+    `/projects/${projectId}/progress-steps`,
+    { title: stepName } // API 요청 바디
+  );
+  return response.data;
+}
+
+/**
+ * 프로젝트 진행 단계 삭제 API
+ */
+export async function deleteProjectProgressStepApi(
+  projectId: string,
+  progressStepId: string
+): Promise<CommonResponseType<void>> {
+  const response = await axiosInstance.delete(
+    `/projects/${projectId}/progress-steps/${progressStepId}`
+  );
+  return response.data;
+}

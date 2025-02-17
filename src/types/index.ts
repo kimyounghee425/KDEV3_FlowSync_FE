@@ -534,9 +534,9 @@ export interface NoticeListResponse {
 export interface ProjectProgressStepProps {
   id: string;
   title: string;
-  value: string;
-  count: number;
-  status: string;
+  value?: string;
+  count?: number;
+  status?: string;
 }
 
 export interface UserInfoResponse {

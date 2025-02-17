@@ -17,6 +17,7 @@ interface ConfirmDialogProps {
   title: string;
   description: string;
   confirmText?: string;
+  confirmBackgroundColor?: string;
   cancelText?: string;
   isLoading?: boolean;
 }
@@ -28,6 +29,7 @@ export default function ConfirmDialog({
   title,
   description,
   confirmText = "확인",
+  confirmBackgroundColor = "#00a8ff",
   cancelText = "취소",
   isLoading = false,
 }: ConfirmDialogProps) {
@@ -42,9 +44,9 @@ export default function ConfirmDialog({
           padding: "24px", // 내부 패딩 추가
           borderRadius: "12px", // 둥근 모서리
           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // 그림자 효과 추가
-          backgroundColor: "white", // 배경색 (다크모드 고려 시 Chakra의 `useColorModeValue` 사용 가능)
+          backgroundColor: "white", // 배경색
           width: "400px", // 고정된 너비 설정
-          maxHeight: "250px", // 모달 길이 제한
+          maxHeight: "300px", // 모달 길이 제한
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -93,9 +95,9 @@ export default function ConfirmDialog({
             width: "100%",
           }}
         >
-          {/* 확인 버튼 (더 길고 가독성 좋게) */}
+          {/* 확인 버튼 */}
           <Button
-            backgroundColor="#00a8ff"
+            backgroundColor={confirmBackgroundColor}
             color="white"
             onClick={onConfirm}
             loading={isLoading}
@@ -103,14 +105,14 @@ export default function ConfirmDialog({
             // colorScheme="blue"
             disabled={isLoading}
             style={{
-              width: "100%", // 버튼을 더 길게 설정
+              width: "100%",
               padding: "12px",
               fontSize: "16px",
             }}
           >
             {confirmText}
           </Button>
-          {/* 취소 버튼 (더 길고 가독성 좋게) */}
+          {/* 취소 버튼 */}
           <DialogActionTrigger asChild>
             <Button
               variant={"outline"}
@@ -118,7 +120,7 @@ export default function ConfirmDialog({
               onClick={onClose}
               disabled={isLoading}
               style={{
-                width: "100%", // 버튼을 더 길게 설정
+                width: "100%",
                 padding: "12px",
                 fontSize: "16px",
               }}
