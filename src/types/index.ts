@@ -412,7 +412,10 @@ export interface QuestionArticle {
   category: string;
   status: string;
   deletedYn: string;
-  author: string;
+  register: {
+    name: string;
+    role: string;
+  }
   fileList: ArticleFile[];
   linkList: ArticleLink[];
   commentList: ArticleComment[];
@@ -481,7 +484,10 @@ export interface ArticleFile {
 // 댓글
 export interface ArticleComment {
   id: number;
-  author: string;
+  register: {
+    name: string;
+    role: string;
+  }
   content: string;
   regAt: string;
   editAt: string;

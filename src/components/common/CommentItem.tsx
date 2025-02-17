@@ -38,6 +38,9 @@ export default function CommentItem({
   const [editedContent, setEditedContent] = useState<string>(comment.content);
   const pathname = usePathname();
 
+  //
+  console.log(comment)
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -160,6 +163,7 @@ export default function CommentItem({
       py={4}
       borderBottom="1px solid #E2E8F0"
     >
+      <Text fontWeight={"bold"} pb={2}>{comment.register.name} {` / ${comment.register.role}`}</Text>
       {/* 댓글 본문 */}
       <Flex justifyContent="space-between">
         {isEditing ? (

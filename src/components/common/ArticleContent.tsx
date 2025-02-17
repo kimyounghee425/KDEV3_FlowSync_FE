@@ -116,12 +116,13 @@ export default function ArticleContent<
   return (
     <Box mb={4}>
       {/* 제목 */}
-      <Text fontSize="2xl" fontWeight="bold" mb={4}>
+      <Text fontSize="2xl" fontWeight="bold" mb={4} pt={4}>
         {article.title}
       </Text>
 
       {/* 작성자, 작성 일시 (NoticeArticle인 경우 작성자 정보 숨김) */}
       <Box mb={4}>
+        <Text pb={2} fontWeight={"bold"}>작성자: {article.register.name} {`/ ${article.register.role}`}</Text>
         <Text color={"gray.400"}>
           등록일: {formatDateWithTime(article.regAt)}
         </Text>

@@ -19,3 +19,12 @@ export async function getMembersApi(
     throw error;
   }
 }
+
+export async function getMeApi () {
+  try {
+    const response = await axiosInstance.get("/me");
+    return response.data;
+  } catch (error) {
+    console.log("사용자 정보 가져오는 중 오류 발생 : ", error)
+  }
+}
