@@ -544,20 +544,14 @@ export interface ProjectProgressStepProps {
   count?: number;
   status?: string;
 }
-
 export interface UserInfoResponse {
   id: string;
-  organizationId: string;
   role: string;
-  status: string;
-  email: string;
   name: string;
-  phoneNum: string;
-  jobRole: string;
-  jobTitle: string;
-  regAt: string;
-  introduction: string;
-  remark: string;
+  organizationId: string;
+  organizationName: string;
+  organizationType: string;
+  projectIdList: number[];
 }
 
 export interface BaseArticleRequestData {

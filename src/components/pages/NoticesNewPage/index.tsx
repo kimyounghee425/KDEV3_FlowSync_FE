@@ -40,11 +40,17 @@ export default function NoticesNewPage() {
 
   const handleSave = async (requestData: NoticeRequestData) => {
     try {
-      await createNotice({
+      const response = await createNotice({
         ...requestData,
         category: category || requestData.category,
         priority: priority || requestData.priority,
       });
+
+      // 요청 실패 시 즉시 리턴
+      if (response === null) {
+        return;
+      }
+
       router.push(`/notices`);
     } catch (error) {
       console.error("저장 실패:", error);

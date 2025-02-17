@@ -23,7 +23,7 @@ export function useMutationData<T, P extends any[]>({ mutationApi }: UseMutation
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const mutate = async (...args: P) => {
+  const mutate = async (...args: P): Promise<CommonResponseType<T> | null> => {
     setLoading(true);
     try {
       const response = await mutationApi(...args);
@@ -78,6 +78,7 @@ export function useEditNotice() {
     mutationApi: editNoticeApi,
   });
 }
+
 
 /**
  * 공지사항 삭제 훅

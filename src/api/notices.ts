@@ -20,7 +20,7 @@ export async function fetchNoticeListApi(
 }
 
 // 공지사항 생성
-export async function createNoticeApi(requestData: NoticeRequestData) {
+export async function createNoticeApi(requestData: NoticeRequestData): Promise<CommonResponseType<void>> {
   const response = await axiosInstance.post(`/admins/notices`, requestData, );
   return response.data;
 }
@@ -29,7 +29,7 @@ export async function createNoticeApi(requestData: NoticeRequestData) {
 export async function editNoticeApi(
   noticeId: string,
   requestData: NoticeRequestData,
-) {
+): Promise<CommonResponseType<void>> {
   const response = await axiosInstance.put(
     `/admins/notices/${noticeId}`,
     requestData,
