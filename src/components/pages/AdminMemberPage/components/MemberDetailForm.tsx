@@ -16,15 +16,16 @@ import {
   createListCollection,
   Flex,
   Heading,
+  HStack,
   Stack,
   Table,
 } from "@chakra-ui/react";
+import { Radio, RadioGroup } from "@/src/components/ui/radio";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import { useMemberProjectList } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import CommonTable from "@/src/components/common/CommonTable";
-import { useColorModeValue } from "@/src/components/ui/color-mode";
 import StatusTag from "@/src/components/common/StatusTag";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import Pagination from "@/src/components/common/Pagination";
@@ -218,9 +219,33 @@ export default function MemberDetailForm({
         onDelete={handleDelete}
         deleteEntityType="회원" // 삭제 대상 선택 ("회원" | "업체" | "프로젝트")
       >
-        {/* 성함, 연락처 */}
+        <Box>
+          <Flex direction="row" align="center" mb={4}>
+            <Box>
+              <span
+                style={{
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  color: "#4A5568",
+                  marginRight: "2.3rem",
+                }}
+              >
+                회원 유형을 선택하세요
+              </span>
+            </Box>
+            <Box>
+              <RadioGroup value={formData.role} disabled>
+                <HStack gap={6}>
+                  <Radio value="MEMBER">일반 회원</Radio>
+                  <Radio value="ADMIN">관리자</Radio>
+                </HStack>
+              </RadioGroup>
+            </Box>
+          </Flex>
+        </Box>
+        {/* 성함, 로그인 Email */}
         <Flex gap={4} align="center">
-          <Box flex="2">
+          <Box flex="1">
             <InputForm
               id="name"
               type="text"
@@ -231,8 +256,18 @@ export default function MemberDetailForm({
               isChanged={!!isChanged["name"]}
             />
           </Box>
+          {/* 고객사/개발사 선택 모달 */}
+          <Box flex="1" display="flex" flexDirection="column">
+            <InputForm
+              id="organizationName"
+              type="text"
+              label="소속 업체"
+              value={formData.organizationName}
+              disabled
+            />
+          </Box>
           {/* (수정불가) 로그인 Email */}
-          <Box flex="2">
+          <Box flex="1">
             <InputForm
               id="email"
               type="email"
@@ -241,20 +276,10 @@ export default function MemberDetailForm({
               disabled
             />
           </Box>
-          {/* (수정불가) 사용자 권한 */}
-          <Box flex="1">
-            <InputForm
-              id="role"
-              type="text"
-              label="사용자 권한"
-              value={formData.role}
-              disabled
-            />
-          </Box>
         </Flex>
         {/* 연락처, 직무, 직함 */}
         <Flex gap={4} align="center">
-          <Box flex="2">
+          <Box flex="1">
             <InputForm
               id="phoneNum"
               type="tel"
@@ -265,7 +290,7 @@ export default function MemberDetailForm({
               isChanged={!!isChanged["phoneNum"]}
             />
           </Box>
-          <Box flex="2">
+          <Box flex="1">
             <InputForm
               id="jobRole"
               type="text"
@@ -320,10 +345,24 @@ export default function MemberDetailForm({
           </Box>
         </Flex>
       </InputFormLayout>
-      <Suspense>
-        {/* 회원 별 참여 중 프로젝트 목록 조회 */}
-        <MemberProjectList memberId={memberId} />
-      </Suspense>
+
+      <Stack align="center" width="full" marginTop="2rem">
+        <Box
+          maxWidth="1000px" // ✅ InputFormLayout과 동일한 너비 적용
+          width="100%"
+          p="1.5rem"
+          borderRadius="lg"
+          bg="white"
+          boxShadow="md"
+          marginX="auto"
+          justifyContent="center"
+        >
+          <Suspense>
+            {/* 회원 별 참여 중 프로젝트 목록 조회 */}
+            <MemberProjectList memberId={memberId} />
+          </Suspense>
+        </Box>
+      </Stack>
     </>
   );
 }
@@ -381,7 +420,7 @@ function MemberProjectList({ memberId }: { memberId: string }) {
     <>
       <Stack width="full">
         <Heading size="2xl" color="gray.600">
-          프로젝트 목록
+          참여 중 프로젝트
         </Heading>
         <Flex justifyContent="end">
           {/* 프로젝트 검색/필터 섹션 (검색창, 필터 옵션 등) */}
@@ -389,7 +428,7 @@ function MemberProjectList({ memberId }: { memberId: string }) {
             <FilterSelectBox
               statusFramework={projectStatusFramework}
               selectedValue={managementStep}
-              placeholder="관리단계 선택"
+              placeholder="관리단계"
               queryKey="managementStep"
             />
           </SearchSection>
@@ -411,7 +450,6 @@ function MemberProjectList({ memberId }: { memberId: string }) {
           }
           headerTitle={
             <Table.Row
-              backgroundColor={useColorModeValue("#eee", "gray.700")}
               css={{
                 "& > th": { textAlign: "center" },
               }}

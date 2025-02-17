@@ -43,6 +43,7 @@ export default function ContentSection({
             target.style.height = `${target.scrollHeight}px`;
           }}
           maxLength={255}
+          autoresize
         />
       </Box>
 
@@ -53,7 +54,7 @@ export default function ContentSection({
             프로젝트 상세 내용
           </Text>
           <Text textAlign="right" color="gray.500">
-            {detail.length} / {255}
+            {detail.length} / {500}
           </Text>
         </Flex>
         <Textarea
@@ -71,7 +72,8 @@ export default function ContentSection({
             target.style.height = "5rem";
             target.style.height = `${target.scrollHeight}px`;
           }}
-          maxLength={255}
+          maxLength={500}
+          autoresize
         />
       </Box>
     </Flex>

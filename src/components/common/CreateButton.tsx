@@ -13,7 +13,7 @@ export default function CreateButton({ handleButton }: CreateButtonProps) {
       border="none"
       transition="all 0.3s ease"
       _hover={{
-        backgroundColor: "#00aaffb9",
+        backgroundColor: "#1f98d4",
         cursor: "pointer",
       }}
       onClick={handleButton}

@@ -228,12 +228,21 @@ export default function CommentItem({
             mt={2}
             mr={2}
             size="xs"
-            colorScheme="blue"
+            color="white"
+            bg="blue.500"
+            _hover={{ bg: "blue.600" }}
             onClick={handleUpdate}
           >
             저장
           </Button>
-          <Button mt={2} size="xs" colorScheme="blue" onClick={handleCancel}>
+          <Button
+            mt={2}
+            size="xs"
+            color="white"
+            bg="blue.500"
+            _hover={{ bg: "blue.600" }}
+            onClick={handleCancel}
+          >
             취소
           </Button>
         </Box>

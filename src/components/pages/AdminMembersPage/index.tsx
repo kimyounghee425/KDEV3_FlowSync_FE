@@ -14,6 +14,7 @@ import {
 import { Switch } from "@/src/components/ui/switch";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
+import CreateButton from "@/src/components/common/CreateButton";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
@@ -167,25 +168,12 @@ function AdminMembersPageContent() {
 
   return (
     <>
-      <Stack width="full">
+      <Stack width="full" maxWidth="1400px" marginX="auto">
         <Heading size="2xl" color="gray.600">
           회원 관리
         </Heading>
         <Box display="flex" justifyContent="space-between">
-          <Button
-            variant={"surface"}
-            backgroundColor="#00a8ff"
-            color="white"
-            border="none"
-            transition="all 0.3s ease"
-            _hover={{
-              backgroundColor: "#00aaffb9",
-              cursor: "pointer",
-            }}
-            onClick={handleMemberCreateButton}
-          >
-            신규 등록
-          </Button>
+          <CreateButton handleButton={handleMemberCreateButton} />
           <SearchSection keyword={keyword} placeholder="회원명 입력">
             <FilterSelectBox
               statusFramework={memberRoleFramework}

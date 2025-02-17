@@ -3,7 +3,6 @@
 "use client";
 
 import { Box } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/BackButton";
 import QuestionEditForm from "@/src/components/pages/ProjectQuestionEditPage/components/QuestionEditForm";
 
 export default function ProjectQuestionEditPage() {
@@ -18,8 +17,6 @@ export default function ProjectQuestionEditPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <BackButton />
-
       <QuestionEditForm />
     </Box>
   );

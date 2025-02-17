@@ -2,7 +2,6 @@
 "use client";
 
 import { Box } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/BackButton";
 import ApprovalEditForm from "@/src/components/pages/ProjectApprovalEditPage/components/ApprovalEditForm";
 
 export default function ProjectApprovalEditPage() {
@@ -17,8 +16,6 @@ export default function ProjectApprovalEditPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <BackButton />
-
       <ApprovalEditForm />
     </Box>
   );

@@ -37,11 +37,6 @@ export default function ProjectsManagementStepCards({
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [selectedStep, setSelectedStep] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
-
-  // const bgColor = useColorModeValue("white", "gray.800");
-  // const borderColor = useColorModeValue("gray.200", "gray.700");
-  // const textColor = useColorModeValue("gray.700", "gray.200");
-
   const { data, refetch } = useProjectInfoContext();
   const currentManagementStep = data?.managementStep; // 현재 프로젝트 단계
 

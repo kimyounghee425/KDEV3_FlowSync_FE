@@ -13,7 +13,6 @@ import {
   Wrench,
 } from "lucide-react";
 import ProjectsManagementStepCard from "@/src/components/pages/ProjectsPage/components/ProjectsManagementStepCard";
-import { useColorModeValue } from "@/src/components/ui/color-mode";
 import { ProjectManagementSteps } from "@/src/constants/projectManagementSteps";
 import { useManagementStepsCount } from "@/src/hook/useFetchData";
 import { ManagementStepCountMap } from "@/src/types";

@@ -4,7 +4,6 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
-  Button,
   createListCollection,
   Heading,
   Stack,
@@ -14,14 +13,15 @@ import {
 import { Switch } from "@/src/components/ui/switch";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
-import { useOrganizationList } from "@/src/hook/useFetchBoardList";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
+import CreateButton from "@/src/components/common/CreateButton";
 import { deleteOriginationWithReason } from "@/src/api/organizations";
 import { useUpdateOrganizationStatus } from "@/src/hook/useMutationData";
+import { useOrganizationList } from "@/src/hook/useFetchBoardList";
+import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 
 const organizationTypeFramework = createListCollection<{
   label: string;
@@ -93,7 +93,7 @@ function AdminOrganizationsPageContent() {
   };
 
   // 신규등록 버튼 클릭 시 - 업체 등록 페이지로 이동
-  const handleMemberCreateButton = () => {
+  const handleOrganizationCreateButton = () => {
     router.push("/admin/organizations/create");
   };
 
@@ -133,13 +133,7 @@ function AdminOrganizationsPageContent() {
           업체 관리
         </Heading>
         <Box display="flex" justifyContent="space-between">
-          <Button
-            variant={"surface"}
-            _hover={{ backgroundColor: "#00a8ff", color: "white" }}
-            onClick={handleMemberCreateButton}
-          >
-            신규 등록
-          </Button>
+          <CreateButton handleButton={handleOrganizationCreateButton} />
           <SearchSection keyword={keyword} placeholder="업체명 입력">
             <FilterSelectBox
               statusFramework={organizationTypeFramework}

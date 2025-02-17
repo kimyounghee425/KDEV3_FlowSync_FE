@@ -6,7 +6,6 @@ import { Box, Flex } from "@chakra-ui/react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 // 절대 경로 파일
-import BackButton from "@/src/components/common/BackButton";
 import NoticeArticleContent from "@/src/components/pages/NoticePage/components/NoticeArticleContent";
 import { useReadNotice } from "@/src/hook/useFetchData";
 import { Loading } from "@/src/components/common/Loading";
@@ -52,7 +51,7 @@ export default function NoticePage() {
 
   return (
     <Box
-      maxW="1000px"
+      maxWidth="1000px"
       w="100%"
       mx="auto"
       mt={10}
@@ -62,8 +61,7 @@ export default function NoticePage() {
       boxShadow="md"
     >
       <Flex justifyContent="space-between">
-        <BackButton />
-        {!isNoticeDeleted && (
+        {isNoticeDeleted && (
           <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
         )}
       </Flex>
