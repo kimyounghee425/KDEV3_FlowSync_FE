@@ -60,8 +60,8 @@ export default function NoticePage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <Flex justifyContent="space-between">
-        {isNoticeDeleted && (
+      <Flex justifyContent="flex-end">
+        {!isNoticeDeleted && (
           <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
         )}
       </Flex>
