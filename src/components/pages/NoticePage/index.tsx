@@ -63,7 +63,7 @@ export default function NoticePage() {
     >
       <Flex justifyContent="space-between">
         <BackButton />
-        {isNoticeDeleted && (
+        {!isNoticeDeleted && (
           <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
         )}
       </Flex>

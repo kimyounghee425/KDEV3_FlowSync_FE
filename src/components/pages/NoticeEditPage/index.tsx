@@ -101,7 +101,7 @@ export default function NoticeEditPage() {
           progressStepId={1} // 임시
           initialTitle={notice.title || ""}
           initialContent={notice.content || []}
-          initialUploadedFiles={notice.fileList || []}
+          initialUploadedFiles={notice.fileInfoList || []}
           title={notice.title || ""}
           setTitle={(value) =>
             setNotice((prev) => (prev ? { ...prev, title: value } : null))

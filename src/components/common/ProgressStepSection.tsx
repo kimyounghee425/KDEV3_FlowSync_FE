@@ -18,7 +18,6 @@ export default function ProgressStepSection({
   progressStep,
   loading,
 }: ProgressStepSectionProps) {
-  console.log(progressStep);
   // 현재 선택된 버튼 id 상태 (기본값은 progressData의 첫 번째 항목)
   const [selectedButtonId, setSelectedButtonId] = useState<string>(
     progressStep.length > 0 ? progressStep[0].id : "",

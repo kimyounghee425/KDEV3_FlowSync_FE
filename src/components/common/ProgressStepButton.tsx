@@ -13,7 +13,6 @@ export default function ProgressStepButton({
   isSelected,
   onClick,
 }: ProgressStepButtonProps) {
-  console.log("isSelected: ", isSelected);
   return (
     <Button
       onClick={onClick}

@@ -460,7 +460,7 @@ export interface NoticeArticle {
   isDeleted: string;
   regAt: string;
   updatedAt: string;
-  fileList: ArticleFile[];
+  fileInfoList: ArticleFile[];
 }
 
 // 게시글 첨부링크

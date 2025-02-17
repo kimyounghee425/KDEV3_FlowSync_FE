@@ -70,7 +70,6 @@ export async function fetchMembersWithinOrgApi(organizationId: string) {
     );
     return response.data;
   } catch (error) {
-    console.log("멤버 목록 조회 실패 : ", error);
     throw error;
   }
 }
@@ -179,11 +178,9 @@ export async function activateMemberApi(
   memberId: string,
 ): Promise<ActivateMemberResponse> {
   try {
-    console.log("활성화 API 호출 전 - memberId: ", memberId);
     const response = await axiosInstance.post(
       `/admins/members/activate?memberId=${memberId}`,
     );
-    console.log("활성화 API 호출 후 - response: ", response);
     return response.data;
   } catch (error) {
     throw error; // 🚨 에러 발생 시 throw

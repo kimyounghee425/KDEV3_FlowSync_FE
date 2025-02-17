@@ -31,9 +31,7 @@ export default function AdminOrganizationPage() {
       if (!organizationId) return; // organizationId가 없는 경우 API 호출 방지
 
       try {
-        console.log("Fetching organization data for ID:", organizationId);
         const response = await fetchOrganizationDetails(organizationId);
-        console.log("업체 데이터 fetch 결과:", response);
 
         // 🚀 업체 데이터가 없는 경우 404 이동
         if (!response) {

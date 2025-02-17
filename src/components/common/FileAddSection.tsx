@@ -28,8 +28,6 @@ export default function FileAddSection({
       const formData = new FormData();
       formData.append("file", file);
 
-      console.log(formData);
-
       const responseData = await uploadFileApi(file);
 
       const responseFileData: UploadedFilesProps = responseData.data; // 이게 파일 배열에 넣어야 할 객체
@@ -77,14 +75,9 @@ export default function FileAddSection({
     return size + "B";
   };
 
-  console.log(uploadedFiles)
-
-
   return (
     <Box mt={6}>
-      <Text mb={2}>
-        첨부 파일
-      </Text>
+      <Text mb={2}>첨부 파일</Text>
 
       <Button onClick={handleAddFile} colorScheme={"blue"}>
         파일 추가
@@ -103,9 +96,14 @@ export default function FileAddSection({
             width="100%"
           >
             <Text fontSize="sm">
-              파일 이름: {file.originalName}, 파일 크기: {formatFileSize(file.size)}
+              파일 이름: {file.originalName}, 파일 크기:{" "}
+              {formatFileSize(file.size)}
             </Text>
-            <Button onClick={() => handleRemoveFile(index)} size="sm" colorScheme="red">
+            <Button
+              onClick={() => handleRemoveFile(index)}
+              size="sm"
+              colorScheme="red"
+            >
               삭제
             </Button>
           </Box>

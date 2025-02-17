@@ -26,7 +26,6 @@ export default function CommentItem({
   replies = [],
   setCommentIsWritten,
 }: CommentProps) {
-  // console.log(comment.regAt)
   const { projectId, questionId, approvalId } = useParams() as {
     projectId: string;
     questionId?: string;
@@ -88,7 +87,6 @@ export default function CommentItem({
   };
 
   const handleEdit = async (commentId: number) => {
-
     const existingContent = await fetchComment(commentId);
     setEditedContent(
       typeof existingContent === "string" ? existingContent : "",
@@ -129,8 +127,6 @@ export default function CommentItem({
   };
 
   const handleDelete = async (commentId: number) => {
-    // console.log(questionId)
-    // console.log(commentId)
     try {
       if (pathname.includes("/questions")) {
         const responseData = await deleteQuestionComment(
@@ -146,9 +142,8 @@ export default function CommentItem({
         );
       }
       setCommentIsWritten((prev) => !prev);
-
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -209,7 +204,6 @@ export default function CommentItem({
               zIndex={10}
             >
               {isEditing ? (
-
                 ""
               ) : (
                 <Button size="xs" mr={2} onClick={() => handleEdit(comment.id)}>
@@ -226,7 +220,6 @@ export default function CommentItem({
 
       {isEditing && (
         <Box>
-
           <Button
             mt={2}
             mr={2}
@@ -239,7 +232,6 @@ export default function CommentItem({
           <Button mt={2} size="xs" colorScheme="blue" onClick={handleCancel}>
             취소
           </Button>
-
         </Box>
       )}
 
