@@ -1,13 +1,7 @@
 "use client";
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import {
-  Box,
-  Button,
-  Flex,
-  Table,
-  createListCollection,
-} from "@chakra-ui/react";
+import { Box, Flex, Table, createListCollection } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
@@ -15,12 +9,13 @@ import StatusTag from "@/src/components/common/StatusTag";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import SearchSection from "@/src/components/common/SearchSection";
 import StatusSelectBox from "@/src/components/common/FilterSelectBox";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
-import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
-import { useProjectApprovalList } from "@/src/hook/useFetchBoardList";
+import CreateButton from "@/src/components/common/CreateButton";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { getMeApi } from "@/src/api/getMembersApi";
+import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
+import { useProjectApprovalList } from "@/src/hook/useFetchBoardList";
+import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 
 const approvalStatusFramework = createListCollection<{
   id: string;
@@ -126,17 +121,7 @@ export default function ProjectApprovalsPage() {
       />
       <Box direction="column" paddingX="1rem" gap="8px" mb="30px">
         <Flex justifyContent={"space-between"} paddingX="0.3rem">
-          <Button
-            variant={"surface"}
-            backgroundColor="#00a8ff"
-            color="white"
-            border="none"
-            _hover={{ backgroundColor: "#00a8ff", color: "white" }}
-            onClick={handleProjectApprovalCreateButton}
-          >
-            신규 등록
-          </Button>
-
+          <CreateButton handleButton={handleProjectApprovalCreateButton} />
           {/* 검색 섹션 */}
           <SearchSection keyword={keyword} placeholder="제목 입력">
             <StatusSelectBox

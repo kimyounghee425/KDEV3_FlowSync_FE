@@ -69,7 +69,7 @@ export default function FilterSelectBox({
       {/* 드롭다운 버튼(트리거) */}
       <SelectTrigger
         _hover={{
-          backgroundColor: "#6c757d",
+          backgroundColor: "#d2d5d8",
         }}
       >
         {/* 선택된 값이 표시될 영역 */}

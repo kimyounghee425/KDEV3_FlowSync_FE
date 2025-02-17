@@ -106,7 +106,9 @@ export default function LinkAddSection({
           onChange={(e) => setNewLinkName(e.target.value)}
         />
         <Button
-          colorScheme={"blue"}
+          color="white"
+          bg="blue.500"
+          _hover={{ bg: "blue.600" }}
           loading={isChecking}
           onClick={handleAddLink}
         >

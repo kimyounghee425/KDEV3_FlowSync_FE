@@ -15,6 +15,7 @@ import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import Pagination from "@/src/components/common/Pagination";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
+import CreateButton from "@/src/components/common/CreateButton";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useProjectQuestionList } from "@/src/hook/useFetchBoardList";
 import { useProjectQuestionProgressStepData } from "@/src/hook/useFetchData";
@@ -107,16 +108,7 @@ export default function ProjectQuestionsPage() {
 
       <Box direction="column" paddingX="1rem" gap="8px" mb="30px">
         <Flex justifyContent={"space-between"} paddingX="0.3rem">
-          <Button
-            variant={"surface"}
-            backgroundColor="#00a8ff"
-            color="white"
-            border="none"
-            _hover={{ backgroundColor: "#00a8ff", color: "white" }}
-            onClick={handleProjectQuestionCreateButton}
-          >
-            신규 등록
-          </Button>
+          <CreateButton handleButton={handleProjectQuestionCreateButton} />
           {/* 검색 섹션 */}
           <SearchSection keyword={keyword} placeholder="제목 입력">
             <FilterSelectBox

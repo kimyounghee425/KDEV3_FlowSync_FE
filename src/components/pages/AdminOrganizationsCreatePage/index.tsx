@@ -86,7 +86,7 @@ export default function AdminOrganizationsCreatePage() {
 
   return (
     <InputFormLayout
-      title="▹ 업체 등록"
+      title="업체 등록"
       onSubmit={handleSubmit}
       isLoading={false}
     >
@@ -119,16 +119,31 @@ export default function AdminOrganizationsCreatePage() {
           </RadioGroup>
         </Flex>
       </Box>
-      {/* 업체 정보 입력*/}
-      <InputForm
-        id="name"
-        type="text"
-        label="업체명"
-        placeholder="ex) 비엔시스템"
-        value={inputValues.name}
-        error={inputErrors.name}
-        onChange={(e) => handleChange("name", e.target.value)}
-      />
+      <Flex gap={4} align="center">
+        <Box flex="2">
+          <InputForm
+            id="name"
+            type="text"
+            label="업체명"
+            placeholder="ex) 비엔시스템"
+            value={inputValues.name}
+            error={inputErrors.name}
+            onChange={(e) => handleChange("name", e.target.value)}
+          />
+        </Box>
+        <Box flex="1">
+          <InputForm
+            id="phoneNumber"
+            type="tel"
+            label="대표자 연락처"
+            placeholder="ex) 010-1234-5678"
+            value={inputValues.phoneNumber}
+            error={inputErrors.phoneNumber}
+            onChange={(e) => handleChange("phoneNumber", e.target.value)}
+          />
+        </Box>
+        <Box flex="1"></Box>
+      </Flex>
       <Flex gap={4} align="center">
         <Box flex="1">
           <InputForm
@@ -150,36 +165,36 @@ export default function AdminOrganizationsCreatePage() {
             onChange={(e) =>
               handleChange("businessLicense", e.target.files?.[0] || "")
             }
+            isRequired={false} //  `*` 표시 안 함
           />
         </Box>
       </Flex>
-      <InputForm
-        id="streetAddress"
-        type="address"
-        label="사업장 도로명 주소"
-        placeholder="주소를 검색해주세요."
-        value={inputValues.streetAddress}
-        error={inputErrors.streetAddress}
-        onChange={(e) => handleChange("streetAddress", e.target.value)}
-      />
-      <InputForm
-        id="detailAddress"
-        type="text"
-        label="사업장 상세 주소"
-        placeholder="ex) 역삼동"
-        value={inputValues.detailAddress}
-        error={inputErrors.detailAddress}
-        onChange={(e) => handleChange("detailAddress", e.target.value)}
-      />
-      <InputForm
-        id="phoneNumber"
-        type="tel"
-        label="대표자 연락처"
-        placeholder="ex) 010-1234-5678"
-        value={inputValues.phoneNumber}
-        error={inputErrors.phoneNumber}
-        onChange={(e) => handleChange("phoneNumber", e.target.value)}
-      />
+      {/* 사업장 주소 조회 및 입력 */}
+      <Flex gap={4} align="center">
+        <Box flex="1">
+          <InputForm
+            id="streetAddress"
+            type="address"
+            label="사업장 도로명 주소"
+            placeholder="주소를 검색해주세요."
+            value={inputValues.streetAddress}
+            error={inputErrors.streetAddress}
+            onChange={(e) => handleChange("streetAddress", e.target.value)}
+          />
+        </Box>
+        {/* 사업장 주소 상세 입력 */}
+        <Box flex="1">
+          <InputForm
+            id="detailAddress"
+            type="text"
+            label="사업장 상세 주소"
+            placeholder="ex) 역삼동"
+            value={inputValues.detailAddress}
+            error={inputErrors.detailAddress}
+            onChange={(e) => handleChange("detailAddress", e.target.value)}
+          />
+        </Box>
+      </Flex>
     </InputFormLayout>
   );
 }

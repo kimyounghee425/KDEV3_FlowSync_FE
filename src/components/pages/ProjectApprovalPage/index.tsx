@@ -10,7 +10,6 @@ import { useState, useEffect } from "react";
 import ArticleContent from "@/src/components/common/ArticleContent";
 import ArticleComments from "@/src/components/common/ArticleComments";
 import CommentBox from "@/src/components/common/CommentBox";
-import BackButton from "@/src/components/common/BackButton";
 import { readApprovalApi } from "@/src/api/ReadArticle";
 import SignToApprove from "@/src/components/pages/ProjectApprovalPage/components/SignToApprove";
 import { ArticleComment, ApprovalArticle } from "@/src/types";
@@ -114,7 +113,6 @@ export default function ProjectApprovalPage() {
         marginBottom="1rem"
         alignItems="center"
       >
-        <BackButton />
         {/* <Image src={signatureUrl} alt="signature" width="100px" height="auto" /> */}
         <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
       </Flex>

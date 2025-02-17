@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Box } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/BackButton";
 import { NoticeRequestData } from "@/src/types";
 import SelectInput from "@/src/components/common/FormSelectInput";
 import { useCreateNotice } from "@/src/hook/useMutationData";
@@ -53,7 +52,7 @@ export default function NoticesNewPage() {
 
   return (
     <Box
-      maxW="1000px"
+      maxWidth="1000px"
       w={"100%"}
       mx="auto"
       mt={10}
@@ -62,8 +61,6 @@ export default function NoticesNewPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <BackButton />
-
       {noticeRegisterError && (
         <ErrorAlert message="공지사항 저장에 실패했습니다. 다시 시도해주세요." />
       )}

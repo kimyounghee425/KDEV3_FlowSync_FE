@@ -366,7 +366,9 @@ export default function OrganizationSelector({
                           <Button
                             size="xs"
                             mt="0.5rem"
-                            colorScheme={isOwner ? "blue" : "gray"}
+                            color={isOwner ? "blue.500" : "white"}
+                            bg="blue.500"
+                            _hover={{ bg: "blue.600" }}
                             onClick={(e) => {
                               e.stopPropagation();
                               handleSetOwner(member);
@@ -389,7 +391,9 @@ export default function OrganizationSelector({
             <Button
               mt="1rem"
               width="100%"
-              colorScheme="blue"
+              bg="blue.500"
+              color="white"
+              _hover={{ bg: "blue.600" }}
               onClick={() => setIsModalOpen(false)}
             >
               저장

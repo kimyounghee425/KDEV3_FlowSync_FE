@@ -5,7 +5,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Box } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createQuestionApi } from "@/src/api/RegisterArticle";
 import { ProgressStep, QuestionRequestData } from "@/src/types";
@@ -74,8 +73,6 @@ export default function ProjectQuestionsNewPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <BackButton />
-
       <ArticleForm
         title={title}
         setTitle={setTitle}

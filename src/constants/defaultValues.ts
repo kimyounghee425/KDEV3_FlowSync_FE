@@ -17,7 +17,7 @@ export const defaultValuesOfLogin = {
 export const defaultValuesOfMember = {
   organizationId: "",
   name: "",
-  role: "", // radio 버튼
+  role: "MEMBER", // radio 버튼
   email: "",
   password: "", // <input> url 타입 기본 속성은 https:// 를 입력해야 돼서 초기값으로 세팅
   phoneNum: "",

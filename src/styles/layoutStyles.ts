@@ -51,10 +51,12 @@ export const layoutStyles = {
     minWidth: "0px",
     height: "calc(100vh - var(--header-height))", // 고정된 높이 설정
     transition: "width 0.2s ease-in-out",
+    overflowX: "hidden", // ✅ 내부 요소가 남지 않도록 설정
     overflowY: "auto", // 독립적인 스크롤 적용
     backgroundColor: "white",
     borderRight: isSidebarOpen ? "1px solid #ddd" : "none",
     zIndex: isSidebarOverlayPage ? 100 : 99, // 프로젝트 페이지는 다른 콘텐츠 위에 배치
     boxShadow: isSidebarOpen ? "2px 0 5px rgba(0, 0, 0, 0.2)" : "none",
+    padding: isSidebarOpen ? "0.1rem 0 0.1rem 0.3rem" : "0", //  사이드바가 닫힐 때 내부 패딩도 제거
   }),
 };

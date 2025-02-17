@@ -3,7 +3,6 @@
 "use client";
 
 import { Box, Flex } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/BackButton";
 import ProjectForm from "@/src/components/pages/ProjectsCreatePage/components/ProjectForm";
 import { useParams, useRouter } from "next/navigation";
 import { ProjectDetailProps } from "@/src/types";
@@ -63,9 +62,8 @@ export default function ProjectEditPage() {
         boxShadow="md"
         backgroundColor="white"
       >
-        {/* 🔹 BackButton & 프로젝트 상태 텍스트 (생성 / 수정) */}
+        {/* 프로젝트 상태 텍스트 (생성 / 수정) */}
 
-        <BackButton />
         <ProjectForm projectData={projectData} projectId={projectId} />
       </Box>
     </Flex>

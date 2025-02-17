@@ -1,14 +1,21 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
-import { Layers, List, MessageCircleQuestion } from "lucide-react";
+import { Box, Flex, Heading, HStack, IconButton, Text } from "@chakra-ui/react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Layers,
+  List,
+  MessageCircleQuestion,
+  Settings,
+} from "lucide-react";
 import { SegmentedControl } from "@/src/components/ui/segmented-control";
 import ProjectInfoSection from "@/src/components/common/ProjectInfoSection";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { useProjectInfoContext } from "@/src/context/ProjectInfoContext";
-import ProjectInfoSection222 from "../common/ProjectInfoSection222";
+import { useUserInfo } from "@/src/hook/useFetchData";
 
 interface ProjectLayoutProps {
   children: ReactNode;
@@ -58,6 +65,15 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
   const router = useRouter();
   const { projectId } = useParams();
   const pathname = usePathname();
+  // 현재 로그인한 사용자 정보 가져오기
+  const { data: userInfo } = useUserInfo();
+  console.log("사용자 정보:", userInfo); // 🔍 현재 로그인한 사용자 정보 출력
+
+  const isAdmin = userInfo?.role === "ADMIN"; // 관리자 여부 확인
+  console.log("isAdmin 값:", isAdmin); // 🔍 isAdmin 값 출력
+
+  // 프로젝트 정보 접기/펼치기 상태
+  const [isProjectInfoVisible, setIsProjectInfoVisible] = useState(false);
 
   // 프로젝트 정보 데이터 패칭
   const {
@@ -75,7 +91,7 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
   };
 
   return (
-    <Flex direction="column" marginTop="1rem">
+    <Flex direction="column" marginTop="1rem" width="100%">
       {projectInfoError && (
         <ErrorAlert message="프로젝트 기본 정보를 불러오지 못했습니다. 다시 시도해주세요." />
       )}
@@ -83,31 +99,70 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
       <Flex
         direction="column"
         gap="1rem"
-        padding="1.2rem"
+        padding="1.5rem 1.5rem 1rem 1.5rem"
         border="1px solid #b8b1b1"
         borderRadius="1.5rem"
         marginBottom="2rem"
       >
+        {/* 프로젝트명 */}
         <Flex
           direction="row"
-          gap="3rem"
           alignItems="center"
           justifyContent="space-between"
         >
-          <Box flex="1.1">
-            <Heading fontSize="1.5rem" paddingLeft="0.5rem">
+          <Flex direction="row" gap="0.5rem">
+            <Heading
+              fontSize="1.5rem"
+              whiteSpace="nowrap" //  줄 바꿈 방지
+              overflow="hidden"
+              textOverflow="ellipsis" //  넘칠 경우 ... 처리
+            >
               {projectInfo?.projectName}
             </Heading>
-          </Box>
-          {/* 프로젝트 정보 */}
-          <ProjectInfoSection222
-            projectInfo={projectInfo}
-            loading={projectInfoLoading}
-          />
+            {/* 프로젝트 정보 접기/펼치기 버튼 */}
+            <IconButton
+              aria-label="프로젝트 토글 버튼"
+              as={isProjectInfoVisible ? ChevronUp : ChevronDown} // 아이콘 직접 전달
+              onClick={() => setIsProjectInfoVisible(!isProjectInfoVisible)}
+              variant="ghost"
+              size="xs"
+            />
+          </Flex>
+          {/* 관리자만 볼 수 있는 설정 버튼 */}
+          {isAdmin && (
+            <Box>
+              <Settings
+                onClick={() => router.push(`/projects/${projectId}/edit`)}
+                cursor="pointer"
+              />
+            </Box>
+          )}
         </Flex>
-        <Text fontSize="1rem" fontStyle="italic" paddingLeft="0.5rem">
-          {projectInfo?.description}
-        </Text>
+        {/* 프로젝트 설명 (접기/펼치기) */}
+        {isProjectInfoVisible && (
+          <>
+            <Box flex="1">
+              <Text
+                fontSize="1rem"
+                fontStyle="italic"
+                paddingLeft="0.5rem"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+              >
+                - {projectInfo?.description}
+              </Text>
+            </Box>
+            <hr />
+            {/* 고객사/개발사/프로젝트 일정 */}
+            <Box flex="1">
+              <ProjectInfoSection
+                projectInfo={projectInfo}
+                loading={projectInfoLoading}
+              />
+            </Box>
+          </>
+        )}
       </Flex>
 
       {/* 게시판 탭, 관리 단계 표시 */}

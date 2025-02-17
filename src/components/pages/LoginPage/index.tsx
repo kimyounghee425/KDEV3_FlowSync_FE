@@ -22,7 +22,7 @@ export const GUIDE_MESSAGE = `
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
-  // const [showGuide, setShowGuide] = useState(false); // Popover 메시지 상태
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfLogin, validationRulesOfLogin);
@@ -31,14 +31,9 @@ export default function LoginPage() {
     // MAC 시스템 다크모드 사용자 설정 감지
     const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
     document.body.className = darkMode ? "dark" : "light";
-
-    if (localStorage.getItem("user")) {
-      localStorage.removeItem("user");
-    }
-
-    if (localStorage.getItem("selectedProjectFilter")) {
-      localStorage.removeItem("selectedProjectFilter");
-    }
+    // 로그인 시 기존 데이터 초기화
+    localStorage.removeItem("user");
+    localStorage.removeItem("selectedProjectFilter");
   }, []);
 
   // #TODO 차크라UI 컴포넌트 사용 - 에러메시지 또는 로딩 UI
@@ -47,15 +42,9 @@ export default function LoginPage() {
       alert("입력값을 확인하세요.");
       return false;
     }
-
     // 공백 입력 시 경고 메시지 출력
-    if (inputValues.email.includes(" ")) {
-      alert("이메일에는 공백을 포함할 수 없습니다.");
-      return false;
-    }
-
-    if (inputValues.password.includes(" ")) {
-      alert("비밀번호에는 공백을 포함할 수 없습니다.");
+    if (inputValues.email.includes(" ") || inputValues.password.includes(" ")) {
+      alert("이메일 및 비밀번호에는 공백을 포함할 수 없습니다.");
       return false;
     }
     return true;
@@ -63,24 +52,27 @@ export default function LoginPage() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (isLoading) return; // 이미 로딩 중이라면 요청 중단
-    if (!validateLoginInputs()) return; // 입력값 유효성 검사 실패 시 요청 중단
+
+    if (isSubmitting) return; // 이미 로딩 중이라면 요청 중단
+    if (!validateLoginInputs()) return;
+
+    setIsSubmitting(true);
 
     try {
-      setIsLoading(true);
-      const response = await login(inputValues.email, inputValues.password);
+      await login(inputValues.email, inputValues.password);
       route.push("/");
     } catch (error) {
       console.error("로그인 실패:", error);
     } finally {
-      setIsLoading(false); // 로딩 상태 해제
+      setIsSubmitting(false);
     }
   }
 
   return (
     <Box className={styles.loginContainer}>
-      {/* 로그인 컴포넌트 */}
+      {/* 로그인 카드 */}
       <Box className={styles.loginCard}>
+        {/* 로그인 헤더 */}
         <Box className={styles.loginHeader}>
           <Box className={styles.loginLogo}>
             <Image
@@ -88,7 +80,6 @@ export default function LoginPage() {
               alt="FlowSync"
               width={35} // 원하는 크기로 설정
               height={35}
-              objectFit="contain"
               priority
             />
             <Text className={styles.loginLogoName}>FlowSync</Text>
@@ -98,7 +89,6 @@ export default function LoginPage() {
           </Text>
         </Box>
         {/* 가이드 메시지 */}
-        {/* className={`${styles.guideMessage} ${showGuide ? styles.show : ""}`} */}
         <Box className={styles.guideMessage}>
           <Text color="var(--text-light)" whiteSpace="pre-line">
             {GUIDE_MESSAGE}
@@ -116,12 +106,6 @@ export default function LoginPage() {
                 error={inputErrors.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
               />
-              {/* <Button
-                onClick={() => setShowGuide((prev) => !prev)}
-                className={styles.popoverButton}
-              >
-                계정 안내
-              </Button> */}
             </Box>
             <InputForm
               id="password"
@@ -136,7 +120,11 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 className={styles.loginButton}
-                disabled={isLoading}
+                _disabled={{
+                  cursor: "not-allowed",
+                }}
+                loading={isLoading}
+                disabled={isSubmitting}
               >
                 {isLoading ? "로딩 중..." : "로그인"}
               </Button>

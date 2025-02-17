@@ -6,7 +6,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Box, Text } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/BackButton";
 import ArticleForm from "@/src/components/common/ArticleForm";
 import { createTaskApi } from "@/src/api/RegisterArticle";
 import { ApprovalRequestData, ProgressStep } from "@/src/types";
@@ -76,8 +75,6 @@ export default function ProjectApprovalsNewPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <BackButton />
-
       <ArticleForm
         title={title}
         setTitle={setTitle}

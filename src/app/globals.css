@@ -9,8 +9,8 @@
   --font-size-lg: 1.125rem;
 
   /* ✅ 색상 통일 */
-  --primary-color: #007bff; /* 주요 버튼 색상 */
-  --primary-hover-color: #0056b3;
+  --primary-color: #00a8ff; /* 주요 버튼 색상 */
+  --primary-hover-color: #1f98d4;
   --primary-active-color: #003c80;
   --background-color: #ffffff;
   --text-color: #333;

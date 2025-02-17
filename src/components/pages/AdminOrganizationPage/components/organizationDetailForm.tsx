@@ -6,7 +6,6 @@ import {
   Box,
   createListCollection,
   Flex,
-  Heading,
   HStack,
   Stack,
   Table,
@@ -35,7 +34,6 @@ import ErrorAlert from "@/src/components/common/ErrorAlert";
 import CommonTable from "@/src/components/common/CommonTable";
 import StatusTag from "@/src/components/common/StatusTag";
 import { formatDynamicDate } from "@/src/utils/formatDateUtil";
-import { useColorModeValue } from "@/src/components/ui/color-mode";
 import Pagination from "@/src/components/common/Pagination";
 import {
   activateMemberApi,
@@ -43,8 +41,7 @@ import {
   deleteMember,
 } from "@/src/api/members";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
-import { SegmentedControl } from "@/src/components/ui/segmented-control";
-import { LuFolder, LuSquareCheck, LuUser } from "react-icons/lu";
+import { LuFolder, LuUser } from "react-icons/lu";
 
 const memberRoleFramework = createListCollection<{
   label: string;
@@ -265,9 +262,9 @@ export default function OrganizationDetailForm({
       // 수정된 데이터만 렌더링
       refetchOrganizationData();
       setIsChanged({}); // 모든 필드 변경 상태 및 스타일 초기화
-      alert("업체 정보가 수정되었습니다.");
+      // alert("업체 정보가 수정되었습니다.");
     } catch (error) {
-      alert("수정 실패: 다시 시도해주세요.");
+      // alert("수정 실패: 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }
@@ -291,7 +288,7 @@ export default function OrganizationDetailForm({
   return (
     <>
       <InputFormLayout
-        title="▹ 업체 상세 조회"
+        title="업체 상세 조회"
         onSubmit={handleUpdate}
         isLoading={isSubmitting}
         isDisabled={isUpdateDisabled} // 버튼 비활성화 조건 추가
@@ -308,23 +305,12 @@ export default function OrganizationDetailForm({
                     fontSize: "14px",
                     fontWeight: "bold",
                     color: "#4A5568",
+                    marginRight: "2rem",
                   }}
                 >
                   업체 유형을 선택하세요
                 </span>
-                <span
-                  style={{
-                    color: "red",
-                    marginLeft: "4px",
-                    marginRight: "24px",
-                  }}
-                >
-                  *
-                </span>
-                <RadioGroup
-                  value={formData.type}
-                  onValueChange={(e) => handleInputUpdate("type", e.value)}
-                >
+                <RadioGroup value={formData.type} disabled>
                   <HStack gap={6}>
                     <Radio value="CUSTOMER" disabled>
                       고객사
@@ -337,9 +323,8 @@ export default function OrganizationDetailForm({
               </Flex>
             </Box>
           </Flex>
-          {/* 업체명 및 사업자 등록번호 */}
+          {/* 업체명 (수정 불가) */}
           <Flex gap={4} align="center">
-            {/* 업체명 (수정 불가) */}
             <Box flex="2">
               <InputForm
                 id="name"
@@ -384,7 +369,6 @@ export default function OrganizationDetailForm({
             <Box flex="1" className={styles.inputFieldContainer}>
               <label htmlFor="businessLicense" className={styles.label}>
                 사업자 등록증 첨부
-                <span className={styles.required}>*</span>
               </label>
               <>
                 <div className={styles.fileUploadContainer}>
@@ -462,7 +446,6 @@ export default function OrganizationDetailForm({
           </Flex>
           {/* 사업장 주소 조회 및 입력 */}
           <Flex gap={4} align="center">
-            {/* 사업장 주소(도로명) 검색 */}
             <Box flex="1">
               <InputForm
                 id="streetAddress"
@@ -495,44 +478,57 @@ export default function OrganizationDetailForm({
         </Flex>
       </InputFormLayout>
 
-      <Stack align="flex-start">
-        <Tabs.RootProvider value={tabs}>
-          <Tabs.List>
-            <Tabs.Trigger
-              value="members"
-              onClick={() => {
-                const params = new URLSearchParams();
-                params.set("tab", "members"); // ✅ 탭 값만 유지, 나머지 초기화
-                route.push(`?${params.toString()}`);
-              }}
-            >
-              <LuUser />
-              소속 회원
-            </Tabs.Trigger>
-            <Tabs.Trigger
-              value="projects"
-              onClick={() => {
-                const params = new URLSearchParams();
-                params.set("tab", "projects"); // ✅ 탭 값만 유지, 나머지 초기화
-                route.push(`?${params.toString()}`);
-              }}
-            >
-              <LuFolder />
-              참여 중 프로젝트
-            </Tabs.Trigger>
-          </Tabs.List>
+      <Stack align="center" width="full" marginTop="2rem">
+        <Box
+          maxWidth="1000px" // ✅ InputFormLayout과 동일한 너비 적용
+          width="100%"
+          p="1.5rem"
+          borderRadius="lg"
+          bg="white"
+          boxShadow="md"
+          marginX="auto"
+          justifyContent="center"
+        >
+          <Tabs.RootProvider value={tabs}>
+            <Tabs.List>
+              <Tabs.Trigger
+                value="members"
+                onClick={() => {
+                  const params = new URLSearchParams();
+                  params.set("tab", "members"); // ✅ 탭 값만 유지, 나머지 초기화
+                  route.push(`?${params.toString()}`);
+                }}
+                _selected={{ color: "#00a8ff" }}
+              >
+                <LuUser />
+                소속 회원
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                value="projects"
+                onClick={() => {
+                  const params = new URLSearchParams();
+                  params.set("tab", "projects"); // ✅ 탭 값만 유지, 나머지 초기화
+                  route.push(`?${params.toString()}`);
+                }}
+                _selected={{ color: "#00a8ff" }}
+              >
+                <LuFolder />
+                참여 중 프로젝트
+              </Tabs.Trigger>
+            </Tabs.List>
 
-          <Suspense>
-            <Tabs.Content value="members">
-              {/* 업체 별 소속 회원 목록 조회 */}
-              <OrganizationMemberList organizationId={organizationId} />
-            </Tabs.Content>
-            <Tabs.Content value="projects">
-              {/* 업체 별 참여 중 프로젝트 목록 조회 */}
-              <OrganizationProjectList organizationId={organizationId} />
-            </Tabs.Content>
-          </Suspense>
-        </Tabs.RootProvider>
+            <Suspense>
+              <Tabs.Content value="members">
+                {/* 업체 별 소속 회원 목록 조회 */}
+                <OrganizationMemberList organizationId={organizationId} />
+              </Tabs.Content>
+              <Tabs.Content value="projects">
+                {/* 업체 별 참여 중 프로젝트 목록 조회 */}
+                <OrganizationProjectList organizationId={organizationId} />
+              </Tabs.Content>
+            </Suspense>
+          </Tabs.RootProvider>
+        </Box>
       </Stack>
     </>
   );
@@ -862,7 +858,6 @@ function OrganizationProjectList({
           }
           headerTitle={
             <Table.Row
-              backgroundColor={useColorModeValue("#eee", "gray.700")}
               css={{
                 "& > th": { textAlign: "center" },
               }}

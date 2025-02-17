@@ -6,9 +6,8 @@
   justify-content: center;
   min-height: 100vh;
   padding: 1rem;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  font-size: var(--font-size-base);
+  background-color: white; /* 배경색을 흰색으로 설정 */
+  overflow: hidden;
 }
 
 /* 로그인 카드 (폼 컨테이너) */
@@ -17,9 +16,9 @@
   max-width: 28rem;
   min-width: 20rem;
   padding: 2rem;
-  background-color: #ffffff;
   border: 1px solid #e1e4e8;
   border-radius: 0.5rem;
+  background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -27,7 +26,6 @@
 .loginHeader {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   text-align: center;
 }
@@ -85,15 +83,15 @@
   width: 50%;
   padding: 0.75rem;
   margin-top: 0.5rem;
-  background-color: var(--button-bg);
-  color: var(--button-text-color);
+  background-color: #00a8ff;
+  color: white;
   border-radius: 0.5rem;
   font-weight: bold;
   cursor: pointer;
 }
 
 .loginButton:hover {
-  background-color: var(--button-hover-bg);
+  background-color: #1f98d4;
 }
 
 /* 가이드 메시지 영역 (항상 자리 차지) */

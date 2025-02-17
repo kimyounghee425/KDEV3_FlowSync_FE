@@ -1,5 +1,6 @@
-import { HStack, Button } from "@chakra-ui/react";
+import { HStack, Button, IconButton } from "@chakra-ui/react";
 import { PaginationProps as PaginationInfo } from "@/src/types";
+import { ChevronLeft, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 interface PaginationProps {
   paginationInfo?: PaginationInfo; // PaginationMeta 전체를 전달받음
@@ -23,16 +24,16 @@ const Pagination: React.FC<PaginationProps> = ({
   const endPage = Math.min(currentGroup * maxVisibleButtons, totalPages);
 
   return (
-    <HStack wrap="wrap" justify="center" mt={4}>
+    <HStack wrap="wrap" justify="center" mt={4} alignItems="center">
       {/* 이전 버튼 */}
-      <Button
-        variant={"surface"}
-        size="sm"
+      <IconButton
+        aria-label="이전 페이지"
+        as={ChevronLeftIcon} // 아이콘 직접 전달
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={isFirstPage}
-      >
-        이전
-      </Button>
+        variant="ghost"
+        size="xs"
+      />
 
       {/* 페이지 번호 버튼 */}
       {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
@@ -51,14 +52,14 @@ const Pagination: React.FC<PaginationProps> = ({
       })}
 
       {/* 다음 버튼 */}
-      <Button
-        variant={"surface"}
-        size="sm"
+      <IconButton
+        aria-label="다음 페이지"
+        as={ChevronRightIcon} // 아이콘 직접 전달
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={isLastPage}
-      >
-        다음
-      </Button>
+        variant="ghost"
+        size="xs"
+      />
     </HStack>
   );
 };

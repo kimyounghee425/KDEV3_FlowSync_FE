@@ -13,13 +13,13 @@ import CommonTable from "@/src/components/common/CommonTable";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import Pagination from "@/src/components/common/Pagination";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
+import DropDownMenu from "@/src/components/common/DropDownMenu";
 import CreateButton from "@/src/components/common/CreateButton";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { useNoticeList } from "@/src/hook/useFetchBoardList";
 import { useUserInfo } from "@/src/hook/useFetchData";
-import DropDownMenu from "@/src/components/common/DropDownMenu";
 import { useDeleteNotice } from "@/src/hook/useMutationData";
+import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 
 const noticeStatusFramework = createListCollection<{
   label: string;
@@ -59,7 +59,6 @@ const PRIORITY_LABELS: Record<string, string> = {
 
 const EMERGENCY_STYLE = {
   fontWeight: "bold",
-  color: "red",
 };
 
 const NOTICE_STATUS_LABELS: Record<string, string> = {
@@ -129,7 +128,7 @@ function NoticesPageContent() {
   };
 
   return (
-    <Box>
+    <Box width="100%">
       <Heading size="2xl" color="gray.700" mb="10px">
         공지사항
       </Heading>
@@ -144,7 +143,7 @@ function NoticesPageContent() {
               selectedValue={category}
               queryKey="category"
               placeholder="카테고리"
-              width="120px"
+              width="140px"
             />
           </SearchSection>
         </Flex>
@@ -234,7 +233,12 @@ function NoticesPageContent() {
                 },
               }}
             >
-              <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
+              <Table.Cell
+                style={{
+                  fontWeight: isEmergency ? "bold" : "normal",
+                  color: isEmergency ? "red" : "inherit",
+                }}
+              >
                 {PRIORITY_LABELS[notice.priority]}
               </Table.Cell>
               <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>

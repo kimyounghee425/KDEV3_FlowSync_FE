@@ -8,6 +8,7 @@ import Sidebar from "@/src/components/layouts/Sidebar";
 import { SidebarProvider } from "@/src/context/SidebarContext";
 import { useUserInfo } from "@/src/hook/useFetchData";
 import { layoutStyles } from "@/src/styles/layoutStyles";
+import BackButton from "@/src/components/common/BackButton";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -23,10 +24,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   // 페이지 유형 구분 (목록 조회 vs 상세 조회)
   const isListPage =
-    pathname.includes("/") ||
-    pathname.includes("/admin/organizations") ||
-    pathname.includes("/admin/members") ||
-    pathname.includes("/notices");
+    pathname === "/" ||
+    pathname === "/admin/organizations" ||
+    pathname === "/admin/members" ||
+    pathname === "/notices";
 
   // 현재 로그인 한 사용자 정보
   const { data: loggedInUserInfo } = useUserInfo();
@@ -70,6 +71,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             as="main"
             {...layoutStyles.mainContent(isSidebarOpen, isListPage)}
           >
+            {!isListPage ? <BackButton /> : <></>}
             {children}
           </Box>
         </Flex>

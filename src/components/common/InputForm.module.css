@@ -32,9 +32,9 @@
 
 /* 🔹 입력 필드 포커스 시 */
 .input:focus {
-  border-color: var(--button-hover-bg) !important; /* ⚡강제 적용 */
+  border-color: #00a8ff !important; /* ⚡강제 적용 */
   outline: none;
-  box-shadow: 0 0 0 2px #01e4b3;
+  box-shadow: 0 0 0 1px #00a8ff;
 }
 
 /* 🔹 입력 필드 에러 상태 */
@@ -54,7 +54,7 @@
 /* 🔹 변경된 입력 필드 */
 .input.changed {
   background-color: #e8f5e9 !important;
-  border: 1px solid #01e4b3 !important;
+  border: 1px solid #00a8ff !important;
 }
 
 .label {
@@ -81,7 +81,7 @@
 
 /* ✅ 파일 업로드 버튼 */
 .fileUploadButton {
-  background-color: #007bff;
+  background-color: #00a8ff;
   color: white;
   padding: 8px 12px;
   border-radius: 5px;
@@ -92,7 +92,7 @@
 }
 
 .fileUploadButton:hover {
-  background-color: #0056b3;
+  background-color: #1f98d4;
 }
 
 /* ✅ 선택된 파일명 스타일 */

@@ -415,7 +415,7 @@ export interface QuestionArticle {
   register: {
     name: string;
     role: string;
-  }
+  };
   fileList: ArticleFile[];
   linkList: ArticleLink[];
   commentList: ArticleComment[];
@@ -487,7 +487,7 @@ export interface ArticleComment {
   register: {
     name: string;
     role: string;
-  }
+  };
   content: string;
   regAt: string;
   editAt: string;
@@ -517,6 +517,7 @@ export interface InputFormData {
   isChanged?: boolean;
   maxLength?: number;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  isRequired?: boolean;
 }
 
 // 공지사항
@@ -621,7 +622,7 @@ export interface Actor {
 }
 
 export interface ProgressStepOrder {
-  id: string; 
+  id: string;
   order: number;
   title?: string;
 }

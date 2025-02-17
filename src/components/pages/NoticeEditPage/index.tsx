@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Box } from "@chakra-ui/react";
-import BackButton from "@/src/components/common/BackButton";
 import { NoticeArticle, NoticeRequestData } from "@/src/types";
 import SelectInput from "@/src/components/common/FormSelectInput";
 import { useEditNotice } from "@/src/hook/useMutationData";
@@ -91,8 +90,6 @@ export default function NoticeEditPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <BackButton />
-
       {noticeError && (
         <ErrorAlert message="공지사항 조회에 실패했습니다. 다시 시도해주세요." />
       )}
