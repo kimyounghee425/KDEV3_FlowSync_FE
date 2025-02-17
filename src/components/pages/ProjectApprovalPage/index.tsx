@@ -46,8 +46,13 @@ export default function ProjectApprovalPage() {
         setCategory(responseData.category);
         setCommentList(responseData.commentList ?? []);
         setRegisterSignatureUrl(responseData.register.signatureUrl);
-        setApproverSignatureUrl(responseData.approver?.signatureUrl);
-        setRegisterOrgId(responseData.register.organizationId);
+        if (responseData.status === "APPROVED") {
+          setApproverSignatureUrl(responseData.approver?.signatureUrl);
+        } else if (responseData.status === "REJECTED") {
+          setApproverSignatureUrl("/비추_고화질.png")
+        } else {
+          setApproverSignatureUrl(responseData.approver?.signatureUrl);
+        }
       } catch (err) {
         setError(
           err instanceof Error

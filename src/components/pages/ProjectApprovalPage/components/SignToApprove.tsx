@@ -6,6 +6,7 @@ import { getMyOrgId } from "@/src/api/ReadArticle";
 import SignaturePad from "signature_pad";
 import DropDownInfoTop from "@/src/components/common/DropDownInfoTop";
 import axiosInstance from "@/src/api/axiosInstance";
+import { getMeApi } from "@/src/api/getMembersApi";
 
 interface SigntoUploadProps {
   registerSignatureUrl?: string; // 요청자 사인 url
@@ -29,11 +30,12 @@ export default function SignToApprove({
   ); // 결재자 사인 url
   const [isSignatureComplete, setIsignatureComplete] =
     useState<boolean>(!!approverSignatureUrl);
+  const [signing, setSigning] = useState<boolean>(false);
+  const [newSigning, setNewSigning] = useState<boolean>(false);
 
   // 캔버스 초기화
   useEffect(() => {
     isMyOrg();
-
     if (approverSignatureUrl) {
       setIsignatureComplete(true); // 서명이 이미 존재하면 다시 입력할 수 없도록 설정
       setYourSignatureUrl(approverSignatureUrl); // 서명 이미지도 업데이트
@@ -43,6 +45,23 @@ export default function SignToApprove({
       setSignaturePad(new SignaturePad(canvasRef.current));
     }
   }, [approverSignatureUrl]);
+
+  const handleNewSign = () => {
+    setNewSigning(true);
+
+    setTimeout(() => {
+      if (canvasRef.current) {
+        setSignaturePad(new SignaturePad(canvasRef.current));
+      }
+      enableSignaturePad(); // 🔥 여기서 다시 활성화!
+    }, 100);
+  };
+
+  const enableSignaturePad = () => {
+    if (signaturePad) {
+      signaturePad.on();
+    }
+  };
 
   // 서명 지우기
   const clearSignature = () => {
@@ -125,6 +144,7 @@ export default function SignToApprove({
 
   // 승인 반려
   const rejectApproval = async () => {
+    window.confirm("결재를 반려하시겠습니까?");
     try {
       const response = await axiosInstance.post(
         `projects/${projectId}/approvals/${approvalId}/reject`,
@@ -132,8 +152,8 @@ export default function SignToApprove({
       if (response.data.result === "SUCCESS") {
         disableSignaturePad();
         setIsignatureComplete(true);
+        setYourSignatureUrl("./public/reject.jpg");
       }
-      // return response.data.result;
     } catch (error) {
       console.error(error);
     }
@@ -158,13 +178,15 @@ export default function SignToApprove({
   // 자기 업체 글이면 결재자 서명 비활
   const isMyOrg = async () => {
     try {
-      const response = await getMyOrgId();
-      if (response.data.organizationId === registerOrgId) {
+      const response = await getMeApi();
+      // console.log(response.data.organizationType)
+      if (response.data.organizationType === "DEVELOPER") {
+
         setIsignatureComplete(true);
         disableSignaturePad();
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -214,6 +236,7 @@ export default function SignToApprove({
                 height={166.6}
                 src={yourSignatureUrl}
                 alt="서명"
+                objectFit="contain"
               />
             ) : (
               <Text
@@ -231,36 +254,84 @@ export default function SignToApprove({
           </Box>
         </Flex>
       </Flex>
-      {!isSignatureComplete && (
-        <Box mb={5}>
-          <canvas
-            ref={canvasRef}
-            width={600}
-            height={400}
-            style={{
-              border: "2px solid black",
-              borderRadius: "10px",
-              width: "600px",
-              height: "400px",
-            }}
-          />
-        </Box>
-      )}
+      {!isSignatureComplete &&
+        (newSigning ? (
+          <Box mb={5}>
+            <canvas
+              ref={canvasRef}
+              width={600}
+              height={400}
+              style={{
+                border: "2px solid black",
+                borderRadius: "10px",
+                width: "600px",
+                height: "400px",
+              }}
+            />
+          </Box>
+        ) : (
+          <Box pt={5}></Box>
+        ))}
 
       <Flex direction={"row"} justifyContent={"center"} gap={4}>
         {!isSignatureComplete && (
           <Flex direction={"row"}>
-            <Button mr={3} onClick={bringSignature}>
-              서명 불러오기
-            </Button>
-            <Button mr={3} onClick={clearSignature}>
-              지우기
-            </Button>
-            <Button mr={3} onClick={saveSignature}>
-              등록
-            </Button>
+            {!signing ? (
+              <Button
+                onClick={() => setSigning(true)}
+                backgroundColor={"blue.500"}
+                color="white"
+                _hover={{ backgroundColor: "blue.600" }}
+                mr={2}
+              >
+                결재
+              </Button>
+            ) : !newSigning ? (
+              <Flex direction={"row"}>
+                <Button
+                  backgroundColor={"green.500"}
+                  color="white"
+                  _hover={{ backgroundColor: "green.600" }}
+                  mr={3}
+                  onClick={bringSignature}
+                >
+                  서명 불러오기
+                </Button>
+                <Button
+                  backgroundColor={"blue.500"}
+                  color="white"
+                  _hover={{ backgroundColor: "blue.600" }}
+                  mr={2}
+                  onClick={handleNewSign}
+                >
+                  서명 새로 작성하기
+                </Button>
+              </Flex>
+            ) : (
+              <Flex direction={"row"}>
+                <Button
+                  backgroundColor={"blue.500"}
+                  color="white"
+                  _hover={{ backgroundColor: "blue.600" }}
+                  mr={3}
+                  onClick={saveSignature}
+                >
+                  등록
+                </Button>
+                <Button
+                  backgroundColor={"red.500"}
+                  color="white"
+                  _hover={{ backgroundColor: "red.600" }}
+                  mr={3}
+                  onClick={clearSignature}
+                >
+                  지우기
+                </Button>
+              </Flex>
+            )}
+
             <Button mr={3} backgroundColor={"red.200"} onClick={rejectApproval}>
-              승인 반려
+              반려
             </Button>
             <DropDownInfoTop
               text={`결재 글은 서명을 기입해야 작성이 가능합니다. \n "서명 불러오기" 는 기존에 저장된 서명을 불러옵니다. \n 새 서명을 기입하고 "등록" 을 누르면 기존에 저장되어 있던 서명은 삭제됩니다. `}

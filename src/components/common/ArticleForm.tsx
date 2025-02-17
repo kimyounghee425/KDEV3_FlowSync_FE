@@ -58,6 +58,8 @@ export default function ArticleForm({
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
   const [isDisabled, setisDisabled] = useState<boolean>(false);
   const [isSignYes, setIsSignYes] = useState<boolean>(false);
+  const [contentText, setContentText] = useState("");
+  const maxContentLength = 10000;
   const pathname = usePathname();
 
   useEffect(() => {
@@ -108,6 +110,7 @@ export default function ArticleForm({
                   return { success: 1, file: { url: responseData.data.url } };
                 } catch (error) {
                   console.error("파일 업로드 중 오류 발생:", error);
+                  alert("이미지 파일 크기는 10mb 를 초과할 수 없습니다.");
                   removeEmptyImageBlocks(); // 업로드 실패 시 빈 블록 제거
                   return { success: 0 };
                 }
@@ -140,8 +143,20 @@ export default function ArticleForm({
         await editorRef.current?.isReady;
         attachImageDeleteButtons(); // 초기화 완료 후 버튼 추가
       },
-      onChange: () => {
+      onChange: async () => {
         setTimeout(() => attachImageDeleteButtons(), 300); // 블록 변경 시 삭제 버튼 적용
+
+        const savedData = await editorRef.current?.save();
+
+        let totalText = "";
+        savedData?.blocks.forEach((block) => {
+          if (block.type === "paragraph") {
+            totalText += block.data.text || "";
+          } else if (block.type === "image" && block.data?.file?.url) {
+            totalText += block.data.file.url; // 이미지 URL 길이 포함
+          }
+        });
+        setContentText(totalText.slice(0, maxContentLength));
       },
     });
   };
@@ -197,17 +212,13 @@ export default function ArticleForm({
 
   const attachImageDeleteButtons = () => {
     if (!editorRef.current) return;
-
-    const imageBlocks = document.querySelectorAll(
-      ".ce-block__content .cdx-block",
-    );
-
-    imageBlocks.forEach((block) => {
+  
+    const blocks = document.querySelectorAll(".ce-block__content .cdx-block");
+  
+    blocks.forEach((block) => {
       const blockElement = block as HTMLElement;
-      const imgElement = blockElement.querySelector(
-        "img",
-      ) as HTMLImageElement | null;
-
+      const imgElement = blockElement.querySelector("img") as HTMLImageElement | null;
+  
       if (imgElement && !blockElement.querySelector(".image-delete-btn")) {
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "❌ 삭제";
@@ -220,14 +231,21 @@ export default function ArticleForm({
         deleteButton.style.cursor = "pointer";
         deleteButton.style.padding = "4px 8px";
         deleteButton.style.borderRadius = "4px";
-
+  
         deleteButton.onclick = () => {
-          editorRef.current?.blocks.delete(
-            editorRef.current.blocks.getCurrentBlockIndex(),
-          );
-          removeEmptyImageBlocks(); // 삭제 후 빈 블록 제거
+          if (!editorRef.current) return;
+  
+          // ✅ 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
+          const blockIndex = editorRef.current.blocks.getCurrentBlockIndex();
+  
+          if (blockIndex !== -1) {
+            editorRef.current.blocks.delete(blockIndex);
+          } else {
+            return;
+          }
         };
-
+  
+  
         blockElement.style.position = "relative";
         blockElement.appendChild(deleteButton);
       }
@@ -245,7 +263,7 @@ export default function ArticleForm({
       blockElements.forEach((blockElement, index) => {
         const imgElement = blockElement.querySelector("img");
         const blockData = savedData.blocks[index];
-
+        editor.blocks.delete(index);
         // 이미지 블록인데 URL이 없거나 로딩 상태일 경우 삭제
         if (
           !imgElement &&
@@ -275,7 +293,10 @@ export default function ArticleForm({
       {children}
       <Flex align={"center"} gap={4}>
         <Box flex={2}>
-          <Text mb={2}>제목</Text>
+          <Flex direction={"row"} alignItems={"center"}>
+            <Text pb={2}>제목</Text>
+            <Text pb={2} pl={2}>{title.length} / 80 </Text>
+          </Flex>
           <Input
             type="text"
             placeholder="제목을 입력하세요."
@@ -301,6 +322,9 @@ export default function ArticleForm({
               '사진 첨부가 가능합니다. \n 사진을 끌어다 놓거나 드래그하여 업로드하세요. \n 또는 "/"를 입력한 후 "IMAGE"를 선택하여 추가할 수도 있습니다.'
             }
           />
+          <Text>
+            {contentText.length} / {maxContentLength}{" "}
+          </Text>
         </Flex>
         <Box
           id="editorjs"

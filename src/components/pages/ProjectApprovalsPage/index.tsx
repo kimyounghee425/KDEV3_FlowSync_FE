@@ -8,6 +8,7 @@ import {
   Table,
   createListCollection,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
 import StatusTag from "@/src/components/common/StatusTag";
@@ -19,6 +20,7 @@ import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
 import { useProjectApprovalList } from "@/src/hook/useFetchBoardList";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
+import { getMeApi } from "@/src/api/getMembersApi";
 
 const approvalStatusFramework = createListCollection<{
   id: string;
@@ -48,7 +50,7 @@ export default function ProjectApprovalsPage() {
   const { projectId } = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
-
+  const [myOrgType, setMyOrgType] = useState<string>("");
   const resolvedProjectId = Array.isArray(projectId)
     ? projectId[0]
     : projectId || "";
@@ -93,8 +95,24 @@ export default function ProjectApprovalsPage() {
   };
 
   const handleProjectApprovalCreateButton = () => {
+    if (myOrgType === "CUSTOMER") {
+      alert("결재 글은 개발사만 작성이 가능합니다.");
+      return;
+    }
     router.push(`/projects/${projectId}/approvals/new`);
   };
+
+  useEffect(() => {
+    const getMyOrgType = async () => {
+      try {
+        const responseData = await getMeApi();
+        setMyOrgType(responseData.data.organizationType);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getMyOrgType();
+  }, []);
 
   return (
     <ProjectLayout>

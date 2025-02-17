@@ -88,6 +88,11 @@ export default function ApprovalEditForm() {
                           console.error("파일 업로드 실패");
                           return { success: 0 };
                         }
+
+                        setTimeout(() => {
+                          attachImageDeleteButtons();
+                        }, 500);
+
                         return {
                           success: 1,
                           file: { url: responseData.data.url },
@@ -102,6 +107,15 @@ export default function ApprovalEditForm() {
               },
             },
             placeholder: "내용을 작성하세요",
+
+            onReady: async () => {
+              console.log("📝 EditorJS 초기화 완료!");
+              await editorRef.current?.isReady;
+              attachImageDeleteButtons();
+            },
+            onChange: () => {
+              setTimeout(() => attachImageDeleteButtons(), 300); // 블록 변경 시 삭제 버튼 적용
+            },
           });
         }
 
@@ -153,6 +167,48 @@ export default function ApprovalEditForm() {
       console.error("저장 실패:", error);
       alert("저장 중 문제가 발생했습니다.");
     }
+  };
+
+  const attachImageDeleteButtons = () => {
+    if (!editorRef.current) return;
+  
+    const blocks = document.querySelectorAll(".ce-block__content .cdx-block");
+  
+    blocks.forEach((block) => {
+      const blockElement = block as HTMLElement;
+      const imgElement = blockElement.querySelector("img") as HTMLImageElement | null;
+  
+      if (imgElement && !blockElement.querySelector(".image-delete-btn")) {
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "❌ 삭제";
+        deleteButton.classList.add("image-delete-btn");
+        deleteButton.style.position = "absolute";
+        deleteButton.style.top = "5px";
+        deleteButton.style.right = "5px";
+        deleteButton.style.background = "red";
+        deleteButton.style.color = "white";
+        deleteButton.style.cursor = "pointer";
+        deleteButton.style.padding = "4px 8px";
+        deleteButton.style.borderRadius = "4px";
+  
+        deleteButton.onclick = () => {
+          if (!editorRef.current) return;
+  
+          // ✅ 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
+          const blockIndex = editorRef.current.blocks.getCurrentBlockIndex();
+  
+          if (blockIndex !== -1) {
+            editorRef.current.blocks.delete(blockIndex);
+          } else {
+            return;
+          }
+        };
+  
+  
+        blockElement.style.position = "relative";
+        blockElement.appendChild(deleteButton);
+      }
+    });
   };
 
   const handleEditorSave = async () => {

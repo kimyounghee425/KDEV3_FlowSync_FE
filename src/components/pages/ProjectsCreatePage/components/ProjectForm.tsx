@@ -140,20 +140,41 @@ export default function ProjectForm({
   const handleSubmit = async (event: React.FormEvent) => {
     event?.preventDefault();
 
-    if (
-      !formData.name ||
-      !formData.startAt ||
-      !formData.deadlineAt ||
-      !formData.customerOrgId ||
-      !formData.developerOrgId ||
-      selectedCustomerMembers.length === 0 ||
-      selectedDeveloperMembers.length === 0 ||
-      !formData.customerOwnerId ||
-      !formData.devOwnerId
-    ) {
-      alert("필수 정보를 입력해주세요.");
+    formData.name = formData.name.trim().replace(/\s{2,}/g, " ");
+    formData.description = formData.description.trim().replace(/\s{2,}/g, " ");
+
+    // 필수 정보
+    if (formData.name.length < 2) {
+      alert("프로젝트명을 2글자 이상 입력해주세요.")
       return;
-    }
+    } else if (formData.description.length < 2) {
+      alert("프로젝트 개요를 2글자 이상 입력해주세요.")
+      return;
+    } else if (!formData.startAt) {
+      alert("프로젝트 시작일을 선택해주세요.")
+      return;
+    } else if (!formData.deadlineAt) {
+      alert("프로젝트 종료일을 선택해주세요.")
+      return;
+    } else if (!formData.customerOrgId) {
+      alert("고객사를 지정해주세요.")
+      return;
+    } else if (!formData.developerOrgId) {
+      alert("개발사를 지정해주세요.")
+      return;
+    } else if (selectedCustomerMembers.length === 0) {
+      alert("고객사 담당자 회원을 배정해주세요.")
+      return;
+    } else if (selectedDeveloperMembers.length === 0) {
+      alert("개발사 담당자 회원을 배정해주세요.")
+      return;
+    } else if (!formData.customerOwnerId) {
+      alert("고객사 Owner 을 설정해주세요.")
+      return;
+    } else if (!formData.devOwnerId) {
+      alert("개발사 Owner 을 설정해주세요.")
+      return;
+    } 
 
     const requestBody = {
       ...formData,

@@ -109,8 +109,15 @@ export default function AdminMembersCreatePage() {
 
   // 등록 버튼 클릭 후 회원 등록 API 호출
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+
     event.preventDefault();
     if (!validateInputs()) return;
+    inputValues.role.trim().replace(/\s{2,}/g, " ");
+    inputValues.name.trim().replace(/\s{2,}/g, " ");
+    inputValues.jobRole.trim().replace(/\s{2,}/g, " ");
+    inputValues.jobTitle.trim().replace(/\s{2,}/g, " ");
+    inputValues.introduction.trim().replace(/\s{2,}/g, " ");
+    inputValues.remark.trim().replace(/\s{2,}/g, " ");
     try {
       const response = await createMember(
         formattedData(inputValues.role),
@@ -329,6 +336,7 @@ export default function AdminMembersCreatePage() {
         value={inputValues.jobRole}
         error={inputErrors.jobRole}
         onChange={(e) => handleInputChange("jobRole", e.target.value)}
+        maxLength={20}
       />
       {/* 직함 입력 */}
       <InputForm
@@ -339,6 +347,7 @@ export default function AdminMembersCreatePage() {
         value={inputValues.jobTitle}
         error={inputErrors.jobTitle}
         onChange={(e) => handleInputChange("jobTitle", e.target.value)}
+        maxLength={20}
       />
       {/* 회원소개 입력 */}
       <InputForm
@@ -349,6 +358,7 @@ export default function AdminMembersCreatePage() {
         value={inputValues.introduction}
         error={inputErrors.introduction}
         onChange={(e) => handleInputChange("introduction", e.target.value)}
+        maxLength={100}
       />
       {/* 회원 특이사항 입력 */}
       <InputForm
@@ -359,6 +369,7 @@ export default function AdminMembersCreatePage() {
         value={inputValues.remark}
         error={inputErrors.remark}
         onChange={(e) => handleInputChange("remark", e.target.value)}
+        maxLength={100}
       />
     </InputFormLayout>
   );
