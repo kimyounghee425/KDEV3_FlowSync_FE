@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { CommonResponseType, CompletionHistoryListResponse, ManagementStepCountMap, NoticeArticle, ProgressStep, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse,  } from "@/src/types";
-import { fetchProjectApprovalProgressStepApi, fetchProjectInfoApi, fetchProjectQuestionProgressStepApi, fetchProjectsManagementStepsCountApi,  getCompletionRequestsApi, projectProgressStepApi } from "@/src/api/projects";
+import { CommonResponseType, ManagementStepCountMap, NoticeArticle, ProgressStep, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse,  } from "@/src/types";
+import { fetchProjectApprovalProgressStepApi, fetchProjectInfoApi, fetchProjectQuestionProgressStepApi, fetchProjectsManagementStepsCountApi, projectProgressStepApi } from "@/src/api/projects";
 import { showToast } from "@/src/utils/showToast";
 import { fetchUserInfoApi } from "@/src/api/auth";
 import { readNoticeApi } from "@/src/api/ReadArticle";

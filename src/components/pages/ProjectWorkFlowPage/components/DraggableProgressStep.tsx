@@ -11,7 +11,8 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 import { Trash2, Plus } from "lucide-react";
-import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
+import { useProjectProgressStepData } from "@/src/hook/useFetchData";
+
 import {
   useCreateProjectProgressStep,
   useDeleteProjectProgressStep,
@@ -38,7 +39,7 @@ export default function DraggableProgressSteps({
     loading: progressStepLoading,
     error: progressStepError,
     refetch,
-  } = useProjectApprovalProgressStepData(projectId);
+  } = useProjectProgressStepData(projectId);
 
   // 백엔드 순서 업데이트 요청 훅
   const { mutate: updateProgressStepOrder } =
@@ -65,7 +66,7 @@ export default function DraggableProgressSteps({
         .map((step, index) => ({
           id: step.id,
           order: index + 1, // ✅ order 속성 추가
-          title: step.title,
+          title: step.name,
         })),
     );
   }, [progressSteps]);
@@ -91,7 +92,7 @@ export default function DraggableProgressSteps({
       }),
     );
 
-    updateProgressStepOrder(projectId, reorderedSteps);
+    await updateProgressStepOrder(projectId, reorderedSteps);
     await refetch();
   };
 

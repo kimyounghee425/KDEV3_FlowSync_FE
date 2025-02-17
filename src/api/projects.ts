@@ -367,7 +367,7 @@ export async function updateProjectProgressStepOrderApi(
   steps: ProgressStepOrder[],
 ): Promise<CommonResponseType<void>> {
   const response = await axiosInstance.put(
-    `/projects/${projectId}/progress-steps/order`,
+    `/projects/${projectId}/progress-steps/orders`,
     { steps },
   );
   return response.data;

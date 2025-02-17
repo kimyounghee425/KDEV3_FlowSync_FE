@@ -183,10 +183,6 @@ export async function middleware(request: NextRequest) {
     return handleUnauthorized(request);
   }
 
-  // `x-user-role` 헤더 추가하여  서버 컴포넌트에서 사용 가능하도록 설정
-  response?.headers.set("x-user-id", userInfo.id);
-  response?.headers.set("x-user-role", userInfo.role);
-
   // 🔹 ✅ 관리자 권한 검사를 배열을 사용하여 수행
   if (
     adminPages.some((path) => pathname.startsWith(path)) &&
@@ -195,6 +191,18 @@ export async function middleware(request: NextRequest) {
     console.warn("🚫 권한이 부족하여 홈으로 리디렉트 됨");
     return NextResponse.redirect(new URL("/", request.url));
   }
+
+  // 🔹 ✅ 프로젝트 접근 권한 검사 (ADMIN은 검사 제외)
+  if (userInfo.role !== "ADMIN" && pathname.startsWith("/projects/")) {
+    const pathSegments = pathname.split("/");
+    const projectId = pathSegments[2]; // `/projects/[projectId]/*` 형태에서 projectId 추출
+
+    if (!userInfo.projectIdList.includes(Number(projectId))) {
+      console.warn(`🚫 프로젝트 접근 불가 (projectId: ${projectId}) → 홈으로 이동`);
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+  
   return response;
 }
 
