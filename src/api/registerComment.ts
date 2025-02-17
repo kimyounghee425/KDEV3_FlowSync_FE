@@ -1,33 +1,19 @@
 import axiosInstance from "@/src/api/axiosInstance";
 
-
+/**
+ * 댓글 등록 API
+ * @param apiPath - API 요청 경로 (사전 구성 필요)
+ * @param requestData - 요청 데이터 (댓글 내용)
+ */
 export async function registerComment(
-  projectId: number,
+  apiPath: string,
   requestData: any,
-  questionId?: number,
-  approvalId?: number,
-  parentId?: number,
 ) {
-  const pathname =
-    typeof window !== "undefined" ? window.location.pathname : "";
-
-  let apiPATH: string = "";
-
-  if (pathname.includes("/questions")) {
-    apiPATH = `/projects/${projectId}/questions/${questionId}/comments`;
-  } else if (pathname.includes("/approvals")) {
-    apiPATH = `/projects/${projectId}/approvals/${approvalId}/comments`;
-  }
-
-  if (parentId) {
-    apiPATH += `/${parentId}/recomments`;
-  }
-
-  if (!apiPATH) {
+  if (!apiPath) {
     throw new Error("API URL is not defined");
   }
 
-  const response = await axiosInstance.post(apiPATH, requestData, {
+  const response = await axiosInstance.post(apiPath, requestData, {
     headers: {
       "Content-Type": "application/json",
     },

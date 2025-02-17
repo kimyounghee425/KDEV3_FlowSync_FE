@@ -41,9 +41,7 @@ export default function ConfirmDialogEditDelete({
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <DialogBody>
-          <p>{description}</p>
-        </DialogBody>
+        <DialogBody>{description}</DialogBody>
         <DialogFooter>
           <DialogActionTrigger asChild>
             <Button variant="outline">{cancelText}</Button>
