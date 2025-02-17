@@ -101,20 +101,19 @@ export default function ArticleContent<T extends NoticeArticle>({
         {article.title}
       </Text>
 
-      <Box mb={4}>
+      <Box mb={5}>
         <Text>{formatDateWithTime(article.regAt)}</Text>
       </Box>
-
+      <Separator mb={5} size={"sm"} />
       {/* 본문 내용 */}
       <Box mb={4}>{renderContent(parsedContent)}</Box>
-
+      <Separator mb={5} size={"sm"} />
       {/* 첨부 파일 */}
-      <Box mb={4}>
+      <Box>
         <Text fontWeight="bold" mb={2}>
           첨부 파일
         </Text>
-        <VStack align="start">{renderFiles(article.fileList)}</VStack>
-        <Separator mb={6} size={"lg"} />
+        <VStack align="start">{renderFiles(article.fileInfoList)}</VStack>
       </Box>
     </Box>
   );

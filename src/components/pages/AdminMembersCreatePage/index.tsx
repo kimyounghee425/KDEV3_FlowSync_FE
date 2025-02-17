@@ -35,7 +35,6 @@ export default function AdminMembersCreatePage() {
   const fetchOrganizations = async () => {
     try {
       const orgData = await getOrganizationsApi();
-      console.log("페칭출력", orgData.data.dtoList);
       setOrganizations(orgData.data.dtoList);
     } catch (error) {
       console.error("업체 데이터를 가져오는 중 오류 발생:", error);

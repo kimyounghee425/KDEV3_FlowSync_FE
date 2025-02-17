@@ -11,11 +11,9 @@ export async function getOrganizationsApi(type?: string, status?: string) {
       `${BASE_URL}/admins/organizations`,
       { params },
     );
-    // console.log("2132132",response)
 
     return response.data;
   } catch (error) {
-    console.log("고객사 목록 조회 실패 : ", error);
     throw error;
   }
 }

@@ -7,7 +7,7 @@ interface SignUploadProps {
   setIsSignYes: (bool: boolean) => void;
 }
 
-export default function SignUpload({setIsSignYes}: SignUploadProps) {
+export default function SignUpload({ setIsSignYes }: SignUploadProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [signaturePad, setSignaturePad] = useState<SignaturePad | null>(null);
 
@@ -47,8 +47,7 @@ export default function SignUpload({setIsSignYes}: SignUploadProps) {
     try {
       const responseData = await sendSignApi(file);
       setSignatureUrl(responseData.data.url);
-      console.log("저장되었다리", responseData.data.url);
-      setIsSignYes(true)
+      setIsSignYes(true);
     } catch (error) {
       console.error("서명 등록 실패", error);
     }
@@ -57,20 +56,14 @@ export default function SignUpload({setIsSignYes}: SignUploadProps) {
   const bringSignature = async () => {
     try {
       const responseData = await bringSignApi();
-      if (responseData.code === 200 && responseData.data) {
-        setSignatureUrl(responseData.data.signatureUrl ?? "");
-        console.log("잘불러왔다리", responseData.data.signatureUrl);
+      setSignatureUrl(responseData.data.signatureUrl ?? "");
 
-        if (signaturePad) {
-          // console.log(responseData.data.signatureUrl);
-          signaturePad.fromDataURL(responseData.data.signatureUrl);
-        }
-        setIsSignYes(true)
-      } else {
-        console.log("못불러왔다리");
+      if (signaturePad) {
+        signaturePad.fromDataURL(responseData.data.signatureUrl);
       }
+      setIsSignYes(true);
     } catch (error) {
-      console.log("서명 불러오는데 오류 발생", error);
+      console.error("서명 불러오는데 오류 발생", error);
     }
   };
 
@@ -108,7 +101,11 @@ export default function SignUpload({setIsSignYes}: SignUploadProps) {
               </Text>
             )}
           </Box>
-          <Box border={"2px solid black"} borderRadius={"10px"} backgroundColor={"gray.300"}>
+          <Box
+            border={"2px solid black"}
+            borderRadius={"10px"}
+            backgroundColor={"gray.300"}
+          >
             <Text
               display="flex"
               alignItems="center"

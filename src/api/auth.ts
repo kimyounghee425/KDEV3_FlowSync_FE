@@ -56,5 +56,4 @@ export async function login(email: string, password: string) {
 // 로그아웃 API 호출
 export async function logout(): Promise<void> {
   await axiosInstance.post("/logout");
-  console.log("로그아웃 성공!");
 }

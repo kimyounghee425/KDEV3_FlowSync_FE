@@ -168,7 +168,6 @@ export async function fetchProjectDetailsApi(
   projectId: string,
 ): Promise<ProjectDetailProps> {
   const response = await axiosInstance.get(`/admins/projects/${projectId}`);
-  console.log("프로젝트 상세 조회 API 호출 중 - response: ", response);
   return response.data.data;
 }
 
@@ -195,7 +194,6 @@ export async function fetchProjectInfoApi(
   const response = await axiosInstance.get(
     `/projects/${projectId}/project-info`,
   );
-  console.log(response.data);
   return response.data;
 }
 

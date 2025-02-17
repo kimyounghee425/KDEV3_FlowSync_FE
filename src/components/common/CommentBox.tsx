@@ -53,13 +53,12 @@ export default function CommentBox({
         );
       }
       if (responseData?.result === "SUCCESS") {
-        console.log(responseData.result);
         setCommentIsWritten((prev: boolean) => !prev);
         setCommentText("");
         if (setIsReplying) setIsReplying(false);
       }
     } catch (error) {
-      console.log("댓글 등록 실패 : ", error);
+      console.error("댓글 등록 실패 : ", error);
     }
   };
 

@@ -31,8 +31,6 @@ export default function ArticleContent<
       ? JSON.parse(article.content)
       : article.content;
 
-  // console.log(parsedContent[0])
-
   const renderContent = (content: ContentBlock[]) => {
     return content.map((block, index) => {
       // paragraph 데이터
