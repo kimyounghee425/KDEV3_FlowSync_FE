@@ -34,6 +34,7 @@ export default function NoticesNewPage() {
   const [category, setCategory] = useState<string>("");
   const [priority, setPriority] = useState<string>("");
   const router = useRouter();
+
   const { mutate: createNotice, error: noticeRegisterError } =
     useCreateNotice();
 
@@ -67,12 +68,7 @@ export default function NoticesNewPage() {
         <ErrorAlert message="공지사항 저장에 실패했습니다. 다시 시도해주세요." />
       )}
       {/* progressStepId 임시 */}
-      <ArticleForm
-        progressStepId={1}
-        title={title}
-        setTitle={setTitle}
-        handleSave={handleSave}
-      >
+      <ArticleForm title={title} setTitle={setTitle} handleSave={handleSave}>
         {/* 우선순위 선택 */}
         <SelectInput
           label="우선순위"

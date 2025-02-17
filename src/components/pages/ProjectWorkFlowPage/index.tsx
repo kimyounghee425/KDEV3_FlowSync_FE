@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
+import { debounce } from "lodash";
 import "react-datepicker/dist/react-datepicker.css";
 import { Heading, Table, Flex, Button } from "@chakra-ui/react";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
@@ -14,7 +16,6 @@ import CustomModal from "@/src/components/pages/ProjectWorkFlowPage/components/C
 import ProjectLogTable from "@/src/components/pages/ProjectWorkFlowPage/components/ProjectLogTable";
 import { useUpdateProjectProgressStepSchedule } from "@/src/hook/useMutationData";
 import { formatDate } from "@/src/utils/formatDateUtil";
-import Link from "next/link";
 import DraggableProgressSteps from "@/src/components/pages/ProjectWorkFlowPage/components/DraggableProgressStep";
 
 export default function ProjectWorkFlowPage() {
@@ -41,6 +42,8 @@ export default function ProjectWorkFlowPage() {
 
   // 변경 가능한 날짜 상태
   const [dates, setDates] = useState<typeof initialDates>({});
+
+  const [isSaving, setIsSaving] = useState<Record<string, boolean>>({});
 
   // 초기 날짜 데이터를 받아오면, 상태를 설정
   useEffect(() => {
@@ -92,6 +95,20 @@ export default function ProjectWorkFlowPage() {
       console.error("날짜 업데이트 실패:", error);
     }
   };
+
+  // ✅ `debounce` 적용한 handleSaveDates
+  const debouncedSaveDates = useCallback(
+    debounce(async (progressStepId: string) => {
+      setIsSaving((prev) => ({ ...prev, [progressStepId]: true })); // ✅ 로딩 시작
+
+      try {
+        await handleSaveDates(progressStepId);
+      } finally {
+        setIsSaving((prev) => ({ ...prev, [progressStepId]: false })); // ✅ 로딩 종료
+      }
+    }, 1000),
+    [handleSaveDates],
+  );
 
   return (
     <ProjectLayout>
@@ -201,8 +218,14 @@ export default function ProjectWorkFlowPage() {
                     variant={"surface"}
                     _hover={{ backgroundColor: "#00a8ff", color: "white" }}
                     size="sm"
-                    disabled={!isDateChanged || !!isStartAfterDeadline}
-                    onClick={() => handleSaveDates(stepId)}
+                    disabled={
+                      isSaving[stepId] ||
+                      !isDateChanged ||
+                      !!isStartAfterDeadline
+                    }
+                    onClick={() => debouncedSaveDates(stepId)}
+                    loading={isSaving[stepId]}
+                    loadingText="저장 중..."
                   >
                     저장
                   </Button>

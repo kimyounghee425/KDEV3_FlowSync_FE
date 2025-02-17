@@ -140,7 +140,6 @@ function ProjectsPageContent() {
           content="FlowSync로 프로젝트 관리를 한번에"
         />
       </Head>
-
       <Box p="4" minHeight="100vh">
         <Stack spaceY="SECTION_SPACING">
           <ProjectsManagementStepCards title={"프로젝트 현황"} />
@@ -199,8 +198,14 @@ function ProjectsPageContent() {
                   <Table.Column htmlWidth="10%" />
                   <Table.Column htmlWidth="10%" />
                   <Table.Column htmlWidth="10%" />
-                  <Table.Column htmlWidth="5%" />
-                  <Table.Column htmlWidth="5%" />
+                  {userRole === "ADMIN" ? (
+                    <>
+                      <Table.Column htmlWidth="5%" />
+                      <Table.Column htmlWidth="5%" />
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </>
               }
               headerTitle={

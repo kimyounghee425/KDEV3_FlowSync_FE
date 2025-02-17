@@ -163,7 +163,7 @@ export default function ProjectsManagementStepCards({
         alignItems="center"
         gap={gap}
         p={4}
-        border="1px solid"
+        border="1px solid #e4e4e7"
         borderRadius="lg"
         boxShadow="md"
         overflow="hidden" // 가로 스크롤 방지

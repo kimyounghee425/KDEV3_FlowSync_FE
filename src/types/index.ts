@@ -623,4 +623,5 @@ export interface Actor {
 export interface ProgressStepOrder {
   id: string; 
   order: number;
+  title?: string;
 }
