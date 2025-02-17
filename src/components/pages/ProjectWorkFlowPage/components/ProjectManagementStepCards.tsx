@@ -125,7 +125,7 @@ export default function ProjectsManagementStepCards({
 
   return (
     <Flex
-      margin="2rem 1rem 3rem 1.3rem"
+      margin="2rem 1rem 2rem 1.3rem"
       width="full"
       alignItems="center"
       gap="3rem"

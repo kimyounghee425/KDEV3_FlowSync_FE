@@ -18,7 +18,6 @@ export default function ProgressStepAddSection({
 
     setProgressStepId(selectedId);
   };
-  console.log(progressStepId);
   return (
     <Box>
       <Text>진행 단계 선택</Text>

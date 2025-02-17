@@ -4,7 +4,6 @@ import {
   NoticeRequestData,
 } from "@/src/types";
 import axiosInstance from "@/src/api/axiosInstance";
-import { headers } from "next/headers";
 
 // 공지사항 생성
 export async function fetchNoticeListApi(
@@ -19,12 +18,10 @@ export async function fetchNoticeListApi(
   });
   return response.data;
 }
+
+// 공지사항 생성
 export async function createNoticeApi(requestData: NoticeRequestData) {
-  const response = await axiosInstance.post(`/admins/notices`, requestData, {
-    headers: {
-      "Content-type": "multipart/form-data",
-    },
-  });
+  const response = await axiosInstance.post(`/admins/notices`, requestData, );
   return response.data;
 }
 

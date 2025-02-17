@@ -42,7 +42,7 @@ export default function ProgressStepSection({
 
     // URL 쿼리 파라미터를 수정 (progressStep 값 변경)
     const params = new URLSearchParams(window.location.search);
-    params.set("progressStep", selectedValue);
+    params.set("progressStepId", selectedValue);
 
     // 브라우저 히스토리(주소)를 업데이트
     history.replaceState(null, "", `?${params.toString()}`); // URL 업데이트
@@ -77,7 +77,7 @@ export default function ProgressStepSection({
           text={button.title}
           count={button.count || 0} // 서버에서 받아온 개수 표시
           isSelected={selectedButtonId === button.id} // 선택 상태 전달
-          onClick={() => handleStatusChange(button.id)} // 클릭 핸들러 전달
+          onClick={() => handleStatusChange(button.id)} // 선택된 버튼이면 ProgressStepButton 내부에서 클릭 방지
         />
       ))}
     </Flex>

@@ -3,7 +3,7 @@
 // 외부 라이브러리
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Box, Input, Text, Flex, Button, Textarea } from "@chakra-ui/react";
+import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
@@ -94,7 +94,6 @@ export default function ArticleForm({
             uploader: {
               async uploadByFile(file: File) {
                 if (!file) {
-                  console.log("🚨 파일 업로드가 취소되었습니다.");
                   removeEmptyImageBlocks(); // 취소된 상태에서 빈 블록 삭제
                   return { success: 0 };
                 }
@@ -138,7 +137,6 @@ export default function ArticleForm({
         }),
       },
       onReady: async () => {
-        console.log("📝 EditorJS 초기화 완료!");
         await editorRef.current?.isReady;
         attachImageDeleteButtons(); // 초기화 완료 후 버튼 추가
       },
@@ -254,7 +252,6 @@ export default function ArticleForm({
           blockData.type === "image" &&
           !blockData.data?.file?.url
         ) {
-          console.log("🚨 빈 이미지 블록 발견 및 DOM에서 제거");
           blockElement.remove(); // DOM에서 로딩 박스 제거
         }
       });
@@ -266,7 +263,6 @@ export default function ArticleForm({
 
       // 데이터가 변경되었으면 에디터 재초기화
       if (newBlocks.length !== savedData.blocks.length) {
-        console.log("🚨 빈 이미지 블록 제거 후 EditorJS 재초기화");
         initializeEditor(newBlocks);
       }
     });

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { showToast } from "@/src/utils/showToast";
-import { CommonResponseType, NoticeRequestData, OrganizationProps, ProgressStep } from "@/src/types";
+import { CommonResponseType, NoticeRequestData, OrganizationProps, ProgressStep, ProgressStepOrder } from "@/src/types";
 import { createNoticeApi, deleteNoticeApi, editNoticeApi } from "@/src/api/notices";
-import { updateProjectProgressStepApi } from "@/src/api/projects";
+import { updateProjectProgressStepScheduleApi, updateProjectProgressStepOrderApi, createProjectProgressStepApi, deleteProjectProgressStepApi } from "@/src/api/projects";
 import { changeOrganizationStatusApi } from "@/src/api/organizations";
 
 interface UseMutationDataProps<T, P extends any[]> {
@@ -28,6 +28,16 @@ export function useMutationData<T, P extends any[]>({ mutationApi }: UseMutation
     try {
       const response = await mutationApi(...args);
       setError(null);
+
+      // 성공 메시지가 있으면 토스트 띄우기
+      if (response.message) {
+        showToast({
+          title: "요청 성공",
+          description: response.message,
+          type: "success",
+          duration: 3000,
+        });
+      }
       return response;
     } catch (err: any) {
       console.error("API 요청 실패:", err);
@@ -42,7 +52,7 @@ export function useMutationData<T, P extends any[]>({ mutationApi }: UseMutation
       });
 
       setError(errorMessage);
-      throw new Error(errorMessage);
+      return null;
     } finally {
       setLoading(false);
     }
@@ -81,9 +91,9 @@ export function useDeleteNotice() {
 /**
  * 프로젝트 진행 단계 날짜 업데이트 훅
  */
-export function useUpdateProjectProgressStep() {
+export function useUpdateProjectProgressStepSchedule() {
   return useMutationData<ProgressStep, [string, string, { startAt: string; deadlineAt: string }]>({
-    mutationApi: updateProjectProgressStepApi,
+    mutationApi: updateProjectProgressStepScheduleApi,
   });
 }
 
@@ -94,4 +104,31 @@ export function useUpdateOrganizationStatus() {
   return useMutationData<OrganizationProps, [string]> ({
     mutationApi: changeOrganizationStatusApi,
   })
+}
+
+/**
+ * 프로젝트 진행 단계 순서 업데이트 훅
+ */
+export function useUpdateProjectProgressStepOrder() {
+  return useMutationData<void, [string, ProgressStepOrder[]]>({
+    mutationApi: updateProjectProgressStepOrderApi,
+  });
+}
+
+/**
+ * 프로젝트 진행 단계 추가 훅
+ */
+export function useCreateProjectProgressStep() {
+  return useMutationData<{ id: string; title: string }, [string, string]>({
+    mutationApi: createProjectProgressStepApi,
+  });
+}
+
+/**
+ * 프로젝트 진행 단계 삭제 훅
+ */
+export function useDeleteProjectProgressStep() {
+  return useMutationData<void, [string, string]>({
+    mutationApi: deleteProjectProgressStepApi,
+  });
 }

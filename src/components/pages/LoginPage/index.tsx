@@ -69,7 +69,6 @@ export default function LoginPage() {
     try {
       setIsLoading(true);
       const response = await login(inputValues.email, inputValues.password);
-      console.log("로그인 성공:", response);
       route.push("/");
     } catch (error) {
       console.error("로그인 실패:", error);

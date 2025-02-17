@@ -54,7 +54,6 @@ export default function EditSignUpload({ signatureUrl }: EditSignUploadProps) {
     try {
       const responseData = await sendSignApi(file);
       setYourSignatureUrl(responseData.data.url);
-      console.log("저장되었다리", responseData.data.url);
     } catch (error) {
       console.error("서명 등록 실패", error);
     }
@@ -63,19 +62,14 @@ export default function EditSignUpload({ signatureUrl }: EditSignUploadProps) {
   const bringSignature = async () => {
     try {
       const responseData = await bringSignApi();
-      if (responseData.code === 200 && responseData.data) {
-        setYourSignatureUrl(responseData.data.signatureUrl ?? "");
-        console.log("잘불러왔다리", responseData.data.signatureUrl);
 
-        if (signaturePad) {
-          // console.log(responseData.data.signatureUrl);
-          signaturePad.fromDataURL(responseData.data.signatureUrl);
-        }
-      } else {
-        console.log("못불러왔다리");
+      setYourSignatureUrl(responseData.data.signatureUrl ?? "");
+
+      if (signaturePad) {
+        signaturePad.fromDataURL(responseData.data.signatureUrl);
       }
     } catch (error) {
-      console.log("서명 불러오는데 오류 발생", error);
+      console.error("서명 불러오는데 오류 발생", error);
     }
   };
 

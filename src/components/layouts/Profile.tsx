@@ -9,7 +9,6 @@ import {
   MenuRoot,
   MenuTrigger,
 } from "@/src/components/ui/menu";
-import { useColorModeValue } from "@/src/components/ui/color-mode";
 import { Avatar } from "@/src/components/ui/avatar";
 import { ChevronDown } from "lucide-react";
 import { Loading } from "@/src/components/common/Loading";
@@ -27,13 +26,8 @@ export default function Profile() {
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const bgColor = useColorModeValue("white", "gray.800");
-  const hoverBgColor = useColorModeValue("#ebf2fa", "gray.700");
-  const textColor = useColorModeValue("gray.800", "gray.200");
-  const subTextColor = useColorModeValue("gray.500", "gray.400");
-
+  // 로그인 사용자 데이터 페칭
   useEffect(() => {
-    // 사용자 정보 가져오기
     const fetchUserData = async () => {
       try {
         const response = await axiosInstance.get("/me");
@@ -43,11 +37,6 @@ export default function Profile() {
             organizationName: response.data.data.organizationName,
             role: response.data.data.role,
           });
-          // #TODO 랜덤 프로필 이미지 설정 -> 회사 로고 등 이미지 변경
-          // 프로필 이미지를 외부 URL에서 가져올 때, URL 뒤에 캐싱 방지 쿼리 문자열(timestamp) 를 추가하여 브라우저 캐시 무력화
-          setProfileImageUrl(
-            `${getRandomProfileImage()}?timestamp=${Date.now()}`,
-          );
         }
       } catch (error) {
         console.error("사용자 데이터를 가져오지 못했습니다.", error);
@@ -59,6 +48,14 @@ export default function Profile() {
     fetchUserData();
   }, []);
 
+  // Hydration 문제 해결: useEffect에서 프로필 이미지 설정
+  useEffect(() => {
+    if (userData) {
+      setProfileImageUrl(getRandomProfileImage());
+    }
+  }, [userData]);
+
+  // 로그아웃 API 호출
   const handleLogout = async () => {
     try {
       const response = await axiosInstance.post("/logout");
@@ -97,64 +94,67 @@ export default function Profile() {
   }
 
   if (!userData) {
-    return (
-      <Text color={subTextColor} fontSize="sm">
-        사용자 정보를 불러올 수 없습니다.
-      </Text>
-    );
+    return <Text fontSize="sm">사용자 정보를 불러올 수 없습니다.</Text>;
   }
 
   return (
-    <MenuRoot positioning={{ placement: "right-end" }}>
+    <MenuRoot positioning={{ placement: "bottom-end" }}>
       <MenuTrigger asChild>
         <Box
           display="Flex"
           alignItems="center"
           gap={3}
           paddingX="1rem"
-          backgroundColor={bgColor}
-          _hover={{ backgroundColor: hoverBgColor }}
+          // _hover={{ }}
           borderRadius="md"
           cursor="pointer" // 프로필 전체를 클릭 가능하도록 설정
           position="relative" // 부모 박스를 기준으로 위치 설정
+          zIndex="101"
         >
           {/* Avatar와 사용자 정보 */}
-          <Avatar size="sm" src={profileImageUrl || ""} name={userData.name} />
+          <Avatar
+            size="sm"
+            src={profileImageUrl || undefined}
+            name={userData.name}
+          />
           <Flex direction="row" align="center" gap={3}>
             <Box>
-              <Text
-                fontWeight="bold"
-                fontSize="md"
-                color={textColor}
-                lineHeight="1"
-              >
+              <Text fontWeight="bold" fontSize="md" lineHeight="1">
                 {userData.name}
               </Text>
-              <Text fontSize="sm" color={subTextColor}>
+              <Text fontSize="sm">
                 {userData.organizationName} · {userData.role}
               </Text>
             </Box>
             {/* ChevronDown 아이콘 */}
-            <Box as={ChevronDown} color={textColor} />
+            <Box as={ChevronDown} />
           </Flex>
         </Box>
       </MenuTrigger>
       <MenuContent
         style={{
-          position: "absolute",
-          right: "0", // ChevronDown 부분에 맞춰 위치
-          top: "100%", // 아래로 펼쳐지도록 설정
-          marginTop: "0.5rem", // 약간의 간격 추가
-          zIndex: 10, // 다른 UI 요소 위에 표시
+          width: "150px",
+          paddingTop: "0.75rem",
+          paddingBottom: "0.75rem",
+          borderRadius: "8px",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+          zIndex: 200,
         }}
       >
         {/* 드롭다운 메뉴 */}
         <MenuItem
           asChild
-          value="로그아웃"
-          color="fg.error"
-          _hover={{ bg: "bg.error", color: "fg.error" }}
+          value="logout"
+          _hover={{ bg: "#7dbcffde", color: "white" }}
           onClick={handleLogout}
+          style={{
+            padding: "0.5rem",
+            fontSize: "1rem",
+            borderRadius: "5px",
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+          }}
         >
           <Link href={"/"}>로그아웃</Link>
         </MenuItem>

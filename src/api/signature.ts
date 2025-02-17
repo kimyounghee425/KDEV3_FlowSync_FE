@@ -6,7 +6,6 @@ export async function bringSignApi() {
     const response =
       await axiosInstance.get<SignApiResponse>(`/members/signatures`);
 
-    // console.log(response);
     return response.data;
   } catch (error) {
     console.error("API 호출 실패", error);

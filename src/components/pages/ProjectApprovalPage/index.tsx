@@ -69,7 +69,6 @@ export default function ProjectApprovalPage() {
     return <Box>로딩 중...</Box>;
   }
 
-  console.log(approverSignatureUrl);
   const handleEdit = () => {
     if (approverSignatureUrl !== undefined) {
       alert("결재가 완료된 글은 수정할 수 없습니다.");

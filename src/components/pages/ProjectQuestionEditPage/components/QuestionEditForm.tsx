@@ -45,7 +45,6 @@ export default function QuestionEditForm() {
           Number(projectId),
           Number(questionId),
         );
-        console.log(responseData);
         setTitle(responseData.title);
         setLinkList(responseData.linkList);
         setUploadedFiles(responseData.fileList);
@@ -88,7 +87,6 @@ export default function QuestionEditForm() {
             },
             placeholder: "내용을 작성하세요",
             onReady: async () => {
-              console.log("📝 EditorJS 초기화 완료!");
               await editorRef.current?.isReady;
               attachImageDeleteButtons();
             },
@@ -117,7 +115,7 @@ export default function QuestionEditForm() {
           });
         }, 500);
       } catch (error) {
-        console.log("에러발생 : ", error);
+        console.error("에러발생 : ", error);
       }
     };
 
@@ -231,7 +229,7 @@ export default function QuestionEditForm() {
         <Box flex={2}>
           <Text mb={2}>제목</Text>
           <Input
-          type="text"
+            type="text"
             placeholder="제목을 입력하세요"
             value={title}
             onChange={(e) => setTitle(e.target.value)}

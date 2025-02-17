@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { CommonResponseType, ManagementStepCountMap, NoticeArticle, ProgressStep, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse,  } from "@/src/types";
-import { fetchProjectApprovalProgressStepApi, fetchProjectInfoApi, fetchProjectQuestionProgressStepApi, fetchProjectsManagementStepsCountApi, projectProgressStepApi } from "@/src/api/projects";
+import { CommonResponseType, CompletionHistoryListResponse, ManagementStepCountMap, NoticeArticle, ProgressStep, ProjectInfoProps, ProjectProgressStepProps, UserInfoResponse,  } from "@/src/types";
+import { fetchProjectApprovalProgressStepApi, fetchProjectInfoApi, fetchProjectQuestionProgressStepApi, fetchProjectsManagementStepsCountApi,  getCompletionRequestsApi, projectProgressStepApi } from "@/src/api/projects";
 import { showToast } from "@/src/utils/showToast";
 import { fetchUserInfoApi } from "@/src/api/auth";
 import { readNoticeApi } from "@/src/api/ReadArticle";
@@ -34,6 +34,7 @@ export function useFetchData<T, P extends any[]>({
       const response = await fetchApi(...args);
       setData(response.data);
       setError(null);
+
     } catch (err: any) {
       console.error("Error fetching data:", err);
       const errorMessage = err.response?.data?.message || err.message || "데이터를 불러오는데 실패했습니다.";

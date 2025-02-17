@@ -1,66 +1,74 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
+import { usePathname } from "next/navigation";
+import { Box, Flex } from "@chakra-ui/react";
 import Header from "@/src/components/layouts/Header";
 import Sidebar from "@/src/components/layouts/Sidebar";
 import { SidebarProvider } from "@/src/context/SidebarContext";
 import { useUserInfo } from "@/src/hook/useFetchData";
+import { layoutStyles } from "@/src/styles/layoutStyles";
 
 interface DashboardLayoutProps {
   children: ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+  const isSidebarOverlayPage = pathname !== "/";
+  // 홈에서는 `true`, 그 외의 페이지에서는 `false`를 기본값으로 설정
+  const [isSidebarOpen, setIsSidebarOpen] = useState(isHomePage);
+  const [showOverlay, setShowOverlay] = useState(isSidebarOverlayPage);
 
-  const sidebarWidth = useBreakpointValue({
-    base: isSidebarOpen ? "70vw" : "0",
-    md: isSidebarOpen ? "10vw" : "0",
-  });
+  // 페이지 유형 구분 (목록 조회 vs 상세 조회)
+  const isListPage =
+    pathname.includes("/") ||
+    pathname.includes("/admin/organizations") ||
+    pathname.includes("/admin/members") ||
+    pathname.includes("/notices");
 
   // 현재 로그인 한 사용자 정보
   const { data: loggedInUserInfo } = useUserInfo();
   const userRole = loggedInUserInfo?.role; // 기본값 설정
 
+  // 반응형에서 사이드바 자동 조정
   useEffect(() => {
-    setIsLoaded(true); // 로딩 완료 상태
+    if (window.innerWidth < 768) setIsSidebarOpen(false);
   }, []);
 
-  if (!isLoaded) return null;
+  // 페이지 이동 시, 사이드바 상태 변경
+  useEffect(() => {
+    setIsSidebarOpen(isHomePage);
+    setShowOverlay(isSidebarOverlayPage);
+  }, [pathname]);
 
   return (
     <SidebarProvider>
-      <Flex
-        direction="column"
-        minHeight="100vh"
-        bg="white"
-        transition="background-color 0.3s"
-      >
-        {/* Header */}
+      <Flex direction="column" minHeight="100vh" position="relative">
+        {/* 홈("/")이 아닌 경우에만 배경 오버레이 적용 */}
+        {isSidebarOpen && showOverlay && (
+          <Box {...layoutStyles.backgroundLayer(showOverlay)} />
+        )}
+
+        {/* 헤더 */}
         <Header
           isSidebarOpen={isSidebarOpen}
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         />
-
-        {/* 메인 레이아웃 */}
-        <Flex direction="row" height="calc(100vh - var(--header-height))">
-          {/* Sidebar 영역 */}
-
+        <Flex direction="row" flex={1} justify="center">
+          {/* 사이드바 */}
           <Sidebar
             loggedInUserRole={userRole}
             isOpen={isSidebarOpen}
+            isSidebarOverlayPage={isSidebarOverlayPage}
             onToggle={setIsSidebarOpen}
           />
 
-          {/* Main Content */}
+          {/* 메인 콘텐츠 */}
           <Box
-            flex="1"
-            marginLeft={sidebarWidth}
-            transition="margin-left 0.3s ease-in-out"
-            p="2.5rem"
-            height="100%"
+            as="main"
+            {...layoutStyles.mainContent(isSidebarOpen, isListPage)}
           >
             {children}
           </Box>

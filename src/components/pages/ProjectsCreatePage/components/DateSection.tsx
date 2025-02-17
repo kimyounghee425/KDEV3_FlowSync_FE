@@ -19,8 +19,6 @@ export default function DateSection({
 }: DateSectionProps) {
   const handleStartDateChange = (date: Date | null) => {
     if (date) {
-      console.log("선택한 시작일:", date); // ✅ 선택한 날짜 확인
-      console.log("ISO 변환 값:", date.toISOString()); // ✅ 변환된 값 확인
       setStartAt(date.toISOString());
       if (!closeAt || new Date(closeAt) < date) {
         setCloseAt("");
@@ -31,8 +29,6 @@ export default function DateSection({
   const handleCloseDateChange = (date: Date | null) => {
     if (date) {
       if (startAt && new Date(startAt) > date) return; // 종료일이 등록일보다 빠를 수 없음
-      console.log("선택한 종료일:", date); // ✅ 선택한 날짜 확인
-      console.log("ISO 변환 값:", date.toISOString()); // ✅ 변환된 값 확인
       setCloseAt(date.toISOString());
     }
   };

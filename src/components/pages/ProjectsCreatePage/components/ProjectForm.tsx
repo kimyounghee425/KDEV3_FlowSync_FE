@@ -170,8 +170,6 @@ export default function ProjectForm({
       ],
     };
 
-    console.log("서버에 보낼 데이터:", requestBody); // ✅ 요청 전에 확인
-
     try {
       if (isEditMode) {
         await updateProjectApi(projectId, requestBody);
@@ -202,9 +200,7 @@ export default function ProjectForm({
     }
   };
 
-  useEffect(() => {
-    console.log("최신 formData 값:", formData);
-  }, [formData]);
+  useEffect(() => {}, [formData]);
 
   return (
     <Flex width="100%" justifyContent="center">

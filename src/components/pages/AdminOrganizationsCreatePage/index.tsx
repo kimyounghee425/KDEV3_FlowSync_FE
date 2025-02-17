@@ -19,7 +19,6 @@ export default function AdminOrganizationsCreatePage() {
 
   function validateInputs() {
     if (!checkAllInputs()) {
-      console.log("입력값 확인요청");
       alert("입력값을 확인하세요.");
       return false;
     }
@@ -77,7 +76,6 @@ export default function AdminOrganizationsCreatePage() {
       };
 
       const response = await createOrganization(organizationData, selectedFile);
-      console.log("업체 등록 성공 - response: ", response);
       alert("업체가 성공적으로 등록되었습니다.");
       route.push("/admin/organizations");
     } catch (error) {

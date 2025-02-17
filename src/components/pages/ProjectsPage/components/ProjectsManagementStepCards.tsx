@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Box, Flex, Heading, useBreakpointValue } from "@chakra-ui/react";
 import {
   Folder,
@@ -39,10 +39,21 @@ export default function ProjectsManagementStepCards({
   title,
 }: ProjectsManagementStepCardsProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   // 현재 선택된 관리 단계 상태
   const [selectedStep, setSelectedStep] = useState<ProjectManagementSteps>(
-    ProjectManagementSteps.ALL,
+    (searchParams.get("managementStep") as ProjectManagementSteps) ||
+      ProjectManagementSteps.ALL,
   );
+
+  useEffect(() => {
+    // ✅ URL의 managementStep이 바뀌면 selectedStep을 업데이트
+    const newStep =
+      (searchParams.get("managementStep") as ProjectManagementSteps) ||
+      ProjectManagementSteps.ALL;
+    setSelectedStep(newStep);
+  }, [searchParams]); // ✅ searchParams 변경 시 실행
 
   const {
     data: managementStepsCountData,
@@ -56,11 +67,6 @@ export default function ProjectsManagementStepCards({
     sm: 6, // 태블릿: 중간 간격
     md: 8, // 데스크탑: 넓은 간격
   });
-
-  // 다크모드 색상
-  const bgColor = useColorModeValue("white", "gray.800");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
-  const textColor = useColorModeValue("gray.700", "gray.200");
 
   const handleStepClick = (step: ProjectManagementSteps) => {
     if (step === selectedStep) {
@@ -141,11 +147,10 @@ export default function ProjectsManagementStepCards({
       width="full" // 전체 너비 사용
       mx="auto" // 가운데 정렬
       // maxWidth="var(--content-max-width)" // 공통 테이블과 같은 너비
-      bg={bgColor} // 다크모드 배경색
       transition="all 0.3s ease-in-out"
     >
       {/* 고정 높이 추가 */}
-      <Heading size="2xl" color={textColor} mb="10px" textAlign="left">
+      <Heading size="2xl" mb="10px" textAlign="left">
         {title}
       </Heading>
       {managementStepsCountError && (
@@ -158,10 +163,9 @@ export default function ProjectsManagementStepCards({
         alignItems="center"
         gap={gap}
         p={4}
-        border={`1px solid ${borderColor}`}
+        border="1px solid"
         borderRadius="lg"
         boxShadow="md"
-        bg={bgColor} // 다크모드 배경 색상
         overflow="hidden" // 가로 스크롤 방지
         height="100%" // Flex 컨테이너 높이 고정
       >

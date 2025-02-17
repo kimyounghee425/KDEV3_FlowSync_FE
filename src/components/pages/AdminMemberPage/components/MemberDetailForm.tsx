@@ -209,9 +209,9 @@ export default function MemberDetailForm({
   }
 
   return (
-    <Flex direction="column" width="80vh" justifyContent="center" gap="1rem">
+    <>
       <InputFormLayout
-        title="▹ 회원 상세 조회"
+        title="회원 상세 조회"
         onSubmit={handleUpdate}
         isLoading={isSubmitting}
         isDisabled={isUpdateDisabled} // 버튼 비활성화 조건 추가
@@ -324,7 +324,7 @@ export default function MemberDetailForm({
         {/* 회원 별 참여 중 프로젝트 목록 조회 */}
         <MemberProjectList memberId={memberId} />
       </Suspense>
-    </Flex>
+    </>
   );
 }
 

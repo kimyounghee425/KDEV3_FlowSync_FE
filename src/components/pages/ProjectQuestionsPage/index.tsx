@@ -51,7 +51,7 @@ export default function ProjectQuestionsPage() {
     ? projectId[0]
     : projectId || "";
   const keyword = searchParams?.get("keyword") || "";
-  const progressStep = searchParams?.get("progressStep") || "";
+  const progressStepId = searchParams?.get("progressStepId") || "";
   const status = searchParams?.get("status") || "";
   const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
   const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
@@ -71,7 +71,7 @@ export default function ProjectQuestionsPage() {
   } = useProjectQuestionList(
     resolvedProjectId,
     keyword,
-    progressStep,
+    progressStepId,
     status,
     currentPage,
     pageSize,
@@ -140,17 +140,27 @@ export default function ProjectQuestionsPage() {
           - handleRowClick: 행 클릭 시 동작
         */}
         <CommonTable
+          columnsWidth={
+            <>
+              <Table.Column htmlWidth="20%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="30%" />
+              <Table.Column htmlWidth="20%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="10%" />
+            </>
+          }
           headerTitle={
             <Table.Row
               backgroundColor={"#eee"}
               css={{
-                "& > th": { textAlign: "center" },
+                "& > th": { textAlign: "center", whiteSpace: "nowrap" },
               }}
             >
               <Table.ColumnHeader>진행단계</Table.ColumnHeader>
               <Table.ColumnHeader>질문유형</Table.ColumnHeader>
-              <Table.ColumnHeader>작성자</Table.ColumnHeader>
               <Table.ColumnHeader>제목</Table.ColumnHeader>
+              <Table.ColumnHeader>작성자</Table.ColumnHeader>
               <Table.ColumnHeader>질문상태</Table.ColumnHeader>
               <Table.ColumnHeader>작성일</Table.ColumnHeader>
             </Table.Row>
@@ -164,7 +174,12 @@ export default function ProjectQuestionsPage() {
               css={{
                 cursor: "pointer",
                 "&:hover": { backgroundColor: "#f5f5f5" },
-                "& > td": { textAlign: "center" },
+                "& > td": {
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                },
               }}
             >
               <Table.Cell>{question.progressStep.name}</Table.Cell>
@@ -173,8 +188,8 @@ export default function ProjectQuestionsPage() {
                   {CATEGORY_LABELS[question.category] || "알 수 없음"}
                 </StatusTag>
               </Table.Cell>
-              <Table.Cell>{question.register.name}</Table.Cell>
               <Table.Cell>{question.title}</Table.Cell>
+              <Table.Cell>{question.register.name}</Table.Cell>
               <Table.Cell>
                 <StatusTag>
                   {STATUS_LABELS[question.status] || "알 수 없음"}

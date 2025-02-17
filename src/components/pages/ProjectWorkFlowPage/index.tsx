@@ -1,49 +1,64 @@
 "use client";
 
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import "react-datepicker/dist/react-datepicker.css";
-import { Heading, Table, Flex } from "@chakra-ui/react";
+import { Heading, Table, Flex, Button } from "@chakra-ui/react";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import ProjectsManagementStepCards from "@/src/components/pages/ProjectWorkFlowPage/components/ProjectManagementStepCards";
 import CommonTable from "@/src/components/common/CommonTable";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { useProjectProgressStepData } from "@/src/hook/useFetchData";
 import DateSection from "@/src/components/pages/ProjectWorkFlowPage/components/DateSection";
-import { useUpdateProjectProgressStep } from "@/src/hook/useMutationData";
 import CustomModal from "@/src/components/pages/ProjectWorkFlowPage/components/CustomModal";
 import ProjectLogTable from "@/src/components/pages/ProjectWorkFlowPage/components/ProjectLogTable";
-
-// 날짜를 'YYYY-MM-DD HH:mm' 형식으로 변환하는 유틸 함수
-const formatDate = (date: Date | null): string => {
-  if (!date) return "";
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // 1월이 0부터 시작하므로 +1
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${year}-${month}-${day} ${hours}:${minutes}`;
-};
+import { useUpdateProjectProgressStepSchedule } from "@/src/hook/useMutationData";
+import { formatDate } from "@/src/utils/formatDateUtil";
+import Link from "next/link";
+import DraggableProgressSteps from "@/src/components/pages/ProjectWorkFlowPage/components/DraggableProgressStep";
 
 export default function ProjectWorkFlowPage() {
   const { projectId } = useParams();
-  const router = useRouter();
   const resolvedProjectId = Array.isArray(projectId)
     ? projectId[0]
     : (projectId ?? "");
 
+  // 진행단계별 정보 조회
   const {
     data: progressStepList,
     loading: progressStepLoading,
     error: progressStepError,
   } = useProjectProgressStepData(projectId as string);
 
-  const { mutate: updateProgressStep } = useUpdateProjectProgressStep();
+  // 진행단계 시작일자-예정완료일자 수정 요청
+  const { mutate: updateProgressStepShedule } =
+    useUpdateProjectProgressStepSchedule();
 
-  // 날짜 상태 관리
-  const [dates, setDates] = useState<
+  // 초기 날짜 데이터를 저장할 상태
+  const [initialDates, setInitialDates] = useState<
     Record<string, { startAt: Date | null; deadlineAt: Date | null }>
   >({});
+
+  // 변경 가능한 날짜 상태
+  const [dates, setDates] = useState<typeof initialDates>({});
+
+  // 초기 날짜 데이터를 받아오면, 상태를 설정
+  useEffect(() => {
+    if (progressStepList && !Object.keys(initialDates).length) {
+      const initialData = Object.fromEntries(
+        progressStepList.map((step) => [
+          step.id,
+          {
+            startAt: step.startAt ? new Date(step.startAt) : null,
+            deadlineAt: step.deadlineAt ? new Date(step.deadlineAt) : null,
+          },
+        ]),
+      );
+
+      setInitialDates(initialData);
+      setDates(initialData);
+    }
+  }, [progressStepList]);
 
   // 날짜 변경 핸들러
   const handleDateChange = (
@@ -53,10 +68,7 @@ export default function ProjectWorkFlowPage() {
   ) => {
     setDates((prev) => ({
       ...prev,
-      [progressStepId]: {
-        ...prev[progressStepId],
-        [field]: value,
-      },
+      [progressStepId]: { ...prev[progressStepId], [field]: value },
     }));
   };
 
@@ -66,20 +78,28 @@ export default function ProjectWorkFlowPage() {
     if (!stepDates?.startAt && !stepDates?.deadlineAt) return;
 
     try {
-      await updateProgressStep(resolvedProjectId, progressStepId, {
+      await updateProgressStepShedule(resolvedProjectId, progressStepId, {
         startAt: formatDate(stepDates.startAt),
         deadlineAt: formatDate(stepDates.deadlineAt),
       });
 
-      alert("날짜가 성공적으로 저장되었습니다.");
+      // 성공했을 때만 `initialDates` 업데이트
+      setInitialDates((prev) => ({
+        ...prev,
+        [progressStepId]: { ...stepDates },
+      }));
     } catch (error) {
-      alert("날짜 저장 중 오류가 발생했습니다.");
+      console.error("날짜 업데이트 실패:", error);
     }
   };
 
   return (
     <ProjectLayout>
       <ProjectsManagementStepCards title={"관리 단계 변경"} />
+
+      {/* ✅ 진행단계 커스텀 (드래그앤드롭) 추가 */}
+      <DraggableProgressSteps projectId={resolvedProjectId} />
+
       <Flex direction="column" marginX="1rem">
         <Heading
           lineHeight="base"
@@ -89,64 +109,62 @@ export default function ProjectWorkFlowPage() {
         >
           진행단계 요약
         </Heading>
+
         {progressStepError && (
           <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
-        {/*
-         * 공통 테이블(CommonTable)
-         *  - headerTitle: 테이블 헤더 구성
-         *  - data: 테이블에 표시될 데이터
-         *  - loading: 로딩 상태
-         *  - renderRow: 한 줄씩 어떻게 렌더링할지 정의 (jsx 반환)
-         *  - handleRowClick: 행 클릭 이벤트 핸들러
-         */}
+
         <CommonTable
           columnsWidth={
             <>
+              <Table.Column htmlWidth="5%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="20%" />
+              <Table.Column htmlWidth="20%" />
               <Table.Column htmlWidth="10%" />
-              <Table.Column htmlWidth="20%" />
-              <Table.Column htmlWidth="20%" />
-              <Table.Column htmlWidth="20%" />
-              <Table.Column htmlWidth="20%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="10%" />
               <Table.Column htmlWidth="10%" />
             </>
           }
           headerTitle={
             <Table.Row
               backgroundColor="#eee"
-              css={{
-                "& > th": { textAlign: "center", whiteSpace: "nowrap" },
-              }}
+              css={{ "& > th": { textAlign: "center", whiteSpace: "nowrap" } }}
             >
               <Table.ColumnHeader>순서</Table.ColumnHeader>
               <Table.ColumnHeader>진행 단계명</Table.ColumnHeader>
               <Table.ColumnHeader>작업 시작일</Table.ColumnHeader>
               <Table.ColumnHeader>완료 예정일</Table.ColumnHeader>
+              <Table.ColumnHeader></Table.ColumnHeader>
               <Table.ColumnHeader>결재 담당자</Table.ColumnHeader>
-              <Table.ColumnHeader>로그</Table.ColumnHeader>
+              <Table.ColumnHeader>결재글ID</Table.ColumnHeader>
+              <Table.ColumnHeader>이력</Table.ColumnHeader>
             </Table.Row>
           }
           data={progressStepList ?? []}
           loading={progressStepLoading}
           renderRow={(progressStep, index = 0) => {
-            const isRowClickable = !!progressStep.relatedApprovalId;
+            const stepId = progressStep.id;
+            const stepDates = dates[stepId];
+
+            // 날짜 변경 감지
+            const isDateChanged =
+              formatDate(stepDates?.startAt) !==
+                formatDate(initialDates[stepId]?.startAt) ||
+              formatDate(stepDates?.deadlineAt) !==
+                formatDate(initialDates[stepId]?.deadlineAt);
+
+            // 시작일이 완료예정일보다 늦으면 비활성화
+            const isStartAfterDeadline =
+              stepDates?.startAt &&
+              stepDates?.deadlineAt &&
+              stepDates.startAt > stepDates.deadlineAt;
 
             return (
               <Table.Row
-                key={progressStep.id}
-                onClick={(event) => {
-                  if (isRowClickable) {
-                    router.push(
-                      `/projects/${resolvedProjectId}/approvals/${progressStep.relatedApprovalId}`,
-                    );
-                  }
-                  event.stopPropagation();
-                }}
+                key={stepId}
                 css={{
-                  cursor: isRowClickable ? "pointer" : "default",
-                  "&:hover": isRowClickable
-                    ? { backgroundColor: "#f5f5f5" }
-                    : {},
                   "& > td": {
                     textAlign: "center",
                     whiteSpace: "nowrap",
@@ -160,14 +178,9 @@ export default function ProjectWorkFlowPage() {
                 <Table.Cell>
                   <Flex direction="row">
                     <DateSection
-                      dateTime={
-                        dates[progressStep.id]?.startAt ??
-                        (progressStep.startAt
-                          ? new Date(progressStep.startAt)
-                          : null)
-                      }
+                      dateTime={stepDates?.startAt}
                       setDateTime={(value) =>
-                        handleDateChange(progressStep.id, "startAt", value)
+                        handleDateChange(stepId, "startAt", value)
                       }
                     />
                   </Flex>
@@ -175,24 +188,50 @@ export default function ProjectWorkFlowPage() {
                 <Table.Cell>
                   <Flex direction="row">
                     <DateSection
-                      dateTime={
-                        dates[progressStep.id]?.deadlineAt ??
-                        (progressStep.deadlineAt
-                          ? new Date(progressStep.deadlineAt)
-                          : null)
-                      }
+                      dateTime={stepDates?.deadlineAt}
                       setDateTime={(value) =>
-                        handleDateChange(progressStep.id, "deadlineAt", value)
+                        handleDateChange(stepId, "deadlineAt", value)
                       }
+                      minDate={stepDates?.startAt}
                     />
                   </Flex>
                 </Table.Cell>
+                <Table.Cell>
+                  <Button
+                    variant={"surface"}
+                    _hover={{ backgroundColor: "#00a8ff", color: "white" }}
+                    size="sm"
+                    disabled={!isDateChanged || !!isStartAfterDeadline}
+                    onClick={() => handleSaveDates(stepId)}
+                  >
+                    저장
+                  </Button>
+                </Table.Cell>
                 <Table.Cell>{progressStep.approver?.name || "-"}</Table.Cell>
                 <Table.Cell>
-                  <CustomModal title="결제 로그" triggerText="로그">
+                  {progressStep.relatedApprovalId ? (
+                    <Link
+                      href={`/projects/${resolvedProjectId}/approvals/${progressStep.relatedApprovalId}`}
+                      style={{
+                        color: "#007bff",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                      }} // ✅ 클릭 가능한 스타일 적용
+                    >
+                      {progressStep.relatedApprovalId}
+                    </Link>
+                  ) : (
+                    "-"
+                  )}
+                </Table.Cell>
+                <Table.Cell>
+                  <CustomModal
+                    title={`[${progressStep.name}] 이력`}
+                    triggerText="보기"
+                  >
                     <ProjectLogTable
                       projectId={resolvedProjectId}
-                      progressStepId={progressStep.id}
+                      progressStepId={stepId}
                     />
                   </CustomModal>
                 </Table.Cell>

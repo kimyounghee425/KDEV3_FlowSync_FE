@@ -16,7 +16,6 @@ export async function getMembersApi(
     );
     return response.data;
   } catch (error) {
-    console.log("멤버 목록 조회 실패 : ", error);
     throw error;
   }
 }

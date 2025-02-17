@@ -460,7 +460,7 @@ export interface NoticeArticle {
   isDeleted: string;
   regAt: string;
   updatedAt: string;
-  fileList: ArticleFile[];
+  fileInfoList: ArticleFile[];
 }
 
 // 게시글 첨부링크
@@ -521,7 +521,7 @@ export interface NoticeProps {
   content: string; // 시작일시
   category: string; // 시작일시
   priority: string; //
-  isDeleted: boolean; // 마감일시
+  isDeleted: string; // 마감일시
   regAt: string; // 고객사 이름
   updatedAt: string; // 개발사 이름
 }
@@ -534,9 +534,9 @@ export interface NoticeListResponse {
 export interface ProjectProgressStepProps {
   id: string;
   title: string;
-  value: string;
-  count: number;
-  status: string;
+  value?: string;
+  count?: number;
+  status?: string;
 }
 
 export interface UserInfoResponse {
@@ -586,4 +586,35 @@ export interface ManagementStepCountMap {
   PAUSED: number;
   COMPLETED: number;
   CONTRACT: number;
+}
+
+// 진행단계 로그
+export interface CompletionHistory {
+  id: string;
+  projectId: string;
+  approvalId: string;
+  approvalName: string;
+  actor: Actor;
+  progressStep: ProgressStep;
+  regAt: string;
+  status: string;
+}
+
+export interface CompletionHistoryListResponse {
+  completionHistories: CompletionHistory[];
+  meta: PaginationProps; // 페이지네이션 메타 정보
+}
+
+export interface Actor {
+  id: string;
+  role: string;
+  name: string;
+  organizationId: string;
+  organizationName: string;
+  organizationType: string;
+}
+
+export interface ProgressStepOrder {
+  id: string; 
+  order: number;
 }

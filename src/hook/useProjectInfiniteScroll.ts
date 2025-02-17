@@ -25,7 +25,6 @@ export function useProjectInfiniteScroll(managementStep: string) {
    */
   const fetchMoreProjects = useCallback(
     async (page: number) => {
-      console.log(managementStep, hasMore, loading);
       if (!managementStep || !hasMore || loading) return;
       setLoading(true);
 

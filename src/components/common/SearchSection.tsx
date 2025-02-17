@@ -63,15 +63,19 @@ export default function SearchSection({
             onKeyDown={onKeyDown}
             width="23rem"
           />
-          <Button width="4rem" variant={"surface"} onClick={onSubmit}>
+          <Button
+            width="80px"
+            variant={"surface"}
+            onClick={onSubmit}
+            _hover={{ backgroundColor: "#00a8ff", color: "white" }}
+          >
             검색
           </Button>
           <Button
-            width="4rem"
-            padding={"1.2rem"}
-            border={"1px solid #e4e4e7"}
-            backgroundColor="white"
+            width="80px"
+            variant={"outline"}
             onClick={resetSearch}
+            _hover={{ backgroundColor: "#00a8ff", color: "white" }}
           >
             초기화
           </Button>

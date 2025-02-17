@@ -12,6 +12,8 @@ import {
   ProgressStep,
   ManagementStepCountMap,
   OrganizationProjectListResponse,
+  CompletionHistoryListResponse,
+  ProgressStepOrder,
 } from "@/src/types";
 
 
@@ -166,7 +168,6 @@ export async function fetchProjectDetailsApi(
   projectId: string,
 ): Promise<ProjectDetailProps> {
   const response = await axiosInstance.get(`/admins/projects/${projectId}`);
-  console.log("프로젝트 상세 조회 API 호출 중 - response: ", response);
   return response.data.data;
 }
 
@@ -193,7 +194,6 @@ export async function fetchProjectInfoApi(
   const response = await axiosInstance.get(
     `/projects/${projectId}/project-info`,
   );
-  console.log(response.data);
   return response.data;
 }
 
@@ -277,7 +277,7 @@ export async function fetchProjectsManagementStepsCountApi(): Promise<
 export async function fetchProjectQuestionListApi(
   projectId: string,
   keyword: string = "",
-  progressStep: string = "",
+  progressStepId: string = "",
   status: string = "",
   currentPage: number,
   pageSize: number,
@@ -285,7 +285,7 @@ export async function fetchProjectQuestionListApi(
   const response = await axiosInstance.get(`/projects/${projectId}/questions`, {
     params: {
       keyword,
-      progressStep,
+      progressStepId,
       status,
       currentPage,
       pageSize,
@@ -331,7 +331,7 @@ export async function fetchProjectApprovalListApi(
  * @param requestData 업데이트할 시작일 및 마감일 데이터
  * @returns 업데이트된 진행 단계 정보
  */
-export async function updateProjectProgressStepApi(
+export async function updateProjectProgressStepScheduleApi(
   projectId: string,
   progressStepId: string,
   requestData: { startAt: string; deadlineAt: string },
@@ -339,6 +339,63 @@ export async function updateProjectProgressStepApi(
   const response = await axiosInstance.put(
     `/projects/${projectId}/progress-steps/${progressStepId}/plans`,
     requestData,
+  );
+  return response.data;
+}
+
+export async function getCompletionRequestsApi(
+  projectId: string,
+  condition: {progressStepId: string, currentPage: number, pageSize: number}
+): Promise<CommonResponseType<CompletionHistoryListResponse>> {
+  const response = await axiosInstance.get(
+    `/projects/${projectId}/approvals/histories/completion-requests`,
+    {
+      params: condition
+    }
+  )
+  return response.data;
+}
+
+/**
+ * 프로젝트 진행 단계 순서 업데이트 API
+ * @param projectId 프로젝트 ID
+ * @param steps 업데이트할 진행 단계 리스트
+ * @returns API 응답 데이터
+ */
+export async function updateProjectProgressStepOrderApi(
+  projectId: string,
+  steps: ProgressStepOrder[],
+): Promise<CommonResponseType<void>> {
+  const response = await axiosInstance.put(
+    `/projects/${projectId}/progress-steps/order`,
+    { steps },
+  );
+  return response.data;
+}
+
+/**
+ * 프로젝트 진행 단계 추가 API
+ */
+export async function createProjectProgressStepApi(
+  projectId: string,
+  stepName: string
+): Promise<CommonResponseType<{ id: string; title: string }>> {
+  const response = await axiosInstance.post(
+    `/projects/${projectId}/progress-steps`,
+    { title: stepName } // API 요청 바디
+  );
+  return response.data;
+}
+
+/**
+ * 프로젝트 진행 단계 삭제 API
+ */
+export async function deleteProjectProgressStepApi(
+  projectId: string,
+  progressStepId: string
+): Promise<CommonResponseType<void>> {
+  const response = await axiosInstance.delete(
+    `/projects/${projectId}/progress-steps/${progressStepId}`
   );
   return response.data;
 }

@@ -2,13 +2,9 @@
 
 import Link from "next/link";
 import { Box, Flex, IconButton, Image, Text } from "@chakra-ui/react";
-import {
-  useColorMode,
-  useColorModeValue,
-} from "@/src/components/ui/color-mode";
 import Profile from "@/src/components/layouts/Profile";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
-
+import { layoutStyles } from "@/src/styles/layoutStyles";
 interface HeaderProps {
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
@@ -18,50 +14,41 @@ export default function Header({
   isSidebarOpen,
   onToggleSidebar,
 }: HeaderProps) {
-  const { colorMode } = useColorMode();
-  const textColor = useColorModeValue("gray.800", "white");
-
   return (
     <Flex
       as="header"
-      height="var(--header-height)"
       align="center"
       justify="space-between"
-      paddingX="1rem"
-      backgroundColor={colorMode === "dark" ? "gray.800" : "white"}
-      color={textColor}
-      position="sticky"
-      top="0"
-      zIndex={10}
-      boxShadow="md"
-      transition="none" // transition 제거
+      {...layoutStyles.header}
     >
       {/* 왼쪽: 토글 버튼 및 공지사항 */}
-      <Flex align="center" gap="1rem" gapX={5}>
+      {/* <Flex align="center" gap="1rem" gapX={5}> */}
+      <Flex align="center" gap="1rem">
         <IconButton
           aria-label="Toggle Sidebar"
           onClick={onToggleSidebar}
           variant="ghost"
           _hover={{ bg: "gray.100" }}
         >
-          {isSidebarOpen ? <PanelRightOpen /> : <PanelRightClose />}
+          {isSidebarOpen ? (
+            <PanelRightOpen size={24} color="#007bff" />
+          ) : (
+            <PanelRightClose size={24} />
+          )}
         </IconButton>
+
+        {/* 로고 */}
         <Link href="/">
-          <Box
-            // position="absolute"
-            // left="50%"
-            // transform="translateX(-50%)"
-            display="flex"
-            alignItems="center"
-            gap={2}
-          >
+          <Box display="flex" alignItems="center" gap={2}>
             <Image
               src="/logo.png" // public 디렉토리의 로고 파일 경로
               alt="FlowSync"
               height="25px" // 원하는 크기로 설정
               objectFit="contain"
             />
-            <Text fontSize="1.2rem">FlowSync</Text>
+            <Text fontSize="1.2rem" fontWeight="bold">
+              FlowSync
+            </Text>
           </Box>
         </Link>
       </Flex>
