@@ -172,9 +172,15 @@ function NoticesPageContent() {
             <Table.Column htmlWidth="10%" />
             <Table.Column htmlWidth="30%" />
             <Table.Column htmlWidth="10%" />
-            <Table.Column htmlWidth="10%" />
-            <Table.Column htmlWidth="10%" />
-            <Table.Column htmlWidth="10%" />
+            {userRole === "ADMIN" ? (
+              <>
+                <Table.Column htmlWidth="10%" />
+                <Table.Column htmlWidth="10%" />
+                <Table.Column htmlWidth="10%" />
+              </>
+            ) : (
+              <></>
+            )}
           </>
         }
         headerTitle={

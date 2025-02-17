@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AddressAPI from "@/src/components/common/AddressAPI";
+import AddressModal from "@/src/components/common/AddressModal";
 import { InputFormData } from "@/src/types";
 import styles from "@/src/components/common/InputForm.module.css";
 
@@ -106,7 +106,7 @@ export default function InputForm({
           />
           {/* 주소 검색 모달 (isModalOpen 상태가 true일 때만 렌더링) */}
           {isModalOpen && (
-            <AddressAPI
+            <AddressModal
               isOpen={isModalOpen}
               onClose={() => setModalOpen(false)}
               onComplete={(selectedAddress) => {

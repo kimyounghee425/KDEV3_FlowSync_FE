@@ -1,9 +1,10 @@
 // 질문 글 수정
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { debounce } from "lodash";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
-import { useParams, useRouter } from "next/navigation";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
@@ -11,7 +12,6 @@ import { readApprovalApi } from "@/src/api/ReadArticle";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
 import { editApprovalAPI } from "@/src/api/RegisterArticle";
 import { ApprovalRequestData } from "@/src/types";
-import EditSignUpload from "./EditSignUpload";
 
 // 수정 api 만들고 가져와야함
 
@@ -52,6 +52,7 @@ export default function ApprovalEditForm() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
   const [signatureUrl, setSignatureUrl] = useState<string>("");
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   useEffect(() => {
     const loadTask = async () => {
@@ -155,9 +156,12 @@ export default function ApprovalEditForm() {
     }
   };
 
-  const handleEditorSave = async () => {
-    if (editorRef.current) {
+  const handleEditorSave = useCallback(
+    debounce(async () => {
+      if (isSaving) return;
+      setIsSaving(true);
       try {
+        if (!editorRef.current) return;
         const savedData = await editorRef.current.save();
         const content = savedData.blocks.map((block) => ({
           type: block.type,
@@ -188,9 +192,12 @@ export default function ApprovalEditForm() {
       } catch (error) {
         console.error("저장 실패:", error);
         alert("저장 중 문제가 발생했습니다.");
+      } finally {
+        setIsSaving(false);
       }
-    }
-  };
+    }, 1000),
+    [title, linkList, uploadedFiles, handleSave],
+  );
 
   return (
     <Flex gap={4} direction={"column"}>
@@ -240,6 +247,9 @@ export default function ApprovalEditForm() {
         boxShadow={"md"}
         _hover={{ bg: "red.600" }}
         onClick={handleEditorSave}
+        loading={isSaving}
+        loadingText="수정 중..."
+        disabled={isSaving}
       >
         수정
       </Button>

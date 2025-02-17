@@ -1,7 +1,8 @@
 // Question 글에 맞추어 만들어 놓음.
 "use client";
 // 외부 라이브러리
-import React, { useEffect, useRef, useState } from "react";
+import { debounce } from "lodash";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import EditorJS from "@editorjs/editorjs";
@@ -56,8 +57,8 @@ export default function ArticleForm({
   const [linkList, setLinkList] = useState<LinkListProps[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
-  const [isDisabled, setisDisabled] = useState<boolean>(false);
   const [isSignYes, setIsSignYes] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -146,12 +147,15 @@ export default function ArticleForm({
     });
   };
 
-  const handleEditorSave = async () => {
-    setisDisabled(true);
-    setTimeout(() => setisDisabled(false), 2000);
-    if (editorRef.current) {
+  const handleEditorSave = useCallback(
+    debounce(async () => {
+      if (isSaving) return;
+
+      setIsSaving(true);
       try {
+        if (!editorRef.current) return;
         const savedData = await editorRef.current.save();
+
         const content = savedData.blocks.map((block) => ({
           type: block.type,
           data:
@@ -161,39 +165,40 @@ export default function ArticleForm({
         }));
 
         if (!title.trim()) {
-          window.alert("제목을 입력하세요.");
+          alert("제목을 입력하세요.");
           return;
         }
         if (content.length === 0) {
-          window.alert("내용을 입력하세요.");
+          alert("내용을 입력하세요.");
           return;
         }
-        if (pathname.includes("/approvals") && isSignYes === false) {
-          window.alert("서명을 입력하세요");
+        if (pathname.includes("/approvals") && !isSignYes) {
+          alert("서명을 입력하세요");
           return;
         }
 
-        // 기본 데이터 객체
         const requestData: Partial<BaseArticleRequestData> = {
-          title: title,
-          progressStepId: progressStepId,
-          content: content,
-          linkList: linkList,
+          title,
+          progressStepId,
+          content,
+          linkList,
           fileInfoList: uploadedFiles,
         };
 
-        // progressStepId가 존재하는 경우만 추가
         if (progressStepId !== undefined) {
           requestData.progressStepId = progressStepId;
         }
 
-        handleSave(requestData as BaseArticleRequestData);
+        await handleSave(requestData as BaseArticleRequestData);
       } catch (error) {
         console.error("저장 실패:", error);
         alert("저장 중 문제가 발생했습니다.");
+      } finally {
+        setIsSaving(false);
       }
-    }
-  };
+    }, 1000), // ✅ 1초 동안 연속 클릭 방지
+    [title, linkList, uploadedFiles, isSignYes, handleSave, progressStepId],
+  );
 
   const attachImageDeleteButtons = () => {
     if (!editorRef.current) return;
@@ -340,7 +345,7 @@ export default function ArticleForm({
 
       {/* 작성 버튼 */}
       <Button
-        bg={"red.500"}
+        bg={"blue.300"}
         colorScheme={"red"}
         width={"auto"}
         px={6}
@@ -349,9 +354,11 @@ export default function ArticleForm({
         fontSize={"lg"}
         fontWeight={"bold"}
         boxShadow={"md"}
-        _hover={{ bg: "red.600" }}
         onClick={handleEditorSave}
-        disabled={isDisabled}
+        disabled={isSaving}
+        _hover={{ bg: "blue.500" }}
+        loading={isSaving}
+        loadingText={`${submitButtonLabel} 중...`}
       >
         {submitButtonLabel}
       </Button>

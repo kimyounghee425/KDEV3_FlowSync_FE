@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { debounce } from "lodash";
+import { useCallback } from "react";
 import { Flex, Box, Button, Input, Heading } from "@chakra-ui/react";
 import {
   DragDropContext,
@@ -8,6 +10,7 @@ import {
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
+import { Trash2, Plus } from "lucide-react";
 import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
 import {
   useCreateProjectProgressStep,
@@ -17,7 +20,6 @@ import {
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { Loading } from "@/src/components/common/Loading";
 import { ProgressStepOrder } from "@/src/types";
-import { Trash2, Plus } from "lucide-react";
 import ConfirmDialog from "@/src/components/common/ConfirmDialog";
 
 interface DraggableProgressStepsProps {
@@ -35,6 +37,7 @@ export default function DraggableProgressSteps({
     data: progressSteps = [],
     loading: progressStepLoading,
     error: progressStepError,
+    refetch,
   } = useProjectApprovalProgressStepData(projectId);
 
   // 백엔드 순서 업데이트 요청 훅
@@ -46,30 +49,26 @@ export default function DraggableProgressSteps({
   const { mutate: deleteProgressStep } = useDeleteProjectProgressStep();
 
   // 로컬 상태로 진행 단계 관리
-  const [steps, setSteps] = useState(
-    progressSteps?.filter((step) => Number(step.id) !== 0) || [],
-  );
+  const [steps, setSteps] = useState<ProgressStepOrder[]>([]);
   const [newStepName, setNewStepName] = useState("");
-
-  // 실패 시 복구할 원본 상태 저장
-  const [prevSteps, setPrevSteps] = useState(steps);
   // 삭제 확인 모달 상태
+  const [isAdding, setIsAdding] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    if (progressSteps) {
-      setSteps(progressSteps.filter((step) => Number(step.id) !== 0));
-    }
+    if (!progressSteps) return;
+    setSteps(
+      progressSteps
+        .filter((step) => Number(step.id) !== 0)
+        .map((step, index) => ({
+          id: step.id,
+          order: index + 1, // ✅ order 속성 추가
+          title: step.title,
+        })),
+    );
   }, [progressSteps]);
-
-  /**
-   * 드래그 시작 시 현재 상태를 저장
-   */
-  const handleDragStart = () => {
-    setPrevSteps(steps); // 현재 상태 저장
-  };
 
   /**
    * 드래그 종료 시 실행되는 함수
@@ -81,9 +80,8 @@ export default function DraggableProgressSteps({
     const [movedStep] = updatedSteps.splice(result.source.index, 1);
     updatedSteps.splice(result.destination.index, 0, movedStep);
 
-    // 상태 업데이트 (id가 0인 항목은 제외)
-    const filteredSteps = updatedSteps.filter((step) => Number(step.id) !== 0);
-    setSteps(filteredSteps);
+    // 상태 업데이트 후 서버 반영
+    setSteps(updatedSteps);
 
     // 백엔드에 변경된 순서 반영
     const reorderedSteps: ProgressStepOrder[] = updatedSteps.map(
@@ -93,36 +91,28 @@ export default function DraggableProgressSteps({
       }),
     );
 
-    // ✅ 요청 후 응답 체크
-    const response = await updateProgressStepOrder(projectId, reorderedSteps);
-
-    // ✅ 요청이 실패하면 원래 상태로 롤백
-    if (!response || response.result !== "SUCCESS") {
-      setSteps(prevSteps);
-    }
+    updateProgressStepOrder(projectId, reorderedSteps);
+    await refetch();
   };
 
   /**
    * 새로운 진행 단계 추가
    */
-  const handleAddStep = async () => {
-    if (!newStepName.trim()) return;
+  const handleAddStep = useCallback(
+    debounce(async () => {
+      if (!newStepName.trim()) return;
 
-    // 현재 상태 저장
-    setPrevSteps(steps);
+      setIsAdding(true);
+      const response = await createProgressStep(projectId, newStepName);
+      setIsAdding(false);
 
-    const response = await createProgressStep(projectId, newStepName);
-    if (response && response.result === "SUCCESS") {
-      setSteps([
-        ...steps,
-        { id: response.data.id, title: response.data.title },
-      ]);
-      setNewStepName("");
-    } else {
-      // 요청 실패 시 복구
-      setSteps(prevSteps);
-    }
-  };
+      if (response && response.result === "SUCCESS") {
+        await refetch();
+        setNewStepName("");
+      }
+    }, 1000), // 1초 동안 연속 클릭 방지
+    [newStepName, createProgressStep, projectId, refetch],
+  );
 
   /**
    * 삭제 확인 모달 열기
@@ -139,18 +129,11 @@ export default function DraggableProgressSteps({
     if (!selectedStepId) return;
 
     setIsDeleting(true);
-    setPrevSteps(steps);
-
-    const response = await deleteProgressStep(projectId, selectedStepId);
+    await deleteProgressStep(projectId, selectedStepId);
     setIsDeleting(false);
     setIsDeleteDialogOpen(false);
 
-    if (response && response.result === "SUCCESS") {
-      setSteps(steps.filter((step) => step.id !== selectedStepId));
-    } else {
-      // 요청 실패 시 복구
-      setSteps(prevSteps);
-    }
+    await refetch();
   };
 
   return (
@@ -168,7 +151,13 @@ export default function DraggableProgressSteps({
             size="sm"
             width="200px"
           />
-          <Button backgroundColor="blue.100" size="sm" onClick={handleAddStep}>
+          <Button
+            backgroundColor="blue.100"
+            size="sm"
+            onClick={handleAddStep}
+            disabled={isAdding}
+            loading={isAdding}
+          >
             <Plus size={16} />
           </Button>
         </Flex>
@@ -188,10 +177,7 @@ export default function DraggableProgressSteps({
           <ErrorAlert message="진행 단계를 불러오지 못했습니다." />
         )}
 
-        <DragDropContext
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
+        <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="progressSteps" direction="horizontal">
             {(provided) => (
               <Flex

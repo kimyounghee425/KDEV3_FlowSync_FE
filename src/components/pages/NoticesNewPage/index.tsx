@@ -34,6 +34,7 @@ export default function NoticesNewPage() {
   const [category, setCategory] = useState<string>("");
   const [priority, setPriority] = useState<string>("");
   const router = useRouter();
+
   const { mutate: createNotice, error: noticeRegisterError } =
     useCreateNotice();
 

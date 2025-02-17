@@ -2,7 +2,7 @@
 
 import DaumPostcode from "react-daum-postcode";
 import React from "react";
-import { Box, Button } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 interface AddressModalProps {
   isOpen: boolean;
@@ -10,7 +10,7 @@ interface AddressModalProps {
   onComplete: (address: string) => void;
 }
 
-export default function AddressAPI({
+export default function AddressModal({
   isOpen,
   onClose,
   onComplete,

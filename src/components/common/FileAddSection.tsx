@@ -79,7 +79,7 @@ export default function FileAddSection({
     <Box mt={6}>
       <Text mb={2}>첨부 파일</Text>
 
-      <Button onClick={handleAddFile} colorScheme={"blue"}>
+      <Button onClick={handleAddFile} backgroundColor="gray.700" color="white">
         파일 추가
       </Button>
       <Box mt={4}>

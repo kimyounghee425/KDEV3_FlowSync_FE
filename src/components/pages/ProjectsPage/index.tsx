@@ -198,8 +198,14 @@ function ProjectsPageContent() {
                   <Table.Column htmlWidth="10%" />
                   <Table.Column htmlWidth="10%" />
                   <Table.Column htmlWidth="10%" />
-                  <Table.Column htmlWidth="5%" />
-                  <Table.Column htmlWidth="5%" />
+                  {userRole === "ADMIN" ? (
+                    <>
+                      <Table.Column htmlWidth="5%" />
+                      <Table.Column htmlWidth="5%" />
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </>
               }
               headerTitle={

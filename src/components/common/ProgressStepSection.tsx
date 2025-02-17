@@ -55,10 +55,10 @@ export default function ProgressStepSection({
   return (
     <Flex
       marginY="1rem"
+      marginX="1.3rem"
       alignItems="center"
       justifyContent="center"
-      width="100%"
-      paddingY="1rem"
+      padding="1rem"
       gap="1.5rem"
       flexWrap="nowrap"
       overflowX="auto"
