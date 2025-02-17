@@ -25,6 +25,19 @@ export default function CommentBox({
   const [commentText, setCommentText] = useState<string>("");
   const pathname = usePathname();
 
+  // API 경로를 미리 구성
+  let apiPath = "";
+  if (pathname.includes("/questions") && questionId) {
+    apiPath = `/projects/${projectId}/questions/${questionId}/comments`;
+  } else if (pathname.includes("/approvals") && approvalId) {
+    apiPath = `/projects/${projectId}/approvals/${approvalId}/comments`;
+  }
+
+  // 대댓글(답글)인 경우
+  if (parentId) {
+    apiPath += `/${parentId}/recomments`;
+  }
+
   const handleSave = async () => {
     if (!commentText.trim()) {
       alert("댓글을 입력하세요.");
@@ -33,25 +46,17 @@ export default function CommentBox({
 
     try {
       const requestData = { content: commentText };
-      let responseData: CommentApiResponse | undefined;
 
-      if (pathname.includes("/questions")) {
-        responseData = await registerComment(
-          Number(projectId),
-          requestData,
-          Number(questionId),
-          undefined,
-          parentId ? Number(parentId) : undefined,
-        );
-      } else if (pathname.includes("/approvals")) {
-        responseData = await registerComment(
-          Number(projectId),
-          requestData,
-          undefined, // questionId는 undefined로 전달
-          Number(approvalId),
-          parentId ? Number(parentId) : undefined,
-        );
+      if (!apiPath) {
+        console.error("댓글 API 경로가 올바르지 않습니다.");
+        return;
       }
+
+      const responseData: CommentApiResponse = await registerComment(
+        apiPath, // API 경로를 직접 전달
+        requestData,
+      );
+
       if (responseData?.result === "SUCCESS") {
         setCommentIsWritten((prev: boolean) => !prev);
         setCommentText("");

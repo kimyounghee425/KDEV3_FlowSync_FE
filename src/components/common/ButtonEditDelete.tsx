@@ -1,18 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Input, Text } from "@chakra-ui/react";
-import {
-  DialogRoot,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogBody,
-  DialogFooter,
-  DialogActionTrigger,
-  DialogCloseTrigger,
-} from "@/src/components/ui/dialog";
 import styles from "@/src/components/common/ActionButtons.module.css";
 import ConfirmDialogEditDelete from "./ConfirmDialogEditDelete";
 
@@ -25,8 +13,6 @@ interface ButtonEditDeleteProps {
 }
 
 export default function ButtonEditDelete({
-  isLoading,
-  isDisabled,
   onSubmit,
   onDelete,
   deleteEntityType = "항목",
