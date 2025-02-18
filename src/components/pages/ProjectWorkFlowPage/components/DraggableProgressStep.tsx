@@ -157,12 +157,11 @@ export default function DraggableProgressSteps({
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 direction="row"
-                justifyContent="center"
-                gap="0.5rem"
-                overflowX="auto"
+                flexWrap="wrap"
+                justifyContent="flex-start"
+                gap="1rem"
                 p="0.5rem"
                 borderRadius="md"
-                minWidth="max-content"
               >
                 {steps.map((step, index) => (
                   <Draggable
@@ -184,7 +183,7 @@ export default function DraggableProgressSteps({
                         textAlign="center"
                         minWidth="180px" // 각 요소의 최소 너비 설정
                         maxWidth="200px" // 최대 너비 제한
-                        flexShrink={0} // 가로 스크롤 시 크기 유지
+                        flexShrink={1} // 가로 스크롤 시 크기 유지
                         whiteSpace="nowrap" // 텍스트 줄바꿈 방지
                         cursor="grab" // 드래그 가능 커서 적용
                       >
