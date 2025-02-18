@@ -137,13 +137,13 @@ function NoticesPageContent() {
         <Flex justifyContent="space-between">
           <CreateButton handleButton={handleNoticeCreateButton} />
           {/* 공지사항 검색/필터 섹션 (검색창, 필터 옵션 등) */}
-          <SearchSection keyword={keyword} placeholder="제목 입력">
+          <SearchSection keyword={keyword} placeholder="제목이나 내용 입력">
             <FilterSelectBox
               statusFramework={noticeStatusFramework}
               selectedValue={category}
               queryKey="category"
               placeholder="카테고리"
-              width="140px"
+              width="120px"
             />
           </SearchSection>
         </Flex>
@@ -174,7 +174,7 @@ function NoticesPageContent() {
             {userRole === "ADMIN" ? (
               <>
                 <Table.Column htmlWidth="10%" />
-                <Table.Column htmlWidth="10%" />
+                <Table.Column htmlWidth="11%" />
                 <Table.Column htmlWidth="10%" />
               </>
             ) : (
@@ -203,7 +203,7 @@ function NoticesPageContent() {
                       selectedValue={isDeleted}
                       queryKey="isDeleted"
                       placeholder="게시여부"
-                      width="150px"
+                      width="130px"
                     />
                   </Flex>
                 </Table.ColumnHeader>
@@ -259,10 +259,14 @@ function NoticesPageContent() {
                     {NOTICE_STATUS_LABELS[notice.isDeleted]}
                   </Table.Cell>
                   <Table.Cell onClick={(event) => event.stopPropagation()}>
-                    <DropDownMenu
-                      onEdit={() => handleEdit(notice.id)}
-                      onDelete={() => handleDelete(notice.id)}
-                    />
+                    {notice.isDeleted !== "Y" ? (
+                      <DropDownMenu
+                        onEdit={() => handleEdit(notice.id)}
+                        onDelete={() => handleDelete(notice.id)}
+                      />
+                    ) : (
+                      <Box width="36px" height="36px" visibility="hidden" />
+                    )}
                   </Table.Cell>
                 </>
               )}

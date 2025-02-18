@@ -1,6 +1,6 @@
 import { HStack, Button, IconButton } from "@chakra-ui/react";
 import { PaginationProps as PaginationInfo } from "@/src/types";
-import { ChevronLeft, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 interface PaginationProps {
   paginationInfo?: PaginationInfo; // PaginationMeta 전체를 전달받음
@@ -44,7 +44,8 @@ const Pagination: React.FC<PaginationProps> = ({
             key={page}
             disabled={page === currentPage}
             onClick={() => handlePageChange(page)}
-            variant={page === currentPage ? "surface" : "outline"}
+            backgroundColor="white"
+            border={"none"}
           >
             {page}
           </Button>

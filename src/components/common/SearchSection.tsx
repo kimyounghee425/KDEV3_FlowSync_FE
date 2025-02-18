@@ -73,6 +73,7 @@ export default function SearchSection({
           </Button>
           <Button
             width="80px"
+            height="42px"
             variant={"outline"}
             onClick={resetSearch}
             _hover={{ backgroundColor: "#00a8ff", color: "white" }}

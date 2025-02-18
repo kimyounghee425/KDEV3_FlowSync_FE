@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
-import { useColorModeValue } from "@/src/components/ui/color-mode";
 
 interface ProjectsManagementStepCardProps {
   count: number; // 숫자(통계 수치)
@@ -9,6 +8,16 @@ interface ProjectsManagementStepCardProps {
   isSelected?: boolean;
   onClick: () => void;
 }
+
+// CSS 변수에서 컬러 가져오기
+const STATUS_KEYS: Record<string, string> = {
+  계약: "contract",
+  진행중: "in_progress",
+  납품완료: "completed",
+  하자보수: "maintenance",
+  일시중단: "paused",
+  삭제: "deleted",
+};
 
 /**
  * ManagementStepCard 컴포넌트
@@ -25,6 +34,8 @@ export default function ProjectsManagementStepCard({
   isSelected = false,
   onClick,
 }: ProjectsManagementStepCardProps) {
+  const statusKey = STATUS_KEYS[label] || "default";
+  const colorVar = `var(--${statusKey}-color, #505050)`;
   // 반응형 크기 설정
   const cardWidth = useBreakpointValue({
     base: "100px", // 모바일
@@ -53,7 +64,7 @@ export default function ProjectsManagementStepCard({
   const labelFontSize = useBreakpointValue({
     base: "0.75rem", // 모바일
     sm: "0.9rem", // 태블릿
-    md: "1rem", // 데스크탑
+    md: "1.3rem", // 데스크탑
   });
 
   return (
@@ -94,19 +105,19 @@ export default function ProjectsManagementStepCard({
           justifyContent="center"
           alignItems="center"
         >
-          <Text fontSize={countFontSize} fontWeight={700} color="gray.700">
+          <Text fontSize={countFontSize} fontWeight={700}>
             {count}
           </Text>
           {/* ✅ 줄 바꿈 방지 및 글자 생략 적용 */}
           <Text
             fontSize={labelFontSize}
             fontWeight={500}
-            color="gray.700"
             maxWidth="100px" // 글자 최대 너비 설정
             whiteSpace="nowrap" // 줄 바꿈 방지
             overflow="hidden"
             textOverflow="ellipsis" // 너무 길면 "..."
             textAlign="center"
+            color={colorVar}
           >
             {label}
           </Text>

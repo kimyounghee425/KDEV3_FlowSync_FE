@@ -4,7 +4,6 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
-  Button,
   createListCollection,
   Heading,
   Stack,
@@ -179,13 +178,15 @@ function AdminMembersPageContent() {
               statusFramework={memberRoleFramework}
               selectedValue={role}
               queryKey="role"
-              placeholder="역할"
+              placeholder="회원유형"
+              width="120px"
             />
             <FilterSelectBox
               statusFramework={memberStatusFramework}
               selectedValue={status}
               queryKey="status"
-              placeholder="활성화 여부"
+              placeholder="회원상태"
+              width="120px"
             />
           </SearchSection>
         </Box>
@@ -197,12 +198,12 @@ function AdminMembersPageContent() {
             <>
               <Table.Column htmlWidth="10%" />
               <Table.Column htmlWidth="15%" />
-              <Table.Column htmlWidth="15%" />
-              <Table.Column htmlWidth="15%" />
-              <Table.Column htmlWidth="20%" />
-              <Table.Column htmlWidth="12%" />
               <Table.Column htmlWidth="10%" />
-              <Table.Column htmlWidth="5%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="15%" />
+              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="10%" />
               <Table.Column htmlWidth="5%" />
             </>
           }
@@ -213,14 +214,14 @@ function AdminMembersPageContent() {
                 "& > th": { textAlign: "center" },
               }}
             >
-              <Table.ColumnHeader>역할</Table.ColumnHeader>
+              <Table.ColumnHeader>회원유형</Table.ColumnHeader>
               <Table.ColumnHeader>회원명</Table.ColumnHeader>
               <Table.ColumnHeader>소속 업체명</Table.ColumnHeader>
               <Table.ColumnHeader>직무 | 직책</Table.ColumnHeader>
               <Table.ColumnHeader>이메일</Table.ColumnHeader>
               <Table.ColumnHeader>연락처</Table.ColumnHeader>
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
-              <Table.ColumnHeader>상태</Table.ColumnHeader>
+              <Table.ColumnHeader>회원상태</Table.ColumnHeader>
               <Table.ColumnHeader>관리</Table.ColumnHeader>
             </Table.Row>
           }

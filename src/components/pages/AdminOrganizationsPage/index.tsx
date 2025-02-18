@@ -140,12 +140,14 @@ function AdminOrganizationsPageContent() {
               selectedValue={type}
               queryKey="type"
               placeholder="업체유형"
+              width="120px"
             />
             <FilterSelectBox
               statusFramework={OrganizationStatusFramework}
               selectedValue={status}
               queryKey="status"
-              placeholder="활성화 여부"
+              placeholder="업체 상태"
+              width="120px"
             />
           </SearchSection>
         </Box>

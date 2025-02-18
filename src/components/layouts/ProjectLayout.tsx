@@ -181,7 +181,7 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
           fontWeight="bold"
           fontSize="1rem"
           paddingRight="1rem"
-          color="#0c9ae0"
+          color={`var(--${(projectInfo?.managementStep || "").toLowerCase()}-color, "#0c9ae0")`}
         >
           &bull; {MANAGEMENT_STEP_LABELS[projectInfo?.managementStep || ""]}{" "}
           단계
