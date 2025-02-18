@@ -2,12 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Box, Flex, Heading, useBreakpointValue } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  IconButton,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverRoot,
+  PopoverTrigger,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import {
   Folder,
   OctagonPause,
   OctagonX,
   PackageCheck,
+  Palette,
   Signature,
   Swords,
   Wrench,
@@ -18,6 +30,7 @@ import { useManagementStepsCount } from "@/src/hook/useFetchData";
 import { ManagementStepCountMap } from "@/src/types";
 import { Loading } from "@/src/components/common/Loading";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
+import ColorCustomizer from "@/src/components/pages/ProjectsPage/components/ColorCustomizer";
 
 // 아이콘 배열 정의
 const icons = [
@@ -66,6 +79,8 @@ export default function ProjectsManagementStepCards({
     sm: 6, // 태블릿: 중간 간격
     md: 8, // 데스크탑: 넓은 간격
   });
+
+  const [isColorCustomizerOpen, setIsColorCustomizerOpen] = useState(false);
 
   const handleStepClick = (step: ProjectManagementSteps) => {
     if (step === selectedStep) {
@@ -148,10 +163,43 @@ export default function ProjectsManagementStepCards({
       // maxWidth="var(--content-max-width)" // 공통 테이블과 같은 너비
       transition="all 0.3s ease-in-out"
     >
-      {/* 고정 높이 추가 */}
-      <Heading size="2xl" mb="10px" textAlign="left">
-        {title}
-      </Heading>
+      <Flex justifyContent="space-between" mb="10px">
+        <Heading size="2xl" mb="10px" textAlign="left">
+          {title}
+        </Heading>
+        <Box position="relative">
+          {/* 컬러 설정 버튼 추가 */}
+          <PopoverRoot
+            open={isColorCustomizerOpen}
+            onOpenChange={(e) => setIsColorCustomizerOpen(e.open)}
+          >
+            <PopoverTrigger asChild>
+              <IconButton
+                aria-label="색상 변경"
+                backgroundColor="#e4e4e7"
+                border="1px solid #d1d1d6"
+                _hover={{ backgroundColor: "#d6d6d8" }}
+              >
+                <Palette />
+              </IconButton>
+            </PopoverTrigger>
+            <PopoverContent
+              minWidth="350px"
+              maxWidth="90vw"
+              zIndex={1000}
+              position="fixed"
+              left="auto"
+              right="0"
+            >
+              <PopoverArrow />
+              <PopoverBody>
+                <ColorCustomizer />
+              </PopoverBody>
+            </PopoverContent>
+          </PopoverRoot>
+        </Box>
+      </Flex>
+
       {managementStepsCountError && (
         <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
       )}

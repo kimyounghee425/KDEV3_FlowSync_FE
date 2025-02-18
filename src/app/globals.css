@@ -182,3 +182,30 @@ header {
     font-size: 7px;
   }
 }
+
+:root {
+  --contract-color: #1C77C3;
+  --in_progress-color: #f1c40f;
+  --completed-color: #21a366;
+  --maintenance-color: #e67e22;
+  --paused-color: #6689A1;
+  --deleted-color: #ea7d80;
+  --default-color: #7E6551; /* 기본 컬러 */
+}
+
+.status-tag {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  min-width: 80px;
+  display: inline-block;
+}
+
+.contract { background-color: var(--contract-color); }
+.in_progress { background-color: var(--in_progress-color); }
+.completed { background-color: var(--completed-color); }
+.maintenance { background-color: var(--maintenance-color); }
+.paused { background-color: var(--paused-color); }
+.deleted { background-color: var(--deleted-color); }

@@ -12,6 +12,16 @@ interface ProjectsManagementStepCardProps {
   isThin?: boolean;
 }
 
+// CSS 변수에서 컬러 가져오기
+const STATUS_KEYS: Record<string, string> = {
+  계약: "contract",
+  진행중: "in_progress",
+  납품완료: "completed",
+  하자보수: "maintenance",
+  일시중단: "paused",
+  삭제: "deleted",
+};
+
 /**
  * ManagementStepCard 컴포넌트
  * - 프로젝트 관리 단계 카드 UI
@@ -24,6 +34,9 @@ export default function ProjectsManagementStepCard({
   isThin = false,
   isDisabled = false,
 }: ProjectsManagementStepCardProps) {
+  const statusKey = STATUS_KEYS[label] || "default";
+  const colorVar = `var(--${statusKey}-color, #505050)`;
+
   // 반응형 크기 설정
   const cardWidth = useBreakpointValue({
     base: "100px", // 모바일;
@@ -82,7 +95,7 @@ export default function ProjectsManagementStepCard({
           <Text
             fontSize="md"
             fontWeight={500}
-            color="gray.700"
+            color={colorVar}
             maxWidth="100px" // 글자 최대 너비 설정
             whiteSpace="nowrap" // 줄 바꿈 방지
             overflow="hidden"

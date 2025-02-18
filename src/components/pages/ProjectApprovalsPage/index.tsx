@@ -131,7 +131,7 @@ export default function ProjectApprovalsPage() {
               statusFramework={approvalStatusFramework}
               selectedValue={status}
               queryKey="status"
-              width="150px"
+              width="120px"
             />
           </SearchSection>
         </Flex>

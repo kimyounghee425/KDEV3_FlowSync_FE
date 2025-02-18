@@ -26,7 +26,7 @@ export default function FilterSelectBox({
   selectedValue,
   queryKey,
   placeholder,
-  width = "150px",
+  width = "120px",
 }: StatusSelectBoxProps) {
   const router = useRouter();
 
