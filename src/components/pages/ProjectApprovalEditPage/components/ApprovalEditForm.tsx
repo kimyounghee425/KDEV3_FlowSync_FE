@@ -13,9 +13,8 @@ import { uploadFileApi } from "@/src/api/RegisterArticle";
 import { editApprovalAPI } from "@/src/api/RegisterArticle";
 import { ApprovalRequestData } from "@/src/types";
 
-// 수정 api 만들고 가져와야함
-
-// import { ApprovalArticle } from "@/src/types";
+import EditSignUpload from "./EditSignUpload";
+import { showToast } from "@/src/utils/showToast";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -86,7 +85,19 @@ export default function ApprovalEditForm() {
                       try {
                         const responseData = await uploadFileApi(file);
                         if (responseData.result !== "SUCCESS") {
-                          console.error("파일 업로드 실패");
+                          const errorMessage = "이미지 업로드 중 오류 발생";
+                          showToast({
+                            title: "요청 실패",
+                            description: errorMessage,
+                            type: "error",
+                            duration: 3000,
+                            error: errorMessage,
+                          });
+                          const blockIndex =
+                            editorRef.current?.blocks.getCurrentBlockIndex();
+                          if (blockIndex !== undefined && blockIndex !== -1) {
+                            editorRef.current?.blocks.delete(blockIndex);
+                          }
                           return { success: 0 };
                         }
 
@@ -99,7 +110,21 @@ export default function ApprovalEditForm() {
                           file: { url: responseData.data.url },
                         };
                       } catch (error) {
-                        console.error("파일 업로드 중 오류 발생:", error);
+                        const blockIndex =
+                          editorRef.current?.blocks.getCurrentBlockIndex();
+                        if (blockIndex !== undefined && blockIndex !== -1) {
+                          editorRef.current?.blocks.delete(blockIndex);
+                        }
+                        const errorMessage =
+                          "이미지 크기는 10MB 를 초과할 수 없습니다.";
+                        showToast({
+                          title: "요청 실패",
+                          description: errorMessage,
+                          type: "error",
+                          duration: 3000,
+                          error: errorMessage,
+                        });
+
                         return { success: 0 };
                       }
                     },
@@ -163,9 +188,29 @@ export default function ApprovalEditForm() {
             : {}),
         },
       );
-      router.push(`/projects/${projectId}/approvals`);
-    } catch (error) {
-      console.error("저장 실패:", error);
+      if (response.message) {
+        showToast({
+          title: "요청 성공",
+          description: response.message,
+          type: "success",
+          duration: 3000,
+        });
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "질문 등록 중 중 오류가 발생했습니다.";
+
+      // ✅ 토스트로 사용자에게 알림
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
+
       alert("저장 중 문제가 발생했습니다.");
     }
   };
@@ -217,6 +262,7 @@ export default function ApprovalEditForm() {
     debounce(async () => {
       if (isSaving) return;
       setIsSaving(true);
+
       try {
         if (!editorRef.current) return;
         const savedData = await editorRef.current.save();

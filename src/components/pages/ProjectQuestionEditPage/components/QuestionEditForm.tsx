@@ -12,6 +12,7 @@ import { readQuestionApi } from "@/src/api/ReadArticle";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
 import { editQuestionAPI } from "@/src/api/RegisterArticle";
 import { QuestionRequestData } from "@/src/types";
+import { showToast } from "@/src/utils/showToast";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -71,7 +72,19 @@ export default function QuestionEditForm() {
                       try {
                         const responseData = await uploadFileApi(file);
                         if (responseData.result !== "SUCCESS") {
-                          console.error("파일 업로드 실패");
+                          const errorMessage = "이미지 업로드 중 오류 발생";
+                          showToast({
+                            title: "요청 실패",
+                            description: errorMessage,
+                            type: "error",
+                            duration: 3000,
+                            error: errorMessage,
+                          });
+                          const blockIndex =
+                            editorRef.current?.blocks.getCurrentBlockIndex();
+                          if (blockIndex !== undefined && blockIndex !== -1) {
+                            editorRef.current?.blocks.delete(blockIndex);
+                          }
                           return { success: 0 };
                         }
 
@@ -84,7 +97,20 @@ export default function QuestionEditForm() {
                           file: { url: responseData.data.url },
                         };
                       } catch (error) {
-                        console.error("파일 업로드 중 오류 발생:", error);
+                        const blockIndex =
+                          editorRef.current?.blocks.getCurrentBlockIndex();
+                        if (blockIndex !== undefined && blockIndex !== -1) {
+                          editorRef.current?.blocks.delete(blockIndex);
+                        }
+                        const errorMessage =
+                          "이미지 크기는 10MB 를 초과할 수 없습니다.";
+                        showToast({
+                          title: "요청 실패",
+                          description: errorMessage,
+                          type: "error",
+                          duration: 3000,
+                          error: errorMessage,
+                        });
                         return { success: 0 };
                       }
                     },
@@ -146,10 +172,28 @@ export default function QuestionEditForm() {
             : {}),
         },
       );
-      alert("수정이 완료되었습니다.");
-      router.push(`/projects/${projectId}/questions`);
-    } catch (error) {
-      console.error("저장 실패:", error);
+      if (response.message) {
+        showToast({
+          title: "요청 성공",
+          description: response.message,
+          type: "success",
+          duration: 3000,
+        });
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "질문 등록 중 중 오류가 발생했습니다.";
+
+      // ✅ 토스트로 사용자에게 알림
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
       alert("저장 중 문제가 발생했습니다.");
     }
   };
@@ -199,9 +243,7 @@ export default function QuestionEditForm() {
 
   const attachImageDeleteButtons = () => {
     if (!editorRef.current) return;
-  
     const blocks = document.querySelectorAll(".ce-block__content .cdx-block");
-  
     blocks.forEach((block) => {
       const blockElement = block as HTMLElement;
       const imgElement = blockElement.querySelector("img") as HTMLImageElement | null;
@@ -221,10 +263,8 @@ export default function QuestionEditForm() {
   
         deleteButton.onclick = () => {
           if (!editorRef.current) return;
-  
           // ✅ 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
           const blockIndex = editorRef.current.blocks.getCurrentBlockIndex();
-  
           if (blockIndex !== -1) {
             editorRef.current.blocks.delete(blockIndex);
           } else {

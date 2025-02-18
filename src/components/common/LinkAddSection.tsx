@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Box, Text, Button, Flex, Input } from "@chakra-ui/react";
+import { showToast } from "@/src/utils/showToast";
+
 interface LinkProps {
   name: string;
   url: string;
@@ -30,7 +32,14 @@ export default function LinkAddSection({
     setIsChecking(false);
 
     if (!isValid) {
-      alert("존재하지 않은 URL입니다.");
+      const errorMessage = "존재하지 않는 URL 입니다.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
       return;
     }
 
@@ -85,7 +94,9 @@ export default function LinkAddSection({
           </Text>
           <Button
             ml={4}
-            colorScheme={"red"}
+            backgroundColor={"red.400"}
+            _hover={{ backgroundColor: "red.500" }}
+            color={"white"}
             size={"sm"}
             onClick={() => handleRemoveLink(index)}
           >
@@ -106,9 +117,9 @@ export default function LinkAddSection({
           onChange={(e) => setNewLinkName(e.target.value)}
         />
         <Button
-          color="white"
-          bg="blue.500"
-          _hover={{ bg: "blue.600" }}
+          backgroundColor={"#00a8ff"}
+          _hover={{ backgroundColor: "#0095ff" }}
+          color={"white"}
           loading={isChecking}
           onClick={handleAddLink}
         >

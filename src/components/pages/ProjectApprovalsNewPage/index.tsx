@@ -13,6 +13,7 @@ import { projectProgressStepApi } from "@/src/api/projects";
 import { useFetchData } from "@/src/hook/useFetchData";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
 import DropDownInfoTop from "@/src/components/common/DropDownInfoTop";
+import { showToast } from "@/src/utils/showToast";
 import "./edit.css";
 
 export default function ProjectApprovalsNewPage() {
@@ -56,11 +57,30 @@ export default function ProjectApprovalsNewPage() {
           ? { progressStepId: requestData.progressStepId }
           : {}),
       });
-      alert("저장이 완료되었습니다.");
+      if (response.message) {
+        showToast({
+          title: "요청 성공",
+          description: response.message,
+          type: "success",
+          duration: 3000,
+        });
+      }
       router.push(`/projects/${projectId}/approvals`);
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "결재 등록 중 중 오류가 발생했습니다.";
+
+      // ✅ 토스트로 사용자에게 알림
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
       console.error("저장 실패:", error);
-      alert("저장 중 문제가 발생했습니다.");
     }
   };
 

@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+
 import AddressModal from "@/src/components/common/AddressModal";
 import { Flex, Text } from "@chakra-ui/react";
+
 import { InputFormData } from "@/src/types";
 import styles from "@/src/components/common/InputForm.module.css";
 
@@ -92,15 +94,18 @@ export default function InputForm({
       <Flex direction={"row"} justifyContent={"space-between"}>
         <label className={styles.label}>
           {label}
+
           {isRequired && !disabled && (
             <span className={styles.required}>*</span>
           )}
         </label>
         {/* {!["연락처", "로그인 Password", "로그인 Email"].includes(label) && (
+>>>>>>> main
           <Text pl={4}>
             {`${value.length} / `}
             {maxLength}
           </Text>
+
         )} */}
       </Flex>
       {/* 주소 입력 필드 - 클릭 시 검색 모달 오픈 */}

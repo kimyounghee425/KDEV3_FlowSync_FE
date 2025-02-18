@@ -397,6 +397,7 @@ export default function AdminMembersCreatePage() {
               onChange={(e) => handleChange("phoneNum", e.target.value)}
             />{" "}
           </Box>
+
           <Box flex="2">
             {/* 직무 입력 */}
             <InputForm

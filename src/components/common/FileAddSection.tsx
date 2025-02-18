@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
 import { Text, Box, Button } from "@chakra-ui/react";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
+import { showToast } from "@/src/utils/showToast";
+
 interface UploadedFilesProps {
   originalName: string;
   saveName: string;
@@ -35,8 +37,14 @@ export default function FileAddSection({
 
       setUploadedFileSize((prev) => [...prev, responseFileData.size]);
     } catch (error) {
-      console.error("파일 업로드 실패:", error);
-      alert("업로드 파일 용량은 10MB 를 초과할 수 없습니다.");
+      const errorMessage = "첨부파일 크기는 10MB 를 초과할 수 없습니다.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
       return null;
     }
   };
@@ -79,7 +87,12 @@ export default function FileAddSection({
     <Box mt={6}>
       <Text mb={2}>첨부 파일</Text>
 
-      <Button onClick={handleAddFile} backgroundColor="gray.700" color="white">
+      <Button
+        backgroundColor={"#00a8ff"}
+        _hover={{ backgroundColor: "#0095ff" }}
+        color={"white"}
+        onClick={handleAddFile}
+      >
         파일 추가
       </Button>
       <Box mt={4}>
@@ -102,7 +115,9 @@ export default function FileAddSection({
             <Button
               onClick={() => handleRemoveFile(index)}
               size="sm"
-              colorScheme="red"
+              backgroundColor={"red.400"}
+              _hover={{ backgroundColor: "red.500" }}
+              color={"white"}
             >
               삭제
             </Button>
