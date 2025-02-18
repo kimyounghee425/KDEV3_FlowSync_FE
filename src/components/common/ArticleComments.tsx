@@ -12,6 +12,10 @@ interface ArticleCommentsProps {
 
 export default function ArticleComments({ comments, setCommentIsWritten }: ArticleCommentsProps) {
 
+  const hasVisibleComments = comments.some(
+    (comment) => !comment.deleted || (comment.deleted && comments.some((reply) => reply.parentId === comment.id && !reply.deleted))
+  );
+
   return (
     <Box>
       <Box
@@ -23,7 +27,7 @@ export default function ArticleComments({ comments, setCommentIsWritten }: Artic
       <Text fontSize="xl" fontWeight="bold" mb={4}>
         댓글
       </Text>
-      {comments.length > 0 ? (
+      {hasVisibleComments ? (
         <Comments comments={comments} setCommentIsWritten={setCommentIsWritten} />
       ) : (
         <Text color={"gray.500"} fontSize={"sm"}>댓글이 없습니다.</Text>

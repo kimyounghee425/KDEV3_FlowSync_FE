@@ -75,6 +75,7 @@ export default function CommentBox({
         onChange={(e) => setCommentText(e.target.value)}
         value={commentText}
         maxLength={250}
+        maxHeight={"100px"}
       />
       <Flex justifyContent="flex-end">
         <Button
