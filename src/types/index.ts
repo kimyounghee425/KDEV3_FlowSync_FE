@@ -548,10 +548,11 @@ export interface NoticeListResponse {
 export interface ProjectProgressStepProps {
   id: string;
   title: string;
-  value?: string;
-  count?: number;
-  status?: string;
-  color?: string;
+  value: string;
+  count: number;
+  status: string;
+  color: string;
+  description: string;
 }
 export interface UserInfoResponse {
   id: string;
