@@ -493,7 +493,7 @@ export interface ArticleComment {
     name: string;
     role: string;
   };
-
+  deleted: boolean;
   content: string;
   regAt: string;
   editAt: string;
