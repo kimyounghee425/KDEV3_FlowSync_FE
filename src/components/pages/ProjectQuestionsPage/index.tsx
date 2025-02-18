@@ -16,7 +16,6 @@ import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import Pagination from "@/src/components/common/Pagination";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
 import CreateButton from "@/src/components/common/CreateButton";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useProjectQuestionList } from "@/src/hook/useFetchBoardList";
 import { useProjectQuestionProgressStepData } from "@/src/hook/useFetchData";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
@@ -187,7 +186,7 @@ export default function ProjectQuestionsPage() {
                   {STATUS_LABELS[question.status] || "알 수 없음"}
                 </StatusTag>
               </Table.Cell>
-              <Table.Cell>{formatDynamicDate(question.createdDate)}</Table.Cell>
+              <Table.Cell>{question.createdDate.split(" ")[0]}</Table.Cell>
             </Table.Row>
           )}
         />

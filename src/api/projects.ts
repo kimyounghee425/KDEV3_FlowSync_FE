@@ -6,7 +6,6 @@ import {
   ProjectQuestionListResponse,
   ProjectApprovalListResponse,
   ProjectDetailProps,
-  CreateProjectInput,
   ProjectListSidebarResponse,
   ProjectInfoProps,
   ProgressStep,
@@ -14,8 +13,8 @@ import {
   OrganizationProjectListResponse,
   CompletionHistoryListResponse,
   ProgressStepOrder,
+  CreateProjectResponse,
 } from "@/src/types";
-
 
 /**
  * 프로젝트 생성
@@ -24,7 +23,7 @@ import {
  */
 export async function createProjectApi(
   requestData: any,
-): Promise<CommonResponseType<CreateProjectInput>> {
+): Promise<CommonResponseType<CreateProjectResponse>> {
   try {
     const response = await axiosInstance.post("/admins/projects", requestData);
     return response.data;
@@ -43,7 +42,7 @@ export async function createProjectApi(
 export async function updateProjectApi(
   projectId: string,
   requestData: any,
-): Promise<CommonResponseType<CreateProjectInput>> {
+): Promise<CommonResponseType<CreateProjectResponse>> {
   try {
     const response = await axiosInstance.patch(
       `/admins/projects/${projectId}`,
@@ -61,20 +60,10 @@ export async function updateProjectApi(
  * @param projectId 프로젝트 ID
  * @returns
  */
-export async function deleteProjectApi(
-  projectId: string,
-): Promise<CommonResponseType<string>> {
-  try {
-    const response = await axiosInstance.delete(
-      `/admins/projects/${projectId}`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error("프로젝트 삭제 실패", error);
-    throw error;
-  }
+export async function deleteProjectApi(projectId: string) {
+  const response = await axiosInstance.delete(`/admins/projects/${projectId}`);
+  return response.data;
 }
-
 
 /**
  * 프로젝트 목록을 가져옵니다.
@@ -345,14 +334,14 @@ export async function updateProjectProgressStepScheduleApi(
 
 export async function getCompletionRequestsApi(
   projectId: string,
-  condition: {progressStepId: string, currentPage: number, pageSize: number}
+  condition: { progressStepId: string; currentPage: number; pageSize: number },
 ): Promise<CommonResponseType<CompletionHistoryListResponse>> {
   const response = await axiosInstance.get(
     `/projects/${projectId}/approvals/histories/completion-requests`,
     {
-      params: condition
-    }
-  )
+      params: condition,
+    },
+  );
   return response.data;
 }
 
@@ -378,11 +367,11 @@ export async function updateProjectProgressStepOrderApi(
  */
 export async function createProjectProgressStepApi(
   projectId: string,
-  stepName: string
+  stepName: string,
 ): Promise<CommonResponseType<{ id: string; title: string }>> {
   const response = await axiosInstance.post(
     `/projects/${projectId}/progress-steps`,
-    { title: stepName } // API 요청 바디
+    { title: stepName }, // API 요청 바디
   );
   return response.data;
 }
@@ -392,10 +381,10 @@ export async function createProjectProgressStepApi(
  */
 export async function deleteProjectProgressStepApi(
   projectId: string,
-  progressStepId: string
+  progressStepId: string,
 ): Promise<CommonResponseType<void>> {
   const response = await axiosInstance.delete(
-    `/projects/${projectId}/progress-steps/${progressStepId}`
+    `/projects/${projectId}/progress-steps/${progressStepId}`,
   );
   return response.data;
 }

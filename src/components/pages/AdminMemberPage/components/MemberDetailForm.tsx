@@ -5,11 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { MemberProps } from "@/src/types";
-import {
-  deleteMember,
-  fetchMemberDetails,
-  updateMember,
-} from "@/src/api/members";
+import { fetchMemberDetails } from "@/src/api/members";
 import { validationRulesOfUpdatingMember } from "@/src/constants/validationRules"; // 유효성 검사 규칙 import
 import {
   Box,
@@ -27,8 +23,9 @@ import { useMemberProjectList } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import CommonTable from "@/src/components/common/CommonTable";
 import StatusTag from "@/src/components/common/StatusTag";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import Pagination from "@/src/components/common/Pagination";
+import { useInputFormatter } from "@/src/hook/useInputFormatter";
+import { useDeleteMember, useUpdateMember } from "@/src/hook/useMutationData";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -71,6 +68,8 @@ export default function MemberDetailForm({
   const isUpdateDisabled =
     Object.values(isChanged).every((changed) => !changed) ||
     Object.keys(errors).length > 0;
+  const { mutate: updateMember, error: MemberUpdateError } = useUpdateMember();
+  const { mutate: deleteMember, error: MemberDeleteError } = useDeleteMember();
 
   // 🔹 formData가 변경될 때만 실행되도록 설정
   useEffect(() => {
@@ -117,8 +116,14 @@ export default function MemberDetailForm({
 
   // 📌 입력 값 변경 시 상태(formData)를 업데이트.
   function handleInputUpdate(inputName: string, value: string) {
-    // 숫자만 남기기
     let formattedValue = value;
+
+    // 공백을 제거해야 하는 필드
+    const noWhitespaceFields = ["name", "phoneNum", "jobRole", "jobTitle"];
+
+    if (noWhitespaceFields.includes(inputName)) {
+      formattedValue = value.trim().replace(/\s{2,}/g, " "); // 연속 공백을 하나로 줄임
+    }
 
     if (inputName === "phoneNum") {
       // 숫자만 남기기 (주소 입력란 제외)
@@ -163,6 +168,12 @@ export default function MemberDetailForm({
     });
   }
 
+  // Enter 키 입력 시 기본 submit 작동 방지
+  function handleFormKeyDown(event: React.KeyboardEvent<HTMLFormElement>) {
+    if (event.key === "Enter") {
+      event.preventDefault(); // 기본 제출 방지
+    }
+  }
   // 📌 회원 정보 수정
   async function handleUpdate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -196,17 +207,9 @@ export default function MemberDetailForm({
 
   // 📌 회원 삭제 (삭제 컴포넌트(공통)는 InputFormLayout.tsx 에서 관리)
   async function handleDelete(deleteReason: string) {
-    if (!deleteReason.trim()) {
-      alert("탈퇴 사유를 입력해주세요.");
-      return;
-    }
-    try {
-      await deleteMember(memberId, deleteReason); // 탈퇴 사유 입력값 전달
-      alert("회원이 탈퇴 조치 되었습니다.");
-      route.push("/admin/members"); // 삭제 후 목록 페이지(회원 관리)로 이동
-    } catch (error) {
-      alert("회원 삭제에 실패했습니다.");
-    }
+    const response = await deleteMember(memberId, ""); // 탈퇴 사유 입력값 전달
+    if (response === null) return;
+    route.back();
   }
 
   return (
@@ -483,12 +486,10 @@ function MemberProjectList({ memberId }: { memberId: string }) {
                 <Table.Cell>
                   <StatusTag>{STATUS_LABELS[project.managementStep]}</StatusTag>
                 </Table.Cell>
-                <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
-                <Table.Cell>{formatDynamicDate(project.deadlineAt)}</Table.Cell>
+                <Table.Cell>{project.startAt}</Table.Cell>
+                <Table.Cell>{project.deadlineAt}</Table.Cell>
                 <Table.Cell>
-                  {formatDynamicDate(project.closeAt) === ""
-                    ? "-"
-                    : formatDynamicDate(project.closeAt)}
+                  {project.closeAt === "" ? "-" : project.closeAt}
                 </Table.Cell>
               </Table.Row>
             );

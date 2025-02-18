@@ -3,7 +3,6 @@ import { Box, Text, Image, VStack, Separator } from "@chakra-ui/react";
 
 // 절대 경로 파일
 import { ArticleFile, ContentBlock, NoticeArticle } from "@/src/types";
-import { formatDateWithTime } from "@/src/utils/formatDateUtil";
 
 interface ArticleContentProps<T extends NoticeArticle> {
   article: T | null;
@@ -102,7 +101,7 @@ export default function ArticleContent<T extends NoticeArticle>({
       </Text>
 
       <Box mb={5}>
-        <Text>{formatDateWithTime(article.regAt)}</Text>
+        <Text>{article.regAt}</Text>
       </Box>
       <Separator mb={5} size={"sm"} />
       {/* 본문 내용 */}

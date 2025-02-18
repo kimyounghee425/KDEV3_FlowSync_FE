@@ -19,7 +19,6 @@ import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { useNoticeList } from "@/src/hook/useFetchBoardList";
 import { useUserInfo } from "@/src/hook/useFetchData";
 import { useDeleteNotice } from "@/src/hook/useMutationData";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 
 const noticeStatusFramework = createListCollection<{
   label: string;
@@ -121,10 +120,8 @@ function NoticesPageContent() {
   const handleDelete = async (noticeId: string) => {
     const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
     if (!confirmDelete) return;
-    try {
-      await deleteNotice(noticeId);
-      refetch();
-    } catch (error) {}
+    await deleteNotice(noticeId);
+    refetch();
   };
 
   return (
@@ -248,12 +245,12 @@ function NoticesPageContent() {
                 {notice.title}
               </Table.Cell>
               <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
-                {formatDynamicDate(notice.regAt)}
+                {notice.regAt.split(" ")[0]}
               </Table.Cell>
               {userRole === "ADMIN" && (
                 <>
                   <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
-                    {formatDynamicDate(notice.updatedAt)}
+                    {notice.updatedAt.split(" ")[0]}
                   </Table.Cell>
                   <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
                     {NOTICE_STATUS_LABELS[notice.isDeleted]}

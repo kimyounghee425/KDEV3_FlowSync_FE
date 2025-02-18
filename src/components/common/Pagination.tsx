@@ -1,6 +1,6 @@
-import { HStack, Button, IconButton } from "@chakra-ui/react";
+import { HStack, Button } from "@chakra-ui/react";
 import { PaginationProps as PaginationInfo } from "@/src/types";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationProps {
   paginationInfo?: PaginationInfo; // PaginationMeta 전체를 전달받음
@@ -26,14 +26,15 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <HStack wrap="wrap" justify="center" mt={4} alignItems="center">
       {/* 이전 버튼 */}
-      <IconButton
-        aria-label="이전 페이지"
-        as={ChevronLeftIcon} // 아이콘 직접 전달
+      <Button
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={isFirstPage}
         variant="ghost"
-        size="xs"
-      />
+        size="md"
+        _hover={{ backgroundColor: "gray.200" }}
+      >
+        <ChevronLeft />
+      </Button>
 
       {/* 페이지 번호 버튼 */}
       {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
@@ -46,6 +47,7 @@ const Pagination: React.FC<PaginationProps> = ({
             onClick={() => handlePageChange(page)}
             backgroundColor="white"
             border={"none"}
+            _hover={{ backgroundColor: "gray.200" }}
           >
             {page}
           </Button>
@@ -53,14 +55,15 @@ const Pagination: React.FC<PaginationProps> = ({
       })}
 
       {/* 다음 버튼 */}
-      <IconButton
-        aria-label="다음 페이지"
-        as={ChevronRightIcon} // 아이콘 직접 전달
+      <Button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={isLastPage}
         variant="ghost"
-        size="xs"
-      />
+        size="md"
+        _hover={{ backgroundColor: "gray.200" }}
+      >
+        <ChevronRight />
+      </Button>
     </HStack>
   );
 };

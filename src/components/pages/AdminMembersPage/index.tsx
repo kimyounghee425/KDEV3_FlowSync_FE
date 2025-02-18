@@ -14,18 +14,14 @@ import { Switch } from "@/src/components/ui/switch";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
 import CreateButton from "@/src/components/common/CreateButton";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import { useMemberList } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
-import {
-  activateMemberApi,
-  deactivateMemberApi,
-  deleteMember,
-} from "@/src/api/members";
+import { activateMemberApi, deactivateMemberApi } from "@/src/api/members";
 import { MemberProps } from "@/src/types";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
+import { useDeleteMember } from "@/src/hook/useMutationData";
 
 const memberRoleFramework = createListCollection<{
   label: string;
@@ -95,6 +91,7 @@ function AdminMembersPageContent() {
     }
   }, [memberList]);
   const [loadingId, setLoadingId] = useState<string | null>(null); // ✅ 특정 회원의 Switch 로딩 상태
+  const { mutate: deleteMember, error: MemberDeleteError } = useDeleteMember();
 
   // ✅ 회원 상태 변경 핸들러 (API 호출 및 UI 반영)
   const handleStatusChange = async (
@@ -156,13 +153,9 @@ function AdminMembersPageContent() {
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
     if (!confirmDelete) return;
-    try {
-      await deleteMember(id, "");
-      alert("회원이 탈퇴 조치 되었습니다.");
-      refetch();
-    } catch (error) {
-      alert(`삭제 중 문제가 발생했습니다 : ${error}`);
-    }
+    const response = await deleteMember(id, ""); // 탈퇴 사유 입력값 전달
+    if (response === null) return;
+    refetch();
   };
 
   return (
@@ -250,7 +243,7 @@ function AdminMembersPageContent() {
               <Table.Cell>{`${member.jobRole} | ${member.jobTitle}`}</Table.Cell>
               <Table.Cell>{member.email}</Table.Cell>
               <Table.Cell>{member.phoneNum}</Table.Cell>
-              <Table.Cell>{formatDynamicDate(member.regAt)}</Table.Cell>
+              <Table.Cell>{member.regAt.split(" ")[0]}</Table.Cell>
               <Table.Cell onClick={(event) => event.stopPropagation()}>
                 {member.status === "DELETED" ? (
                   <Text color="red">삭제됨</Text>

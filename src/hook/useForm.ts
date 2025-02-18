@@ -1,8 +1,10 @@
-// useForm: 공통 상태 및 유효성 검사 로직
-// 입력값과 에러 상태를 관리하는 로직을 커스텀 훅으로 추출하여 코드 중복을 제거합니다.
+/*
+ * useForm.ts: 공통 입력 폼 커스텀 훅 (유효성 검사 로직) 및 유효성 검사 로직
+ * 입력값과 에러 상태를 관리하는 로직을 커스텀 훅으로 추출하여 코드 중복을 제거합니다.
+ */
 import { useState } from "react";
 
-type InputValues = { [inputName: string]: string }; // 모든 입력값의 집합(입력 필드 이름과 그 값)
+export type InputValues = { [inputName: string]: string }; // 모든 입력값의 집합(입력 필드 이름과 그 값)
 type ValidationRule = {
   isValid: (value: string) => boolean; // 입력값이 유효한지 확인하는 함수
   errorMessage: string; // 값이 유효하지 않을 경우 표시할 에러 메시지
@@ -19,11 +21,10 @@ export function useForm(
     [inputName: string]: string | undefined;
   }>({}); // 에러 상태
 
-  // 특정 입력값의 유효성을 검사하고, 에러 메시지를 설정
+  // 특정 입력값 유효성 검사
   function checkInput(inputName: string, inputValue: string) {
     const rule = validationRules[inputName]; // 해당 필드의 검증 규칙
     if (!rule) {
-      console.warn(`"${inputName}"에 대한 유효성 규칙이 없습니다.`);
       return;
     }
     const isValid = rule.isValid?.(inputValue); // 함수 존재 여부 체크 후 호출
@@ -33,10 +34,9 @@ export function useForm(
     }));
   }
 
-  // 모든 입력값을 유효성 검사하고, 유효하지 않은 필드에 대해 에러 메시지를 설정
+  // 모든 입력값 유효성 검사
   function checkAllInputs() {
     const newErrors: { [inputName: string]: string } = {}; // 새 에러 상태를 저장할 객체
-
     // 각 입력 필드에 대해 검증 규칙 적용
     Object.entries(validationRules).forEach(([inputName, rule]) => {
       const inputValue = inputValues[inputName];
@@ -46,12 +46,11 @@ export function useForm(
     });
 
     setInputErrors(newErrors); // 에러 상태 업데이트
-
     // 에러가 없으면 true 반환
     return Object.keys(newErrors).length === 0;
   }
 
-  // 특정 입력 필드의 값을 업데이트하고, 실시간으로 유효성을 검사
+  // 특정 입력 필드 변경 핸들러
   function handleInputChange(inputName: string, inputValue: string) {
     setInputValues((prevValues) => ({
       ...prevValues,
@@ -60,10 +59,16 @@ export function useForm(
     checkInput(inputName, inputValue);
   }
 
+  // 📌 외부에서 `inputValues`를 한 번에 설정하는 함수
+  function setFormValues(newValues: InputValues) {
+    setInputValues(newValues);
+  }
+
   return {
-    inputValues, // 현재 입력값 상태
-    inputErrors, // 현재 에러 상태
-    handleInputChange, // 특정 입력 필드 변경 핸들러
-    checkAllInputs, // 모든 필드 유효성 검사
+    inputValues,
+    inputErrors,
+    handleInputChange,
+    checkAllInputs,
+    setFormValues, // 외부에서 한 번에 데이터 설정 가능
   };
 }

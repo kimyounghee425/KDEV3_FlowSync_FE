@@ -16,7 +16,6 @@ import { QuestionArticle, ArticleComment } from "@/src/types";
 import { deleteQuestionApi } from "@/src/api/RegisterArticle";
 import { showToast } from "@/src/utils/showToast";
 import { getMeApi } from "@/src/api/getMembersApi";
-import BackButton from "@/src/components/common/BackButton";
 
 export default function ProjectQuestionPage() {
   const { projectId, questionId } = useParams() as {
@@ -120,7 +119,6 @@ export default function ProjectQuestionPage() {
       boxShadow="md"
     >
       <Flex justifyContent="space-between">
-        <BackButton />
         {myId === registerId ? (
           <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
         ) : null}

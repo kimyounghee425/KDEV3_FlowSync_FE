@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
 import {
-  Box,
   createListCollection,
   Flex,
   Heading,
@@ -19,11 +18,10 @@ import SearchSection from "@/src/components/common/SearchSection";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import CreateButton from "@/src/components/common/CreateButton";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useUserInfo } from "@/src/hook/useFetchData";
 import { useProjectList } from "@/src/hook/useFetchBoardList";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
-import ColorCustomizer from "@/src/components/pages/ProjectsPage/components/ColorCustomizer";
+import { useDeleteProject } from "@/src/hook/useMutationData";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -78,11 +76,13 @@ function ProjectsPageContent() {
     paginationInfo,
     loading: projectListLoading,
     error: projectListError,
+    refetch,
   } = useProjectList(keyword, managementStep, currentPage, pageSize);
 
   // 현재 로그인 한 사용자 정보
   const { data: loggedInUserInfo } = useUserInfo();
   const userRole = loggedInUserInfo?.role; // 기본값 설정
+  const { mutate: deleteProject } = useDeleteProject();
 
   /**
    * 페이지 변경 시 호출되는 콜백 함수
@@ -112,18 +112,19 @@ function ProjectsPageContent() {
     }
   };
 
-  // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
   const handleProjectCreateButton = () => {
     router.push(`/projects/create`);
   };
-  // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
-  const handleEditClick = (id: string) => {
-    router.push(`/projects/${id}/edit`);
-  };
-  // 신규등록 버튼 클릭 시 - 공지사항 등록 페이지로 이동
-  const handleProjectDeleteButton = (id: string) => {
-    router.push(`/projects/${id}/delete`);
-  };
+  function handleEdit(projectId: string) {
+    // router.push(`/projects/${projectId}/edit?${searchParams.toString()}`);
+    router.push(`/projects/${projectId}/edit`);
+  }
+  async function handleDelete(projectId: string) {
+    const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+    await deleteProject(projectId);
+    refetch();
+  }
 
   return (
     <>
@@ -179,19 +180,10 @@ function ProjectsPageContent() {
         {projectListError && (
           <ErrorAlert message="프로젝트 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
-        {/*
-         * 공통 테이블(CommonTable)
-         *  - headerTitle: 테이블 헤더 구성
-         *  - data: 테이블에 표시될 데이터
-         *  - loading: 로딩 상태
-         *  - renderRow: 한 줄씩 어떻게 렌더링할지 정의 (jsx 반환)
-         *  - handleRowClick: 행 클릭 이벤트 핸들러
-         */}
-
         <CommonTable
           columnsWidth={
             <>
-              <Table.Column htmlWidth="20%" />
+              <Table.Column htmlWidth="15%" />
               <Table.Column htmlWidth="15%" />
               <Table.Column htmlWidth="15%" />
               <Table.Column htmlWidth="10%" />
@@ -200,7 +192,7 @@ function ProjectsPageContent() {
               <Table.Column htmlWidth="10%" />
               {userRole === "ADMIN" ? (
                 <>
-                  <Table.Column htmlWidth="5%" />
+                  <Table.Column htmlWidth="10%" />
                   <Table.Column htmlWidth="5%" />
                 </>
               ) : (
@@ -262,20 +254,18 @@ function ProjectsPageContent() {
                     {STATUS_LABELS[project.managementStep] || "알 수 없음"}
                   </StatusTag>
                 </Table.Cell>
-                <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
-                <Table.Cell>{formatDynamicDate(project.deadlineAt)}</Table.Cell>
+                <Table.Cell>{project.startAt.split(" ")[0]}</Table.Cell>
+                <Table.Cell>{project.deadlineAt.split(" ")[0]}</Table.Cell>
                 <Table.Cell>
-                  {formatDynamicDate(project.closeAt) === ""
-                    ? "-"
-                    : formatDynamicDate(project.closeAt)}
+                  {(project.closeAt ?? "-").split(" ")[0]}
                 </Table.Cell>
                 {userRole === "ADMIN" ? (
                   <>
                     <Table.Cell>{project.deletedYn}</Table.Cell>
                     <Table.Cell onClick={(event) => event.stopPropagation()}>
                       <DropDownMenu
-                        onEdit={() => handleEditClick(project.id)}
-                        onDelete={() => handleProjectDeleteButton(project.id)}
+                        onEdit={() => handleEdit(project.id)}
+                        onDelete={() => handleDelete(project.id)}
                       />
                     </Table.Cell>
                   </>

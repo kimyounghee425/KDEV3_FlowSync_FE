@@ -366,9 +366,9 @@ export default function OrganizationSelector({
                           <Button
                             size="xs"
                             mt="0.5rem"
-                            color={isOwner ? "blue.500" : "white"}
-                            bg="blue.500"
-                            _hover={{ bg: "blue.600" }}
+                            color="white"
+                            bg="gray.500"
+                            _hover={{ bg: "gray.600" }}
                             onClick={(e) => {
                               e.stopPropagation();
                               handleSetOwner(member);

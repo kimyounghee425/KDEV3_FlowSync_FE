@@ -17,7 +17,6 @@ import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { getMeApi } from "@/src/api/getMembersApi";
 import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
 import { useProjectApprovalList } from "@/src/hook/useFetchBoardList";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 
 const approvalStatusFramework = createListCollection<{
   id: string;
@@ -208,9 +207,9 @@ export default function ProjectApprovalsPage() {
               </Table.Cell>
               <Table.Cell>{approval.approver?.name || "-"}</Table.Cell>
               <Table.Cell>
-                {formatDynamicDate(approval.approvedAt) || "-"}
+                {(approval.approvedAt ?? "-").split(" ")[0] || "-"}
               </Table.Cell>
-              <Table.Cell>{formatDynamicDate(approval.regAt)}</Table.Cell>
+              <Table.Cell>{approval.regAt.split(" ")[0]}</Table.Cell>
             </Table.Row>
           )}
         />

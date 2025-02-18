@@ -38,22 +38,18 @@ export default function NoticesNewPage() {
     useCreateNotice();
 
   const handleSave = async (requestData: NoticeRequestData) => {
-    try {
-      const response = await createNotice({
-        ...requestData,
-        category: category || requestData.category,
-        priority: priority || requestData.priority,
-      });
+    const response = await createNotice({
+      ...requestData,
+      category: category || requestData.category,
+      priority: priority || requestData.priority,
+    });
 
-      // 요청 실패 시 즉시 리턴
-      if (response === null) {
-        return;
-      }
-
-      router.push(`/notices`);
-    } catch (error) {
-      console.error("저장 실패:", error);
+    // 요청 실패 시 즉시 리턴
+    if (response === null) {
+      return;
     }
+
+    router.push(`/notices`);
   };
 
   return (

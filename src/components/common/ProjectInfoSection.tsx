@@ -1,6 +1,5 @@
 import { Box, Text, HStack, Flex } from "@chakra-ui/react";
 import { ProjectInfoProps } from "@/src/types";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { Loading } from "@/src/components/common/Loading";
 
 interface ProjectInfoSectionProps {
@@ -82,13 +81,13 @@ export default function ProjectInfoSection({
             <Text>|</Text>
             <Box>
               <Text fontSize="0.9rem">
-                시작일: {formatDynamicDate(projectInfo?.startAt) || "-"}
+                시작일: {projectInfo?.startAt.split(" ")[0] || "-"}
               </Text>
               <Text fontSize="0.9rem">
-                마감일: {formatDynamicDate(projectInfo?.deadlineAt) || "-"}
+                마감일: {(projectInfo?.deadlineAt ?? "-").split(" ")[0] || "-"}
               </Text>{" "}
               <Text fontSize="0.9rem">
-                종료일: {formatDynamicDate(projectInfo?.closeAt) || "-"}
+                종료일: {(projectInfo?.closeAt ?? "-").split(" ")[0] || "-"}
               </Text>
             </Box>
           </HStack>

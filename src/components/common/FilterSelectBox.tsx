@@ -77,6 +77,7 @@ export default function FilterSelectBox({
           textAlign="center"
           width="100%"
           placeholder={placeholder}
+          fontSize="0.9rem"
         />
       </SelectTrigger>
 

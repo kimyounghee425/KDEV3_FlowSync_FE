@@ -16,7 +16,6 @@ import { ArticleComment, ApprovalArticle } from "@/src/types";
 import { deleteApprovalApi } from "@/src/api/RegisterArticle";
 import { getMeApi } from "@/src/api/getMembersApi";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
-import BackButton from "@/src/components/common/BackButton";
 import DropDownInfoBottom from "../../common/DropDownInfoBottom";
 import { showToast } from "@/src/utils/showToast";
 
@@ -63,7 +62,8 @@ export default function ProjectApprovalPage() {
         if (responseData.status === "APPROVED") {
           setApproverSignatureUrl(responseData.approver?.signatureUrl);
         } else if (responseData.status === "REJECTED") {
-          setApproverSignatureUrl("/비추_고화질.png");
+          // setApproverSignatureUrl("/비추_고화질.png");
+          setApproverSignatureUrl("/badge-x.png");
         } else {
           setApproverSignatureUrl(responseData.approver?.signatureUrl);
         }
@@ -168,7 +168,6 @@ export default function ProjectApprovalPage() {
         marginBottom="1rem"
         alignItems="center"
       >
-        <BackButton />
         {myName === registerName && myOrgId === registerOrgId ? (
           <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
         ) : null}
