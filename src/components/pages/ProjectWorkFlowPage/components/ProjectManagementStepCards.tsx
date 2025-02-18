@@ -130,10 +130,11 @@ export default function ProjectsManagementStepCards({
         <Heading fontSize="1.3rem">{title}</Heading>
       </Box>
       <Flex
-        wrap="nowrap"
+        wrap="wrap"
         justifyContent="center"
         alignItems="center"
         gap="2rem"
+        width="100%"
       >
         {mappedData.map((item) => {
           const isCurrentStep = item.step === currentManagementStep;

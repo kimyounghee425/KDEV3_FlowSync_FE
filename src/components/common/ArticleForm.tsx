@@ -218,7 +218,7 @@ export default function ArticleForm({
         await handleSave(requestData as BaseArticleRequestData);
       } catch (error) {
         console.error("저장 실패:", error);
-        alert("저장 중 문제가 발생했습니다.");
+        return;
       } finally {
         setIsSaving(false);
       }
@@ -383,7 +383,7 @@ export default function ArticleForm({
 
       {/* 작성 버튼 */}
       <Button
-        bg={"red.500"}
+        bg={"blue.300"}
         color={"white"}
         width={"auto"}
         px={6}

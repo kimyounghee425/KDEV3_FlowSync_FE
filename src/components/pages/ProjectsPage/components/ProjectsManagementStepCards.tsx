@@ -160,7 +160,6 @@ export default function ProjectsManagementStepCards({
       mb="2rem"
       width="full" // 전체 너비 사용
       mx="auto" // 가운데 정렬
-      // maxWidth="var(--content-max-width)" // 공통 테이블과 같은 너비
       transition="all 0.3s ease-in-out"
     >
       <Flex justifyContent="space-between" mb="10px">
@@ -168,35 +167,7 @@ export default function ProjectsManagementStepCards({
           {title}
         </Heading>
         <Box position="relative">
-          {/* 컬러 설정 버튼 추가 */}
-          <PopoverRoot
-            open={isColorCustomizerOpen}
-            onOpenChange={(e) => setIsColorCustomizerOpen(e.open)}
-          >
-            <PopoverTrigger asChild>
-              <IconButton
-                aria-label="색상 변경"
-                backgroundColor="#e4e4e7"
-                border="1px solid #d1d1d6"
-                _hover={{ backgroundColor: "#d6d6d8" }}
-              >
-                <Palette />
-              </IconButton>
-            </PopoverTrigger>
-            <PopoverContent
-              minWidth="350px"
-              maxWidth="90vw"
-              zIndex={1000}
-              position="fixed"
-              left="auto"
-              right="0"
-            >
-              <PopoverArrow />
-              <PopoverBody>
-                <ColorCustomizer />
-              </PopoverBody>
-            </PopoverContent>
-          </PopoverRoot>
+          <ColorCustomizer />
         </Box>
       </Flex>
 

@@ -278,6 +278,7 @@ export interface ProgressStep {
   projectId: string;
   relatedApprovalId: string;
   approver: Approver;
+  color: string;
 }
 
 export interface Register {
@@ -550,6 +551,7 @@ export interface ProjectProgressStepProps {
   value?: string;
   count?: number;
   status?: string;
+  color?: string;
 }
 export interface UserInfoResponse {
   id: string;
@@ -625,4 +627,10 @@ export interface ProgressStepOrder {
   id: string;
   order: number;
   title?: string;
+}
+
+export interface ProgressAddProps {
+  title: string;
+  color: string;
+  description?: string;
 }
