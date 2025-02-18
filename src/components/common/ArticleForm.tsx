@@ -13,6 +13,7 @@ import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 import DropDownInfoBottom from "@/src/components/common/DropDownInfoBottom";
 import SignUpload from "@/src/components/pages/ProjectApprovalsNewPage/components/SignUpload";
+import { showToast } from "@/src/utils/showToast";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -58,7 +59,9 @@ export default function ArticleForm({
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
   const [isSignYes, setIsSignYes] = useState<boolean>(false);
+
   const [isSaving, setIsSaving] = useState<boolean>(false);
+
   const [contentText, setContentText] = useState("");
   const maxContentLength = 10000;
   const pathname = usePathname();
@@ -109,9 +112,18 @@ export default function ArticleForm({
 
                   setTimeout(() => attachImageDeleteButtons(), 500); // 이미지 업로드 후 삭제 버튼 추가
                   return { success: 1, file: { url: responseData.data.url } };
-                } catch (error) {
+                } catch (error: any) {
                   console.error("파일 업로드 중 오류 발생:", error);
-                  alert("이미지 파일 크기는 10mb 를 초과할 수 없습니다.");
+                  // alert("이미지 파일 크기는 10mb 를 초과할 수 없습니다.");
+                  const errorMessage =
+                    "이미지 크기는 10MB 를 초과할 수 없습니다.";
+                  showToast({
+                    title: "요청 실패",
+                    description: errorMessage,
+                    type: "error",
+                    duration: 3000,
+                    error: errorMessage,
+                  });
                   removeEmptyImageBlocks(); // 업로드 실패 시 빈 블록 제거
                   return { success: 0 };
                 }
@@ -203,7 +215,6 @@ export default function ArticleForm({
         if (progressStepId !== undefined) {
           requestData.progressStepId = progressStepId;
         }
-
         await handleSave(requestData as BaseArticleRequestData);
       } catch (error) {
         console.error("저장 실패:", error);
@@ -372,8 +383,8 @@ export default function ArticleForm({
 
       {/* 작성 버튼 */}
       <Button
-        bg={"blue.300"}
-        colorScheme={"red"}
+        bg={"red.500"}
+        color={"white"}
         width={"auto"}
         px={6}
         py={4}

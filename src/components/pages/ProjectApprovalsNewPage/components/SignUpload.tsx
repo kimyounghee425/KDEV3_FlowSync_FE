@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Flex, Button, Image, Text } from "@chakra-ui/react";
 import { bringSignApi, sendSignApi } from "@/src/api/signature";
+import { showToast } from "@/src/utils/showToast";
+
 import SignaturePad from "signature_pad";
 
 interface SignUploadProps {
@@ -50,8 +52,19 @@ export default function SignUpload({ setIsSignYes }: SignUploadProps) {
       setSignatureUrl(responseData.data.url);
       // console.log("저장되었다리", responseData.data.url);
       setIsSignYes(true);
-    } catch (error) {
-      console.error("서명 등록 실패", error);
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "서명을 등록하는 중 오류가 발생했습니다.";
+
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
     }
   };
 
@@ -60,19 +73,28 @@ export default function SignUpload({ setIsSignYes }: SignUploadProps) {
       const responseData = await bringSignApi();
       setSignatureUrl(responseData.data.signatureUrl ?? "");
 
+      if (signaturePad) {
+        // console.log(responseData.data.signatureUrl);
+        signaturePad.fromDataURL(responseData.data.signatureUrl);
+      } else {
+        console.log("못불러왔다리");
+      }
+      setIsSignYes(true);
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "서명을 불러오는 중 오류가 발생했습니다.";
 
-        if (signaturePad) {
-          // console.log(responseData.data.signatureUrl);
-          signaturePad.fromDataURL(responseData.data.signatureUrl);
-        }else {
-          console.log("못불러왔다리");
-  
-        }
-        setIsSignYes(true);
-      } catch (error) {
-      console.error("서명 불러오는데 오류 발생", error);
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
     }
-  }
+  };
 
   return (
     <Flex direction={"column"} align="center">
@@ -159,7 +181,12 @@ export default function SignUpload({ setIsSignYes }: SignUploadProps) {
               _hover={{ backgroundColor: "blue.600" }}
               mr={2}
               onClick={() => {
-                setSigning(true);
+                const isConfirmed = window.confirm(
+                  `서명을 새로 등록하면 기존의 서명이 덮어씌워집니다. \n 새로 등록하시겠습니까?`,
+                );
+                if (isConfirmed) {
+                  setSigning(true);
+                }
               }}
             >
               서명 새로 등록하기
@@ -176,10 +203,15 @@ export default function SignUpload({ setIsSignYes }: SignUploadProps) {
             >
               등록
             </Button>
-            <Button backgroundColor={"red.500"}
+            <Button
+              backgroundColor={"red.500"}
               color="white"
               _hover={{ backgroundColor: "red.600" }}
-              mr={2} onClick={clearSignature}>지우기</Button>
+              mr={2}
+              onClick={clearSignature}
+            >
+              지우기
+            </Button>
           </>
         )}
       </Flex>

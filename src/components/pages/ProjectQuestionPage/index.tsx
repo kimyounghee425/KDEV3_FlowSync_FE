@@ -14,6 +14,9 @@ import { readQuestionApi } from "@/src/api/ReadArticle";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
 import { QuestionArticle, ArticleComment } from "@/src/types";
 import { deleteQuestionApi } from "@/src/api/RegisterArticle";
+import { showToast } from "@/src/utils/showToast";
+import { getMeApi } from "@/src/api/getMembersApi";
+import BackButton from "@/src/components/common/BackButton";
 
 export default function ProjectQuestionPage() {
   const { projectId, questionId } = useParams() as {
@@ -27,11 +30,16 @@ export default function ProjectQuestionPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [commentList, setCommentList] = useState<ArticleComment[]>([]);
   const [commentIsWritten, setCommentIsWritten] = useState<boolean>(false);
+  const [myId, setMyId] = useState<number>();
+  const [registerId, setRegisterId] = useState<number>();
 
   // 글 렌더링
   useEffect(() => {
     const loadTask = async () => {
       try {
+        const myData = await getMeApi();
+        setMyId(myData.data.id);
+
         const responseData = await readQuestionApi(
           Number(projectId),
           Number(questionId),
@@ -39,6 +47,7 @@ export default function ProjectQuestionPage() {
 
         setArticle(responseData);
         setCommentList(responseData.commentList ?? []);
+        setRegisterId(responseData.register.id);
       } catch (err) {
         setError(
           err instanceof Error
@@ -68,11 +77,33 @@ export default function ProjectQuestionPage() {
     const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
     if (!confirmDelete) return;
     try {
-      await deleteQuestionApi(Number(projectId), Number(questionId));
-      alert("게시글이 삭제되었습니다.");
+      const response = await deleteQuestionApi(
+        Number(projectId),
+        Number(questionId),
+      );
+      if (response.message) {
+        showToast({
+          title: "요청 성공",
+          description: response.message,
+          type: "success",
+          duration: 3000,
+        });
+      }
       router.push(`/projects/${projectId}/questions`);
-    } catch (error) {
-      alert(`삭제 중 문제가 발생했습니다 : ${error}`);
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "질문 글 삭제 중 중 오류가 발생했습니다.";
+
+      // ✅ 토스트로 사용자에게 알림
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
     }
   };
 
@@ -89,7 +120,10 @@ export default function ProjectQuestionPage() {
       boxShadow="md"
     >
       <Flex justifyContent="space-between">
-        <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
+        <BackButton />
+        {myId === registerId ? (
+          <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
+        ) : null}
       </Flex>
 
       {/* 게시글 내용 */}
