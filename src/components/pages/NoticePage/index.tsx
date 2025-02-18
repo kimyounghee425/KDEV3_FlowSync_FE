@@ -7,7 +7,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 // 절대 경로 파일
 import NoticeArticleContent from "@/src/components/pages/NoticePage/components/NoticeArticleContent";
-import { useReadNotice } from "@/src/hook/useFetchData";
+import { useReadNotice, useUserInfo } from "@/src/hook/useFetchData";
 import { Loading } from "@/src/components/common/Loading";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
@@ -21,6 +21,9 @@ export default function NoticePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = searchParams?.get("currentPage") || "1"; // 🔹 현재 페이지 값 읽기
+
+  const { data: userInfoData } = useUserInfo();
+  const userRole = userInfoData?.role;
 
   const {
     data: noticeArticle,
@@ -61,7 +64,7 @@ export default function NoticePage() {
       boxShadow="md"
     >
       <Flex justifyContent="flex-end">
-        {!isNoticeDeleted && (
+        {userRole === "ADMIN" && !isNoticeDeleted && (
           <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
         )}
       </Flex>

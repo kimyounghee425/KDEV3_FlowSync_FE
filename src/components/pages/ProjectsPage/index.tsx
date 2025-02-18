@@ -4,14 +4,13 @@ import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
 import {
-  Box,
   createListCollection,
   Flex,
   Heading,
   Stack,
   Table,
 } from "@chakra-ui/react";
-import StatusTag from "@/src/components/common/StatusTag";
+import ManagementStepTag from "@/src/components/pages/ProjectsPage/components/ManagementStepTag";
 import ProjectsManagementStepCards from "@/src/components/pages/ProjectsPage/components/ProjectsManagementStepCards";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
@@ -23,7 +22,6 @@ import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import { useUserInfo } from "@/src/hook/useFetchData";
 import { useProjectList } from "@/src/hook/useFetchBoardList";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
-import ColorCustomizer from "@/src/components/pages/ProjectsPage/components/ColorCustomizer";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -258,9 +256,9 @@ function ProjectsPageContent() {
                 <Table.Cell>{project.customerName}</Table.Cell>
                 <Table.Cell>{project.developerName}</Table.Cell>
                 <Table.Cell>
-                  <StatusTag>
+                  <ManagementStepTag>
                     {STATUS_LABELS[project.managementStep] || "알 수 없음"}
-                  </StatusTag>
+                  </ManagementStepTag>
                 </Table.Cell>
                 <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
                 <Table.Cell>{formatDynamicDate(project.deadlineAt)}</Table.Cell>

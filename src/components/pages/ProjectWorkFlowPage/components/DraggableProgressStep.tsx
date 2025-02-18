@@ -1,20 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { debounce } from "lodash";
-import { useCallback } from "react";
-import { Flex, Box, Button, Input, Heading } from "@chakra-ui/react";
+import { Flex, Box, Button, Heading, IconButton } from "@chakra-ui/react";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { Trash2, Plus } from "lucide-react";
+import { Edit, Plus, Trash2 } from "lucide-react";
 import { useProjectProgressStepData } from "@/src/hook/useFetchData";
 
 import {
-  useCreateProjectProgressStep,
   useDeleteProjectProgressStep,
   useUpdateProjectProgressStepOrder,
 } from "@/src/hook/useMutationData";
@@ -22,6 +19,8 @@ import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { Loading } from "@/src/components/common/Loading";
 import { ProgressStepOrder } from "@/src/types";
 import ConfirmDialog from "@/src/components/common/ConfirmDialog";
+import AddProgressStepModal from "@/src/components/pages/ProjectWorkFlowPage/components/AddProgressStepModal";
+import EditProgressStepModal from "@/src/components/pages/ProjectWorkFlowPage/components/EditProgressStepModal";
 
 interface DraggableProgressStepsProps {
   projectId: string;
@@ -44,19 +43,20 @@ export default function DraggableProgressSteps({
   // 백엔드 순서 업데이트 요청 훅
   const { mutate: updateProgressStepOrder } =
     useUpdateProjectProgressStepOrder();
-  // 백엔드 단계 추가 요청 훅
-  const { mutate: createProgressStep } = useCreateProjectProgressStep();
   // 백엔드 단계 삭제 요청 훅
   const { mutate: deleteProgressStep } = useDeleteProjectProgressStep();
 
   // 로컬 상태로 진행 단계 관리
   const [steps, setSteps] = useState<ProgressStepOrder[]>([]);
-  const [newStepName, setNewStepName] = useState("");
-  // 삭제 확인 모달 상태
-  const [isAdding, setIsAdding] = useState<boolean>(false);
+  // 삭제 확인 모달
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
+
+  // 진행단계 추가 모달 상태
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  // 진행단계 수정 모달 상태 (수정할 단계 ID 저장)
+  const [editingStepId, setEditingStepId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!progressSteps) return;
@@ -65,7 +65,7 @@ export default function DraggableProgressSteps({
         .filter((step) => Number(step.id) !== 0)
         .map((step, index) => ({
           id: step.id,
-          order: index + 1, // ✅ order 속성 추가
+          order: index + 1, // order 속성 추가
           title: step.name,
         })),
     );
@@ -97,25 +97,6 @@ export default function DraggableProgressSteps({
   };
 
   /**
-   * 새로운 진행 단계 추가
-   */
-  const handleAddStep = useCallback(
-    debounce(async () => {
-      if (!newStepName.trim()) return;
-
-      setIsAdding(true);
-      const response = await createProgressStep(projectId, newStepName);
-      setIsAdding(false);
-
-      if (response && response.result === "SUCCESS") {
-        await refetch();
-        setNewStepName("");
-      }
-    }, 1000), // 1초 동안 연속 클릭 방지
-    [newStepName, createProgressStep, projectId, refetch],
-  );
-
-  /**
    * 삭제 확인 모달 열기
    */
   const handleDeleteStep = (stepId: string) => {
@@ -139,29 +120,20 @@ export default function DraggableProgressSteps({
 
   return (
     <>
-      <Flex marginX="1.3rem" justifyContent="space-between">
-        <Heading lineHeight="base" paddingBottom="0.7rem" fontSize="1.3rem">
-          진행 단계 커스텀
+      <Flex marginX="1.3rem" justifyContent="flex-start" alignItems="center">
+        <Heading lineHeight="base" fontSize="1.3rem">
+          진행단계 관리
         </Heading>
         {/* 진행 단계 추가 */}
-        <Flex gap="0.5rem" justifyContent="flex-end">
-          <Input
-            placeholder="새 진행 단계 입력"
-            value={newStepName}
-            onChange={(e) => setNewStepName(e.target.value)}
-            size="sm"
-            width="200px"
-          />
-          <Button
-            backgroundColor="blue.100"
-            size="sm"
-            onClick={handleAddStep}
-            disabled={isAdding}
-            loading={isAdding}
-          >
-            <Plus size={16} />
-          </Button>
-        </Flex>
+        <IconButton
+          size="sm"
+          backgroundColor="blue.100"
+          _hover={{ bg: "blue.300" }}
+          onClick={() => setIsAddModalOpen(true)}
+          marginLeft="0.7rem"
+        >
+          <Plus />
+        </IconButton>
       </Flex>
 
       <Box
@@ -185,12 +157,11 @@ export default function DraggableProgressSteps({
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 direction="row"
-                justifyContent="center"
-                gap="0.5rem"
-                overflowX="auto"
+                flexWrap="wrap"
+                justifyContent="flex-start"
+                gap="1rem"
                 p="0.5rem"
                 borderRadius="md"
-                minWidth="max-content"
               >
                 {steps.map((step, index) => (
                   <Draggable
@@ -212,7 +183,7 @@ export default function DraggableProgressSteps({
                         textAlign="center"
                         minWidth="180px" // 각 요소의 최소 너비 설정
                         maxWidth="200px" // 최대 너비 제한
-                        flexShrink={0} // 가로 스크롤 시 크기 유지
+                        flexShrink={1} // 가로 스크롤 시 크기 유지
                         whiteSpace="nowrap" // 텍스트 줄바꿈 방지
                         cursor="grab" // 드래그 가능 커서 적용
                       >
@@ -223,7 +194,20 @@ export default function DraggableProgressSteps({
                           ml="0.5rem"
                           w="24px"
                           h="24px"
-                          border="1px solid red.300"
+                          border="1px solid blue.50"
+                          bg="blue.50"
+                          _hover={{ bg: "blue.100" }}
+                          onClick={() => setEditingStepId(step.id)}
+                        >
+                          <Edit size={14} />
+                        </Button>
+                        <Button
+                          size="xs"
+                          variant="ghost"
+                          ml="0.5rem"
+                          w="24px"
+                          h="24px"
+                          border="1px solid #fef2f2"
                           bg="red.50"
                           _hover={{ bg: "red.100" }}
                           onClick={() => handleDeleteStep(step.id)}
@@ -240,6 +224,25 @@ export default function DraggableProgressSteps({
           </Droppable>
         </DragDropContext>
       </Box>
+
+      {/* 추가 모달 */}
+      <AddProgressStepModal
+        projectId={projectId}
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onStepAdded={refetch}
+      />
+
+      {/* 수정 모달 */}
+      {editingStepId && (
+        <EditProgressStepModal
+          projectId={projectId}
+          progressStepId={editingStepId}
+          isOpen={!!editingStepId}
+          onClose={() => setEditingStepId(null)}
+          onStepUpdated={refetch}
+        />
+      )}
 
       {/* 삭제 확인 다이얼로그 */}
       <ConfirmDialog
