@@ -405,6 +405,9 @@ export interface QuestionArticle {
   category: string;
   status: string;
   deletedYn: string;
+  progressStep: {
+    name: string
+  }
   register: {
     id: number;
     name: string;

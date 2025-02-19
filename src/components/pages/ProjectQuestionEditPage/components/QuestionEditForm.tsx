@@ -42,18 +42,51 @@ export default function QuestionEditForm() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   useEffect(() => {
+    const handleShiftEnterAsEnter = (event: KeyboardEvent) => {
+      if (event.shiftKey && event.key === "Enter") {
+        event.preventDefault(); // 기본 `<br>` 개행 방지
+
+        if (editorRef.current) {
+          const editor = editorRef.current;
+          const currentBlock = editor.blocks.getCurrentBlockIndex();
+
+          if (currentBlock !== -1) {
+            editor.blocks.insert(
+              "paragraph",
+              { text: "" },
+              undefined,
+              currentBlock + 1,
+              true,
+            );
+
+            // 커서를 새 블록으로 자동 이동
+            setTimeout(() => {
+              editor.caret.setToBlock(currentBlock + 1, "start");
+            }, 10);
+          }
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleShiftEnterAsEnter);
+    return () => {
+      document.removeEventListener("keydown", handleShiftEnterAsEnter);
+    };
+  }, []);
+
+  useEffect(() => {
     const disableUndo = (event: KeyboardEvent) => {
       if (event.metaKey && event.key === "z") {
         event.preventDefault(); // 기본 동작 차단
       }
     };
-  
+
     document.addEventListener("keydown", disableUndo);
     return () => {
       document.removeEventListener("keydown", disableUndo);
     };
   }, []);
-  
+
   useEffect(() => {
     const loadTask = async () => {
       try {
@@ -259,8 +292,10 @@ export default function QuestionEditForm() {
     const blocks = document.querySelectorAll(".ce-block__content .cdx-block");
     blocks.forEach((block) => {
       const blockElement = block as HTMLElement;
-      const imgElement = blockElement.querySelector("img") as HTMLImageElement | null;
-  
+      const imgElement = blockElement.querySelector(
+        "img",
+      ) as HTMLImageElement | null;
+
       if (imgElement && !blockElement.querySelector(".image-delete-btn")) {
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "❌ 삭제";
@@ -273,7 +308,7 @@ export default function QuestionEditForm() {
         deleteButton.style.cursor = "pointer";
         deleteButton.style.padding = "4px 8px";
         deleteButton.style.borderRadius = "4px";
-  
+
         deleteButton.onclick = () => {
           if (!editorRef.current) return;
           // ✅ 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
@@ -284,8 +319,7 @@ export default function QuestionEditForm() {
             return;
           }
         };
-  
-  
+
         blockElement.style.position = "relative";
         blockElement.appendChild(deleteButton);
       }
@@ -327,7 +361,7 @@ export default function QuestionEditForm() {
       />
 
       <Button
-        bg={"red.500"}
+        bg={"#00a8ff"}
         colorScheme={"red"}
         loading={isSaving}
         loadingText="저장 중..."
@@ -338,7 +372,7 @@ export default function QuestionEditForm() {
         fontSize={"lg"}
         fontWeight={"bold"}
         boxShadow={"md"}
-        _hover={{ bg: "red.600" }}
+        _hover={{ bg: "#0095ff" }}
         onClick={handleEditorSave}
         disabled={isSaving}
       >

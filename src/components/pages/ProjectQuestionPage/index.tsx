@@ -2,7 +2,7 @@
 "use client";
 
 // 외부 라이브러리
-import { Flex, Box, VStack } from "@chakra-ui/react";
+import { Flex, Box, VStack, Button } from "@chakra-ui/react";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -119,13 +119,25 @@ export default function ProjectQuestionPage() {
       boxShadow="md"
     >
       <Flex justifyContent="space-between">
+        <Button
+          borderRadius={"xl"}
+          fontSize={"xl"}
+          fontWeight={"bold"}
+          color={"#7e6551"}
+          backgroundColor={"#f9f9f9"}
+          mb={2}
+          cursor="default"
+        >
+          {article?.progressStep.name}
+        </Button>
         {myId === registerId ? (
           <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
         ) : null}
       </Flex>
 
       {/* 게시글 내용 */}
-      <ArticleContent article={article} registerId={registerId}/>
+      <ArticleContent article={article} registerId={registerId} />
+
       {/* 댓글 섹션 */}
       <VStack align="stretch" gap={8} mt={10}>
         <ArticleComments

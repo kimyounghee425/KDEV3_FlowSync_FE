@@ -163,11 +163,20 @@ export default function ProjectApprovalPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <Flex
-        justifyContent="space-between"
-        marginBottom="1rem"
-        alignItems="center"
-      >
+
+      {/* 게시글 내용 */}
+      <Flex justifyContent={"space-between"}>
+        <Button
+          borderRadius={"xl"}
+          fontSize={"xl"}
+          fontWeight={"bold"}
+          color={"#7e6551"}
+          backgroundColor={"#f9f9f9"}
+          mb={2}
+          cursor="default"
+        >
+          {category === "NORMAL_REQUEST" ? "일반 결재" : "진행단계 완료 결재"}
+        </Button>
         {myName === registerName && myOrgId === registerOrgId ? (
           <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
         ) : null}

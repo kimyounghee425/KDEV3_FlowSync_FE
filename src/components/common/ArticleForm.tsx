@@ -16,7 +16,6 @@ import SignUpload from "@/src/components/pages/ProjectApprovalsNewPage/component
 import { showToast } from "@/src/utils/showToast";
 import { isToday } from "date-fns";
 
-
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface UploadedFilesProps {
@@ -67,6 +66,39 @@ export default function ArticleForm({
   const [contentText, setContentText] = useState("");
   const maxContentLength = 10000;
   const pathname = usePathname();
+
+  useEffect(() => {
+    const handleShiftEnterAsEnter = (event: KeyboardEvent) => {
+      if (event.shiftKey && event.key === "Enter") {
+        event.preventDefault(); // 기본 `<br>` 개행 방지
+
+        if (editorRef.current) {
+          const editor = editorRef.current;
+          const currentBlock = editor.blocks.getCurrentBlockIndex();
+
+          if (currentBlock !== -1) {
+            editor.blocks.insert(
+              "paragraph",
+              { text: "" },
+              undefined,
+              currentBlock + 1,
+              true,
+            );
+
+            // 커서를 새 블록으로 자동 이동
+            setTimeout(() => {
+              editor.caret.setToBlock(currentBlock + 1, "start");
+            }, 10);
+          }
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleShiftEnterAsEnter);
+    return () => {
+      document.removeEventListener("keydown", handleShiftEnterAsEnter);
+    };
+  }, []);
 
   useEffect(() => {
     const disableUndo = (event: KeyboardEvent) => {
@@ -399,7 +431,7 @@ export default function ArticleForm({
 
       {/* 작성 버튼 */}
       <Button
-        bg={"blue.300"}
+        bg={"#00a8ff"}
         color={"white"}
         width={"auto"}
         px={6}
@@ -410,7 +442,7 @@ export default function ArticleForm({
         boxShadow={"md"}
         onClick={handleEditorSave}
         disabled={isSaving}
-        _hover={{ bg: "red.600" }}
+        _hover={{ bg: "#0095ff" }}
         loading={isSaving}
         loadingText={`${submitButtonLabel} 중...`}
       >
