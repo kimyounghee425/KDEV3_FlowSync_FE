@@ -78,7 +78,7 @@ export const SegmentedControl = React.forwardRef<
                 fontWeight: "bold",
                 color: "inherit", // 선택된 요소도 기존 글씨 색 유지
                 opacity: isSelected ? 1 : undefined, // 선택된 요소도 투명도 변화 없음
-                backgroundColor: isSelected ? "gray.300" : "transparent", // 선택된 요소 배경 변경
+                backgroundColor: isSelected ? "#FFFFFF" : "transparent", // 선택된 요소 배경 변경
               }}
               css={
                 isSelected

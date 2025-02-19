@@ -11,6 +11,7 @@ import {
   Table,
   Text,
 } from "@chakra-ui/react";
+import { CircleAlert } from "lucide-react";
 import { Switch } from "@/src/components/ui/switch";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
@@ -24,9 +25,7 @@ import {
   useUpdateOrganizationStatus,
 } from "@/src/hook/useMutationData";
 import { useOrganizationList } from "@/src/hook/useFetchBoardList";
-import DropDownInfoBottom from "../../common/DropDownInfoBottom";
-import { Tooltip } from "../../ui/tooltip";
-import { CircleAlert } from "lucide-react";
+import { Tooltip } from "@/src/components/ui/tooltip";
 
 const organizationTypeFramework = createListCollection<{
   label: string;
@@ -85,8 +84,7 @@ function AdminOrganizationsPageContent() {
 
   // 업체 상태 변경 훅
   const { mutate: updateOrganizationStatus } = useUpdateOrganizationStatus();
-  const { mutate: deleteOrganization, error: OrganizationDeleteError } =
-    useDeleteOrganization();
+  const { mutate: deleteOrganization } = useDeleteOrganization();
 
   // 업체 상태 변경 핸들러
   const handleStatusChange = async (organizationId: string) => {
@@ -158,6 +156,8 @@ function AdminOrganizationsPageContent() {
           <ErrorAlert message="업체 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
         <CommonTable
+          colspan={9}
+          skeletonCount={14}
           columnsWidth={
             <>
               <Table.Column htmlWidth="8%" />

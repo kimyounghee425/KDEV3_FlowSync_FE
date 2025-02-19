@@ -2,7 +2,13 @@
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
-import { Box, Flex, Table, createListCollection } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Separator,
+  Table,
+  createListCollection,
+} from "@chakra-ui/react";
 
 import { useEffect, useState } from "react";
 import CommonTable from "@/src/components/common/CommonTable";
@@ -119,6 +125,7 @@ export default function ProjectApprovalsPage() {
         progressStep={approvalProgressStepData || []}
         loading={approvalProgressStepLoading}
       />
+
       <Box direction="column" paddingX="1rem" gap="8px" mb="30px">
         <Flex justifyContent={"space-between"} paddingX="0.3rem">
           <CreateButton handleButton={handleProjectApprovalCreateButton} />
@@ -145,6 +152,8 @@ export default function ProjectApprovalsPage() {
           - handleRowClick: 행 클릭 시 동작
         */}
         <CommonTable
+          skeletonCount={4}
+          colspan={8}
           columnsWidth={
             <>
               <Table.Column htmlWidth="15%" />

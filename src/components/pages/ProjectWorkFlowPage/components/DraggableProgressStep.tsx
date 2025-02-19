@@ -16,7 +16,6 @@ import {
   useUpdateProjectProgressStepOrder,
 } from "@/src/hook/useMutationData";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
-import { Loading } from "@/src/components/common/Loading";
 import { ProgressStepOrder } from "@/src/types";
 import ConfirmDialog from "@/src/components/common/ConfirmDialog";
 import AddProgressStepModal from "@/src/components/pages/ProjectWorkFlowPage/components/AddProgressStepModal";
@@ -24,6 +23,7 @@ import EditProgressStepModal from "@/src/components/pages/ProjectWorkFlowPage/co
 
 interface DraggableProgressStepsProps {
   projectId: string;
+  refetchProgressSteps: () => void;
 }
 
 /**
@@ -31,14 +31,11 @@ interface DraggableProgressStepsProps {
  */
 export default function DraggableProgressSteps({
   projectId,
+  refetchProgressSteps,
 }: DraggableProgressStepsProps) {
   // 진행 단계 데이터 가져오기
-  const {
-    data: progressSteps = [],
-    loading: progressStepLoading,
-    error: progressStepError,
-    refetch,
-  } = useProjectProgressStepData(projectId);
+  const { data: progressSteps = [], error: progressStepError } =
+    useProjectProgressStepData(projectId);
 
   // 백엔드 순서 업데이트 요청 훅
   const { mutate: updateProgressStepOrder } =
@@ -93,7 +90,7 @@ export default function DraggableProgressSteps({
     );
 
     await updateProgressStepOrder(projectId, reorderedSteps);
-    await refetch();
+    await refetchProgressSteps();
   };
 
   /**
@@ -115,7 +112,7 @@ export default function DraggableProgressSteps({
     setIsDeleting(false);
     setIsDeleteDialogOpen(false);
 
-    await refetch();
+    await refetchProgressSteps();
   };
 
   return (
@@ -145,7 +142,6 @@ export default function DraggableProgressSteps({
         overflowX="auto"
         whiteSpace="nowrap"
       >
-        {progressStepLoading && <Loading />}
         {progressStepError && (
           <ErrorAlert message="진행 단계를 불러오지 못했습니다." />
         )}
@@ -230,7 +226,7 @@ export default function DraggableProgressSteps({
         projectId={projectId}
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onStepAdded={refetch}
+        onStepAdded={refetchProgressSteps}
       />
 
       {/* 수정 모달 */}
@@ -240,7 +236,7 @@ export default function DraggableProgressSteps({
           progressStepId={editingStepId}
           isOpen={!!editingStepId}
           onClose={() => setEditingStepId(null)}
-          onStepUpdated={refetch}
+          onStepUpdated={refetchProgressSteps}
         />
       )}
 

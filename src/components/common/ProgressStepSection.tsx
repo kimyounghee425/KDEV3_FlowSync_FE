@@ -54,15 +54,30 @@ export default function ProgressStepSection({
 
   return (
     <Flex
-      marginY="1rem"
+      marginY="0.5rem"
       marginX="1.3rem"
       alignItems="center"
-      justifyContent="center"
       padding="1rem"
       gap="1.5rem"
       flexWrap="nowrap"
       overflowX="auto"
-      whiteSpace="nowrap"
+      touchAction="pan-x"
+      css={{
+        "&::-webkit-scrollbar": {
+          width: "2.5px",
+          height: "10px",
+        },
+        "&::-webkit-scrollbar-track": {
+          width: "2px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          borderRadius: "5px",
+          transition: "all 1s ease-in-out",
+        },
+        "&:hover::-webkit-scrollbar-thumb": {
+          background: "gray.100",
+        },
+      }}
     >
       {/*
         progressStep 배열을 순회하며 ProgressStepButton을 렌더링

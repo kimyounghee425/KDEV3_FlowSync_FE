@@ -95,6 +95,8 @@ function NoticesPageContent() {
     refetch,
   } = useNoticeList(keyword, category, isDeleted, currentPage, pageSize);
 
+  const colspan = userRole === "ADMIN" ? 7 : 4;
+
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(window.location.search);
     // 쿼리스트링 업데이트
@@ -162,6 +164,8 @@ function NoticesPageContent() {
         <ErrorAlert message="공지사항 목록을 불러오지 못했습니다. 다시 시도해주세요." />
       )}
       <CommonTable
+        colspan={colspan}
+        skeletonCount={13}
         columnsWidth={
           <>
             <Table.Column htmlWidth="10%" />

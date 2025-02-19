@@ -70,6 +70,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <Box
             as="main"
             {...layoutStyles.mainContent(isSidebarOpen, isListPage)}
+            mb={"30rem"}
           >
             {!isListPage ? <BackButton /> : <></>}
             {children}

@@ -46,6 +46,7 @@ export default function ProjectWorkFlowPage() {
     data: progressStepList,
     loading: progressStepLoading,
     error: progressStepError,
+    refetch: refetchProgressSteps,
   } = useProjectProgressStepData(projectId as string);
 
   // 진행단계 시작일자-예정완료일자 수정 요청
@@ -133,7 +134,10 @@ export default function ProjectWorkFlowPage() {
         <ProjectsManagementStepCards title={"관리단계 변경"} />
 
         {/* 진행단계 커스텀 (드래그앤드롭) 추가 */}
-        <DraggableProgressSteps projectId={resolvedProjectId} />
+        <DraggableProgressSteps
+          projectId={resolvedProjectId}
+          refetchProgressSteps={refetchProgressSteps}
+        />
 
         <Flex direction="column" marginX="1rem">
           <Heading
@@ -150,6 +154,8 @@ export default function ProjectWorkFlowPage() {
           )}
 
           <CommonTable
+            skeletonCount={9}
+            colspan={8}
             columnsWidth={
               <>
                 <Table.Column htmlWidth="5%" />

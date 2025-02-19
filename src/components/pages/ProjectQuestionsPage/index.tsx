@@ -124,6 +124,8 @@ export default function ProjectQuestionsPage() {
           - handleRowClick: 행 클릭 시 동작
         */}
         <CommonTable
+          skeletonCount={4}
+          colspan={6}
           columnsWidth={
             <>
               <Table.Column htmlWidth="20%" />
