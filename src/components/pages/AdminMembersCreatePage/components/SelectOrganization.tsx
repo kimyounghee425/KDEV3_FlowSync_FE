@@ -64,7 +64,9 @@ export default function SelectedOrganization({
                 _hover={{ bg: "blue.200", color: "white" }}
                 onClick={() => setSelectedOrganization(org)}
               >
-                <Text>{org.name}</Text>
+                <Text>
+                  {org.name}({org.type})
+                </Text>
               </Box>
             ))
           ) : (

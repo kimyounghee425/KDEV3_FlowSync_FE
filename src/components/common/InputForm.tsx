@@ -99,14 +99,6 @@ export default function InputForm({
             <span className={styles.required}>*</span>
           )}
         </label>
-        {/* {!["연락처", "로그인 Password", "로그인 Email"].includes(label) && (
->>>>>>> main
-          <Text pl={4}>
-            {`${value.length} / `}
-            {maxLength}
-          </Text>
-
-        )} */}
       </Flex>
       {/* 주소 입력 필드 - 클릭 시 검색 모달 오픈 */}
       {type === "address" ? (

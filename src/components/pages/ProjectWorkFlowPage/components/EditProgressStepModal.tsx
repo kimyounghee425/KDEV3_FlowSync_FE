@@ -131,6 +131,7 @@ export default function EditProgressStepModal({
               placeholder="이 단계에 대한 설명을 입력하세요."
               value={stepDescription}
               onChange={(e) => setStepDescription(e.target.value)}
+              autoresize
             />
           </Box>
 

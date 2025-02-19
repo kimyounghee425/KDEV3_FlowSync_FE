@@ -10,11 +10,10 @@ import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 import { readApprovalApi } from "@/src/api/ReadArticle";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
-import { editApprovalAPI } from "@/src/api/RegisterArticle";
 import { ApprovalRequestData } from "@/src/types";
-
 import EditSignUpload from "./EditSignUpload";
 import { showToast } from "@/src/utils/showToast";
+import { useUpdateApproval } from "@/src/hook/useMutationData";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -52,6 +51,8 @@ export default function ApprovalEditForm() {
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
   const [signatureUrl, setSignatureUrl] = useState<string>("");
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const { mutate: updateApproval, error: approvalUpdateError } =
+    useUpdateApproval();
 
   useEffect(() => {
     const handleShiftEnterAsEnter = (event: KeyboardEvent) => {
@@ -106,6 +107,7 @@ export default function ApprovalEditForm() {
           Number(projectId),
           Number(approvalId),
         );
+
         setTitle(responseData.title);
         setLinkList(responseData.linkList);
         setUploadedFiles(responseData.fileList);
@@ -223,42 +225,17 @@ export default function ApprovalEditForm() {
   }, [projectId, approvalId]);
 
   const handleSave = async <T extends ApprovalRequestData>(requestData: T) => {
-    try {
-      const response = await editApprovalAPI(
-        Number(projectId),
-        Number(approvalId),
-        {
-          ...requestData,
-          ...(requestData.progressStepId !== undefined
-            ? { progressStepId: requestData.progressStepId }
-            : {}),
-        },
-      );
-      if (response.message) {
-        showToast({
-          title: "요청 성공",
-          description: response.message,
-          type: "success",
-          duration: 3000,
-        });
-      }
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "질문 등록 중 중 오류가 발생했습니다.";
-
-      // ✅ 토스트로 사용자에게 알림
-      showToast({
-        title: "요청 실패",
-        description: errorMessage,
-        type: "error",
-        duration: 3000,
-        error: errorMessage,
-      });
-
-      alert("저장 중 문제가 발생했습니다.");
-    }
+    const response = await updateApproval(
+      Number(projectId),
+      Number(approvalId),
+      {
+        ...requestData,
+        ...(requestData.progressStepId !== undefined
+          ? { progressStepId: requestData.progressStepId }
+          : {}),
+      },
+    );
+    if (response === null) return;
   };
 
   const attachImageDeleteButtons = () => {
@@ -336,11 +313,16 @@ export default function ApprovalEditForm() {
           fileInfoList: uploadedFiles,
         });
 
-        // alert("수정이 완료되었습니다.");
         router.push(`/projects/${projectId}/approvals/${approvalId}`);
       } catch (error) {
-        console.error("저장 실패:", error);
-        alert("저장 중 문제가 발생했습니다.");
+        const errorMessage = "저장 중 문제가 발생했습니다.";
+        showToast({
+          title: "요청 실패",
+          description: errorMessage,
+          type: "error",
+          duration: 3000,
+          error: errorMessage,
+        });
       } finally {
         setIsSaving(false);
       }
@@ -386,7 +368,7 @@ export default function ApprovalEditForm() {
 
       <Button
         bg={"#00a8ff"}
-        colorScheme={"red"}
+        color="white"
         width={"auto"}
         px={6}
         py={4}

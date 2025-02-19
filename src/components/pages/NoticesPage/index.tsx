@@ -8,6 +8,7 @@ import {
   Flex,
   Heading,
   Table,
+  Text,
 } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import SearchSection from "@/src/components/common/SearchSection";
@@ -257,7 +258,13 @@ function NoticesPageContent() {
                     {(notice.updatedAt ?? "-").split(" ")[0]}
                   </Table.Cell>
                   <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
-                    {NOTICE_STATUS_LABELS[notice.isDeleted]}
+                    {notice.isDeleted === "Y" ? (
+                      <Text color="red">
+                        {NOTICE_STATUS_LABELS[notice.isDeleted]}
+                      </Text>
+                    ) : (
+                      <>{NOTICE_STATUS_LABELS[notice.isDeleted]}</>
+                    )}
                   </Table.Cell>
                   <Table.Cell onClick={(event) => event.stopPropagation()}>
                     {notice.isDeleted !== "Y" ? (

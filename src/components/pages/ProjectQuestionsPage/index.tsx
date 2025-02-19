@@ -115,14 +115,7 @@ export default function ProjectQuestionsPage() {
         {projectQuestionError && (
           <ErrorAlert message="프로젝트 질문 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
-        {/* 
-          CommonTable: 게시글 목록을 렌더링하는 공통 테이블 컴포넌트
-          - headerTitle: 테이블 헤더
-          - data: 목록 데이터
-          - loading: 로딩 상태
-          - renderRow: 각 행의 셀을 어떻게 렌더링할지 정의
-          - handleRowClick: 행 클릭 시 동작
-        */}
+
         <CommonTable
           skeletonCount={4}
           colspan={6}

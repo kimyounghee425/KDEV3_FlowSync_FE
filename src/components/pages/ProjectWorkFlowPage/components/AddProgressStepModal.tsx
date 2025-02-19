@@ -12,7 +12,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { debounce } from "lodash";
-import { Palette, Plus, RefreshCcw } from "lucide-react";
+import { Palette, RefreshCcw } from "lucide-react";
 import { SketchPicker, ColorResult } from "react-color";
 import CustomModal from "@/src/components/pages/ProjectWorkFlowPage/components/CustomModal";
 import { useCreateProjectProgressStep } from "@/src/hook/useMutationData";
@@ -114,6 +114,7 @@ export default function AddProgressStepModal({
               placeholder="이 단계에 대한 설명을 입력하세요."
               value={stepDescription}
               onChange={(e) => setStepDescription(e.target.value)}
+              autoresize
             />
           </Box>
 

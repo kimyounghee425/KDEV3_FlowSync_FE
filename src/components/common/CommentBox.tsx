@@ -84,6 +84,7 @@ export default function CommentBox({
         value={commentText}
         maxLength={250}
         maxHeight={"100px"}
+        autoresize
       />
       <Flex justifyContent="flex-end">
         <Button

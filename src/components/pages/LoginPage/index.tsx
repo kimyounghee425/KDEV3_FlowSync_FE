@@ -27,7 +27,6 @@ export default function LoginPage() {
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfLogin, validationRulesOfLogin);
 
-  // #TODO 차크라UI 컴포넌트 사용 - 에러메시지 또는 로딩 UI
   function validateLoginInputs() {
     if (!checkAllInputs()) {
       alert("입력값을 확인하세요.");

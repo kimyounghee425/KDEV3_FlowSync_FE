@@ -15,7 +15,7 @@ export const showToast = ({
   }
   // 중복 체크: 동일한 description이 존재하는 경우 새 토스트 생성 안 함
   if (toastMessages.has(description)) return;
-  
+
   // 토스트 메시지 Set에 추가
   toastMessages.add(description);
 

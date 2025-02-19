@@ -22,6 +22,7 @@ import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { getMeApi } from "@/src/api/getMembersApi";
 import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
 import { useProjectApprovalList } from "@/src/hook/useFetchBoardList";
+import { showToast } from "@/src/utils/showToast";
 
 const approvalStatusFramework = createListCollection<{
   id: string;
@@ -97,7 +98,14 @@ export default function ProjectApprovalsPage() {
 
   const handleProjectApprovalCreateButton = () => {
     if (myOrgType === "CUSTOMER") {
-      alert("결재 글은 개발사만 작성이 가능합니다.");
+      const errorMessage = "결재 글은 개발사만 작성이 가능합니다.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
       return;
     }
     router.push(`/projects/${projectId}/approvals/new`);

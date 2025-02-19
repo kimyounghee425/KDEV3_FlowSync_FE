@@ -31,10 +31,11 @@ import ErrorAlert from "@/src/components/common/ErrorAlert";
 import CommonTable from "@/src/components/common/CommonTable";
 import StatusTag from "@/src/components/pages/ProjectsPage/components/ManagementStepTag";
 import Pagination from "@/src/components/common/Pagination";
-import { activateMemberApi, deactivateMemberApi } from "@/src/api/members";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
 import { LuFolder, LuUser } from "react-icons/lu";
 import {
+  useActivateMemberStatus,
+  useDeactivateMemberStatus,
   useDeleteMember,
   useDeleteOrganization,
   useUpdateOrganization,
@@ -559,6 +560,10 @@ function OrganizationMemberList({
 
   // ✅ 상태 변경을 위한 로컬 상태 추가
   const [memberData, setMemberData] = useState<MemberProps[]>([]);
+  const { mutate: activateMember, error: memberActiveError } =
+    useActivateMemberStatus();
+  const { mutate: deactivateMember, error: memberDeactiveError } =
+    useDeactivateMemberStatus();
   const { mutate: deleteMember, error: MemberDeleteError } = useDeleteMember();
 
   useEffect(() => {
@@ -575,32 +580,26 @@ function OrganizationMemberList({
     currentStatus: string,
   ) => {
     setLoadingId(memberId); // ✅ 변경 중인 ID 설정 (로딩 표시)
-    try {
-      if (currentStatus === "ACTIVE") {
-        await deactivateMemberApi(memberId); // 비활성화 API 호출
-      } else {
-        await activateMemberApi(memberId); // 활성화 API 호출
-      }
-      alert("회원 상태가 변경되었습니다.");
-      // ✅ API 호출 후 로컬 상태 업데이트 (UI 즉시 반영)
-      setMemberData((prevMembers) =>
-        (prevMembers || []).map((member) =>
-          member.id === memberId
-            ? {
-                ...member,
-                memberStatus:
-                  currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE",
-              }
-            : member,
-        ),
-      );
-      refetch();
-    } catch (error) {
-      console.error("회원 상태 변경 실패:", error);
-      alert("회원 상태 변경 중 오류가 발생했습니다.");
-    } finally {
-      setLoadingId(null); // ✅ 로딩 해제
+    const newStatus = currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+
+    // ✅ UI를 먼저 업데이트하여 즉각적인 피드백 제공
+    setMemberData((prevMembers) =>
+      prevMembers.map((member) =>
+        member.id === memberId ? { ...member, status: newStatus } : member,
+      ),
+    );
+
+    if (currentStatus === "ACTIVE") {
+      deactivateMember(memberId); // 비활성화 API 호출
+    } else {
+      activateMember(memberId); // 활성화 API 호출
     }
+
+    setTimeout(() => {
+      refetch();
+    }, 500);
+
+    setLoadingId(null);
   };
 
   const handleMemberPageChange = (page: number) => {

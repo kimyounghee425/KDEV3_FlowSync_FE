@@ -281,7 +281,6 @@ export default function OrganizationSelector({
                   border="1px solid #ccc"
                   borderRadius="0.5rem"
                   p="0.75rem"
-                  mb="1rem"
                   width="100%"
                 />
                 <Box maxHeight="20rem" overflowY="auto">

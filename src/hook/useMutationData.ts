@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { showToast } from "@/src/utils/showToast";
 import {
+  ActivateMemberResponse,
+  ApprovalRequestData,
   CommonResponseType,
   CreateMemberInput,
   CreateMemberResponse,
   CreateOrganizationInput,
   CreateOrganizationResponse,
   CreateProjectResponse,
+  DeactivateMemberResponse,
   DeleteMemberResponse,
   DeleteOrganizationResponse,
   MemberProps,
@@ -15,6 +18,7 @@ import {
   ProgressAddProps,
   ProgressStep,
   ProgressStepOrder,
+  QuestionRequestData,
 } from "@/src/types";
 import {
   createNoticeApi,
@@ -39,10 +43,20 @@ import {
   updateOrganizationApi,
 } from "@/src/api/organizations";
 import {
+  activateMemberApi,
   createMemberApi,
+  deactivateMemberApi,
   deleteMemberApi,
   updateMemberApi,
 } from "@/src/api/members";
+import {
+  createApprovalApi,
+  createQuestionApi,
+  deleteApprovalApi,
+  deleteQuestionApi,
+  editApprovalApi,
+  updateQuestionApi,
+} from "@/src/api/RegisterArticle";
 
 interface UseMutationDataProps<T, P extends any[]> {
   mutationApi: (...args: P) => Promise<CommonResponseType<T>>;
@@ -129,6 +143,24 @@ export function useUpdateMember() {
 export function useDeleteMember() {
   return useMutationData<DeleteMemberResponse, [string, string]>({
     mutationApi: deleteMemberApi,
+  });
+}
+
+/**
+ * 회원 상태 활성화로 변경 훅
+ */
+export function useActivateMemberStatus() {
+  return useMutationData<ActivateMemberResponse, [string]>({
+    mutationApi: activateMemberApi,
+  });
+}
+
+/**
+ * 회원 상태 비활성화로 변경 훅
+ */
+export function useDeactivateMemberStatus() {
+  return useMutationData<DeactivateMemberResponse, [string]>({
+    mutationApi: deactivateMemberApi,
   });
 }
 
@@ -278,5 +310,59 @@ export function useUpdateProjectProgressStep() {
 export function useUpdateProjectManagementStep() {
   return useMutationData<void, [string, string]>({
     mutationApi: projectManagementStepApi,
+  });
+}
+
+/**
+ * 결재 게시글 생성 훅
+ */
+export function useCreateApproval() {
+  return useMutationData<void, [number, ApprovalRequestData]>({
+    mutationApi: createApprovalApi,
+  });
+}
+
+/**
+ * 결재 게시글 수정 훅
+ */
+export function useUpdateApproval() {
+  return useMutationData<void, [number, number, ApprovalRequestData]>({
+    mutationApi: editApprovalApi,
+  });
+}
+
+/**
+ * 결재 게시글 삭제 훅
+ */
+export function useDeleteApproval() {
+  return useMutationData<void, [number, number]>({
+    mutationApi: deleteApprovalApi,
+  });
+}
+
+/**
+ * 질문 게시글 생성 훅
+ */
+export function useCreateQuestion() {
+  return useMutationData<void, [number, QuestionRequestData]>({
+    mutationApi: createQuestionApi,
+  });
+}
+
+/**
+ * 질문 게시글 수정 훅
+ */
+export function useUpdateQuestion() {
+  return useMutationData<void, [number, number, QuestionRequestData]>({
+    mutationApi: updateQuestionApi,
+  });
+}
+
+/**
+ * 질문 게시글 삭제 훅
+ */
+export function useDeleteQuestion() {
+  return useMutationData<void, [number, number]>({
+    mutationApi: deleteQuestionApi,
   });
 }

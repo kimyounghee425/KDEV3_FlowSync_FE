@@ -215,26 +215,37 @@ export default function AdminMembersCreatePage() {
                     />
                     <Box maxHeight="15rem" overflowY="auto">
                       {organizations?.length > 0 ? (
-                        organizations.map((org, index) => (
-                          <Box
-                            key={org.id}
-                            ref={(el: HTMLDivElement | null) =>
-                              (listRefs.current[index] = el)
-                            }
-                            p="3"
-                            borderRadius={"md"}
-                            bg={highlightedIndex === index ? "blue.500" : ""}
-                            color={
-                              highlightedIndex === index ? "white" : "black"
-                            }
-                            cursor="pointer"
-                            mb="2"
-                            _hover={{ bg: "blue.200", color: "white" }}
-                            onClick={() => handleSelectOrganization(org.id)}
-                          >
-                            <Text>{org.name}</Text>
-                          </Box>
-                        ))
+                        organizations.map(
+                          (org, index) =>
+                            org.status === "ACTIVE" && (
+                              <Box
+                                key={org.id}
+                                ref={(el: HTMLDivElement | null) =>
+                                  (listRefs.current[index] = el)
+                                }
+                                p="3"
+                                borderRadius={"md"}
+                                bg={
+                                  highlightedIndex === index ? "blue.500" : ""
+                                }
+                                color={
+                                  highlightedIndex === index ? "white" : "black"
+                                }
+                                cursor="pointer"
+                                mb="2"
+                                _hover={{ bg: "blue.200", color: "white" }}
+                                onClick={() => handleSelectOrganization(org.id)}
+                              >
+                                <Text>
+                                  {org.name}
+                                  &nbsp;
+                                  {org.type === "CUSTOMER"
+                                    ? "(고객사)"
+                                    : "(개발사)"}
+                                </Text>
+                              </Box>
+                            ),
+                        )
                       ) : (
                         <Text>조회된 회사가 없습니다.</Text>
                       )}
