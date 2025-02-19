@@ -243,7 +243,7 @@ function AdminMembersPageContent() {
               <Table.Cell>{`${member.jobRole} | ${member.jobTitle}`}</Table.Cell>
               <Table.Cell>{member.email}</Table.Cell>
               <Table.Cell>{member.phoneNum}</Table.Cell>
-              <Table.Cell>{member.regAt.split(" ")[0]}</Table.Cell>
+              <Table.Cell>{(member.regAt ?? "-").split(" ")[0]}</Table.Cell>
               <Table.Cell onClick={(event) => event.stopPropagation()}>
                 {member.status === "DELETED" ? (
                   <Text color="red">삭제됨</Text>

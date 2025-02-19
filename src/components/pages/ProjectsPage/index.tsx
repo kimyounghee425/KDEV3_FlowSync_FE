@@ -254,8 +254,12 @@ function ProjectsPageContent() {
                     {STATUS_LABELS[project.managementStep] || "알 수 없음"}
                   </ManagementStepTag>
                 </Table.Cell>
-                <Table.Cell>{project.startAt.split(" ")[0]}</Table.Cell>
-                <Table.Cell>{project.deadlineAt.split(" ")[0]}</Table.Cell>
+                <Table.Cell>
+                  {(project.startAt ?? "-").split(" ")[0]}
+                </Table.Cell>
+                <Table.Cell>
+                  {(project.deadlineAt ?? "-").split(" ")[0]}
+                </Table.Cell>
                 <Table.Cell>
                   {(project.closeAt ?? "-").split(" ")[0]}
                 </Table.Cell>

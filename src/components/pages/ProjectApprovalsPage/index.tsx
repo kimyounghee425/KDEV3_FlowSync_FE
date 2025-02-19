@@ -206,7 +206,7 @@ export default function ProjectApprovalsPage() {
               <Table.Cell>
                 {(approval.approvedAt ?? "-").split(" ")[0] || "-"}
               </Table.Cell>
-              <Table.Cell>{approval.regAt.split(" ")[0]}</Table.Cell>
+              <Table.Cell>{(approval.regAt ?? "-").split(" ")[0]}</Table.Cell>
             </Table.Row>
           )}
         />

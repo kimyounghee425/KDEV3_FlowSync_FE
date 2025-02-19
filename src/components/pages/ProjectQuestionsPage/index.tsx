@@ -177,7 +177,9 @@ export default function ProjectQuestionsPage() {
               <Table.Cell>
                 {STATUS_LABELS[question.status] || "알 수 없음"}
               </Table.Cell>
-              <Table.Cell>{question.createdDate.split(" ")[0]}</Table.Cell>
+              <Table.Cell>
+                {(question.createdDate ?? "-").split(" ")[0]}
+              </Table.Cell>
             </Table.Row>
           )}
         />

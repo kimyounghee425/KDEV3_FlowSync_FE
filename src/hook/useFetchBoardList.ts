@@ -126,7 +126,7 @@ export const useProjectQuestionList = (
 export const useProjectApprovalList = (
   resolvedProjectId: string,
   keyword: string,
-  progressStep: string,
+  progressId: string,
   status: string,
   currentPage: number,
   pageSize: number,
@@ -141,7 +141,7 @@ export const useProjectApprovalList = (
     params: [
       resolvedProjectId,
       keyword,
-      progressStep,
+      progressId,
       status,
       currentPage,
       pageSize,
