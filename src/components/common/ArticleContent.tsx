@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 // 외부 라이브러리
 import {
   Box,
@@ -17,9 +19,6 @@ import {
   ArticleFile,
   ContentBlock,
 } from "@/src/types";
-import { formatDateWithTime } from "@/src/utils/formatDateUtil";
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 
 interface ArticleContentProps<T extends QuestionArticle | ApprovalArticle> {
   article: T | null;
@@ -181,9 +180,8 @@ export default function ArticleContent<
         <Text pb={2} fontWeight={"bold"}>
           작성자: {article.register.name} {`/ ${article.register.role}`}
         </Text>
-        <Text color={"gray.400"}>
-          등록일: {formatDateWithTime(article.regAt)}
-        </Text>
+        <Text color={"gray.400"}>등록일: {article.regAt}</Text>
+        <Text color={"gray.400"}>등록일: {article.regAt}</Text>
       </Box>
       <Separator mb={6} size={"lg"} />
 

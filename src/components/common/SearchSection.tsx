@@ -68,6 +68,7 @@ export default function SearchSection({
             variant={"surface"}
             onClick={onSubmit}
             _hover={{ backgroundColor: "#00a8ff", color: "white" }}
+            fontSize="0.9rem"
           >
             검색
           </Button>
@@ -77,6 +78,7 @@ export default function SearchSection({
             variant={"outline"}
             onClick={resetSearch}
             _hover={{ backgroundColor: "#00a8ff", color: "white" }}
+            fontSize="0.9rem"
           >
             초기화
           </Button>

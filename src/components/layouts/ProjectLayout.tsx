@@ -73,7 +73,7 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
   console.log("isAdmin 값:", isAdmin); // 🔍 isAdmin 값 출력
 
   // 프로젝트 정보 접기/펼치기 상태
-  const [isProjectInfoVisible, setIsProjectInfoVisible] = useState(false);
+  const [isProjectInfoVisible, setIsProjectInfoVisible] = useState(true);
 
   // 프로젝트 정보 데이터 패칭
   const {
@@ -87,7 +87,10 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
   // 탭 변경 핸들러
   const handleTabChange = (details: { value: string }) => {
     // details.value = "approvals" | "questions" | "workflow"
-    router.push(`/projects/${projectId}/${details.value}`);
+    const newUrl = `/projects/${projectId}/${details.value}`;
+
+    window.history.replaceState(null, "", newUrl); // ✅ 히스토리 덮어쓰기 (기록 X)
+    router.replace(newUrl); // ✅ Next.js의 상태 갱신 (히스토리 추가 X)
   };
 
   return (

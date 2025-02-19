@@ -1,9 +1,47 @@
 import { useState } from "react";
 import { showToast } from "@/src/utils/showToast";
-import { CommonResponseType, NoticeRequestData, OrganizationProps, ProgressAddProps, ProgressStep, ProgressStepOrder } from "@/src/types";
-import { createNoticeApi, deleteNoticeApi, editNoticeApi } from "@/src/api/notices";
-import { updateProjectProgressStepScheduleApi, updateProjectProgressStepOrderApi, createProjectProgressStepApi, deleteProjectProgressStepApi, updateProjectProgressStepApi } from "@/src/api/projects";
-import { changeOrganizationStatusApi } from "@/src/api/organizations";
+import {
+  CommonResponseType,
+  CreateMemberInput,
+  CreateMemberResponse,
+  CreateOrganizationInput,
+  CreateOrganizationResponse,
+  CreateProjectResponse,
+  DeleteMemberResponse,
+  DeleteOrganizationResponse,
+  MemberProps,
+  NoticeRequestData,
+  OrganizationProps,
+  ProgressAddProps,
+  ProgressStep,
+  ProgressStepOrder,
+} from "@/src/types";
+import {
+  createNoticeApi,
+  deleteNoticeApi,
+  editNoticeApi,
+} from "@/src/api/notices";
+import {
+  updateProjectProgressStepScheduleApi,
+  updateProjectProgressStepOrderApi,
+  createProjectProgressStepApi,
+  deleteProjectProgressStepApi,
+  deleteProjectApi,
+  updateProjectApi,
+  createProjectApi,
+  updateProjectProgressStepApi,
+} from "@/src/api/projects";
+import {
+  changeOrganizationStatusApi,
+  createOrganizationApi,
+  deleteOriginationApi,
+  updateOrganizationApi,
+} from "@/src/api/organizations";
+import {
+  createMemberApi,
+  deleteMemberApi,
+  updateMemberApi,
+} from "@/src/api/members";
 
 interface UseMutationDataProps<T, P extends any[]> {
   mutationApi: (...args: P) => Promise<CommonResponseType<T>>;
@@ -19,7 +57,9 @@ interface UseMutationDataProps<T, P extends any[]> {
  * @param {UseMutationDataProps<T, P>} props 훅에 필요한 속성들
  * @returns mutate 함수, 로딩 상태, 에러 메시지
  */
-export function useMutationData<T, P extends any[]>({ mutationApi }: UseMutationDataProps<T, P>) {
+export function useMutationData<T, P extends any[]>({
+  mutationApi,
+}: UseMutationDataProps<T, P>) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,7 +81,10 @@ export function useMutationData<T, P extends any[]>({ mutationApi }: UseMutation
       return response;
     } catch (err: any) {
       console.error("API 요청 실패:", err);
-      const errorMessage = err.response?.data?.message || err.message || "요청 처리 중 오류가 발생했습니다.";
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "요청 처리 중 오류가 발생했습니다.";
 
       showToast({
         title: "요청 실패",
@@ -62,6 +105,72 @@ export function useMutationData<T, P extends any[]>({ mutationApi }: UseMutation
 }
 
 /**
+ * 회원 생성 훅
+ */
+export function useCreateMember() {
+  return useMutationData<CreateMemberResponse, [CreateMemberInput]>({
+    mutationApi: createMemberApi,
+  });
+}
+
+/**
+ * 회원 수정 훅
+ */
+export function useUpdateMember() {
+  return useMutationData<void, [string, Partial<MemberProps>]>({
+    mutationApi: updateMemberApi,
+  });
+}
+
+/**
+ * 회원 삭제 훅
+ */
+export function useDeleteMember() {
+  return useMutationData<DeleteMemberResponse, [string, string]>({
+    mutationApi: deleteMemberApi,
+  });
+}
+
+/**
+ * 업체 생성 훅
+ */
+export function useCreateOrganization() {
+  return useMutationData<
+    CreateOrganizationResponse,
+    [CreateOrganizationInput, any]
+  >({
+    mutationApi: createOrganizationApi,
+  });
+}
+
+/**
+ * 업체 수정 훅
+ */
+export function useUpdateOrganization() {
+  return useMutationData<void, [string, Partial<OrganizationProps>, any]>({
+    mutationApi: updateOrganizationApi,
+  });
+}
+
+/**
+ * 업체 삭제 훅
+ */
+export function useDeleteOrganization() {
+  return useMutationData<DeleteOrganizationResponse, [string, string]>({
+    mutationApi: deleteOriginationApi,
+  });
+}
+
+/**
+ * 업체 상태 변경 훅
+ */
+export function useUpdateOrganizationStatus() {
+  return useMutationData<OrganizationProps, [string]>({
+    mutationApi: changeOrganizationStatusApi,
+  });
+}
+
+/**
  * 공지사항 생성 훅
  */
 export function useCreateNotice() {
@@ -79,7 +188,6 @@ export function useEditNotice() {
   });
 }
 
-
 /**
  * 공지사항 삭제 훅
  */
@@ -93,18 +201,12 @@ export function useDeleteNotice() {
  * 프로젝트 진행 단계 날짜 업데이트 훅
  */
 export function useUpdateProjectProgressStepSchedule() {
-  return useMutationData<ProgressStep, [string, string, { startAt: string; deadlineAt: string }]>({
+  return useMutationData<
+    ProgressStep,
+    [string, string, { startAt: string; deadlineAt: string }]
+  >({
     mutationApi: updateProjectProgressStepScheduleApi,
   });
-}
-
-/**
- * 조직 상태 변경 훅
- */
-export function useUpdateOrganizationStatus() {
-  return useMutationData<OrganizationProps, [string]> ({
-    mutationApi: changeOrganizationStatusApi,
-  })
 }
 
 /**
@@ -135,6 +237,32 @@ export function useDeleteProjectProgressStep() {
 }
 
 /**
+ * 프로젝트 생성 훅
+ */
+export function useCreateProject() {
+  return useMutationData<CreateProjectResponse, [any]>({
+    mutationApi: createProjectApi,
+  });
+}
+
+/**
+ * 프로젝트 수정 훅
+ */
+export function useUpdateProject() {
+  return useMutationData<CreateProjectResponse, [string, any]>({
+    mutationApi: updateProjectApi,
+  });
+}
+
+/**
+ * 프로젝트 삭제 훅
+ */
+export function useDeleteProject() {
+  return useMutationData<void, [string]>({
+    mutationApi: deleteProjectApi,
+  });
+}
+/*
  * 진행 단계 수정 훅
  */
 export function useUpdateProjectProgressStep() {

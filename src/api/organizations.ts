@@ -5,7 +5,7 @@ import {
   CreateOrganizationInput,
   CreateOrganizationResponse,
   OrganizationProps,
-  DeleteOriginationWithReasonResponse,
+  DeleteOrganizationResponse,
 } from "@/src/types";
 
 // 📌 업체 목록 Fetch API
@@ -35,7 +35,7 @@ export async function fetchOrganizationDetails(
 }
 
 // 📌 업체 생성 API (파일 업로드 API 완성 시 추가 구현 예정)
-export async function createOrganization(
+export async function createOrganizationApi(
   data: CreateOrganizationInput,
   file?: any,
 ): Promise<CommonResponseType<CreateOrganizationResponse>> {
@@ -61,7 +61,7 @@ export async function createOrganization(
 
 // 📌  업체 정보 수정 (PATCH 요청)
 // #TODO 파일 업로드 하여 데이터 multiForm 으로 전송
-export async function updateOrganization(
+export async function updateOrganizationApi(
   organizationId: string,
   updateData: Partial<OrganizationProps>,
   file?: any,
@@ -93,10 +93,10 @@ export async function updateOrganization(
 }
 
 // 📌 업체 삭제 (탈퇴 사유 포함 ver.)
-export async function deleteOriginationWithReason(
+export async function deleteOriginationApi(
   organizationId: string,
   reason: string,
-): Promise<DeleteOriginationWithReasonResponse> {
+): Promise<CommonResponseType<DeleteOrganizationResponse>> {
   try {
     const response = await axiosInstance.post(
       `/admins/organizations/${organizationId}/remove`,
@@ -111,9 +111,9 @@ export async function deleteOriginationWithReason(
 export async function changeOrganizationStatusApi(
   organizationId: string,
 ): Promise<CommonResponseType<OrganizationProps>> {
-    const response = await axiosInstance.post(
-      `/admins/organizations/${organizationId}/changeStatus`,
-    );
+  const response = await axiosInstance.post(
+    `/admins/organizations/${organizationId}/changeStatus`,
+  );
 
-    return response.data;
+  return response.data;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Button, Flex, HStack, Input, Text } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@/src/components/ui/radio";
@@ -9,80 +9,40 @@ import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { defaultValuesOfMember } from "@/src/constants/defaultValues";
 import { validationRulesOfCreatingMember } from "@/src/constants/validationRules";
-import { createMember } from "@/src/api/members";
-import { getOrganizationsApi } from "@/src/api/getOrganization";
-import { OrganizationProps } from "@/src/types";
+import { CreateMemberInput } from "@/src/types";
+import { useInputFormatter } from "@/src/hook/useInputFormatter";
+import { useOrganizationSearch } from "@/src/hook/useOrganizationSearch";
+import { useCreateMember } from "@/src/hook/useMutationData";
+import { useValidation } from "@/src/hook/useValidation";
 
 export default function AdminMembersCreatePage() {
   const route = useRouter();
+  // 📌 useForm 훅으로 입력값 및 유효성 검사 관리
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfMember, validationRulesOfCreatingMember);
+  // 📌 전화번호 및 기타 입력값 포맷팅 (useInputFormatter 활용)
+  const { validateInputs } = useValidation(checkAllInputs);
+  const { formatPhoneNumber, trimWhitespace } = useInputFormatter();
 
   // 업체 관련 정보
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const modalRef = useRef<HTMLDivElement | null>(null);
-  const [organizations, setOrganizations] = useState<OrganizationProps[]>([]);
-  const [selectedOrganization, setSelectedOrganization] =
-    useState<OrganizationProps>();
-  const [selectedOrganizationId, setSelectedOrganizationId] =
-    useState<string>("");
-  const [selectedOrganizationName, setSelectedOrganizationName] =
-    useState<string>("");
-  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1); //  키보드 네비게이션을 위한 상태
-  const listRefs = useRef<Array<HTMLDivElement | null>>([]); // 각 리스트 항목을 참조하는 Ref
+  // 📌 조직 검색 및 선택 기능 (useOrganizationSearch 활용)
+  const {
+    isModalOpen,
+    searchTerm,
+    organizations,
+    selectedOrganizationId,
+    selectedOrganizationName,
+    highlightedIndex,
+    listRefs,
+    modalRef,
+    setSearchTerm,
+    setIsModalOpen,
+    handleSelectOrganization,
+    handleSearchKeyDown,
+  } = useOrganizationSearch();
 
-  // 조직 목록을 가져오는 함수
-  const fetchOrganizations = async (searchQuery: string = "") => {
-    try {
-      const orgData = await getOrganizationsApi();
-
-      // 검색어가 없으면 전체 목록 반환
-      if (searchQuery.trim() === "") {
-        setOrganizations(orgData.data.dtoList);
-        return;
-      }
-
-      // 검색어가 있을 경우 필터링된 목록 반환 (대소문자 구분 없이 검색)
-      const filteredOrganizations = orgData.data.dtoList.filter(
-        (org: OrganizationProps) =>
-          org.name.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
-
-      setOrganizations(filteredOrganizations);
-    } catch (error) {
-      console.error("업체 데이터를 가져오는 중 오류 발생:", error);
-    }
-  };
-
-  //  모달이 열릴 때 조직 목록을 가져옴
-  useEffect(() => {
-    if (isModalOpen && organizations.length === 0) {
-      fetchOrganizations();
-    }
-  }, [isModalOpen]);
-
-  // 외부 클릭 시 모달 닫기
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        setIsModalOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  //  검색어가 변경될 때 자동으로 검색 실행
-  useEffect(() => {
-    fetchOrganizations(searchTerm);
-    setHighlightedIndex(-1); //  검색어 변경 시 하이라이트 초기화
-  }, [searchTerm]);
+  const { mutate: createMember, error: MemberRegisterError } =
+    useCreateMember();
 
   useEffect(() => {
     // 현재 선택된 항목이 화면에 표시되도록 스크롤 조정
@@ -101,100 +61,38 @@ export default function AdminMembersCreatePage() {
       event.preventDefault(); // 기본 제출 방지
     }
   }
-
-  // 모달 내 검색 입력 필드에서만 Enter 키 허용
-  function handleSearchKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      if (highlightedIndex >= 0 && highlightedIndex < organizations.length) {
-        handleSelectOrganization(organizations[highlightedIndex].id);
-      }
-    } else if (event.key === "ArrowDown") {
-      event.preventDefault();
-      setHighlightedIndex((prevIndex) =>
-        prevIndex < organizations.length - 1 ? prevIndex + 1 : prevIndex,
-      );
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      setHighlightedIndex((prevIndex) =>
-        prevIndex > 0 ? prevIndex - 1 : prevIndex,
-      );
-    } else if (event.key === "Escape") {
-      setIsModalOpen(false);
-    }
-  }
-
-  //  조직 선택 시 ID와 Name을 함께 설정
-  async function handleSelectOrganization(orgId: string) {
-    setSelectedOrganizationId(orgId);
-    const selectedOrg = organizations.find((org) => org.id === orgId);
-    setSelectedOrganizationName(selectedOrg ? selectedOrg.name : ""); // 선택된 조직명 업데이트
-    setIsModalOpen(false);
-  }
-
+  // 입력 변경 핸들러 (전화번호 포맷 적용)
   function handleChange(inputName: string, value: string) {
     if (inputName === "phoneNum") {
-      const onlyNumbers = value
-        .toString()
-        .replace(/[^0-9]/g, "")
-        .slice(0, 11);
-
-      let formattedValue = onlyNumbers;
-
-      if (onlyNumbers.length > 3 && onlyNumbers.length <= 7) {
-        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3)}`;
-      } else if (onlyNumbers.length > 7) {
-        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3, 7)}-${onlyNumbers.slice(7, 11)}`;
-      }
-
-      handleInputChange(inputName, formattedValue);
+      handleInputChange(inputName, formatPhoneNumber(value));
     } else {
       handleInputChange(inputName, value);
     }
   }
-
-  // 유효성 검사
-  function validateInputs() {
-    if (!checkAllInputs()) {
-      alert("입력값을 확인하세요.");
-      return false;
-    }
-    return true;
-  }
-
-  // 입력값 공백 다듬기
-  function formattedData(input: string) {
-    return input.replace(/\s{2,}/g, " ").trim();
-  }
-
-  // 등록 버튼 클릭 후 회원 등록 API 호출
+  // 회원 생성 요청
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!validateInputs()) return;
-    inputValues.role.trim().replace(/\s{2,}/g, " ");
-    inputValues.name.trim().replace(/\s{2,}/g, " ");
-    inputValues.jobRole.trim().replace(/\s{2,}/g, " ");
-    inputValues.jobTitle.trim().replace(/\s{2,}/g, " ");
-    inputValues.introduction.trim().replace(/\s{2,}/g, " ");
-    inputValues.remark.trim().replace(/\s{2,}/g, " ");
-    try {
-      const response = await createMember(
-        formattedData(inputValues.role),
-        selectedOrganizationId,
-        formattedData(inputValues.name),
-        inputValues.email,
-        inputValues.password,
-        inputValues.phoneNum,
-        formattedData(inputValues.jobRole),
-        formattedData(inputValues.jobTitle),
-        formattedData(inputValues.introduction),
-        formattedData(inputValues.remark),
-      );
-      alert("회원이 성공적으로 등록되었습니다.");
-      route.push("/admin/members");
-    } catch (error) {
-      alert("회원 등록에 실패했습니다. 다시 시도해주세요.");
-    }
+    if (!validateInputs(inputValues)) return;
+
+    // `CreateMemberInput` 타입을 가진 객체 생성
+    const newMember: CreateMemberInput = {
+      role: inputValues.role,
+      organizationId: selectedOrganizationId,
+      name: trimWhitespace(inputValues.name),
+      email: trimWhitespace(inputValues.email),
+      password: trimWhitespace(inputValues.password),
+      phoneNum: inputValues.phoneNum,
+      jobRole: trimWhitespace(inputValues.jobRole),
+      jobTitle: trimWhitespace(inputValues.jobTitle),
+      introduction: trimWhitespace(inputValues.introduction),
+      remark: trimWhitespace(inputValues.remark),
+    };
+
+    const response = await createMember(newMember); // API 호출
+
+    if (response === null) return;
+
+    route.push("/admin/members"); // 성공 시 이동
   }
 
   return (

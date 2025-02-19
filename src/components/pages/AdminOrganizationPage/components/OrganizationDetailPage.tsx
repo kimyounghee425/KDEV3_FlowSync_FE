@@ -10,6 +10,7 @@ import {
   Stack,
   Table,
   Tabs,
+  Text,
   useTabs,
 } from "@chakra-ui/react";
 import { Switch } from "@/src/components/ui/switch";
@@ -17,13 +18,9 @@ import { Radio, RadioGroup } from "@/src/components/ui/radio";
 import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { MemberProps, OrganizationProps } from "@/src/types";
-import {
-  deleteOriginationWithReason,
-  fetchOrganizationDetails,
-  updateOrganization,
-} from "@/src/api/organizations";
+import { fetchOrganizationDetails } from "@/src/api/organizations";
 import styles from "@/src/components/common/InputForm.module.css";
-import { validationRulesOfUpdatingOrganization } from "@/src/constants/validationRules";
+import { validationRulesOfOrganization } from "@/src/constants/validationRules";
 import {
   useOrganizationMemberList,
   useOrganizationProjectList,
@@ -33,15 +30,15 @@ import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import CommonTable from "@/src/components/common/CommonTable";
 import StatusTag from "@/src/components/pages/ProjectsPage/components/ManagementStepTag";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 import Pagination from "@/src/components/common/Pagination";
-import {
-  activateMemberApi,
-  deactivateMemberApi,
-  deleteMember,
-} from "@/src/api/members";
+import { activateMemberApi, deactivateMemberApi } from "@/src/api/members";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
 import { LuFolder, LuUser } from "react-icons/lu";
+import {
+  useDeleteMember,
+  useDeleteOrganization,
+  useUpdateOrganization,
+} from "@/src/hook/useMutationData";
 
 const memberRoleFramework = createListCollection<{
   label: string;
@@ -95,7 +92,7 @@ const STATUS_LABELS: Record<string, string> = {
   DELETED: "삭제",
 };
 
-export default function OrganizationDetailForm({
+export default function OrganizationDetailPage({
   organizationData,
   organizationId,
 }: {
@@ -121,6 +118,10 @@ export default function OrganizationDetailForm({
   const tabs = useTabs({
     defaultValue: "members",
   });
+  const { mutate: updateOrganization, error: OrganizationUpdateError } =
+    useUpdateOrganization();
+  const { mutate: deleteOrganization, error: OrganizationDeleteError } =
+    useDeleteOrganization();
 
   // 🔹 formData가 변경될 때만 실행되도록 설정
   useEffect(() => {
@@ -164,9 +165,7 @@ export default function OrganizationDetailForm({
   // 📌 입력 값 유효성 검사
   function validateInputs() {
     // 🔹 `Object.entries()`를 사용하여 모든 필드에 대한 유효성 검사 수행
-    const updatedErrors = Object.entries(
-      validationRulesOfUpdatingOrganization,
-    ).reduce(
+    const updatedErrors = Object.entries(validationRulesOfOrganization).reduce(
       (errors, [inputName, validationRule]) => {
         if (
           !validationRule.isValid(
@@ -244,45 +243,33 @@ export default function OrganizationDetailForm({
       return;
     }
 
-    try {
-      const response = await updateOrganization(
-        organizationId,
-        {
-          type: formData.type,
-          name: formData.name,
-          brNumber: formData.brNumber,
-          brCertificateUrl: formData.brCertificateUrl,
-          streetAddress: formData.streetAddress,
-          detailAddress: formData.detailAddress,
-          phoneNumber: formData.phoneNumber,
-        },
-        selectedFile,
-      );
+    const organizationData = {
+      type: formData.type,
+      name: formData.name,
+      brNumber: formData.brNumber,
+      brCertificateUrl: formData.brCertificateUrl,
+      streetAddress: formData.streetAddress,
+      detailAddress: formData.detailAddress,
+      phoneNumber: formData.phoneNumber,
+    };
+    const response = await updateOrganization(
+      organizationId,
+      organizationData,
+      selectedFile,
+    );
+    // 요청 실패 시 즉시 리턴
+    if (response === null) return;
 
-      // 수정된 데이터만 렌더링
-      refetchOrganizationData();
-      setIsChanged({}); // 모든 필드 변경 상태 및 스타일 초기화
-      // alert("업체 정보가 수정되었습니다.");
-    } catch (error) {
-      // alert("수정 실패: 다시 시도해주세요.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    // 수정된 데이터만 렌더링
+    refetchOrganizationData();
+    setIsChanged({}); // 모든 필드 변경 상태 및 스타일 초기화
+    setIsSubmitting(false);
   }
 
   // 📌 업체 삭제 - 탈퇴 사유 입력 ver.
   async function handleDelete(deleteReason: string) {
-    if (!deleteReason.trim()) {
-      alert("탈퇴 사유를 입력해주세요.");
-      return;
-    }
-    try {
-      await deleteOriginationWithReason(organizationId, deleteReason); // 탈퇴 사유 입력값 전달
-      alert("업체가 삭제 조치 되었습니다.");
-      route.push("/admin/organizations"); // 삭제 후 목록 페이지(회원 관리)로 이동
-    } catch (error) {
-      alert("업체 삭제에 실패했습니다.");
-    }
+    const response = await deleteOrganization(organizationId, deleteReason); // 탈퇴 사유 입력값 전달
+    route.push("/admin/organizations"); // 삭제 후 목록 페이지(회원 관리)로 이동
   }
 
   return (
@@ -496,7 +483,9 @@ export default function OrganizationDetailForm({
                 onClick={() => {
                   const params = new URLSearchParams();
                   params.set("tab", "members"); // ✅ 탭 값만 유지, 나머지 초기화
-                  route.push(`?${params.toString()}`);
+                  const newUrl = `?${params.toString()}`;
+                  window.history.replaceState(null, "", newUrl); // ✅ 히스토리에 추가
+                  route.push(newUrl);
                 }}
                 _selected={{ color: "#00a8ff" }}
               >
@@ -508,7 +497,9 @@ export default function OrganizationDetailForm({
                 onClick={() => {
                   const params = new URLSearchParams();
                   params.set("tab", "projects"); // ✅ 탭 값만 유지, 나머지 초기화
-                  route.push(`?${params.toString()}`);
+                  const newUrl = `?${params.toString()}`;
+                  window.history.replaceState(null, "", newUrl); // ✅ 히스토리에 추가
+                  route.push(newUrl);
                 }}
                 _selected={{ color: "#00a8ff" }}
               >
@@ -568,6 +559,8 @@ function OrganizationMemberList({
 
   // ✅ 상태 변경을 위한 로컬 상태 추가
   const [memberData, setMemberData] = useState<MemberProps[]>([]);
+  const { mutate: deleteMember, error: MemberDeleteError } = useDeleteMember();
+
   useEffect(() => {
     if (memberList) {
       setMemberData(memberList);
@@ -635,13 +628,9 @@ function OrganizationMemberList({
   const handleDelete = async (memberId: string) => {
     const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
     if (!confirmDelete) return;
-    try {
-      await deleteMember(memberId, "");
-      alert("회원이 탈퇴 조치 되었습니다.");
-      refetch();
-    } catch (error) {
-      alert(`삭제 중 문제가 발생했습니다 : ${error}`);
-    }
+    const response = await deleteMember(memberId, ""); // 탈퇴 사유 입력값 전달
+    if (response === null) return;
+    refetch();
   };
 
   return (
@@ -665,9 +654,9 @@ function OrganizationMemberList({
             <FilterSelectBox
               statusFramework={memberStatusFramework}
               selectedValue={memberStatus}
-              placeholder="활성화 여부"
+              placeholder="회원 상태"
               queryKey="memberStatus"
-              width="150px"
+              width="120px"
             />
           </SearchSection>
         </Flex>
@@ -729,10 +718,10 @@ function OrganizationMemberList({
                 <Table.Cell>{`${member.jobRole} | ${member.jobTitle}`}</Table.Cell>
                 <Table.Cell>{member.email}</Table.Cell>
                 <Table.Cell>{member.phoneNum}</Table.Cell>
-                <Table.Cell>{formatDynamicDate(member.regAt)}</Table.Cell>
+                <Table.Cell>{member.regAt.split(" ")[0]}</Table.Cell>
                 <Table.Cell onClick={(event) => event.stopPropagation()}>
                   {member.status === "DELETED" ? (
-                    <Switch disabled />
+                    <Text color="red">삭제됨</Text>
                   ) : (
                     <Switch
                       checked={member.status === "ACTIVE"}
@@ -858,6 +847,7 @@ function OrganizationProjectList({
           }
           headerTitle={
             <Table.Row
+              backgroundColor={"#eee"}
               css={{
                 "& > th": { textAlign: "center" },
               }}
@@ -891,12 +881,12 @@ function OrganizationProjectList({
                 <Table.Cell>
                   <StatusTag>{STATUS_LABELS[project.managementStep]}</StatusTag>
                 </Table.Cell>
-                <Table.Cell>{formatDynamicDate(project.startAt)}</Table.Cell>
-                <Table.Cell>{formatDynamicDate(project.deadlineAt)}</Table.Cell>
+                <Table.Cell>{project.startAt.split(" ")[0]}</Table.Cell>
+                <Table.Cell>{project.deadlineAt.split(" ")[0]}</Table.Cell>
                 <Table.Cell>
-                  {formatDynamicDate(project.closeAt) === ""
+                  {project.closeAt.split(" ")[0] === ""
                     ? "-"
-                    : formatDynamicDate(project.closeAt)}
+                    : project.closeAt.split(" ")[0]}
                 </Table.Cell>
               </Table.Row>
             );

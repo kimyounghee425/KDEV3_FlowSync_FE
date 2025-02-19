@@ -11,13 +11,13 @@ import OrganizationSelector from "@/src/components/pages/ProjectsCreatePage/comp
 
 import { fetchMembersWithinOrgApi } from "@/src/api/members";
 import { fetchOrganizationDetails } from "@/src/api/organizations";
-import {
-  createProjectApi,
-  deleteProjectApi,
-  updateProjectApi,
-} from "@/src/api/projects";
 import { MemberProps, ProjectDetailProps } from "@/src/types";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
+import {
+  useCreateProject,
+  useDeleteProject,
+  useUpdateProject,
+} from "@/src/hook/useMutationData";
 
 interface ProjectFormProps {
   projectData?: ProjectDetailProps; // projectData가 있을 경우 수정 모드
@@ -28,10 +28,16 @@ export default function ProjectForm({
   projectData,
   projectId,
 }: ProjectFormProps) {
-  const router = useRouter();
+  const route = useRouter();
   const isEditMode = !!projectId; // projectId가 있으면 수정 모드
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
+  // 업체 상태 변경 훅
+  const { mutate: createProject, error: ProjectCreateError } =
+    useCreateProject();
+  const { mutate: updateProject, error: ProjectUpdateError } =
+    useUpdateProject();
+  const { mutate: deleteProject, error: ProjectDeleteError } =
+    useDeleteProject();
   // 📌 프로젝트 상태 관리
   const [formData, setFormData] = useState<ProjectDetailProps>({
     id: projectData?.id || "",
@@ -41,7 +47,6 @@ export default function ProjectForm({
     managementStep: projectData?.managementStep || "CONTRACT",
     startAt: projectData?.startAt || "",
     deadlineAt: projectData?.deadlineAt || "",
-    // closeAt: projectData?.closeAt || "",
     devOwnerId: projectData?.devOwnerId || "",
     customerOwnerId: projectData?.customerOwnerId || "",
     customerOrgId: projectData?.customerOrgId || "",
@@ -49,6 +54,12 @@ export default function ProjectForm({
     members: projectData?.members || [],
   });
 
+  const [customerOwnerId, setCustomerOwnerId] = useState<string>(
+    formData.customerOwnerId,
+  );
+  const [developerOwnerId, setDeveloperOwnerId] = useState<string>(
+    formData.devOwnerId,
+  );
   const [selectedCustomerOrgName, setSelectedCustomerOrgName] = useState("");
 
   const [selectedDeveloperOrgName, setSelectedDeveloperOrgName] = useState("");
@@ -124,18 +135,6 @@ export default function ProjectForm({
     ]);
   }, [selectedCustomerMembers, selectedDeveloperMembers]);
 
-  const convertToKST = (date: Date | null | undefined): string => {
-    if (!date || isNaN(date.getTime())) {
-      return ""; // 🔥 `null` 대신 빈 문자열 반환
-    }
-    // 🔹 한국 시간으로 변환 (UTC+9)
-    const kstOffset = 9 * 60 * 60 * 1000;
-    const kstDate = new Date(date.getTime() + kstOffset);
-
-    // 🔹 날짜 형식: YYYY-MM-DD HH:mm:ss
-    return kstDate.toISOString().replace("T", " ").split(".")[0];
-  };
-
   // 📌 **프로젝트 생성/수정 API 호출**
   const handleSubmit = async (event: React.FormEvent) => {
     event?.preventDefault();
@@ -145,79 +144,67 @@ export default function ProjectForm({
 
     // 필수 정보
     if (formData.name.length < 2) {
-      alert("프로젝트명을 2글자 이상 입력해주세요.")
+      alert("프로젝트명을 2글자 이상 입력해주세요.");
       return;
     } else if (formData.description.length < 2) {
-      alert("프로젝트 개요를 2글자 이상 입력해주세요.")
+      alert("프로젝트 개요를 2글자 이상 입력해주세요.");
       return;
     } else if (!formData.startAt) {
-      alert("프로젝트 시작일을 선택해주세요.")
+      alert("프로젝트 시작일을 선택해주세요.");
       return;
     } else if (!formData.deadlineAt) {
-      alert("프로젝트 종료일을 선택해주세요.")
+      alert("프로젝트 종료일을 선택해주세요.");
       return;
     } else if (!formData.customerOrgId) {
-      alert("고객사를 지정해주세요.")
+      alert("고객사를 지정해주세요.");
       return;
     } else if (!formData.developerOrgId) {
-      alert("개발사를 지정해주세요.")
+      alert("개발사를 지정해주세요.");
       return;
     } else if (selectedCustomerMembers.length === 0) {
-      alert("고객사 담당자 회원을 배정해주세요.")
+      alert("고객사 담당자 회원을 배정해주세요.");
       return;
     } else if (selectedDeveloperMembers.length === 0) {
-      alert("개발사 담당자 회원을 배정해주세요.")
+      alert("개발사 담당자 회원을 배정해주세요.");
       return;
     } else if (!formData.customerOwnerId) {
-      alert("고객사 Owner 을 설정해주세요.")
+      alert("고객사 Owner 을 설정해주세요.");
       return;
     } else if (!formData.devOwnerId) {
-      alert("개발사 Owner 을 설정해주세요.")
+      alert("개발사 Owner 을 설정해주세요.");
       return;
-    } 
+    }
 
     const requestBody = {
       ...formData,
-      // startAt: formData.startAt.replace("T", " ").split(".")[0],
-      // closeAt: formData.closeAt.replace("T", " ").split(".")[0],
-      startAt: formData.startAt ? convertToKST(new Date(formData.startAt)) : "",
-      deadlineAt: formData.deadlineAt
-        ? convertToKST(new Date(formData.deadlineAt))
-        : "",
-      // closeAt: undefined, // ✅ closeAt은 백엔드에서 자동 업데이트되므로 요청에서 제외
-      members: [
-        ...selectedCustomerMembers.map((m) => Number(m.id)),
-        ...selectedDeveloperMembers.map((m) => Number(m.id)),
-      ],
+      members: [...selectedCustomerMembers, ...selectedDeveloperMembers].map(
+        (m) => m.id,
+      ),
     };
 
-    try {
-      if (isEditMode) {
-        await updateProjectApi(projectId, requestBody);
-        alert("프로젝트가 성공적으로 수정되었습니다.");
-        router.push(`/projects/${projectId}`); // 수정 후 프로젝트 상세 페이지로 이동
-      } else {
-        await createProjectApi(requestBody);
-        alert("프로젝트가 성공적으로 생성되었습니다.");
-        router.push("/"); // 생성 후 목록 페이지로 이동
-      }
-    } catch (error) {
-      console.error(error);
-      alert("프로젝트 처리 중 오류가 발생했습니다.");
+    if (isEditMode) {
+      const response = await updateProject(projectId, requestBody);
+      if (response === null) return;
+      route.back();
+    } else {
+      const response = await createProject(requestBody);
+      if (response === null) return;
+
+      route.push("/");
     }
   };
 
   // 📌 **프로젝트 삭제 API 호출**
   const handleDelete = async () => {
-    try {
+    if (projectId) {
+      const response = await deleteProject(projectId);
+      if (response === null) return;
+
       if (isEditMode) {
-        await deleteProjectApi(projectId);
-        alert("프로젝트가 성공적으로 삭제되었습니다.");
-        router.back(); // 삭제 후 프로젝트 목록 페이지로 이동
+        route.back();
+      } else {
+        route.refresh();
       }
-    } catch (error) {
-      console.error(error);
-      alert("프로젝트 삭제 중 오류가 발생했습니다.");
     }
   };
 
@@ -256,20 +243,12 @@ export default function ProjectForm({
             <DateSection
               startAt={formData.startAt}
               closeAt={formData.deadlineAt} // ✅ 기존 closeAt → deadlineAt 사용
-              setStartAt={(date) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  startAt: date ? convertToKST(new Date(date)) : prev.startAt,
-                }));
-              }}
-              setCloseAt={(date) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  deadlineAt: date
-                    ? convertToKST(new Date(date))
-                    : prev.deadlineAt,
-                }));
-              }}
+              setStartAt={(date) =>
+                setFormData((prev) => ({ ...prev, startAt: date }))
+              }
+              setCloseAt={(date) =>
+                setFormData((prev) => ({ ...prev, deadlineAt: date }))
+              }
             />
           </Box>
         </Flex>

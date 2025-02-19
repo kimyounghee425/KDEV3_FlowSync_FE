@@ -114,13 +114,13 @@ export default function InputFormLayout({
                             <Button variant="outline">취소</Button>
                           </DialogActionTrigger>
                           <Button
-                            // colorScheme="red"
-                            disabled={!deleteReason.trim()} // 삭제 사유 입력 전까지 비활성화
-                            opacity={deleteReason.trim() ? 1 : 0.5} // 비활성화 시 흐린 색상 적용
+                            backgroundColor="#dc3545"
                             onClick={() => {
                               onDelete(deleteReason);
                               setDeleteReason(""); // 입력값 초기화
                             }}
+                            color="white"
+                            _hover={{ backgroundColor: "#b41f2e" }}
                           >
                             삭제 확인
                           </Button>

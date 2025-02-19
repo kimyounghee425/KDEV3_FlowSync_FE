@@ -12,7 +12,6 @@ import {
   editQuestionComment,
 } from "@/src/api/commentAPI";
 import CommentBox from "@/src/components/common/CommentBox";
-import { formattedDate } from "@/src/utils/formatDateUtil";
 import { readQuestionApi, readApprovalApi } from "@/src/api/ReadArticle";
 import { getMeApi } from "@/src/api/getMembersApi";
 
@@ -284,7 +283,7 @@ export default function CommentItem({
       <Flex justifyContent="space-between" alignItems="center" mb={3}>
         <Flex>
           <Text color={"gray.400"} mr={3}>
-            {formattedDate(comment.regAt)}
+            {comment.regAt}
           </Text>
           {!(comment.parentId !== null && !comment.isParent) && (
             <Button

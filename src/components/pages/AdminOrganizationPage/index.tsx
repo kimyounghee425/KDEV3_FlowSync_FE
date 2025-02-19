@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { OrganizationProps } from "@/src/types";
 import { fetchOrganizationDetails } from "@/src/api/organizations";
-import OrganizationDetailForm from "@/src/components/pages/AdminOrganizationPage/components/organizationDetailForm";
+import OrganizationDetailPage from "@/src/components/pages/AdminOrganizationPage/components/OrganizationDetailPage";
 
 export default function AdminOrganizationPage() {
   const router = useRouter();
@@ -53,7 +53,7 @@ export default function AdminOrganizationPage() {
   }
 
   return (
-    <OrganizationDetailForm
+    <OrganizationDetailPage
       organizationData={organizationData}
       organizationId={organizationId as string}
     />

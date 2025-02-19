@@ -18,10 +18,11 @@ import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
 import CreateButton from "@/src/components/common/CreateButton";
-import { deleteOriginationWithReason } from "@/src/api/organizations";
-import { useUpdateOrganizationStatus } from "@/src/hook/useMutationData";
+import {
+  useDeleteOrganization,
+  useUpdateOrganizationStatus,
+} from "@/src/hook/useMutationData";
 import { useOrganizationList } from "@/src/hook/useFetchBoardList";
-import { formatDynamicDate } from "@/src/utils/formatDateUtil";
 
 const organizationTypeFramework = createListCollection<{
   label: string;
@@ -80,6 +81,8 @@ function AdminOrganizationsPageContent() {
 
   // 업체 상태 변경 훅
   const { mutate: updateOrganizationStatus } = useUpdateOrganizationStatus();
+  const { mutate: deleteOrganization, error: OrganizationDeleteError } =
+    useDeleteOrganization();
 
   // 업체 상태 변경 핸들러
   const handleStatusChange = async (organizationId: string) => {
@@ -117,13 +120,9 @@ function AdminOrganizationsPageContent() {
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
     if (!confirmDelete) return;
-    try {
-      await deleteOriginationWithReason(id, "");
-      alert("업체가 삭제 조치 되었습니다.");
-      router.refresh();
-    } catch (error) {
-      alert(`삭제 중 문제가 발생했습니다 : ${error}`);
-    }
+    const response = await deleteOrganization(id, ""); // 탈퇴 사유 입력값 전달
+    if (response === null) return;
+    refetch();
   };
 
   return (
@@ -208,7 +207,9 @@ function AdminOrganizationsPageContent() {
               <Table.Cell>
                 {`${organization.streetAddress} ${organization.detailAddress}`}
               </Table.Cell>
-              <Table.Cell>{formatDynamicDate(organization.regAt)}</Table.Cell>
+              <Table.Cell>
+                {(organization.regAt ?? "-").split(" ")[0]}
+              </Table.Cell>
 
               <Table.Cell onClick={(event) => event.stopPropagation()}>
                 {organization.status === "DELETED" ? (

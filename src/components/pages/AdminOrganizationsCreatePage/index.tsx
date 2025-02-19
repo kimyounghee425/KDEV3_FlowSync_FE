@@ -7,81 +7,56 @@ import { useForm } from "@/src/hook/useForm";
 import InputForm from "@/src/components/common/InputForm";
 import InputFormLayout from "@/src/components/layouts/InputFormLayout";
 import { defaultValuesOfOrganizaion } from "@/src/constants/defaultValues";
-import { validationRulesOfCreatingOrganization } from "@/src/constants/validationRules";
-import { createOrganization } from "@/src/api/organizations";
-import { useState } from "react";
+import { validationRulesOfOrganization } from "@/src/constants/validationRules";
+import { useInputFormatter } from "@/src/hook/useInputFormatter";
+import { useValidation } from "@/src/hook/useValidation";
+import { useCreateOrganization } from "@/src/hook/useMutationData";
 
 export default function AdminOrganizationsCreatePage() {
   const route = useRouter();
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
-    useForm(defaultValuesOfOrganizaion, validationRulesOfCreatingOrganization);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    useForm(defaultValuesOfOrganizaion, validationRulesOfOrganization);
 
-  function validateInputs() {
-    if (!checkAllInputs()) {
-      alert("입력값을 확인하세요.");
-      return false;
-    }
-    return true;
-  }
+  const {
+    formatPhoneNumber,
+    formatBusinessNumber,
+    handleFileUpload,
+    selectedFile,
+  } = useInputFormatter();
+  const { validateInputs } = useValidation(checkAllInputs);
+  const { mutate: createOrganization, error: OrganizationRegisterError } =
+    useCreateOrganization();
 
   function handleChange(inputName: string, value: string | File) {
     if (inputName === "phoneNumber") {
-      // 📌 전화번호 입력 처리 (자동 하이픈 추가)
-      const onlyNumbers = value.toString().replace(/[^0-9]/g, "");
-      let formattedValue = onlyNumbers;
-
-      if (onlyNumbers.length > 3 && onlyNumbers.length <= 7) {
-        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3)}`;
-      } else if (onlyNumbers.length > 7) {
-        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3, 7)}-${onlyNumbers.slice(7, 11)}`;
-      }
-
-      handleInputChange(inputName, formattedValue);
+      handleInputChange(inputName, formatPhoneNumber(value.toString()));
     } else if (inputName === "brNumber") {
-      // 📌 사업자 등록번호 입력 처리 (자동 하이픈 추가) => "123-45-67890" 형식
-      const onlyNumbers = value.toString().replace(/[^0-9]/g, "");
-      let formattedValue = onlyNumbers;
-
-      if (onlyNumbers.length > 3 && onlyNumbers.length <= 5) {
-        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3)}`;
-      } else if (onlyNumbers.length > 5) {
-        formattedValue = `${onlyNumbers.slice(0, 3)}-${onlyNumbers.slice(3, 5)}-${onlyNumbers.slice(5, 10)}`;
-      }
-
-      handleInputChange(inputName, formattedValue);
+      handleInputChange(inputName, formatBusinessNumber(value.toString()));
     } else if (inputName === "businessLicense") {
-      // 📌 파일 업로드 처리
-      if (value instanceof File) {
-        setSelectedFile(value);
-      }
+      if (value instanceof File) handleFileUpload(value);
     } else {
-      // 📌 일반 입력 처리
       handleInputChange(inputName, value.toString());
     }
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!validateInputs()) return;
+    if (!validateInputs(inputValues)) return;
 
-    try {
-      const organizationData = {
-        type: inputValues.type,
-        brNumber: inputValues.brNumber,
-        name: inputValues.name,
-        streetAddress: inputValues.streetAddress,
-        detailAddress: inputValues.detailAddress,
-        phoneNumber: inputValues.phoneNumber,
-      };
+    const organizationData = {
+      type: inputValues.type,
+      brNumber: inputValues.brNumber,
+      name: inputValues.name,
+      streetAddress: inputValues.streetAddress,
+      detailAddress: inputValues.detailAddress,
+      phoneNumber: inputValues.phoneNumber,
+    };
 
-      const response = await createOrganization(organizationData, selectedFile);
-      alert("업체가 성공적으로 등록되었습니다.");
-      route.push("/admin/organizations");
-    } catch (error) {
-      console.error("업체 등록 중 오류 발생:", error);
-      alert("업체 등록에 실패했습니다. 다시 시도해주세요.");
-    }
+    const response = await createOrganization(organizationData, selectedFile);
+    // 요청 실패 시 즉시 리턴
+    if (response === null) return;
+
+    route.push("/admin/organizations");
   }
 
   return (
@@ -90,7 +65,6 @@ export default function AdminOrganizationsCreatePage() {
       onSubmit={handleSubmit}
       isLoading={false}
     >
-      {/* #TODO 화면 렌더링 시 '업체 타입' 기본값으로 '개발사' 선택되어져야 함  */}
       {/* 업체 생성 페이지 - 업체 유형 선택*/}
       <Box>
         <Flex direction="row" align="center" mb={4}>

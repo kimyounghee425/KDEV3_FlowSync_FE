@@ -47,7 +47,7 @@ export interface MemberProps {
 // `createMember` 함수에서 입력값의 타입 정의
 export interface CreateMemberInput {
   role: string;
-  organizationId: number;
+  organizationId: string;
   name: string;
   email: string;
   password: string;
@@ -132,15 +132,8 @@ export interface OrganizationListResponse {
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
-// 🔹 업체 삭제 응답 타입 정의 (탈퇴 사유 포함 X)
-export interface DeleteOriginationResponse {
-  code: number; // HTTP 상태 코드
-  result: "SUCCESS" | "FAIL"; // 결과 상태
-  message: string; // 응답 메시지
-}
-
 // 🔹 업체 삭제 응답 타입 정의 (탈퇴 사유 포함 ver.)
-export interface DeleteOriginationWithReasonResponse {
+export interface DeleteOrganizationResponse {
   code: number; // HTTP 상태 코드
   result: "SUCCESS" | "FAIL"; // 결과 상태
   message: string; // 응답 메시지
@@ -153,7 +146,6 @@ export interface CreateProjectInput {
   managementStep: string; // 계약단계
   startAt: string;
   deadlineAt: string;
-  // closeAt?: string;
   devOwnerId: string;
   customerOwnerId: string;
   developerOrgId: string;
