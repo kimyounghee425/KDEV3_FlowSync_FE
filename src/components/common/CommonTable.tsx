@@ -1,8 +1,8 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Box, Table } from "@chakra-ui/react";
-import { SkeletonText } from "@/src/components/ui/skeleton";
+import { Box, Flex, Table } from "@chakra-ui/react";
+import { Skeleton } from "@/src/components/ui/skeleton";
 
 interface CommonTableProps<T> {
   columnsWidth?: ReactNode;
@@ -10,6 +10,8 @@ interface CommonTableProps<T> {
   data: T[] | null;
   loading: boolean;
   renderRow: (item: T, index?: number) => ReactNode;
+  skeletonCount?: number;
+  colspan?: number;
 }
 
 export default function CommonTable<T extends { id: string }>({
@@ -18,6 +20,8 @@ export default function CommonTable<T extends { id: string }>({
   data = [],
   loading,
   renderRow,
+  skeletonCount = 6,
+  colspan = 8,
 }: CommonTableProps<T>) {
   // 반응형 스타일 값
 
@@ -25,14 +29,7 @@ export default function CommonTable<T extends { id: string }>({
     <Box
       overflowX="auto" // ✅ 테이블이 넘칠 경우 가로 스크롤 활성화
       whiteSpace="nowrap" // ✅ 텍스트 줄바꿈 방지
-      css={{
-        "&::-webkit-scrollbar": { height: "8px" },
-        "&::-webkit-scrollbar-thumb": {
-          background: "#888",
-          borderRadius: "10px",
-        },
-        "&::-webkit-scrollbar-thumb:hover": { background: "#555" },
-      }}
+      maxHeight=""
     >
       <Table.Root
         size="sm"
@@ -52,8 +49,20 @@ export default function CommonTable<T extends { id: string }>({
         <Table.Body>
           {loading ? (
             <Table.Row>
-              <Table.Cell colSpan={7}>
-                <SkeletonText noOfLines={5} gap="4" />
+              <Table.Cell colSpan={colspan}>
+                {Array.from({ length: skeletonCount }).map((_, index) => (
+                  <Flex alignItems={"center"} height={"40px"} key={index}>
+                    <Skeleton
+                      height="20px"
+                      variant="shine"
+                      width="full"
+                      css={{
+                        "--start-color": "colors.white.100",
+                        "--end-color": "colors.white.100",
+                      }}
+                    />
+                  </Flex>
+                ))}
               </Table.Cell>
             </Table.Row>
           ) : (

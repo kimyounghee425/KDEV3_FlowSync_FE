@@ -1,7 +1,7 @@
 "use client";
 
 import { JSX, useState } from "react";
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import {
   OctagonPause,
   PackageCheck,
@@ -12,10 +12,9 @@ import {
 import ProjectsManagementStepCard from "@/src/components/pages/ProjectWorkFlowPage/components/ProjectsManagementStepCard";
 import { ProjectManagementSteps } from "@/src/constants/projectManagementSteps";
 import ConfirmDialog from "@/src/components/common/ConfirmDialog";
-import { projectManagementStepApi } from "@/src/api/projects";
 import { useParams } from "next/navigation";
-import { showToast } from "@/src/utils/showToast";
 import { useProjectInfoContext } from "@/src/context/ProjectInfoContext";
+import { useUpdateProjectManagementStep } from "@/src/hook/useMutationData";
 
 const icons: Partial<Record<ProjectManagementSteps, JSX.Element>> = {
   [ProjectManagementSteps.CONTRACT]: <Signature size="60%" />,
@@ -34,9 +33,11 @@ export default function ProjectsManagementStepCards({
 }: ProjectsManagementStepCardsProps) {
   const { projectId } = useParams();
 
+  const { mutate: updateManagementStep, loading: isLoading } =
+    useUpdateProjectManagementStep();
+
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [selectedStep, setSelectedStep] = useState<string>();
-  const [isLoading, setIsLoading] = useState(false);
   const { data, refetch } = useProjectInfoContext();
   const currentManagementStep = data?.managementStep; // 현재 프로젝트 단계
 
@@ -69,14 +70,6 @@ export default function ProjectsManagementStepCards({
   ];
 
   const handleStepClick = (managementStep: string) => {
-    if (managementStep === currentManagementStep) {
-      showToast({
-        title: "현재와 같은 단계입니다.",
-        description: "이미 해당 프로젝트 관리 단계에 있습니다.",
-        type: "info",
-      });
-      return;
-    }
     setSelectedStep(managementStep);
     setIsConfirmDialogOpen(true);
   };
@@ -84,38 +77,14 @@ export default function ProjectsManagementStepCards({
   const handleConfirmNavigation = async () => {
     if (!selectedStep) return;
 
-    setIsLoading(true);
-    try {
-      await projectManagementStepApi(projectId as string, selectedStep);
+    const response = await updateManagementStep(
+      projectId as string,
+      selectedStep,
+    );
 
-      // selectedStep을 한글 라벨로 변환
-      const selectedStepLabel =
-        mappedData.find((item) => item.step === selectedStep)?.label ||
-        selectedStep;
-
-      showToast({
-        title: "관리단계 변경 성공",
-        description: `프로젝트 관리 단계가 ${selectedStepLabel}로 변경되었습니다.`,
-        type: "success",
-      });
-
-      // 리렌더링을 위해 데이터 다시 가져오기
-      await refetch();
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "데이터를 불러오는데 실패했습니다.";
-      showToast({
-        title: "관리단계 변경 실패",
-        description: "변경 중 오류가 발생했습니다.",
-        type: "error",
-        error: errorMessage,
-      });
-    } finally {
-      setIsLoading(false);
-      setIsConfirmDialogOpen(false);
-    }
+    // 리렌더링을 위해 데이터 다시 가져오기
+    if (response) await refetch();
+    setIsConfirmDialogOpen(false);
   };
 
   return (

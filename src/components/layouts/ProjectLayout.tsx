@@ -67,10 +67,10 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
   const pathname = usePathname();
   // 현재 로그인한 사용자 정보 가져오기
   const { data: userInfo } = useUserInfo();
-  console.log("사용자 정보:", userInfo); // 🔍 현재 로그인한 사용자 정보 출력
+  console.log("사용자 정보:", userInfo); // 현재 로그인한 사용자 정보 출력
 
   const isAdmin = userInfo?.role === "ADMIN"; // 관리자 여부 확인
-  console.log("isAdmin 값:", isAdmin); // 🔍 isAdmin 값 출력
+  console.log("isAdmin 값:", isAdmin); // isAdmin 값 출력
 
   // 프로젝트 정보 접기/펼치기 상태
   const [isProjectInfoVisible, setIsProjectInfoVisible] = useState(true);
@@ -89,8 +89,8 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
     // details.value = "approvals" | "questions" | "workflow"
     const newUrl = `/projects/${projectId}/${details.value}`;
 
-    window.history.replaceState(null, "", newUrl); // ✅ 히스토리 덮어쓰기 (기록 X)
-    router.replace(newUrl); // ✅ Next.js의 상태 갱신 (히스토리 추가 X)
+    window.history.replaceState(null, "", newUrl); // 히스토리 덮어쓰기 (기록 X)
+    router.replace(newUrl); // Next.js의 상태 갱신 (히스토리 추가 X)
   };
 
   return (
@@ -195,10 +195,10 @@ export function ProjectLayout({ children }: ProjectLayoutProps) {
         direction="column"
         gap="1rem"
         padding="1.2rem"
+        marginBottom="2rem"
         border="1px solid #b8b1b1"
         borderRadius="0.8rem"
         height="fit-content"
-        minHeight="500px"
       >
         {children}
       </Flex>

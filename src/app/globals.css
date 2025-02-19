@@ -120,28 +120,6 @@ header {
   padding: 1rem;
 }
 
-/* 📌 스크롤바 */
-::-webkit-scrollbar {
-  width: 8px; /* 세로 스크롤바 너비 */
-  height: 5px; /* 가로 스크롤바 높이 */
-}
-
-/* 스크롤 트랙 (배경) */
-::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 10px;
-}
-
-/* 스크롤 핸들 (드래그하는 부분) */
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-/* 스크롤 핸들 hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 
 /* 반응형 (태블릿 이하) */
 @media (max-width: 1200px) {

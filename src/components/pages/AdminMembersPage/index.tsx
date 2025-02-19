@@ -11,6 +11,7 @@ import {
   Table,
   Text,
 } from "@chakra-ui/react";
+import { CircleAlert } from "lucide-react";
 import { Switch } from "@/src/components/ui/switch";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
@@ -23,8 +24,7 @@ import { activateMemberApi, deactivateMemberApi } from "@/src/api/members";
 import { MemberProps } from "@/src/types";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
 import { useDeleteMember } from "@/src/hook/useMutationData";
-import { Tooltip } from "../../ui/tooltip";
-import { CircleAlert } from "lucide-react";
+import { Tooltip } from "@/src/components/ui/tooltip";
 
 const memberRoleFramework = createListCollection<{
   label: string;
@@ -190,6 +190,8 @@ function AdminMembersPageContent() {
           <ErrorAlert message="회원 목록을 불러오지 못했습니다. 다시 시도해주세요." />
         )}
         <CommonTable
+          colspan={8}
+          skeletonCount={14}
           columnsWidth={
             <>
               <Table.Column htmlWidth="10%" />

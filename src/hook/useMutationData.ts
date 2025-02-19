@@ -30,6 +30,7 @@ import {
   updateProjectApi,
   createProjectApi,
   updateProjectProgressStepApi,
+  projectManagementStepApi,
 } from "@/src/api/projects";
 import {
   changeOrganizationStatusApi,
@@ -268,5 +269,14 @@ export function useDeleteProject() {
 export function useUpdateProjectProgressStep() {
   return useMutationData<void, [string, string, ProgressAddProps]>({
     mutationApi: updateProjectProgressStepApi,
+  });
+}
+
+/**
+ * 프로젝트 관리 단계 변경 훅
+ */
+export function useUpdateProjectManagementStep() {
+  return useMutationData<void, [string, string]>({
+    mutationApi: projectManagementStepApi,
   });
 }
