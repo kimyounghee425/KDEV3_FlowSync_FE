@@ -238,15 +238,36 @@ export default function ArticleForm({
         }));
 
         if (!title.trim()) {
-          alert("제목을 입력하세요.");
+          const errorMessage = "제목을 입력하세요.";
+          showToast({
+            title: "요청 실패",
+            description: errorMessage,
+            type: "error",
+            duration: 3000,
+            error: errorMessage,
+          });
           return;
         }
         if (content.length === 0) {
-          alert("내용을 입력하세요.");
+          const errorMessage = "내용을 입력하세요.";
+          showToast({
+            title: "요청 실패",
+            description: errorMessage,
+            type: "error",
+            duration: 3000,
+            error: errorMessage,
+          });
           return;
         }
         if (pathname.includes("/approvals") && !isSignYes) {
-          alert("서명을 입력하세요");
+          const errorMessage = "서명을 입력하세요.";
+          showToast({
+            title: "요청 실패",
+            description: errorMessage,
+            type: "error",
+            duration: 3000,
+            error: errorMessage,
+          });
           return;
         }
 
@@ -341,7 +362,6 @@ export default function ArticleForm({
       const newBlocks = savedData.blocks.filter(
         (block) => block.type !== "image" || block.data?.file?.url,
       );
-    
 
       // 데이터가 변경되었으면 에디터 재초기화
       if (newBlocks.length !== savedData.blocks.length) {

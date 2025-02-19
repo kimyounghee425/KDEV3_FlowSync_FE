@@ -31,6 +31,7 @@ import { ManagementStepCountMap } from "@/src/types";
 import { Loading } from "@/src/components/common/Loading";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import ColorCustomizer from "@/src/components/pages/ProjectsPage/components/ColorCustomizer";
+import DropDownInfoBottom from "@/src/components/common/DropDownInfoBottom";
 
 // 아이콘 배열 정의
 const icons = [
@@ -163,9 +164,12 @@ export default function ProjectsManagementStepCards({
       transition="all 0.3s ease-in-out"
     >
       <Flex justifyContent="space-between" mb="10px">
-        <Heading size="2xl" mb="10px" textAlign="left">
-          {title}
-        </Heading>
+        <Flex direction="row">
+          <Heading size="2xl" mb="10px" textAlign="left">
+            {title}
+          </Heading>
+          <DropDownInfoBottom text="삭제된 프로젝트는 현황에 집계되지 않습니다." />
+        </Flex>
         <Box position="relative">
           <ColorCustomizer />
         </Box>

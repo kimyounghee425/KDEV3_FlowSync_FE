@@ -4,6 +4,7 @@ import { registerComment } from "@/src/api/registerComment";
 import { useParams } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { CommentApiResponse } from "@/src/types";
+import { showToast } from "@/src/utils/showToast";
 
 interface CommentBoxProps {
   parentId?: number;
@@ -40,7 +41,14 @@ export default function CommentBox({
 
   const handleSave = async () => {
     if (!commentText.trim()) {
-      alert("댓글을 입력하세요.");
+      const errorMessage = "댓글을 입력하세요.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
       return;
     }
 

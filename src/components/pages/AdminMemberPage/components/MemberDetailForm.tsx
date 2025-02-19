@@ -26,6 +26,7 @@ import StatusTag from "@/src/components/pages/ProjectsPage/components/Management
 import Pagination from "@/src/components/common/Pagination";
 import { useInputFormatter } from "@/src/hook/useInputFormatter";
 import { useDeleteMember, useUpdateMember } from "@/src/hook/useMutationData";
+import { showToast } from "@/src/utils/showToast";
 
 const projectStatusFramework = createListCollection<{
   label: string;
@@ -180,7 +181,15 @@ export default function MemberDetailForm({
     setIsSubmitting(true);
 
     if (!validateInputs()) {
-      alert("입력값을 다시 확인해주세요.");
+      const errorMessage = "입력값을 다시 확인해주세요.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
+
       setIsSubmitting(false);
       return;
     }
@@ -197,9 +206,15 @@ export default function MemberDetailForm({
       // 수정된 데이터만 렌더링
       refetchMemberData();
       setIsChanged({}); // 모든 필드 변경 상태 및 스타일 초기화
-      alert("회원 정보가 수정되었습니다.");
     } catch (error) {
-      alert("수정 실패: 다시 시도해주세요.");
+      const errorMessage = "수정 실패: 다시 시도해주세요.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
     } finally {
       setIsSubmitting(false);
     }

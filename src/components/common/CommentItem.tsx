@@ -14,6 +14,7 @@ import {
 import CommentBox from "@/src/components/common/CommentBox";
 import { readQuestionApi, readApprovalApi } from "@/src/api/ReadArticle";
 import { getMeApi } from "@/src/api/getMembersApi";
+import { showToast } from "@/src/utils/showToast";
 
 interface CommentProps {
   comment: ArticleComment;
@@ -109,7 +110,14 @@ export default function CommentItem({
 
   const handleUpdate = async () => {
     if (!editedContent.trim()) {
-      alert("댓글 내용을 입력하세요.");
+      const errorMessage = "댓글 내용을 입력하세요.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
       return;
     }
 
@@ -174,7 +182,7 @@ export default function CommentItem({
       borderBottom="1px solid #E2E8F0"
     >
       <Text fontWeight={"bold"} pb={2}>
-          {`${comment.register.name} (${comment.register.jobTitle}) / ${comment.register.jobRole}`}
+        {`${comment.register.name} (${comment.register.jobTitle}) / ${comment.register.jobRole}`}
       </Text>
 
       {/* 댓글 본문 */}

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
   createListCollection,
+  Flex,
   Heading,
   Stack,
   Table,
@@ -23,6 +24,9 @@ import {
   useUpdateOrganizationStatus,
 } from "@/src/hook/useMutationData";
 import { useOrganizationList } from "@/src/hook/useFetchBoardList";
+import DropDownInfoBottom from "../../common/DropDownInfoBottom";
+import { Tooltip } from "../../ui/tooltip";
+import { CircleAlert } from "lucide-react";
 
 const organizationTypeFramework = createListCollection<{
   label: string;
@@ -162,7 +166,7 @@ function AdminOrganizationsPageContent() {
               <Table.Column htmlWidth="12%" />
               <Table.Column htmlWidth="30%" />
               <Table.Column htmlWidth="12%" />
-              <Table.Column htmlWidth="8%" />
+              <Table.Column htmlWidth="6%" />
               <Table.Column htmlWidth="6%" />
             </>
           }
@@ -179,7 +183,25 @@ function AdminOrganizationsPageContent() {
               <Table.ColumnHeader>연락처</Table.ColumnHeader>
               <Table.ColumnHeader>주소</Table.ColumnHeader>
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
-              <Table.ColumnHeader>상태</Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <Flex alignItems="center" width="100%">
+                  <Tooltip
+                    content={"업체 상태 변경"}
+                    contentProps={{
+                      css: { "--tooltip-bg": "#00A8FF" },
+                    }}
+                    positioning={{ placement: "top" }}
+                  >
+                    <Flex
+                      alignItems="center"
+                      justifyContent="flex-end"
+                      cursor="default"
+                    >
+                      상태 &nbsp; <CircleAlert size="0.9rem" />
+                    </Flex>
+                  </Tooltip>
+                </Flex>
+              </Table.ColumnHeader>
               <Table.ColumnHeader>관리</Table.ColumnHeader>
             </Table.Row>
           }

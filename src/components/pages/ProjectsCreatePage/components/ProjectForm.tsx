@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Flex, Box } from "@chakra-ui/react";
 
 import HeaderSection from "@/src/components/pages/ProjectsCreatePage/components/HeaderSection";
-import DateSection from "@/src/components/pages/ProjectsCreatePage/components/DateSection";
 import ContentSection from "@/src/components/pages/ProjectsCreatePage/components/ContentSection";
 import OrganizationSelector from "@/src/components/pages/ProjectsCreatePage/components/OrganizationSelector";
 
@@ -18,6 +17,7 @@ import {
   useDeleteProject,
   useUpdateProject,
 } from "@/src/hook/useMutationData";
+import DateSection from "@/src/components/pages/ProjectsCreatePage/components/DateSection";
 
 interface ProjectFormProps {
   projectData?: ProjectDetailProps; // projectData가 있을 경우 수정 모드
@@ -183,7 +183,17 @@ export default function ProjectForm({
     };
 
     if (isEditMode) {
+      console.log("수정 요청 - requestBody: ", requestBody);
+      console.log(
+        "수정 요청(시작일 타입) - requestBody: ",
+        typeof requestBody.startAt,
+      );
+      console.log(
+        "수정 요청(예상마감일 타입) - requestBody: ",
+        typeof requestBody.deadlineAt,
+      );
       const response = await updateProject(projectId, requestBody);
+
       if (response === null) return;
       route.back();
     } else {
@@ -242,11 +252,11 @@ export default function ProjectForm({
           <Box flex="1">
             <DateSection
               startAt={formData.startAt}
-              closeAt={formData.deadlineAt} // ✅ 기존 closeAt → deadlineAt 사용
+              deadlineAt={formData.deadlineAt} // ✅ 기존 closeAt → deadlineAt 사용
               setStartAt={(date) =>
                 setFormData((prev) => ({ ...prev, startAt: date }))
               }
-              setCloseAt={(date) =>
+              setDeadlineAt={(date) =>
                 setFormData((prev) => ({ ...prev, deadlineAt: date }))
               }
             />

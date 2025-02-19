@@ -72,17 +72,11 @@ export default function Profile() {
         // 로컬 스토리지 초기화
         localStorage.removeItem("user");
         localStorage.removeItem("projectStatus");
-        alert("로그아웃 되었습니다.");
         // 강제로 새로고침하면서 로그인 페이지로 이동
         // route.push() 의 경우, 브라우저 캐싱 때문에 로그인 페이지로 이동해도 기존 쿠키 값이 보여짐
         window.location.href = "/login";
-      } else {
-        throw new Error(response.data.message || "로그아웃에 실패하였습니다.");
       }
-    } catch (error) {
-      console.error("로그아웃 실패:", error);
-      alert("로그아웃에 실패하였습니다. 다시 시도해주세요.");
-    }
+    } catch (error) {}
   };
 
   if (loading) {
@@ -105,11 +99,12 @@ export default function Profile() {
           alignItems="center"
           gap={3}
           paddingX="1rem"
-          // _hover={{ }}
           borderRadius="md"
           cursor="pointer" // 프로필 전체를 클릭 가능하도록 설정
           position="relative" // 부모 박스를 기준으로 위치 설정
           zIndex="101"
+          transition="background-color 0.3s ease-in-out" // ✅ 천천히 hover 효과 적용
+          _hover={{ bg: "gray.200" }}
         >
           {/* Avatar와 사용자 정보 */}
           <Avatar

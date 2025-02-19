@@ -23,7 +23,15 @@ export default function LinkAddSection({
   // 링크 추가
   const handleAddLink = async () => {
     if (!newLink || !newLinkName) {
-      alert("링크와 이름을 입력하세요.");
+      const errorMessage = "링크와 이름을 입력하세요.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
+
       return;
     }
 
