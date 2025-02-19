@@ -170,20 +170,22 @@ export default function Sidebar({
             overflowY="auto"
             borderBottom="1px solid #ddd"
           >
-            <Box
-              marginTop="0.8rem"
-              padding="0.8rem 1rem 0.8rem 1rem"
-              _hover={{ bg: "gray.100" }}
-              transition="background-color 0.3s ease-in-out" // ✅ 천천히 hover 효과 적용
-              borderRadius="0.6rem"
-              width="95%"
-              fontSize="0.8rem"
-              display="flex" // ✅ 플렉스 박스 적용
-              alignItems="center" // ✅ 세로 중앙 정렬
-              justifyContent="space-between" // ✅ 텍스트와 아이콘 사이 간격 조정
-            >
-              <Text>참여 중 프로젝트 &gt;</Text>
-            </Box>
+            <Flex direction="row">
+              <Box
+                marginTop="0.8rem"
+                padding="0.8rem 1rem 0.8rem 1rem"
+                _hover={{ bg: "gray.100" }}
+                transition="background-color 0.3s ease-in-out" // ✅ 천천히 hover 효과 적용
+                borderRadius="0.6rem"
+                width="95%"
+                fontSize="0.8rem"
+                display="flex" // ✅ 플렉스 박스 적용
+                alignItems="center" // ✅ 세로 중앙 정렬
+                justifyContent="space-between" // ✅ 텍스트와 아이콘 사이 간격 조정
+              >
+                <Text>진행 중 프로젝트 &gt;</Text>
+              </Box>
+            </Flex>
 
             {/* 프로젝트 리스트 */}
             {projectList

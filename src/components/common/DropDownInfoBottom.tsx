@@ -42,22 +42,22 @@ export default function DropDownInfoBottom({ text }: DropdownInfoProps) {
 
       {isOpen && (
         <Box
-        position="absolute"
-        top ="40px"
-        left="0"
-        minWidth="200px"
-        bg="white"
-        border="1px solid #ccc"
-        borderRadius="8px"
-        boxShadow="md"
-        p="4"
+          position="absolute"
+          top="40px"
+          left="0"
+          minWidth="200px"
+          bg="white"
+          border="1px solid #ccc"
+          borderRadius="8px"
+          boxShadow="md"
+          p="4"
           zIndex="9999"
         >
           {text.split("\n").map((line, index) => (
-        <Text key={index} fontSize="sm" mt="2">
-          {line}
-        </Text>
-      ))}
+            <Text key={index} fontSize="sm" mt="2">
+              {line}
+            </Text>
+          ))}
         </Box>
       )}
     </Box>

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
   createListCollection,
+  Flex,
   Heading,
   Stack,
   Table,
@@ -22,6 +23,8 @@ import { activateMemberApi, deactivateMemberApi } from "@/src/api/members";
 import { MemberProps } from "@/src/types";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
 import { useDeleteMember } from "@/src/hook/useMutationData";
+import { Tooltip } from "../../ui/tooltip";
+import { CircleAlert } from "lucide-react";
 
 const memberRoleFramework = createListCollection<{
   label: string;
@@ -196,7 +199,7 @@ function AdminMembersPageContent() {
               <Table.Column htmlWidth="15%" />
               <Table.Column htmlWidth="15%" />
               <Table.Column htmlWidth="10%" />
-              <Table.Column htmlWidth="10%" />
+              <Table.Column htmlWidth="6%" />
               <Table.Column htmlWidth="5%" />
             </>
           }
@@ -214,7 +217,25 @@ function AdminMembersPageContent() {
               <Table.ColumnHeader>이메일</Table.ColumnHeader>
               <Table.ColumnHeader>연락처</Table.ColumnHeader>
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
-              <Table.ColumnHeader>회원상태</Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <Flex alignItems="center" width="100%">
+                  <Tooltip
+                    content={"회원 상태 변경"}
+                    contentProps={{
+                      css: { "--tooltip-bg": "#00A8FF" },
+                    }}
+                    positioning={{ placement: "top" }}
+                  >
+                    <Flex
+                      alignItems="center"
+                      justifyContent="flex-end"
+                      cursor="default"
+                    >
+                      상태 &nbsp; <CircleAlert size="0.9rem" />
+                    </Flex>
+                  </Tooltip>
+                </Flex>
+              </Table.ColumnHeader>
               <Table.ColumnHeader>관리</Table.ColumnHeader>
             </Table.Row>
           }
