@@ -7,7 +7,7 @@ import type { ThemeProviderProps } from "next-themes";
 export function Provider(props: ThemeProviderProps) {
   return (
     <ChakraProvider value={defaultSystem}>
-      <ColorModeProvider {...props} forcedTheme="white" />
+      <ColorModeProvider {...props} forcedTheme="light" />
     </ChakraProvider>
   );
 }
