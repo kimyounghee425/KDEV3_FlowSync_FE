@@ -3,8 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
-import { Home, Briefcase, Building, Users, Bell } from "lucide-react";
+import {
+  Box,
+  Flex,
+  Separator,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import {
+  Home,
+  Briefcase,
+  Building,
+  Users,
+  Bell,
+  ChevronDown,
+  Folder,
+} from "lucide-react";
 import { useSidebar } from "@/src/context/SidebarContext";
 import { useProjectInfiniteScroll } from "@/src/hook/useProjectInfiniteScroll";
 import { Loading } from "@/src/components/common/Loading"; // 기존 컴포넌트 사용
@@ -41,6 +55,7 @@ export default function Sidebar({
   const isMobile = useBreakpointValue({ base: true, md: false });
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [isCollapsed, setIsCollapsed] = useState(false); // true: 아이콘 표시
+  const [showAllProjects, setShowAllProjects] = useState(false); // 더보기 버튼 상태 관리
 
   // 현재 사용자 권한에 따라 메뉴 아이템 선택
   const memberRole = loggedInUserRole === "ADMIN" ? "admin" : "member";
@@ -64,6 +79,13 @@ export default function Sidebar({
   //  프로젝트 상태에 따른 데이터 가져오기
   const { projectList, loading, hasMore, observerRef } =
     useProjectInfiniteScroll(memberRole === "member" ? managementStep : "");
+
+  const projectId = pathname.match(/\/projects\/(\d+)/)?.[1];
+
+  // ✅ 페이지가 변경될 때 showAllProjects 초기화
+  useEffect(() => {
+    setShowAllProjects(false); // 페이지 이동 시 프로젝트 목록을 5개만 보이도록 리셋
+  }, [pathname]); // pathname이 변경될 때마다 실행
 
   // 모바일 화면에서는 자동으로 닫기
   useEffect(() => {
@@ -99,6 +121,7 @@ export default function Sidebar({
       ref={sidebarRef} // 사이드바 ref 추가
       {...layoutStyles.sidebar(isOpen, isSidebarOverlayPage)}
       justifyContent="flex-start"
+      fontSize="0.9rem"
     >
       <Box padding="0.5rem 0 0 0.5rem" width="100%">
         {/*  공통 메뉴 렌더링 */}
@@ -106,9 +129,7 @@ export default function Sidebar({
           {menuItems.map(({ value, title, icon: Icon }) => {
             // "/" (홈)일 때는 `pathname === value`로만 비교 ("/admin/members" 같은 곳에서 홈이 활성화되는 문제 방지)
             const isActive =
-              value === "/"
-                ? pathname === value || pathname.includes("projects")
-                : pathname.startsWith(value);
+              value === "/" ? pathname === value : pathname.startsWith(value);
 
             return (
               <Link key={value} href={value}>
@@ -140,6 +161,8 @@ export default function Sidebar({
             );
           })}
         </Box>
+
+        <Separator size="sm" />
         {/*  멤버 전용 프로젝트 리스트 */}
         {memberRole === "member" && (
           <Flex
@@ -147,23 +170,79 @@ export default function Sidebar({
             overflowY="auto"
             borderBottom="1px solid #ddd"
           >
-            {projectList.map((project) => (
-              <Link
-                key={project.id}
-                href={`/projects/${project.id}/approvals`}
-                passHref
+            <Box
+              marginTop="0.8rem"
+              padding="0.8rem 1rem 0.8rem 1rem"
+              _hover={{ bg: "gray.100" }}
+              transition="background-color 0.3s ease-in-out" // ✅ 천천히 hover 효과 적용
+              borderRadius="0.6rem"
+              width="95%"
+              fontSize="0.8rem"
+              display="flex" // ✅ 플렉스 박스 적용
+              alignItems="center" // ✅ 세로 중앙 정렬
+              justifyContent="space-between" // ✅ 텍스트와 아이콘 사이 간격 조정
+            >
+              <Text>참여 중 프로젝트 &gt;</Text>
+            </Box>
+
+            {/* 프로젝트 리스트 */}
+            {projectList
+              .slice(0, showAllProjects ? projectList.length : 5)
+              .map((project) => {
+                // "/" (홈)일 때는 `pathname === value`로만 비교 ("/admin/members" 같은 곳에서 홈이 활성화되는 문제 방지)
+                const isActiveProject = projectId === project.id.toString();
+
+                return (
+                  <Link
+                    key={project.id}
+                    href={`/projects/${project.id}/approvals`}
+                    passHref
+                  >
+                    <Flex
+                      direction="row"
+                      alignItems="center"
+                      padding={3}
+                      gap="1rem"
+                      overflow="hidden"
+                      bg={isActiveProject ? "blue.100" : "transparent"} // 현재 페이지면 배경색 적용
+                      fontWeight={isActiveProject ? "bold" : "normal"} // 현재 페이지면 볼드 처리
+                      borderLeft={
+                        isActiveProject
+                          ? "4px solid #007bff"
+                          : "4px solid transparent"
+                      } // ✅ 현재 페이지면 왼쪽 포인트
+                      _hover={{ bg: "gray.100" }}
+                    >
+                      <Box flexShrink={0}>{<Folder size={20} />}</Box>
+                      <Box
+                        _hover={{ bg: "gray.100" }}
+                        whiteSpace="nowrap" //  텍스트 한 줄 유지
+                        overflow="hidden" //  넘치는 텍스트 숨김
+                        textOverflow="ellipsis" //  말줄임 처리
+                      >
+                        {project.name}
+                      </Box>
+                    </Flex>
+                  </Link>
+                );
+              })}
+
+            {/* 더보기 버튼 추가 */}
+            {projectList.length > 5 && !showAllProjects && (
+              <Box
+                onClick={() => setShowAllProjects(true)}
+                padding="1rem"
+                _hover={{ bg: "gray.100" }}
+                width="100%"
+                cursor="pointer"
+                fontSize="0.9rem"
               >
-                <Box
-                  p={3}
-                  _hover={{ bg: "gray.100" }}
-                  whiteSpace="nowrap" //  텍스트 한 줄 유지
-                  overflow="hidden" //  넘치는 텍스트 숨김
-                  textOverflow="ellipsis" //  말줄임 처리
-                >
-                  {project.name}
-                </Box>
-              </Link>
-            ))}
+                <Flex direction="row" gap="0.5rem">
+                  <ChevronDown />
+                  <Text>더보기</Text>
+                </Flex>
+              </Box>
+            )}
             {/* 로딩 및 무한스크롤 로직 */}
             {loading && hasMore && (
               <Box mt={4} display="flex" justifyContent="center">

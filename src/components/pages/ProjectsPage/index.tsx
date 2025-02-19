@@ -255,9 +255,11 @@ function ProjectsPageContent() {
                   </ManagementStepTag>
                 </Table.Cell>
                 <Table.Cell>{project.startAt.split(" ")[0]}</Table.Cell>
-                <Table.Cell>{project.deadlineAt.split(" ")[0]}</Table.Cell>
                 <Table.Cell>
                   {(project.closeAt ?? "-").split(" ")[0]}
+                </Table.Cell>
+                <Table.Cell>
+                  {(project.deadlineAt ?? "-").split(" ")[0]}
                 </Table.Cell>
                 {userRole === "ADMIN" ? (
                   <>
