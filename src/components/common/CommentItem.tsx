@@ -197,6 +197,7 @@ export default function CommentItem({
               overflowWrap: "break-word",
               whiteSpace: "pre-wrap",
             }}
+            autoresize
           />
         ) : (
           <Text

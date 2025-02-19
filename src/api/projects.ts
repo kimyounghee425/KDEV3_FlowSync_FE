@@ -25,13 +25,8 @@ import {
 export async function createProjectApi(
   requestData: any,
 ): Promise<CommonResponseType<CreateProjectResponse>> {
-  try {
-    const response = await axiosInstance.post("/admins/projects", requestData);
-    return response.data;
-  } catch (error) {
-    console.error("프로젝트 생성 실패", error);
-    throw error;
-  }
+  const response = await axiosInstance.post("/admins/projects", requestData);
+  return response.data;
 }
 
 /**
@@ -44,16 +39,11 @@ export async function updateProjectApi(
   projectId: string,
   requestData: any,
 ): Promise<CommonResponseType<CreateProjectResponse>> {
-  try {
-    const response = await axiosInstance.patch(
-      `/admins/projects/${projectId}`,
-      requestData,
-    );
-    return response.data;
-  } catch (error) {
-    console.error("프로젝트 수정 실패", error);
-    throw error;
-  }
+  const response = await axiosInstance.patch(
+    `/admins/projects/${projectId}`,
+    requestData,
+  );
+  return response.data;
 }
 
 /**

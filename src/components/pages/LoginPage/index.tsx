@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { login } from "@/src/api/auth";
@@ -27,16 +27,6 @@ export default function LoginPage() {
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfLogin, validationRulesOfLogin);
 
-  useEffect(() => {
-    // MAC 시스템 다크모드 사용자 설정 감지
-    const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    document.body.className = darkMode ? "dark" : "light";
-    // 로그인 시 기존 데이터 초기화
-    localStorage.removeItem("user");
-    localStorage.removeItem("selectedProjectFilter");
-  }, []);
-
-  // #TODO 차크라UI 컴포넌트 사용 - 에러메시지 또는 로딩 UI
   function validateLoginInputs() {
     if (!checkAllInputs()) {
       alert("입력값을 확인하세요.");

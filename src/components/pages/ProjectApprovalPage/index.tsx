@@ -13,11 +13,11 @@ import CommentBox from "@/src/components/common/CommentBox";
 import { readApprovalApi, getProjectInfo } from "@/src/api/ReadArticle";
 import SignToApprove from "@/src/components/pages/ProjectApprovalPage/components/SignToApprove";
 import { ArticleComment, ApprovalArticle } from "@/src/types";
-import { deleteApprovalApi } from "@/src/api/RegisterArticle";
 import { getMeApi } from "@/src/api/getMembersApi";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
 import DropDownInfoBottom from "../../common/DropDownInfoBottom";
 import { showToast } from "@/src/utils/showToast";
+import { useDeleteApproval } from "@/src/hook/useMutationData";
 
 export default function ProjectApprovalPage() {
   const { projectId, approvalId } = useParams() as {
@@ -39,6 +39,8 @@ export default function ProjectApprovalPage() {
   const [myOrgId, setMyOrgId] = useState<number>();
   const [myName, setMyName] = useState<string>("");
   const [customerOwnerName, setCustomerOwnerName] = useState<string>("");
+  const { mutate: deleteApproval, error: approvalDeleteError } =
+    useDeleteApproval();
 
   useEffect(() => {
     const loadApproval = async () => {
@@ -52,9 +54,9 @@ export default function ProjectApprovalPage() {
           Number(approvalId),
         );
 
-        const responseDataOfProject = await getProjectInfo(Number(projectId))
+        const responseDataOfProject = await getProjectInfo(Number(projectId));
 
-        setCustomerOwnerName(responseDataOfProject.data.customerOwnerName)
+        setCustomerOwnerName(responseDataOfProject.data.customerOwnerName);
 
         setArticle(responseData);
         setCategory(responseData.category);
@@ -92,9 +94,6 @@ export default function ProjectApprovalPage() {
     return <Box>로딩 중...</Box>;
   }
 
-  console.log(myName);
-  console.log(myOrgId);
-
   const handleEdit = () => {
     if (approverSignatureUrl !== undefined) {
       const errorMessage = "결재가 완료된 글은 수정할 수 없습니다.";
@@ -125,35 +124,14 @@ export default function ProjectApprovalPage() {
 
     const confirmDelete = window.confirm("정말로 삭제하시겠습니까?");
     if (!confirmDelete) return;
-    try {
-      const response = await deleteApprovalApi(
-        Number(projectId),
-        Number(approvalId),
-      );
-      if (response.message) {
-        showToast({
-          title: "요청 성공",
-          description: response.message,
-          type: "success",
-          duration: 3000,
-        });
-      }
-      router.push(`/projects/${projectId}/approvals`);
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "결재 글 삭제 중 중 오류가 발생했습니다.";
 
-      // ✅ 토스트로 사용자에게 알림
-      showToast({
-        title: "요청 실패",
-        description: errorMessage,
-        type: "error",
-        duration: 3000,
-        error: errorMessage,
-      });
-    }
+    const response = await deleteApproval(
+      Number(projectId),
+      Number(approvalId),
+    );
+    if (response === null) return;
+
+    router.push(`/projects/${projectId}/approvals`);
   };
   // test
   return (
@@ -167,7 +145,6 @@ export default function ProjectApprovalPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-
       {/* 게시글 내용 */}
       <Flex justifyContent={"space-between"}>
         <Button
@@ -185,8 +162,8 @@ export default function ProjectApprovalPage() {
           <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
         ) : null}
       </Flex>
-      {/* 게시글 내용 */}
 
+      {/* 게시글 내용 */}
       <ArticleContent article={article} />
 
       <Box display={"flex"} direction={"row"} alignItems={"center"}>
@@ -205,7 +182,7 @@ export default function ProjectApprovalPage() {
           registerOrgId={registerOrgId}
         />
       </Box>
-      
+
       {/* 댓글 섹션 */}
       <VStack align="stretch" gap={8} mt={10}>
         <ArticleComments

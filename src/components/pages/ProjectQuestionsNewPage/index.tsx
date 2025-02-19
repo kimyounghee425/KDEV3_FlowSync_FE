@@ -6,13 +6,12 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Box } from "@chakra-ui/react";
 import ArticleForm from "@/src/components/common/ArticleForm";
-import { createQuestionApi } from "@/src/api/RegisterArticle";
 import { ProgressStep, QuestionRequestData } from "@/src/types";
 import { projectProgressStepApi } from "@/src/api/projects";
 import { useFetchData } from "@/src/hook/useFetchData";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
-import { showToast } from "@/src/utils/showToast";
 import "@/src/components/pages/ProjectQuestionsNewPage/edit.css";
+import { useCreateQuestion } from "@/src/hook/useMutationData";
 
 export default function ProjectQuestionsNewPage() {
   const { projectId } = useParams();
@@ -22,6 +21,9 @@ export default function ProjectQuestionsNewPage() {
   const resolvedProjectId = Array.isArray(projectId)
     ? projectId[0]
     : projectId || "";
+
+  const { mutate: createQuestion, error: QuestionRegisterError } =
+    useCreateQuestion();
 
   // ProgressStep 데이터 패칭
   const { data: progressStepData } = useFetchData<ProgressStep[], [string]>({
@@ -48,38 +50,14 @@ export default function ProjectQuestionsNewPage() {
   }, [progressStepOptions]);
 
   const handleSave = async <T extends QuestionRequestData>(requestData: T) => {
-    try {
-      const response = await createQuestionApi(Number(projectId), {
-        ...requestData,
-        ...(requestData.progressStepId !== undefined
-          ? { progressStepId: requestData.progressStepId }
-          : {}),
-      });
-      if (response.message) {
-        showToast({
-          title: "요청 성공",
-          description: response.message,
-          type: "success",
-          duration: 3000,
-        });
-      }
-      router.push(`/projects/${projectId}/questions`);
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "질문 등록 중 중 오류가 발생했습니다.";
-
-      // ✅ 토스트로 사용자에게 알림
-      showToast({
-        title: "요청 실패",
-        description: errorMessage,
-        type: "error",
-        duration: 3000,
-        error: errorMessage,
-      });
-      console.error("저장 실패:", error);
-    }
+    const response = createQuestion(Number(projectId), {
+      ...requestData,
+      ...(requestData.progressStepId !== undefined
+        ? { progressStepId: requestData.progressStepId }
+        : {}),
+    });
+    if (response === null) return;
+    router.push(`/projects/${projectId}/questions`);
   };
 
   return (

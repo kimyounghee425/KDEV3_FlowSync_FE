@@ -3,6 +3,7 @@ import { Box, Flex, Button, Image, Text } from "@chakra-ui/react";
 import { bringSignApi, sendSignApi } from "@/src/api/signature";
 import SignaturePad from "signature_pad";
 import DropDownInfoTop from "@/src/components/common/DropDownInfoTop";
+import { showToast } from "@/src/utils/showToast";
 
 interface EditSignUploadProps {
   signatureUrl: string;
@@ -11,7 +12,6 @@ interface EditSignUploadProps {
 export default function EditSignUpload({ signatureUrl }: EditSignUploadProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [signaturePad, setSignaturePad] = useState<SignaturePad | null>(null);
-
   const [yourSignatureUrl, setYourSignatureUrl] =
     useState<string>(signatureUrl);
 
@@ -35,7 +35,14 @@ export default function EditSignUpload({ signatureUrl }: EditSignUploadProps) {
   // 서명 저장
   const saveSignature = async () => {
     if (!signaturePad || signaturePad.isEmpty()) {
-      alert("서명을 입력하세요");
+      const errorMessage = "서명을 입력하세요.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
       return;
     }
     const signatureData = signaturePad.toDataURL("image/png");
@@ -55,7 +62,14 @@ export default function EditSignUpload({ signatureUrl }: EditSignUploadProps) {
       const responseData = await sendSignApi(file);
       setYourSignatureUrl(responseData.data.url);
     } catch (error) {
-      console.error("서명 등록 실패", error);
+      const errorMessage = "서명 등록에 실패했습니다.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
     }
   };
 
@@ -69,7 +83,14 @@ export default function EditSignUpload({ signatureUrl }: EditSignUploadProps) {
         signaturePad.fromDataURL(responseData.data.signatureUrl);
       }
     } catch (error) {
-      console.error("서명 불러오는데 오류 발생", error);
+      const errorMessage = "서명을 불러오는데 오류가 발생했습니다.";
+      showToast({
+        title: "요청 실패",
+        description: errorMessage,
+        type: "error",
+        duration: 3000,
+        error: errorMessage,
+      });
     }
   };
 

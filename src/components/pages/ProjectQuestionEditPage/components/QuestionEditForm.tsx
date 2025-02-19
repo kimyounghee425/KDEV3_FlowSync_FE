@@ -8,11 +8,11 @@ import ImageTool from "@editorjs/image";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
-import { readQuestionApi } from "@/src/api/ReadArticle";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
-import { editQuestionAPI } from "@/src/api/RegisterArticle";
 import { QuestionRequestData } from "@/src/types";
 import { showToast } from "@/src/utils/showToast";
+import { useUpdateQuestion } from "@/src/hook/useMutationData";
+import { readQuestionApi } from "@/src/api/ReadArticle";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -40,6 +40,8 @@ export default function QuestionEditForm() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesProps[]>([]);
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const { mutate: updateQuestion, error: QuestionUpdateError } =
+    useUpdateQuestion();
 
   useEffect(() => {
     const handleShiftEnterAsEnter = (event: KeyboardEvent) => {
@@ -94,6 +96,7 @@ export default function QuestionEditForm() {
           Number(projectId),
           Number(questionId),
         );
+
         setTitle(responseData.title);
         setLinkList(responseData.linkList);
         setUploadedFiles(responseData.fileList);
@@ -207,41 +210,13 @@ export default function QuestionEditForm() {
   }, [projectId, questionId]);
 
   const handleSave = async <T extends QuestionRequestData>(requestData: T) => {
-    try {
-      const response = await editQuestionAPI(
-        Number(projectId),
-        Number(questionId),
-        {
-          ...requestData,
-          ...(requestData.progressStepId !== undefined
-            ? { progressStepId: requestData.progressStepId }
-            : {}),
-        },
-      );
-      if (response.message) {
-        showToast({
-          title: "요청 성공",
-          description: response.message,
-          type: "success",
-          duration: 3000,
-        });
-      }
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "질문 등록 중 중 오류가 발생했습니다.";
-
-      // ✅ 토스트로 사용자에게 알림
-      showToast({
-        title: "요청 실패",
-        description: errorMessage,
-        type: "error",
-        duration: 3000,
-        error: errorMessage,
-      });
-      alert("저장 중 문제가 발생했습니다.");
-    }
+    const response = updateQuestion(Number(projectId), Number(questionId), {
+      ...requestData,
+      ...(requestData.progressStepId !== undefined
+        ? { progressStepId: requestData.progressStepId }
+        : {}),
+    });
+    if (response === null) return;
   };
 
   const handleEditorSave = useCallback(
@@ -261,11 +236,25 @@ export default function QuestionEditForm() {
         }));
 
         if (!title.trim()) {
-          alert("제목을 입력하세요.");
+          const errorMessage = "제목을 입력하세요.";
+          showToast({
+            title: "요청 실패",
+            description: errorMessage,
+            type: "error",
+            duration: 3000,
+            error: errorMessage,
+          });
           return;
         }
         if (content.length === 0) {
-          alert("내용을 입력하세요.");
+          const errorMessage = "내용을 입력하세요.";
+          showToast({
+            title: "요청 실패",
+            description: errorMessage,
+            type: "error",
+            duration: 3000,
+            error: errorMessage,
+          });
           return;
         }
 
@@ -278,8 +267,14 @@ export default function QuestionEditForm() {
 
         router.push(`/projects/${projectId}/questions/${questionId}`);
       } catch (error) {
-        console.error("저장 실패:", error);
-        alert("저장 중 문제가 발생했습니다.");
+        const errorMessage = "저장 중 문제가 발생했습니다.";
+        showToast({
+          title: "요청 실패",
+          description: errorMessage,
+          type: "error",
+          duration: 3000,
+          error: errorMessage,
+        });
       } finally {
         setIsSaving(false);
       }
@@ -362,7 +357,7 @@ export default function QuestionEditForm() {
 
       <Button
         bg={"#00a8ff"}
-        colorScheme={"red"}
+        color="white"
         loading={isSaving}
         loadingText="저장 중..."
         width={"auto"}

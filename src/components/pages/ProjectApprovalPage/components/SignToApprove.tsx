@@ -208,7 +208,7 @@ export default function SignToApprove({
       console.log(error);
     }
   };
-  console.log(myName, customerOwnerName)
+  console.log(myName, customerOwnerName);
   return (
     <Flex direction={"column"} align="center">
       <Flex direction="column" align="center">

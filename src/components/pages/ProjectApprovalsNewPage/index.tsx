@@ -7,14 +7,13 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Box, Text } from "@chakra-ui/react";
 import ArticleForm from "@/src/components/common/ArticleForm";
-import { createTaskApi } from "@/src/api/RegisterArticle";
 import { ApprovalRequestData, ProgressStep } from "@/src/types";
 import { projectProgressStepApi } from "@/src/api/projects";
 import { useFetchData } from "@/src/hook/useFetchData";
 import FormSelectInput from "@/src/components/common/FormSelectInput";
 import DropDownInfoTop from "@/src/components/common/DropDownInfoTop";
-import { showToast } from "@/src/utils/showToast";
 import "./edit.css";
+import { useCreateApproval } from "@/src/hook/useMutationData";
 
 export default function ProjectApprovalsNewPage() {
   const { projectId } = useParams();
@@ -29,6 +28,9 @@ export default function ProjectApprovalsNewPage() {
     fetchApi: projectProgressStepApi,
     params: [resolvedProjectId],
   });
+
+  const { mutate: createApproval, error: approvalRegisterError } =
+    useCreateApproval();
 
   const progressStepOptions = progressStepData
     ? progressStepData.map((step) => ({
@@ -49,39 +51,16 @@ export default function ProjectApprovalsNewPage() {
   }, [progressStepOptions]);
 
   const handleSave = async <T extends ApprovalRequestData>(requestData: T) => {
-    try {
-      const response = await createTaskApi(Number(projectId), {
-        ...requestData,
-        category,
-        ...(requestData.progressStepId !== undefined
-          ? { progressStepId: requestData.progressStepId }
-          : {}),
-      });
-      if (response.message) {
-        showToast({
-          title: "요청 성공",
-          description: response.message,
-          type: "success",
-          duration: 3000,
-        });
-      }
-      router.push(`/projects/${projectId}/approvals`);
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "결재 등록 중 중 오류가 발생했습니다.";
+    const response = await createApproval(Number(projectId), {
+      ...requestData,
+      category,
+      ...(requestData.progressStepId !== undefined
+        ? { progressStepId: requestData.progressStepId }
+        : {}),
+    });
+    if (response === null) return;
 
-      // ✅ 토스트로 사용자에게 알림
-      showToast({
-        title: "요청 실패",
-        description: errorMessage,
-        type: "error",
-        duration: 3000,
-        error: errorMessage,
-      });
-      console.error("저장 실패:", error);
-    }
+    router.push(`/projects/${projectId}/approvals`);
   };
 
   return (

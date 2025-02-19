@@ -20,10 +20,13 @@ import SearchSection from "@/src/components/common/SearchSection";
 import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import { useMemberList } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
-import { activateMemberApi, deactivateMemberApi } from "@/src/api/members";
 import { MemberProps } from "@/src/types";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
-import { useDeleteMember } from "@/src/hook/useMutationData";
+import {
+  useActivateMemberStatus,
+  useDeactivateMemberStatus,
+  useDeleteMember,
+} from "@/src/hook/useMutationData";
 import { Tooltip } from "@/src/components/ui/tooltip";
 
 const memberRoleFramework = createListCollection<{
@@ -94,6 +97,10 @@ function AdminMembersPageContent() {
     }
   }, [memberList]);
   const [loadingId, setLoadingId] = useState<string | null>(null); // ✅ 특정 회원의 Switch 로딩 상태
+  const { mutate: activateMember, error: memberActiveError } =
+    useActivateMemberStatus();
+  const { mutate: deactivateMember, error: memberDeactiveError } =
+    useDeactivateMemberStatus();
   const { mutate: deleteMember, error: MemberDeleteError } = useDeleteMember();
 
   // ✅ 회원 상태 변경 핸들러 (API 호출 및 UI 반영)
@@ -102,33 +109,25 @@ function AdminMembersPageContent() {
     currentStatus: string,
   ) => {
     setLoadingId(memberId); // ✅ 변경 중인 ID 설정 (로딩 표시)
-
-    try {
-      if (currentStatus === "ACTIVE") {
-        await deactivateMemberApi(memberId); // 비활성화 API 호출
-      } else {
-        await activateMemberApi(memberId); // 활성화 API 호출
-      }
-
-      alert("회원 상태가 변경되었습니다.");
-
-      // ✅ API 호출 후 로컬 상태 업데이트 (UI 즉시 반영)
-      setMemberData((prevMembers) =>
-        (prevMembers || []).map((member) =>
-          member.id === memberId
-            ? {
-                ...member,
-                status: currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE",
-              }
-            : member,
-        ),
-      );
-    } catch (error) {
-      console.error("회원 상태 변경 실패:", error);
-      alert("회원 상태 변경 중 오류가 발생했습니다.");
-    } finally {
-      setLoadingId(null); // 로딩 해제
+    if (currentStatus === "ACTIVE") {
+      deactivateMember(memberId); // 비활성화 API 호출
+    } else {
+      activateMember(memberId); // 활성화 API 호출
     }
+
+    // ✅ API 호출 후 로컬 상태 업데이트 (UI 즉시 반영)
+    setMemberData((prevMembers) =>
+      (prevMembers || []).map((member) =>
+        member.id === memberId
+          ? {
+              ...member,
+              status: currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+            }
+          : member,
+      ),
+    );
+
+    setLoadingId(null); // 로딩 해제
   };
 
   // 신규등록 버튼 클릭 시 - 회원 등록 페이지 이동

@@ -65,7 +65,7 @@ export default function ContentSection({
           borderRadius="0.5rem"
           p="0.75rem"
           width="100%"
-          height="5rem"
+          minHeight="5rem"
           overflowY="auto"
           onInput={(e) => {
             const target = e.target as HTMLTextAreaElement;

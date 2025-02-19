@@ -64,14 +64,10 @@ export async function fetchOrganizationMemberListApi(
  * @returns
  */
 export async function fetchMembersWithinOrgApi(organizationId: string) {
-  try {
-    const response = await axiosInstance.get(
-      `/admins/members/member/org/${organizationId}`,
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.get(
+    `/admins/members/member/org/${organizationId}`,
+  );
+  return response.data;
 }
 
 // 📌 회원 상세 정보 가져오기
@@ -133,39 +129,27 @@ export async function deleteMemberApi(
   memberId: string,
   reason: string,
 ): Promise<CommonResponseType<DeleteMemberResponse>> {
-  try {
-    const response = await axiosInstance.post(
-      `/admins/members/delete/${memberId}`,
-      { reason }, // 🔹 요청 바디에 탈퇴 사유 추가
-    );
-    return response.data; // ✅ 응답 데이터 반환
-  } catch (error) {
-    throw error; // 🚨 에러 발생 시 throw
-  }
+  const response = await axiosInstance.post(
+    `/admins/members/delete/${memberId}`,
+    { reason }, // 🔹 요청 바디에 탈퇴 사유 추가
+  );
+  return response.data; // ✅ 응답 데이터 반환
 }
 
 export async function activateMemberApi(
   memberId: string,
-): Promise<ActivateMemberResponse> {
-  try {
-    const response = await axiosInstance.post(
-      `/admins/members/activate?memberId=${memberId}`,
-    );
-    return response.data;
-  } catch (error) {
-    throw error; // 🚨 에러 발생 시 throw
-  }
+): Promise<CommonResponseType<ActivateMemberResponse>> {
+  const response = await axiosInstance.post(
+    `/admins/members/activate?memberId=${memberId}`,
+  );
+  return response.data;
 }
 
 export async function deactivateMemberApi(
   memberId: string,
-): Promise<DeactivateMemberResponse> {
-  try {
-    const response = await axiosInstance.post(
-      `/admins/members/deactivate?memberId=${memberId}`,
-    );
-    return response.data;
-  } catch (error) {
-    throw error; // 🚨 에러 발생 시 throw
-  }
+): Promise<CommonResponseType<DeactivateMemberResponse>> {
+  const response = await axiosInstance.post(
+    `/admins/members/deactivate?memberId=${memberId}`,
+  );
+  return response.data;
 }
