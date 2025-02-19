@@ -42,7 +42,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html suppressHydrationWarning={true} data-theme="light">
+    <html suppressHydrationWarning={true}>
       <head lang="ko">
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />

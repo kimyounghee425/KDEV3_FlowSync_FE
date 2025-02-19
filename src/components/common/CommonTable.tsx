@@ -27,9 +27,8 @@ export default function CommonTable<T extends { id: string }>({
 
   return (
     <Box
-      overflowX="auto" // ✅ 테이블이 넘칠 경우 가로 스크롤 활성화
-      whiteSpace="nowrap" // ✅ 텍스트 줄바꿈 방지
-      maxHeight=""
+      overflowX="auto" // 테이블이 넘칠 경우 가로 스크롤 활성화
+      whiteSpace="nowrap" // 텍스트 줄바꿈 방지
     >
       <Table.Root
         size="sm"

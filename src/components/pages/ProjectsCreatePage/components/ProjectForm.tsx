@@ -33,12 +33,9 @@ export default function ProjectForm({
   const isEditMode = !!projectId; // projectId가 있으면 수정 모드
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   // 업체 상태 변경 훅
-  const { mutate: createProject, error: ProjectCreateError } =
-    useCreateProject();
-  const { mutate: updateProject, error: ProjectUpdateError } =
-    useUpdateProject();
-  const { mutate: deleteProject, error: ProjectDeleteError } =
-    useDeleteProject();
+  const { mutate: createProject } = useCreateProject();
+  const { mutate: updateProject } = useUpdateProject();
+  const { mutate: deleteProject } = useDeleteProject();
   // 📌 프로젝트 상태 관리
   const [formData, setFormData] = useState<ProjectDetailProps>({
     id: projectData?.id || "",

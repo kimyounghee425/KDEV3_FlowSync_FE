@@ -12,6 +12,7 @@ import CreateButton from "@/src/components/common/CreateButton";
 import { useProjectQuestionList } from "@/src/hook/useFetchBoardList";
 import { useProjectQuestionProgressStepData } from "@/src/hook/useFetchData";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
+import ProgressStepTag from "@/src/components/common/ProgressStepTag";
 
 const questionStatusFramework = createListCollection<{
   id: string;
@@ -161,8 +162,12 @@ export default function ProjectQuestionsPage() {
                 },
               }}
             >
-              <Table.Cell style={{ color: question.progressStep.color }}>
-                {question.progressStep.name}
+              <Table.Cell
+                style={{
+                  color: question.progressStep.color,
+                }}
+              >
+                <ProgressStepTag>{question.progressStep.name}</ProgressStepTag>
               </Table.Cell>
               <Table.Cell>
                 {CATEGORY_LABELS[question.category] || "알 수 없음"}

@@ -108,7 +108,7 @@ export default function AddProgressStepModal({
           {/* 설명 입력 */}
           <Box>
             <Text fontSize="md" fontWeight="bold">
-              설명 (선택)
+              설명 <span style={{ color: "red" }}>*</span>
             </Text>
             <Textarea
               placeholder="이 단계에 대한 설명을 입력하세요."
