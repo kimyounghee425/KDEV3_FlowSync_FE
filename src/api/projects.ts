@@ -297,7 +297,7 @@ export async function fetchProjectQuestionListApi(
 export async function fetchProjectApprovalListApi(
   projectId: string,
   keyword: string = "",
-  progressStep: string = "",
+  progressId: string = "",
   status: string = "",
   currentPage: number,
   pageSize: number,
@@ -305,7 +305,7 @@ export async function fetchProjectApprovalListApi(
   const response = await axiosInstance.get(`/projects/${projectId}/approvals`, {
     params: {
       keyword,
-      progressStep,
+      progressId,
       status,
       currentPage,
       pageSize,

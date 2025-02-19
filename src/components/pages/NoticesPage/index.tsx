@@ -245,12 +245,12 @@ function NoticesPageContent() {
                 {notice.title}
               </Table.Cell>
               <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
-                {notice.regAt.split(" ")[0]}
+                {(notice.regAt ?? "-").split(" ")[0]}
               </Table.Cell>
               {userRole === "ADMIN" && (
                 <>
                   <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
-                    {notice.updatedAt.split(" ")[0]}
+                    {(notice.updatedAt ?? "-").split(" ")[0]}
                   </Table.Cell>
                   <Table.Cell {...(isEmergency ? EMERGENCY_STYLE : {})}>
                     {NOTICE_STATUS_LABELS[notice.isDeleted]}

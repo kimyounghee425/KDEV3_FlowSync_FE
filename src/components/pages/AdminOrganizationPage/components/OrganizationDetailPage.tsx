@@ -718,7 +718,7 @@ function OrganizationMemberList({
                 <Table.Cell>{`${member.jobRole} | ${member.jobTitle}`}</Table.Cell>
                 <Table.Cell>{member.email}</Table.Cell>
                 <Table.Cell>{member.phoneNum}</Table.Cell>
-                <Table.Cell>{member.regAt.split(" ")[0]}</Table.Cell>
+                <Table.Cell>{(member.regAt ?? "-").split(" ")[0]}</Table.Cell>
                 <Table.Cell onClick={(event) => event.stopPropagation()}>
                   {member.status === "DELETED" ? (
                     <Text color="red">삭제됨</Text>
@@ -881,8 +881,12 @@ function OrganizationProjectList({
                 <Table.Cell>
                   <StatusTag>{STATUS_LABELS[project.managementStep]}</StatusTag>
                 </Table.Cell>
-                <Table.Cell>{project.startAt.split(" ")[0]}</Table.Cell>
-                <Table.Cell>{project.deadlineAt.split(" ")[0]}</Table.Cell>
+                <Table.Cell>
+                  {(project.startAt ?? "-").split(" ")[0]}
+                </Table.Cell>
+                <Table.Cell>
+                  {(project.deadlineAt ?? "-").split(" ")[0]}
+                </Table.Cell>
                 <Table.Cell>
                   {project.closeAt.split(" ")[0] === ""
                     ? "-"
