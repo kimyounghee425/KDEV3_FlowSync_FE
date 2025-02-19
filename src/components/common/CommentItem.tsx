@@ -174,7 +174,7 @@ export default function CommentItem({
       borderBottom="1px solid #E2E8F0"
     >
       <Text fontWeight={"bold"} pb={2}>
-        {comment.register.name} {` / ${comment.register.role}`}
+          {`${comment.register.name} (${comment.register.jobTitle}) / ${comment.register.jobRole}`}
       </Text>
 
       {/* 댓글 본문 */}
@@ -288,7 +288,7 @@ export default function CommentItem({
           {!(comment.parentId !== null && !comment.isParent) && (
             <Button
               size={"2xs"}
-              fontSize={15}
+              fontSize={"1rem"}
               bg="transparent"
               color={"gray.400"}
               onClick={() => setIsReplying((prev) => !prev)}

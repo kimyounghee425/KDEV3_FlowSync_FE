@@ -2,7 +2,7 @@
 "use client";
 
 // 외부 라이브러리
-import { Box, VStack, Flex, Text } from "@chakra-ui/react";
+import { Box, VStack, Flex, Text, Button } from "@chakra-ui/react";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -173,15 +173,19 @@ export default function ProjectApprovalPage() {
         ) : null}
       </Flex>
       {/* 게시글 내용 */}
-      {category === "NORMAL_REQUEST" ? (
-        <Text fontSize={"xl"} fontWeight={"bold"} color={"blue"} mb={2}>
-          일반 요청
-        </Text>
-      ) : (
-        <Text fontSize={"xl"} fontWeight={"bold"} color={"red"} mb={2}>
-          진행단계 완료 요청
-        </Text>
-      )}
+
+      <Button
+        borderRadius={"xl"}
+        fontSize={"xl"}
+        fontWeight={"bold"}
+        color={"#7e6551"}
+        backgroundColor={"#f9f9f9"}
+        mb={2}
+        cursor="default"
+      >
+        {category === "NORMAL_REQUEST" ? "일반 결재" : "진행단계 완료 결재"}
+      </Button>
+
       <ArticleContent article={article} />
 
       <Box display={"flex"} direction={"row"} alignItems={"center"}>

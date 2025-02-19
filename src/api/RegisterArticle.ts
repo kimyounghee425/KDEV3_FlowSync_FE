@@ -17,6 +17,22 @@ export async function uploadFileApi(file: File) {
   }
 }
 
+export async function uploadContentFileApi(file: File) {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await axiosInstance.post("/file/public", formData, {
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // 질문글 생성
 export async function createQuestionApi(
   projectId: number,

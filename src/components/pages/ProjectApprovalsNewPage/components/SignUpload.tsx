@@ -176,9 +176,9 @@ export default function SignUpload({ setIsSignYes }: SignUploadProps) {
               서명 불러오기
             </Button>
             <Button
-              backgroundColor={"blue.500"}
+              backgroundColor={"#00a8ff"}
               color="white"
-              _hover={{ backgroundColor: "blue.600" }}
+              _hover={{ backgroundColor: "#0095ff" }}
               mr={2}
               onClick={() => {
                 const isConfirmed = window.confirm(
@@ -195,9 +195,9 @@ export default function SignUpload({ setIsSignYes }: SignUploadProps) {
         ) : (
           <>
             <Button
-              backgroundColor={"blue.500"}
+              backgroundColor={"#00a8ff"}
               color="white"
-              _hover={{ backgroundColor: "blue.600" }}
+              _hover={{ backgroundColor: "#0095ff" }}
               mr={2}
               onClick={saveSignature}
             >

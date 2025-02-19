@@ -66,3 +66,12 @@ export async function getMyOrgId() {
     console.error(error);
   }
 }
+
+export async function resolveQuestion(projectId: number, questionId: number) {
+  try {
+    const response = await axiosInstance.post(`/projects/${projectId}/questions/${questionId}/resolve`)
+    return response.data;
+  } catch (error) {
+    console.error(error)
+  }
+}
