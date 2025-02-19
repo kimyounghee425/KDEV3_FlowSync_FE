@@ -314,7 +314,7 @@ export async function fetchProjectApprovalListApi(
 }
 
 /**
- * 특정 프로젝트 진행 단계의 날짜를 업데이트합니다.
+ * 특정 프로젝트 진행 단계의 날짜를 업데이트합니다
  * @param projectId 프로젝트 ID
  * @param progressStepId 진행 단계 ID
  * @param requestData 업데이트할 시작일 및 마감일 데이터
