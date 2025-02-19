@@ -6,6 +6,7 @@ import Link from "next/link";
 import { debounce } from "lodash";
 import "react-datepicker/dist/react-datepicker.css";
 import { Heading, Table, Flex, Button, IconButton } from "@chakra-ui/react";
+import { FileClock } from "lucide-react";
 import { ProjectLayout } from "@/src/components/layouts/ProjectLayout";
 import ProjectsManagementStepCards from "@/src/components/pages/ProjectWorkFlowPage/components/ProjectManagementStepCards";
 import CommonTable from "@/src/components/common/CommonTable";
@@ -17,7 +18,6 @@ import ProjectLogTable from "@/src/components/pages/ProjectWorkFlowPage/componen
 import { useUpdateProjectProgressStepSchedule } from "@/src/hook/useMutationData";
 import { formatDate } from "@/src/utils/formatDateUtil";
 import DraggableProgressSteps from "@/src/components/pages/ProjectWorkFlowPage/components/DraggableProgressStep";
-import { FileClock } from "lucide-react";
 
 export default function ProjectWorkFlowPage() {
   const { projectId } = useParams();
@@ -46,7 +46,7 @@ export default function ProjectWorkFlowPage() {
     data: progressStepList,
     loading: progressStepLoading,
     error: progressStepError,
-    refetch: refetchProgressSteps,
+    refetch: refetchProgressStepList,
   } = useProjectProgressStepData(projectId as string);
 
   // 진행단계 시작일자-예정완료일자 수정 요청
@@ -136,7 +136,9 @@ export default function ProjectWorkFlowPage() {
         {/* 진행단계 커스텀 (드래그앤드롭) 추가 */}
         <DraggableProgressSteps
           projectId={resolvedProjectId}
-          refetchProgressSteps={refetchProgressSteps}
+          progressStepList={progressStepList ?? []}
+          progressStepError={progressStepError ?? ""}
+          refetchProgressStepList={refetchProgressStepList}
         />
 
         <Flex direction="column" marginX="1rem">

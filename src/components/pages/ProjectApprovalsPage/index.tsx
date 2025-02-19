@@ -23,6 +23,7 @@ import { getMeApi } from "@/src/api/getMembersApi";
 import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
 import { useProjectApprovalList } from "@/src/hook/useFetchBoardList";
 import { showToast } from "@/src/utils/showToast";
+import ProgressStepTag from "@/src/components/common/ProgressStepTag";
 
 const approvalStatusFramework = createListCollection<{
   id: string;
@@ -209,7 +210,7 @@ export default function ProjectApprovalsPage() {
               }}
             >
               <Table.Cell style={{ color: approval.progressStep.color }}>
-                {approval.progressStep.name}
+                <ProgressStepTag>{approval.progressStep.name}</ProgressStepTag>
               </Table.Cell>
               <Table.Cell>
                 {CATEGORY_LABELS[approval.category] || "알 수 없음"}
