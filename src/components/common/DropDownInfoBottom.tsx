@@ -3,6 +3,7 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
+import DropDownInfoTop from "./DropDownInfoTop";
 
 interface DropdownInfoProps {
   text: string;

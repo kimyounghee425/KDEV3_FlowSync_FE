@@ -17,7 +17,7 @@ export function useProjectInfiniteScroll(managementStep: string) {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<HTMLDivElement | null>(null);
-
+  
   /**
    * 새로운 프로젝트 데이터를 불러와 기존 목록에 추가하는 함수
    *

@@ -14,7 +14,6 @@ import LinkAddSection from "@/src/components/common/LinkAddSection";
 import DropDownInfoBottom from "@/src/components/common/DropDownInfoBottom";
 import SignUpload from "@/src/components/pages/ProjectApprovalsNewPage/components/SignUpload";
 import { showToast } from "@/src/utils/showToast";
-import { isToday } from "date-fns";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
