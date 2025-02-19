@@ -7,15 +7,13 @@ import { usePathname } from "next/navigation";
 import { Box, Input, Text, Flex, Button } from "@chakra-ui/react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
-import { uploadFileApi } from "@/src/api/RegisterArticle";
+import { uploadContentFileApi } from "@/src/api/RegisterArticle";
 import { BaseArticleRequestData } from "@/src/types";
 import FileAddSection from "@/src/components/common/FileAddSection";
 import LinkAddSection from "@/src/components/common/LinkAddSection";
 import DropDownInfoBottom from "@/src/components/common/DropDownInfoBottom";
 import SignUpload from "@/src/components/pages/ProjectApprovalsNewPage/components/SignUpload";
 import { showToast } from "@/src/utils/showToast";
-import { isToday } from "date-fns";
-
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -69,6 +67,39 @@ export default function ArticleForm({
   const pathname = usePathname();
 
   useEffect(() => {
+    const handleShiftEnterAsEnter = (event: KeyboardEvent) => {
+      if (event.shiftKey && event.key === "Enter") {
+        event.preventDefault(); // 기본 `<br>` 개행 방지
+
+        if (editorRef.current) {
+          const editor = editorRef.current;
+          const currentBlock = editor.blocks.getCurrentBlockIndex();
+
+          if (currentBlock !== -1) {
+            editor.blocks.insert(
+              "paragraph",
+              { text: "" },
+              undefined,
+              currentBlock + 1,
+              true,
+            );
+
+            // 커서를 새 블록으로 자동 이동
+            setTimeout(() => {
+              editor.caret.setToBlock(currentBlock + 1, "start");
+            }, 10);
+          }
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleShiftEnterAsEnter);
+    return () => {
+      document.removeEventListener("keydown", handleShiftEnterAsEnter);
+    };
+  }, []);
+
+  useEffect(() => {
     const disableUndo = (event: KeyboardEvent) => {
       if (event.metaKey && event.key === "z") {
         event.preventDefault(); // 기본 동작 차단
@@ -120,7 +151,7 @@ export default function ArticleForm({
                 }
 
                 try {
-                  const responseData = await uploadFileApi(file);
+                  const responseData = await uploadContentFileApi(file);
                   if (responseData.result !== "SUCCESS") {
                     throw new Error("파일 업로드 실패");
                   }
@@ -207,15 +238,36 @@ export default function ArticleForm({
         }));
 
         if (!title.trim()) {
-          alert("제목을 입력하세요.");
+          const errorMessage = "제목을 입력하세요.";
+          showToast({
+            title: "요청 실패",
+            description: errorMessage,
+            type: "error",
+            duration: 3000,
+            error: errorMessage,
+          });
           return;
         }
         if (content.length === 0) {
-          alert("내용을 입력하세요.");
+          const errorMessage = "내용을 입력하세요.";
+          showToast({
+            title: "요청 실패",
+            description: errorMessage,
+            type: "error",
+            duration: 3000,
+            error: errorMessage,
+          });
           return;
         }
         if (pathname.includes("/approvals") && !isSignYes) {
-          alert("서명을 입력하세요");
+          const errorMessage = "서명을 입력하세요.";
+          showToast({
+            title: "요청 실패",
+            description: errorMessage,
+            type: "error",
+            duration: 3000,
+            error: errorMessage,
+          });
           return;
         }
 
@@ -398,7 +450,7 @@ export default function ArticleForm({
 
       {/* 작성 버튼 */}
       <Button
-        bg={"blue.300"}
+        bg={"#00a8ff"}
         color={"white"}
         width={"auto"}
         px={6}
@@ -409,7 +461,7 @@ export default function ArticleForm({
         boxShadow={"md"}
         onClick={handleEditorSave}
         disabled={isSaving}
-        _hover={{ bg: "blue.500" }}
+        _hover={{ bg: "#0095ff" }}
         loading={isSaving}
         loadingText={`${submitButtonLabel} 중...`}
       >

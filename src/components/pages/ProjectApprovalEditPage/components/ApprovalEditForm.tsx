@@ -53,6 +53,38 @@ export default function ApprovalEditForm() {
   const [signatureUrl, setSignatureUrl] = useState<string>("");
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
+  useEffect(() => {
+    const handleShiftEnterAsEnter = (event: KeyboardEvent) => {
+      if (event.shiftKey && event.key === "Enter") {
+        event.preventDefault(); // 기본 `<br>` 개행 방지
+
+        if (editorRef.current) {
+          const editor = editorRef.current;
+          const currentBlock = editor.blocks.getCurrentBlockIndex();
+
+          if (currentBlock !== -1) {
+            editor.blocks.insert(
+              "paragraph",
+              { text: "" },
+              undefined,
+              currentBlock + 1,
+              true,
+            );
+
+            // 커서를 새 블록으로 자동 이동
+            setTimeout(() => {
+              editor.caret.setToBlock(currentBlock + 1, "start");
+            }, 10);
+          }
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleShiftEnterAsEnter);
+    return () => {
+      document.removeEventListener("keydown", handleShiftEnterAsEnter);
+    };
+  }, []);
 
   useEffect(() => {
     const disableUndo = (event: KeyboardEvent) => {
@@ -60,13 +92,13 @@ export default function ApprovalEditForm() {
         event.preventDefault(); // 기본 동작 차단
       }
     };
-  
+
     document.addEventListener("keydown", disableUndo);
     return () => {
       document.removeEventListener("keydown", disableUndo);
     };
   }, []);
-  
+
   useEffect(() => {
     const loadTask = async () => {
       try {
@@ -353,7 +385,7 @@ export default function ApprovalEditForm() {
       {/* <EditSignUpload signatureUrl={signatureUrl} /> */}
 
       <Button
-        bg={"red.500"}
+        bg={"#00a8ff"}
         colorScheme={"red"}
         width={"auto"}
         px={6}
@@ -362,7 +394,7 @@ export default function ApprovalEditForm() {
         fontSize={"lg"}
         fontWeight={"bold"}
         boxShadow={"md"}
-        _hover={{ bg: "red.600" }}
+        _hover={{ bg: "#0095ff" }}
         onClick={handleEditorSave}
         loading={isSaving}
         loadingText="수정 중..."

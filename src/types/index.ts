@@ -405,10 +405,15 @@ export interface QuestionArticle {
   category: string;
   status: string;
   deletedYn: string;
+  progressStep: {
+    name: string
+  }
   register: {
     id: number;
     name: string;
     role: string;
+    jobRole: string;
+    jobTitle: string;
     organizationId: number;
   };
 
@@ -433,6 +438,8 @@ export interface ApprovalArticle {
     id: number;
     role: string;
     name: string;
+    jobRole: string;
+    jobTitle: string;
     organizationId: number;
     organizationName: string;
     organizationType: string;
@@ -485,6 +492,8 @@ export interface ArticleComment {
     id: number;
     name: string;
     role: string;
+    jobRole: string;
+    jobTitle: string;
   };
   deleted: boolean;
   content: string;

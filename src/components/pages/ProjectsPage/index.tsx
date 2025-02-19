@@ -232,6 +232,11 @@ function ProjectsPageContent() {
               <Table.Row
                 key={project.id}
                 onClick={() => isRowClickable && handleRowClick(project.id)}
+                title={
+                  isRowClickable
+                    ? ""
+                    : "본인이 참여한 프로젝트만 조회할 수 있습니다."
+                } // ✅ 마우스를 올리면 메시지 표시
                 css={{
                   "&:hover": isRowClickable
                     ? { backgroundColor: "#f1f1f1" }

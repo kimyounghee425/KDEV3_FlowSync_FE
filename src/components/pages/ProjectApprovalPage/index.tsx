@@ -2,7 +2,7 @@
 "use client";
 
 // 외부 라이브러리
-import { Box, VStack, Flex, Text } from "@chakra-ui/react";
+import { Box, VStack, Flex, Text, Button } from "@chakra-ui/react";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import ArticleContent from "@/src/components/common/ArticleContent";
 import ArticleComments from "@/src/components/common/ArticleComments";
 import CommentBox from "@/src/components/common/CommentBox";
-import { readApprovalApi } from "@/src/api/ReadArticle";
+import { readApprovalApi, getProjectInfo } from "@/src/api/ReadArticle";
 import SignToApprove from "@/src/components/pages/ProjectApprovalPage/components/SignToApprove";
 import { ArticleComment, ApprovalArticle } from "@/src/types";
 import { deleteApprovalApi } from "@/src/api/RegisterArticle";
@@ -38,6 +38,7 @@ export default function ProjectApprovalPage() {
   const [registerName, setRegisterName] = useState<string>("");
   const [myOrgId, setMyOrgId] = useState<number>();
   const [myName, setMyName] = useState<string>("");
+  const [customerOwnerName, setCustomerOwnerName] = useState<string>("");
 
   useEffect(() => {
     const loadApproval = async () => {
@@ -50,7 +51,10 @@ export default function ProjectApprovalPage() {
           Number(projectId),
           Number(approvalId),
         );
-        console.log(responseData.register);
+
+        const responseDataOfProject = await getProjectInfo(Number(projectId))
+
+        setCustomerOwnerName(responseDataOfProject.data.customerOwnerName)
 
         setArticle(responseData);
         setCategory(responseData.category);
@@ -151,7 +155,7 @@ export default function ProjectApprovalPage() {
       });
     }
   };
-
+  // test
   return (
     <Box
       maxW="1000px"
@@ -163,25 +167,26 @@ export default function ProjectApprovalPage() {
       borderRadius="lg"
       boxShadow="md"
     >
-      <Flex
-        justifyContent="space-between"
-        marginBottom="1rem"
-        alignItems="center"
-      >
+
+      {/* 게시글 내용 */}
+      <Flex justifyContent={"space-between"}>
+        <Button
+          borderRadius={"xl"}
+          fontSize={"xl"}
+          fontWeight={"bold"}
+          color={"#7e6551"}
+          backgroundColor={"#f9f9f9"}
+          mb={2}
+          cursor="default"
+        >
+          {category === "NORMAL_REQUEST" ? "일반 결재" : "진행단계 완료 결재"}
+        </Button>
         {myName === registerName && myOrgId === registerOrgId ? (
           <DropDownMenu onEdit={handleEdit} onDelete={handleDelete} />
         ) : null}
       </Flex>
       {/* 게시글 내용 */}
-      {category === "NORMAL_REQUEST" ? (
-        <Text fontSize={"xl"} fontWeight={"bold"} color={"blue"} mb={2}>
-          일반 요청
-        </Text>
-      ) : (
-        <Text fontSize={"xl"} fontWeight={"bold"} color={"red"} mb={2}>
-          진행단계 완료 요청
-        </Text>
-      )}
+
       <ArticleContent article={article} />
 
       <Box display={"flex"} direction={"row"} alignItems={"center"}>
@@ -194,12 +199,13 @@ export default function ProjectApprovalPage() {
       </Box>
       <Box display={"flex"} direction={"column"} justifyContent={"center"}>
         <SignToApprove
+          customerOwnerName={customerOwnerName}
           registerSignatureUrl={registerSignatureUrl}
           approverSignatureUrl={approverSignatureUrl}
           registerOrgId={registerOrgId}
         />
       </Box>
-
+      
       {/* 댓글 섹션 */}
       <VStack align="stretch" gap={8} mt={10}>
         <ArticleComments

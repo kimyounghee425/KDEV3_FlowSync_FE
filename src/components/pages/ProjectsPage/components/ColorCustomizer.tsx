@@ -17,7 +17,11 @@ export default function ColorCustomizer() {
   return (
     <DialogRoot>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button
+          variant="outline"
+          size="sm"
+          _hover={{ bg: "#00a8ff", color: "white" }}
+        >
           <Palette />
         </Button>
       </DialogTrigger>

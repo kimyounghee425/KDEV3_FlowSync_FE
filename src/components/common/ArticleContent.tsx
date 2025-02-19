@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+
 // 외부 라이브러리
 import {
   Box,
@@ -19,20 +18,33 @@ import {
   ArticleFile,
   ContentBlock,
 } from "@/src/types";
+import { resolveQuestion } from "@/src/api/ReadArticle";
+import { useEffect, useState } from "react";
+import { usePathname, useParams } from "next/navigation";
+import { getMeApi } from "@/src/api/getMembersApi";
 
 interface ArticleContentProps<T extends QuestionArticle | ApprovalArticle> {
   article: T | null;
+  registerId?: number;
 }
 
 export default function ArticleContent<
   T extends QuestionArticle | ApprovalArticle,
->({ article }: ArticleContentProps<T>) {
+>({ article, registerId }: ArticleContentProps<T>) {
   const pathname = usePathname();
   const [articleStatus, setArticleStatus] = useState<string>("");
   const [statusColor, setStatusColor] = useState<string>("");
+  const [resolved, setResolved] = useState<boolean>(false);
+  const [myId, setMyId] = useState<number>();
+  const { projectId, questionId } = useParams() as {
+    projectId: string;
+    questionId?: string;
+  };
+
   useEffect(() => {
     getStatus();
-  }, []);
+    fetchMyData();
+  }, [resolved]);
 
   if (!article) {
     return (
@@ -41,6 +53,15 @@ export default function ArticleContent<
       </Box>
     );
   }
+
+  const fetchMyData = async () => {
+    try {
+      const myData = await getMeApi();
+      setMyId(myData.data.id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getStatus = () => {
     if (pathname.includes("/approvals")) {
@@ -76,7 +97,7 @@ export default function ArticleContent<
       if (block.type === "paragraph" && typeof block.data === "string") {
         return (
           <Text key={index} mb={4} whiteSpace="pre-line">
-            {block.data.replace(/<br\s*\/?>/g, "\n")}
+            {block.data.replace(/<br\s*\/?>/g, "\n").replace(/&nbsp;/g, "").trimEnd()}
           </Text>
         );
       }
@@ -150,23 +171,33 @@ export default function ArticleContent<
     });
   };
 
-  console.log(article.fileList.length);
+  const handleResolve = async (projectId: number, questionId?: number) => {
+    try {
+      if (questionId) {
+        const responseData = await resolveQuestion(projectId, questionId);
+
+        setResolved(true);
+        article.status = "RESOLVED";
+      }
+    } catch (error) {
+      console.error("답변 완료 요청 실패 : ", error);
+    }
+  };
 
   return (
     <Box mb={4}>
       {/* 제목 */}
-      <Flex direction={"row"} pb={4} alignItems={"center"} pt={3}>
+
+      <Flex direction={"row"} pb={4} pt={3}>
         <Button
           fontSize="md"
           fontWeight="bold"
           backgroundColor={statusColor}
           borderRadius="xl"
           color={"white"}
-          cursor="default"
           mr={4}
           height={"2.2rem"}
           width={"5rem"}
-          lineHeight={"0.1rem"}
         >
           {articleStatus}
         </Button>
@@ -176,13 +207,33 @@ export default function ArticleContent<
       </Flex>
 
       {/* 작성자, 작성 일시 (NoticeArticle인 경우 작성자 정보 숨김) */}
-      <Box mb={4}>
-        <Text pb={2} fontWeight={"bold"}>
-          작성자: {article.register.name} {`/ ${article.register.role}`}
-        </Text>
-        <Text color={"gray.400"}>등록일: {article.regAt}</Text>
-        <Text color={"gray.400"}>등록일: {article.regAt}</Text>
-      </Box>
+
+      <Flex mb={4} justifyContent={"space-between"}>
+        <Box>
+          <Text pb={2} fontWeight={"bold"}>
+            {`작성자 : ${article.register.name} (${article.register.jobTitle}) / ${article.register.jobRole}`}
+          </Text>
+          <Text color={"gray.400"}>
+            등록일: {article.regAt}
+          </Text>
+        </Box>
+        {pathname.includes("/questions") && myId === registerId ? (
+          <Button
+            color={"white"}
+            backgroundColor={"#00a8ff"}
+            _hover={{ backgroundColor: "#0095ff" }}
+            onClick={() =>
+              handleResolve(
+                Number(projectId),
+                questionId ? Number(questionId) : undefined,
+              )
+            }
+          >
+            질문 해결
+          </Button>
+        ) : null}
+      </Flex>
+
       <Separator mb={6} size={"lg"} />
 
       {/* 본문 내용 */}
@@ -212,9 +263,10 @@ export default function ArticleContent<
               첨부 파일
             </Text>
             <VStack align="start">{renderFiles(article.fileList)}</VStack>
+
+            <Separator mb={6} size={"lg"} />
           </Box>
         ) : null}
-        <Separator mb={6} size={"lg"} />
       </Box>
     </Box>
   );

@@ -13,12 +13,14 @@ interface SigntoUploadProps {
   registerSignatureUrl?: string; // 요청자 사인 url
   approverSignatureUrl?: string;
   registerOrgId?: number;
+  customerOwnerName: string;
 }
 
 export default function SignToApprove({
   registerSignatureUrl,
   approverSignatureUrl,
   registerOrgId,
+  customerOwnerName,
 }: SigntoUploadProps) {
   const { projectId, approvalId } = useParams() as {
     projectId: string;
@@ -33,6 +35,7 @@ export default function SignToApprove({
     useState<boolean>(!!approverSignatureUrl);
   const [signing, setSigning] = useState<boolean>(false);
   const [newSigning, setNewSigning] = useState<boolean>(false);
+  const [myName, setMyName] = useState<string>("");
 
   // 캔버스 초기화
   useEffect(() => {
@@ -184,7 +187,7 @@ export default function SignToApprove({
         disableSignaturePad();
         setIsignatureComplete(true);
       }
-      // return response.data.result;
+      // return response.data.result;g
     } catch (error) {
       console.error(error);
     }
@@ -194,16 +197,18 @@ export default function SignToApprove({
   const isMyOrg = async () => {
     try {
       const response = await getMeApi();
-      // console.log(response.data.organizationType)
+
       if (response.data.organizationType === "DEVELOPER") {
         setIsignatureComplete(true);
         disableSignaturePad();
+      } else {
+        setMyName(response.data.name);
       }
     } catch (error) {
       console.log(error);
     }
   };
-
+  console.log(myName, customerOwnerName)
   return (
     <Flex direction={"column"} align="center">
       <Flex direction="column" align="center">
@@ -287,72 +292,78 @@ export default function SignToApprove({
           <Box pt={5}></Box>
         ))}
 
-      <Flex direction={"row"} justifyContent={"center"} gap={4}>
-        {!isSignatureComplete && (
-          <Flex direction={"row"}>
-            {!signing ? (
-              <Button
-                onClick={() => setSigning(true)}
-                backgroundColor={"blue.500"}
-                color="white"
-                _hover={{ backgroundColor: "blue.600" }}
-                mr={2}
-              >
-                결재
-              </Button>
-            ) : !newSigning ? (
-              <Flex direction={"row"}>
+      {myName === customerOwnerName ? (
+        <Flex direction={"row"} justifyContent={"center"} gap={4}>
+          {!isSignatureComplete && (
+            <Flex direction={"row"}>
+              {!signing ? (
                 <Button
-                  backgroundColor={"green.500"}
-                  color="white"
-                  _hover={{ backgroundColor: "green.600" }}
-                  mr={3}
-                  onClick={bringSignature}
-                >
-                  서명 불러오기
-                </Button>
-                <Button
+                  onClick={() => setSigning(true)}
                   backgroundColor={"blue.500"}
                   color="white"
                   _hover={{ backgroundColor: "blue.600" }}
                   mr={2}
-                  onClick={handleNewSign}
                 >
-                  서명 새로 작성하기
+                  결재
                 </Button>
-              </Flex>
-            ) : (
-              <Flex direction={"row"}>
-                <Button
-                  backgroundColor={"blue.500"}
-                  color="white"
-                  _hover={{ backgroundColor: "blue.600" }}
-                  mr={3}
-                  onClick={saveSignature}
-                >
-                  등록
-                </Button>
-                <Button
-                  backgroundColor={"red.500"}
-                  color="white"
-                  _hover={{ backgroundColor: "red.600" }}
-                  mr={3}
-                  onClick={clearSignature}
-                >
-                  지우기
-                </Button>
-              </Flex>
-            )}
+              ) : !newSigning ? (
+                <Flex direction={"row"}>
+                  <Button
+                    backgroundColor={"green.500"}
+                    color="white"
+                    _hover={{ backgroundColor: "green.600" }}
+                    mr={3}
+                    onClick={bringSignature}
+                  >
+                    서명 불러오기
+                  </Button>
+                  <Button
+                    backgroundColor={"blue.500"}
+                    color="white"
+                    _hover={{ backgroundColor: "blue.600" }}
+                    mr={2}
+                    onClick={handleNewSign}
+                  >
+                    서명 새로 작성하기
+                  </Button>
+                </Flex>
+              ) : (
+                <Flex direction={"row"}>
+                  <Button
+                    backgroundColor={"blue.500"}
+                    color="white"
+                    _hover={{ backgroundColor: "blue.600" }}
+                    mr={3}
+                    onClick={saveSignature}
+                  >
+                    등록
+                  </Button>
+                  <Button
+                    backgroundColor={"red.500"}
+                    color="white"
+                    _hover={{ backgroundColor: "red.600" }}
+                    mr={3}
+                    onClick={clearSignature}
+                  >
+                    지우기
+                  </Button>
+                </Flex>
+              )}
 
-            <Button mr={3} backgroundColor={"red.200"} onClick={rejectApproval}>
-              반려
-            </Button>
-            <DropDownInfoTop
-              text={`결재 글은 서명을 기입해야 작성이 가능합니다. \n "서명 불러오기" 는 기존에 저장된 서명을 불러옵니다. \n 새 서명을 기입하고 "등록" 을 누르면 기존에 저장되어 있던 서명은 삭제됩니다. `}
-            />
-          </Flex>
-        )}
-      </Flex>
+              <Button
+                mr={3}
+                backgroundColor={"red.200"}
+                onClick={rejectApproval}
+              >
+                반려
+              </Button>
+              <DropDownInfoTop
+                text={`결재 글은 서명을 기입해야 작성이 가능합니다. \n "서명 불러오기" 는 기존에 저장된 서명을 불러옵니다. \n 새 서명을 기입하고 "등록" 을 누르면 기존에 저장되어 있던 서명은 삭제됩니다. `}
+              />
+            </Flex>
+          )}
+        </Flex>
+      ) : null}
     </Flex>
   );
 }
