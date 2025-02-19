@@ -7,6 +7,7 @@ import SignaturePad from "signature_pad";
 import DropDownInfoTop from "@/src/components/common/DropDownInfoTop";
 import axiosInstance from "@/src/api/axiosInstance";
 import { getMeApi } from "@/src/api/getMembersApi";
+import { showToast } from "@/src/utils/showToast";
 
 interface SigntoUploadProps {
   registerSignatureUrl?: string; // 요청자 사인 url
@@ -121,12 +122,23 @@ export default function SignToApprove({
   };
 
   const bringSignature = async () => {
-    const isConfirmed = confirm("결재 서명을 입력하면 취소가 불가능합니다.");
-    if (!isConfirmed) {
-      return;
-    }
     try {
       const responseData = await bringSignApi();
+      if (responseData.data.hasSignatures === false) {
+        const errorMessage = "서명이 없습니다. 서명을 등록하세요.";
+        showToast({
+          title: "요청 실패",
+          description: errorMessage,
+          type: "error",
+          duration: 3000,
+          error: errorMessage,
+        });
+        return;
+      }
+      const isConfirmed = confirm("결재 서명을 입력하면 취소가 불가능합니다.");
+      if (!isConfirmed) {
+        return;
+      }
 
       setYourSignatureUrl(responseData.data.signatureUrl ?? "");
 
@@ -144,7 +156,10 @@ export default function SignToApprove({
 
   // 승인 반려
   const rejectApproval = async () => {
-    window.confirm("결재를 반려하시겠습니까?");
+    const isConfirmed = window.confirm("결재를 반려하시겠습니까?");
+    if (!isConfirmed) {
+      return;
+    }
     try {
       const response = await axiosInstance.post(
         `projects/${projectId}/approvals/${approvalId}/reject`,
@@ -181,7 +196,6 @@ export default function SignToApprove({
       const response = await getMeApi();
       // console.log(response.data.organizationType)
       if (response.data.organizationType === "DEVELOPER") {
-
         setIsignatureComplete(true);
         disableSignaturePad();
       }

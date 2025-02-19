@@ -22,7 +22,7 @@ import FilterSelectBox from "@/src/components/common/FilterSelectBox";
 import { useMemberProjectList } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import CommonTable from "@/src/components/common/CommonTable";
-import StatusTag from "@/src/components/common/StatusTag";
+import StatusTag from "@/src/components/pages/ProjectsPage/components/ManagementStepTag";
 import Pagination from "@/src/components/common/Pagination";
 import { useInputFormatter } from "@/src/hook/useInputFormatter";
 import { useDeleteMember, useUpdateMember } from "@/src/hook/useMutationData";

@@ -5,7 +5,7 @@ import { Table } from "@chakra-ui/react";
 import CommonTable from "@/src/components/common/CommonTable";
 import { useProjectCompletionRequestsData } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
-import StatusTag from "@/src/components/common/StatusTag";
+import StatusTag from "@/src/components/pages/ProjectsPage/components/ManagementStepTag";
 import Pagination from "@/src/components/common/Pagination";
 import { useRouter } from "next/navigation";
 

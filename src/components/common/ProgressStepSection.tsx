@@ -71,13 +71,15 @@ export default function ProgressStepSection({
         - isSelected: 현재 선택 상태 여부
         - onClick: 클릭 시 handleStatusChange 실행
       */}
-      {progressStep.map((button) => (
+      {progressStep.map((progress) => (
         <ProgressStepButton
-          key={button.id}
-          text={button.title}
-          count={button.count || 0} // 서버에서 받아온 개수 표시
-          isSelected={selectedButtonId === button.id} // 선택 상태 전달
-          onClick={() => handleStatusChange(button.id)} // 선택된 버튼이면 ProgressStepButton 내부에서 클릭 방지
+          key={progress.id}
+          text={progress.title}
+          color={progress.color}
+          description={progress.description}
+          count={progress.count || 0} // 서버에서 받아온 개수 표시
+          isSelected={selectedButtonId === progress.id} // 선택 상태 전달
+          onClick={() => handleStatusChange(progress.id)} // 선택된 버튼이면 ProgressStepButton 내부에서 클릭 방지
         />
       ))}
     </Flex>

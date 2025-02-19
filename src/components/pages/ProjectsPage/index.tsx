@@ -10,7 +10,7 @@ import {
   Stack,
   Table,
 } from "@chakra-ui/react";
-import StatusTag from "@/src/components/common/StatusTag";
+import ManagementStepTag from "@/src/components/pages/ProjectsPage/components/ManagementStepTag";
 import ProjectsManagementStepCards from "@/src/components/pages/ProjectsPage/components/ProjectsManagementStepCards";
 import CommonTable from "@/src/components/common/CommonTable";
 import Pagination from "@/src/components/common/Pagination";
@@ -250,9 +250,9 @@ function ProjectsPageContent() {
                 <Table.Cell>{project.customerName}</Table.Cell>
                 <Table.Cell>{project.developerName}</Table.Cell>
                 <Table.Cell>
-                  <StatusTag>
+                  <ManagementStepTag>
                     {STATUS_LABELS[project.managementStep] || "알 수 없음"}
-                  </StatusTag>
+                  </ManagementStepTag>
                 </Table.Cell>
                 <Table.Cell>{project.startAt.split(" ")[0]}</Table.Cell>
                 <Table.Cell>{project.deadlineAt.split(" ")[0]}</Table.Cell>

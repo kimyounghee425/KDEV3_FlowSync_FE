@@ -14,6 +14,7 @@ import {
   CompletionHistoryListResponse,
   ProgressStepOrder,
   CreateProjectResponse,
+  ProgressAddProps,
 } from "@/src/types";
 
 /**
@@ -367,11 +368,11 @@ export async function updateProjectProgressStepOrderApi(
  */
 export async function createProjectProgressStepApi(
   projectId: string,
-  stepName: string,
-): Promise<CommonResponseType<{ id: string; title: string }>> {
+  stepData: ProgressAddProps,
+): Promise<CommonResponseType<void>> {
   const response = await axiosInstance.post(
     `/projects/${projectId}/progress-steps`,
-    { title: stepName }, // API 요청 바디
+    stepData, // API 요청 바디
   );
   return response.data;
 }
@@ -385,6 +386,37 @@ export async function deleteProjectProgressStepApi(
 ): Promise<CommonResponseType<void>> {
   const response = await axiosInstance.delete(
     `/projects/${projectId}/progress-steps/${progressStepId}`,
+  );
+  return response.data;
+}
+
+/**
+ * 프로젝트 진행 단계 조회 API
+ * @param projectId 프로젝트 ID
+ * @param progressStepId 진행 단계 ID
+ * @returns 프로젝트 진행 단계 정보
+ */
+export async function fetchProjectProgressStepApi(
+  projectId: string,
+  progressStepId: string,
+): Promise<CommonResponseType<ProgressStep>> {
+  const response = await axiosInstance.get(
+    `/projects/${projectId}/progress-steps/${progressStepId}`,
+  );
+  return response.data;
+}
+
+/**
+ * 프로젝트 진행 단계 수정 API
+ */
+export async function updateProjectProgressStepApi(
+  projectId: string,
+  progressStepId: string,
+  stepData: ProgressAddProps,
+): Promise<CommonResponseType<void>> {
+  const response = await axiosInstance.put(
+    `/projects/${projectId}/progress-steps/${progressStepId}`,
+    stepData,
   );
   return response.data;
 }

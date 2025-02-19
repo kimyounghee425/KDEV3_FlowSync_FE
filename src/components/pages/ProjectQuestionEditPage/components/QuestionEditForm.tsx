@@ -42,6 +42,19 @@ export default function QuestionEditForm() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   useEffect(() => {
+    const disableUndo = (event: KeyboardEvent) => {
+      if (event.metaKey && event.key === "z") {
+        event.preventDefault(); // 기본 동작 차단
+      }
+    };
+  
+    document.addEventListener("keydown", disableUndo);
+    return () => {
+      document.removeEventListener("keydown", disableUndo);
+    };
+  }, []);
+  
+  useEffect(() => {
     const loadTask = async () => {
       try {
         const responseData = await readQuestionApi(

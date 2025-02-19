@@ -55,25 +55,43 @@ export default function Comments({
 
   return (
     <Box>
-      {parentComments.map((comment) => (
-        <Box key={comment.id}>
-          <CommentItem
-            comment={comment}
-            setCommentIsWritten={setCommentIsWritten}
-          />
-          {commentMap.has(comment.id) && (
-            <Box>
-              {commentMap.get(comment.id)!.map((reply) => (
-                <CommentItem
-                  key={reply.id}
-                  comment={reply}
-                  setCommentIsWritten={setCommentIsWritten}
-                />
-              ))}
-            </Box>
-          )}
-        </Box>
-      ))}
+      {parentComments.map((comment) => {
+        const replies = commentMap.get(comment.id) || [];
+        const hasVisibleReplies = replies.some((reply) => !reply.deleted);
+
+        // 삭제된 댓글이고, 답글이 없거나 모두 삭제된 경우 렌더링 안 함
+        if (comment.deleted && !hasVisibleReplies) return null;
+
+        return (
+          <Box key={comment.id}>
+            {comment.deleted ? (
+              // 삭제된 댓글이고, 답글이 있으면 "삭제된 댓글입니다" 표시
+              <Box color="gray.500" fontStyle="italic" mb={2}>
+                삭제된 댓글입니다.
+              </Box>
+            ) : (
+              <CommentItem comment={comment} setCommentIsWritten={setCommentIsWritten} />
+            )}
+
+            {hasVisibleReplies && (
+              <Box ml={4}>
+                {replies.map((reply) =>
+                  reply.deleted ? (
+                    // 삭제된 대댓글은 표시하지 않음
+                    null
+                  ) : (
+                    <CommentItem
+                      key={reply.id}
+                      comment={reply}
+                      setCommentIsWritten={setCommentIsWritten}
+                    />
+                  ),
+                )}
+              </Box>
+            )}
+          </Box>
+        );
+      })}
     </Box>
   );
 }

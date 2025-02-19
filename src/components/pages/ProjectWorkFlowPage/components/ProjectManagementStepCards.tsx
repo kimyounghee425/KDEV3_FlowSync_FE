@@ -120,20 +120,19 @@ export default function ProjectsManagementStepCards({
 
   return (
     <Flex
+      direction="column"
       margin="2rem 1rem 2rem 1.3rem"
       width="full"
-      alignItems="center"
-      gap="3rem"
-      transition="all 0.3s ease-in-out"
+      alignItems="flex-start" // 왼쪽 정렬
+      gap="1rem" // Heading과 카드들 사이 간격
     >
-      <Box>
-        <Heading fontSize="1.3rem">{title}</Heading>
-      </Box>
+      <Heading fontSize="1.3rem">{title}</Heading>
       <Flex
-        wrap="nowrap"
-        justifyContent="center"
+        wrap="wrap"
+        justifyContent="flex-start"
         alignItems="center"
         gap="2rem"
+        width="100%"
       >
         {mappedData.map((item) => {
           const isCurrentStep = item.step === currentManagementStep;

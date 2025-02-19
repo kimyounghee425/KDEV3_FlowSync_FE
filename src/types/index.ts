@@ -270,6 +270,7 @@ export interface ProgressStep {
   projectId: string;
   relatedApprovalId: string;
   approver: Approver;
+  color: string;
 }
 
 export interface Register {
@@ -485,7 +486,7 @@ export interface ArticleComment {
     name: string;
     role: string;
   };
-
+  deleted: boolean;
   content: string;
   regAt: string;
   editAt: string;
@@ -539,9 +540,11 @@ export interface NoticeListResponse {
 export interface ProjectProgressStepProps {
   id: string;
   title: string;
-  value?: string;
-  count?: number;
-  status?: string;
+  value: string;
+  count: number;
+  status: string;
+  color: string;
+  description: string;
 }
 export interface UserInfoResponse {
   id: string;
@@ -617,4 +620,10 @@ export interface ProgressStepOrder {
   id: string;
   order: number;
   title?: string;
+}
+
+export interface ProgressAddProps {
+  title: string;
+  color: string;
+  description?: string;
 }

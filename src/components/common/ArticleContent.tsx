@@ -1,5 +1,15 @@
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 // 외부 라이브러리
-import { Box, Text, Image, VStack, Separator } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Image,
+  VStack,
+  Separator,
+  Flex,
+  Button,
+} from "@chakra-ui/react";
 
 // 절대 경로 파일
 import {
@@ -17,6 +27,13 @@ interface ArticleContentProps<T extends QuestionArticle | ApprovalArticle> {
 export default function ArticleContent<
   T extends QuestionArticle | ApprovalArticle,
 >({ article }: ArticleContentProps<T>) {
+  const pathname = usePathname();
+  const [articleStatus, setArticleStatus] = useState<string>("");
+  const [statusColor, setStatusColor] = useState<string>("");
+  useEffect(() => {
+    getStatus();
+  }, []);
+
   if (!article) {
     return (
       <Box>
@@ -24,6 +41,29 @@ export default function ArticleContent<
       </Box>
     );
   }
+
+  const getStatus = () => {
+    if (pathname.includes("/approvals")) {
+      if (article.status === "WAIT") {
+        setArticleStatus("대기");
+        setStatusColor("#7E6551");
+      } else if (article.status == "REJECTED") {
+        setArticleStatus("반려");
+        setStatusColor("red.400");
+      } else {
+        setArticleStatus("승인");
+        setStatusColor("#00A8FF");
+      }
+    } else if (pathname.includes("/questions")) {
+      if (article.status === "WAIT") {
+        setArticleStatus("답변 대기");
+        setStatusColor("#7E6551");
+      } else {
+        setArticleStatus("답변 완료");
+        setStatusColor("#00A8FF");
+      }
+    }
+  };
 
   const parsedContent =
     typeof article.content === "string"
@@ -36,7 +76,7 @@ export default function ArticleContent<
       if (block.type === "paragraph" && typeof block.data === "string") {
         return (
           <Text key={index} mb={4} whiteSpace="pre-line">
-            {block.data}
+            {block.data.replace(/<br\s*\/?>/g, "\n")}
           </Text>
         );
       }
@@ -110,20 +150,37 @@ export default function ArticleContent<
     });
   };
 
-  // regAt 날짜 예쁘게 변환
+  console.log(article.fileList.length);
 
   return (
     <Box mb={4}>
       {/* 제목 */}
-      <Text fontSize="2xl" fontWeight="bold" mb={4} pt={4}>
-        {article.title}
-      </Text>
+      <Flex direction={"row"} pb={4} alignItems={"center"} pt={3}>
+        <Button
+          fontSize="md"
+          fontWeight="bold"
+          backgroundColor={statusColor}
+          borderRadius="xl"
+          color={"white"}
+          cursor="default"
+          mr={4}
+          height={"2.2rem"}
+          width={"5rem"}
+          lineHeight={"0.1rem"}
+        >
+          {articleStatus}
+        </Button>
+        <Text fontSize="2xl" fontWeight="bold">
+          {article.title}
+        </Text>
+      </Flex>
 
       {/* 작성자, 작성 일시 (NoticeArticle인 경우 작성자 정보 숨김) */}
       <Box mb={4}>
         <Text pb={2} fontWeight={"bold"}>
           작성자: {article.register.name} {`/ ${article.register.role}`}
         </Text>
+        <Text color={"gray.400"}>등록일: {article.regAt}</Text>
         <Text color={"gray.400"}>등록일: {article.regAt}</Text>
       </Box>
       <Separator mb={6} size={"lg"} />
@@ -132,23 +189,31 @@ export default function ArticleContent<
       <Box mb={4}>{renderContent(parsedContent)}</Box>
       <br />
       <br />
-      <Separator mb={6} />
       {/* 첨부 링크 */}
       <Box>
-        <Text fontWeight="bold" mb={2}>
-          첨부 링크
-          <VStack align="start">{renderLinks(article.linkList)}</VStack>
-        </Text>
+        {article.linkList.length !== 0 ? (
+          <Box>
+            <Separator mb={6} />
+            <Text fontWeight="bold" mb={2}>
+              첨부 링크
+              <VStack align="start">{renderLinks(article.linkList)}</VStack>
+            </Text>
+            <br />
+            <br />
+          </Box>
+        ) : null}
       </Box>
-      <br />
-      <br />
-      <Separator mb={6} />
       {/* 첨부 파일 */}
       <Box mb={4}>
-        <Text fontWeight="bold" mb={2}>
-          첨부 파일
-        </Text>
-        <VStack align="start">{renderFiles(article.fileList)}</VStack>
+        {article.fileList.length !== 0 ? (
+          <Box>
+            <Separator mb={6} />
+            <Text fontWeight="bold" mb={2}>
+              첨부 파일
+            </Text>
+            <VStack align="start">{renderFiles(article.fileList)}</VStack>
+          </Box>
+        ) : null}
         <Separator mb={6} size={"lg"} />
       </Box>
     </Box>

@@ -61,7 +61,7 @@ export async function editApprovalComment(
   approvalId: number,
   commentId: number,
   requestData: any,
-) {
+) { 
   try {
     const response = await axiosInstance.put(
       `${BASE_URL}/projects/${projectId}/approvals/${approvalId}/comments/${commentId}`,

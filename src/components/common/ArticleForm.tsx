@@ -14,6 +14,8 @@ import LinkAddSection from "@/src/components/common/LinkAddSection";
 import DropDownInfoBottom from "@/src/components/common/DropDownInfoBottom";
 import SignUpload from "@/src/components/pages/ProjectApprovalsNewPage/components/SignUpload";
 import { showToast } from "@/src/utils/showToast";
+import { isToday } from "date-fns";
+
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -65,6 +67,19 @@ export default function ArticleForm({
   const [contentText, setContentText] = useState("");
   const maxContentLength = 10000;
   const pathname = usePathname();
+
+  useEffect(() => {
+    const disableUndo = (event: KeyboardEvent) => {
+      if (event.metaKey && event.key === "z") {
+        event.preventDefault(); // 기본 동작 차단
+      }
+    };
+
+    document.addEventListener("keydown", disableUndo);
+    return () => {
+      document.removeEventListener("keydown", disableUndo);
+    };
+  }, []);
 
   useEffect(() => {
     setTitle(initialTitle);
@@ -218,7 +233,7 @@ export default function ArticleForm({
         await handleSave(requestData as BaseArticleRequestData);
       } catch (error) {
         console.error("저장 실패:", error);
-        alert("저장 중 문제가 발생했습니다.");
+        return;
       } finally {
         setIsSaving(false);
       }
@@ -383,7 +398,7 @@ export default function ArticleForm({
 
       {/* 작성 버튼 */}
       <Button
-        bg={"red.500"}
+        bg={"blue.300"}
         color={"white"}
         width={"auto"}
         px={6}

@@ -12,6 +12,7 @@ import {
   MemberProps,
   NoticeRequestData,
   OrganizationProps,
+  ProgressAddProps,
   ProgressStep,
   ProgressStepOrder,
 } from "@/src/types";
@@ -28,6 +29,7 @@ import {
   deleteProjectApi,
   updateProjectApi,
   createProjectApi,
+  updateProjectProgressStepApi,
 } from "@/src/api/projects";
 import {
   changeOrganizationStatusApi,
@@ -220,7 +222,7 @@ export function useUpdateProjectProgressStepOrder() {
  * 프로젝트 진행 단계 추가 훅
  */
 export function useCreateProjectProgressStep() {
-  return useMutationData<{ id: string; title: string }, [string, string]>({
+  return useMutationData<void, [string, ProgressAddProps]>({
     mutationApi: createProjectProgressStepApi,
   });
 }
@@ -258,5 +260,13 @@ export function useUpdateProject() {
 export function useDeleteProject() {
   return useMutationData<void, [string]>({
     mutationApi: deleteProjectApi,
+  });
+}
+/*
+ * 진행 단계 수정 훅
+ */
+export function useUpdateProjectProgressStep() {
+  return useMutationData<void, [string, string, ProgressAddProps]>({
+    mutationApi: updateProjectProgressStepApi,
   });
 }
