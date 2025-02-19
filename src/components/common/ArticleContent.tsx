@@ -97,7 +97,7 @@ export default function ArticleContent<
       if (block.type === "paragraph" && typeof block.data === "string") {
         return (
           <Text key={index} mb={4} whiteSpace="pre-line">
-            {block.data.replace(/<br\s*\/?>/g, "\n")}
+            {block.data.replace(/<br\s*\/?>/g, "\n").replace(/&nbsp;/g, "").trimEnd()}
           </Text>
         );
       }

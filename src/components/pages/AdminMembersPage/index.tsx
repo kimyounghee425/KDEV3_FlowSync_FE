@@ -131,7 +131,7 @@ function AdminMembersPageContent() {
     }
   };
 
-  // 신규등록 버튼 클릭 시 - 회원 등록 페이지로 이동
+  // 신규등록 버튼 클릭 시 - 회원 등록 페이지 이동
   const handleMemberCreateButton = () => {
     router.push("/admin/members/create");
   };

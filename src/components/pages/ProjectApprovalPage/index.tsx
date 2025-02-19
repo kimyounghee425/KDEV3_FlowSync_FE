@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import ArticleContent from "@/src/components/common/ArticleContent";
 import ArticleComments from "@/src/components/common/ArticleComments";
 import CommentBox from "@/src/components/common/CommentBox";
-import { readApprovalApi } from "@/src/api/ReadArticle";
+import { readApprovalApi, getProjectInfo } from "@/src/api/ReadArticle";
 import SignToApprove from "@/src/components/pages/ProjectApprovalPage/components/SignToApprove";
 import { ArticleComment, ApprovalArticle } from "@/src/types";
 import { deleteApprovalApi } from "@/src/api/RegisterArticle";
@@ -38,6 +38,7 @@ export default function ProjectApprovalPage() {
   const [registerName, setRegisterName] = useState<string>("");
   const [myOrgId, setMyOrgId] = useState<number>();
   const [myName, setMyName] = useState<string>("");
+  const [customerOwnerName, setCustomerOwnerName] = useState<string>("");
 
   useEffect(() => {
     const loadApproval = async () => {
@@ -50,7 +51,10 @@ export default function ProjectApprovalPage() {
           Number(projectId),
           Number(approvalId),
         );
-        console.log(responseData.register);
+
+        const responseDataOfProject = await getProjectInfo(Number(projectId))
+
+        setCustomerOwnerName(responseDataOfProject.data.customerOwnerName)
 
         setArticle(responseData);
         setCategory(responseData.category);
@@ -207,6 +211,7 @@ export default function ProjectApprovalPage() {
       </Box>
       <Box display={"flex"} direction={"column"} justifyContent={"center"}>
         <SignToApprove
+          customerOwnerName={customerOwnerName}
           registerSignatureUrl={registerSignatureUrl}
           approverSignatureUrl={approverSignatureUrl}
           registerOrgId={registerOrgId}

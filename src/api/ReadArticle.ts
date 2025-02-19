@@ -75,3 +75,12 @@ export async function resolveQuestion(projectId: number, questionId: number) {
     console.error(error)
   }
 }
+
+export async function getProjectInfo(projectId: number) {
+  try {
+    const response = await axiosInstance.get(`/projects/${projectId}/project-info`)
+    return response.data;
+  } catch (error) {
+    console.error(error)
+  }
+}
