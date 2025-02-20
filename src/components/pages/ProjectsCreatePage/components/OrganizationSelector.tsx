@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Flex, Box, Text, Button, Input } from "@chakra-ui/react";
+import { Flex, Box, Text, Button, Input, IconButton } from "@chakra-ui/react";
+import { X } from "lucide-react";
 import { MemberProps, OrganizationProps } from "@/src/types";
 import { getOrganizationsApi } from "@/src/api/getOrganization";
 import { fetchMembersWithinOrgApi } from "@/src/api/members";
@@ -71,9 +72,23 @@ export default function OrganizationSelector({
     }
   }, [isModalOpen, organizationType]);
 
+  const isFirstRender = useRef(true);
+
   // 프로젝트 수정 시 기존 `selectedMembers` 유지 (멤버 목록이 변경될 때만 업데이트)
   useEffect(() => {
+    if (isFirstRender.current) {
+      // 첫 번째 렌더링에서는 실행하지 않음
+      isFirstRender.current = false;
+      return;
+    }
+
     if (selectedOrganizationId) {
+      console.log("selectedOrganzationId: ", selectedOrganizationId);
+      console.log("ownerId: ", ownerId);
+
+      setSelectedMembers([]);
+      setOwnerId("");
+
       fetchOrganizationMembers(selectedOrganizationId);
     }
   }, [selectedOrganizationId]);
@@ -82,10 +97,8 @@ export default function OrganizationSelector({
   const handleSelectOrganization = async (orgId: string) => {
     setSelectedOrganizationId(orgId);
     const selectedOrg = organizations.find((org) => org.id === orgId);
+    console.log("selectedOrg: ", selectedOrg);
     setSelectedOrganizationName(selectedOrg ? selectedOrg.name : ""); // 선택된 조직명 업데이트
-
-    // 멤버 목록을 가져오지만, 자동으로 `setSelectedMembers`를 업데이트하지 않음
-    await fetchOrganizationMembers(orgId);
   };
 
   // 멤버 선택/해제 로직
@@ -249,29 +262,50 @@ export default function OrganizationSelector({
       {isModalOpen && (
         <Box
           ref={modalRef}
-          position="fixed" // 화면 전체 기준 중앙 정렬
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          width="60rem" // 크기 고정
-          minHeight="30rem" // 최소 높이 고정 (멤버 없을 때도 레이아웃 유지)
-          height="40rem"
-          bg="white"
-          borderRadius="0.5rem"
-          boxShadow="lg"
-          p="1.5rem"
-          zIndex="999"
+          position="fixed"
+          top="0"
+          left="0"
+          width="100vw"
+          height="100vh"
+          background="rgba(0, 0, 0, 0.3)" // 어두운 배경 적용
+          backdropFilter="blur(5px)" // 블러 효과 추가
           display="flex"
-          flexDirection="column"
-          // justifyContent="center" // 내용을 중앙 정렬
-          // alignItems="center"
-          overflowY="auto" // 내부 콘텐츠가 많아지면 스크롤 활성화
+          alignItems="center"
+          justifyContent="center"
+          zIndex="999"
+          onClick={() => setIsModalOpen(false)}
         >
-          <Box>
-            <Flex direction={{ base: "column", md: "row" }} gap="1rem">
-              {/* 고객사/개발사 목록 */}
-              <Box flex="1">
-                <Text fontWeight="bold" mb="0.5rem">
+          <Box
+            position="relative"
+            width="60rem"
+            maxHeight="90vh"
+            bg="white"
+            borderRadius="0.5rem"
+            boxShadow="2xl" // 더 부드러운 그림자 효과
+            p="1.5rem"
+            zIndex="1000"
+            display="flex"
+            flexDirection="column"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 닫기 버튼 추가 */}
+            <IconButton
+              position="absolute"
+              top="1rem"
+              right="1rem"
+              size="sm"
+              onClick={() => setIsModalOpen(false)}
+              aria-label="닫기"
+              backgroundColor="white"
+            >
+              <X />
+            </IconButton>
+
+            {/* 업체 목록 & 멤버 목록 */}
+            <Flex gap="1rem" flex="1" alignItems="flex-start">
+              {/* 업체 목록 */}
+              <Flex flex="1" direction="column" mt="0.4rem">
+                <Text fontWeight="bold" mb="0.9rem">
                   업체 목록
                 </Text>
                 <Input
@@ -282,8 +316,16 @@ export default function OrganizationSelector({
                   borderRadius="0.5rem"
                   p="0.75rem"
                   width="100%"
+                  mb="1rem"
                 />
-                <Box maxHeight="20rem" overflowY="auto">
+                <Box
+                  flex="1"
+                  border="1px solid #ccc"
+                  borderRadius="md"
+                  p="0.75rem"
+                  overflowY="auto"
+                  maxHeight="44vh"
+                >
                   {organizations.length > 0 ? (
                     organizations
                       .filter((org) =>
@@ -318,28 +360,31 @@ export default function OrganizationSelector({
                     <Text>조회된 회사가 없습니다.</Text>
                   )}
                 </Box>
-              </Box>
+              </Flex>
 
               {/* 모달창 우측 회원 목록 */}
-              <Box flex="1">
-                <Flex direction="row" alignItems="center">
+              <Flex flex="1" flexDirection="column">
+                <Flex flex="1" alignItems="center">
                   <Text fontWeight="bold" mb="0.5rem">
                     멤버 선택
                   </Text>
-                  <Box mb="0.5rem" ml="0.5rem">
-                    {organizationType === "CUSTOMER" ? (
-                      <DropDownInfoBottom text="고객사 멤버 중 Owner 로 정해진 사람은 결재 요청 권한이 있습니다" />
-                    ) : (
-                      <DropDownInfoBottom text="개발사 멤버 중 Owner 로 정해진 사람은 결재 요청 권한이 있습니다" />
-                    )}
+                  <Box mb="0.5rem">
+                    <DropDownInfoBottom
+                      text={
+                        organizationType === "CUSTOMER"
+                          ? "고객사 멤버 중 Owner 로 정해진 사람은 결재 요청 권한이 있습니다"
+                          : "개발사 멤버 중 Owner 로 정해진 사람은 결재 요청 권한이 있습니다"
+                      }
+                    />
                   </Box>
                 </Flex>
                 <Box
+                  flex="1"
                   border="1px solid #ccc"
                   borderRadius="0.5rem"
                   p="0.75rem"
-                  maxHeight="20rem"
                   overflowY="auto"
+                  maxHeight="49.7vh"
                 >
                   {members.length > 0 ? (
                     members.map((member) => {
@@ -384,19 +429,8 @@ export default function OrganizationSelector({
                     </Text>
                   )}
                 </Box>
-              </Box>
+              </Flex>
             </Flex>
-
-            <Button
-              mt="1rem"
-              width="100%"
-              bg="blue.500"
-              color="white"
-              _hover={{ bg: "blue.600" }}
-              onClick={() => setIsModalOpen(false)}
-            >
-              저장
-            </Button>
           </Box>
         </Box>
       )}

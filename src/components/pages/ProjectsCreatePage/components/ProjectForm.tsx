@@ -18,7 +18,7 @@ import {
   useUpdateProject,
 } from "@/src/hook/useMutationData";
 import DateSection from "@/src/components/pages/ProjectsCreatePage/components/DateSection";
-import { showToast } from "@/src/utils/showToast";
+import { validateForm } from "@/src/hook/useValidation";
 
 interface ProjectFormProps {
   projectData?: ProjectDetailProps; // projectData가 있을 경우 수정 모드
@@ -82,10 +82,19 @@ export default function ProjectForm({
       return;
     }
     try {
-      const data = await fetchMembersWithinOrgApi(organizationId);
-      setMembers(data.data?.members || []);
+      console.log("업체 id: ", organizationId);
+      const response = await fetchMembersWithinOrgApi(organizationId);
+      const allMembers = response.data.members;
+      console.log("업체 소속 회원목록: ", allMembers);
+      const participants = projectData?.members.map((id: string) => id);
+      console.log("배정된 회원목록: ", participants);
+      const commonMembers = allMembers.filter((member: MemberProps) =>
+        participants?.includes(member.id),
+      );
+      console.log("업체 멤버들: ", commonMembers);
+      setMembers(commonMembers);
     } catch (error) {
-      setMembers([]);
+      // setMembers([]);
     }
   };
 
@@ -105,7 +114,7 @@ export default function ProjectForm({
         );
       }
     }
-  }, [formData.customerOrgId, formData.developerOrgId, projectId]);
+  }, []);
 
   // 프로젝트 수정 시 기존 데이터 반영 (멤버 & Owner)
   useEffect(() => {
@@ -114,18 +123,22 @@ export default function ProjectForm({
         const customerOrg = await fetchOrganizationDetails(
           projectData.customerOrgId,
         );
+        console.log("customerOrg:", customerOrg);
         setSelectedCustomerOrgName(customerOrg?.name || "");
         const developerOrg = await fetchOrganizationDetails(
           projectData.developerOrgId,
         );
+        console.log("developerOrg:", developerOrg);
         setSelectedDeveloperOrgName(developerOrg?.name || "");
       }
     }
     fetchOrgDetails();
-  }, [formData.customerOrgId, formData.developerOrgId, projectId]);
+  }, []);
 
   // 프로젝트에 배정된 전체 멤버 업데이트
   useEffect(() => {
+    console.log("선택된 고객사 회원 목록: ", selectedCustomerMembers);
+    console.log("선택된 개발사 회원 목록: ", selectedDeveloperMembers);
     setSelectedMembers([
       ...selectedCustomerMembers.map((member) => Number(member.id)),
       ...selectedDeveloperMembers.map((member) => Number(member.id)),
@@ -139,88 +152,7 @@ export default function ProjectForm({
     formData.name = formData.name.trim().replace(/\s{2,}/g, " ");
     formData.description = formData.description.trim().replace(/\s{2,}/g, " ");
 
-    // 필수 정보
-    if (formData.name.length < 2) {
-      const errorMessage = "프로젝트명을 2글자 이상 입력해주세요.";
-      showToast({
-        title: "필수 입력정보 ",
-        description: errorMessage,
-        duration: 2000,
-      });
-      return;
-    } else if (formData.description.length < 2) {
-      const errorMessage = "프로젝트 개요를 2글자 이상 입력해주세요.";
-      showToast({
-        title: "필수 입력정보 ",
-        description: errorMessage,
-        duration: 2000,
-      });
-      return;
-    } else if (!formData.startAt) {
-      const errorMessage = "프로젝트 시작일을 선택해주세요.";
-      showToast({
-        title: "필수 입력정보 ",
-        description: errorMessage,
-        duration: 2000,
-      });
-      return;
-    } else if (!formData.deadlineAt) {
-      const errorMessage = "프로젝트 예정 마감일을 선택해주세요.";
-      showToast({
-        title: "필수 입력정보 ",
-        description: errorMessage,
-        duration: 2000,
-      });
-      return;
-    } else if (!formData.customerOrgId) {
-      const errorMessage = "고객사를 지정해주세요.";
-      showToast({
-        title: "필수 입력정보 ",
-        description: errorMessage,
-        duration: 2000,
-      });
-      return;
-    } else if (!formData.developerOrgId) {
-      const errorMessage = "개발사를 지정해주세요.";
-      showToast({
-        title: "필수 입력정보 ",
-        description: errorMessage,
-        duration: 2000,
-      });
-      return;
-    } else if (selectedCustomerMembers.length === 0) {
-      const errorMessage = "고객사 담당자 회원을 배정해주세요.";
-      showToast({
-        title: "필수 입력정보 ",
-        description: errorMessage,
-        duration: 2000,
-      });
-      return;
-    } else if (selectedDeveloperMembers.length === 0) {
-      const errorMessage = "개발사 담당자 회원을 배정해주세요.";
-      showToast({
-        title: "필수 입력정보 ",
-        description: errorMessage,
-        duration: 2000,
-      });
-      return;
-    } else if (!formData.customerOwnerId) {
-      const errorMessage = "고객사 Owner을 지정해주세요.";
-      showToast({
-        title: "필수 입력정보 ",
-        description: errorMessage,
-        duration: 2000,
-      });
-      return;
-    } else if (!formData.devOwnerId) {
-      const errorMessage = "개발사 Owner을 지정해주세요.";
-      showToast({
-        title: "필수 입력정보 ",
-        description: errorMessage,
-        duration: 2000,
-      });
-      return;
-    }
+    if (!validateForm(formData)) return; // 유효성 검사 실패 시 종료
 
     const requestBody = {
       ...formData,
@@ -261,7 +193,7 @@ export default function ProjectForm({
   return (
     <Flex width="100%" justifyContent="center">
       <InputFormLayout
-        title={isEditMode ? "프로젝트 상세 조회" : "프로젝트 생성"}
+        title={isEditMode ? "프로젝트 수정" : "프로젝트 생성"}
         onSubmit={(event) => handleSubmit(event)}
         isLoading={isSubmitting}
         isDisabled={false} // 버튼 비활성화 조건 추가
