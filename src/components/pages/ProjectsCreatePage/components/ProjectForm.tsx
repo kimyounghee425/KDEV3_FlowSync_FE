@@ -52,12 +52,6 @@ export default function ProjectForm({
     members: projectData?.members || [],
   });
 
-  const [customerOwnerId, setCustomerOwnerId] = useState<string>(
-    formData.customerOwnerId,
-  );
-  const [developerOwnerId, setDeveloperOwnerId] = useState<string>(
-    formData.devOwnerId,
-  );
   const [selectedCustomerOrgName, setSelectedCustomerOrgName] = useState("");
 
   const [selectedDeveloperOrgName, setSelectedDeveloperOrgName] = useState("");

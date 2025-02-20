@@ -22,8 +22,7 @@ export default function ProjectQuestionsNewPage() {
     ? projectId[0]
     : projectId || "";
 
-  const { mutate: createQuestion, error: QuestionRegisterError } =
-    useCreateQuestion();
+  const { mutate: createQuestion } = useCreateQuestion();
 
   // ProgressStep 데이터 패칭
   const { data: progressStepData } = useFetchData<ProgressStep[], [string]>({

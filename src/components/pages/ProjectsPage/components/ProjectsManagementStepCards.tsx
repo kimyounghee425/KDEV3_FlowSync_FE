@@ -69,8 +69,6 @@ export default function ProjectsManagementStepCards({
     md: 8, // 데스크탑: 넓은 간격
   });
 
-  const [isColorCustomizerOpen, setIsColorCustomizerOpen] = useState(false);
-
   const handleStepClick = (step: ProjectManagementSteps) => {
     if (step === selectedStep) {
       return;
