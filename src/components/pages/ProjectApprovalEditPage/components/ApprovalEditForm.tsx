@@ -11,7 +11,6 @@ import LinkAddSection from "@/src/components/common/LinkAddSection";
 import { readApprovalApi } from "@/src/api/ReadArticle";
 import { uploadFileApi } from "@/src/api/RegisterArticle";
 import { ApprovalRequestData } from "@/src/types";
-import EditSignUpload from "./EditSignUpload";
 import { showToast } from "@/src/utils/showToast";
 import { useUpdateApproval } from "@/src/hook/useMutationData";
 
@@ -324,7 +323,9 @@ export default function ApprovalEditForm() {
       <Flex gap={4} align={"center"}>
         {/* 제목 입력 */}
         <Box flex={2}>
-          <Text mb={2}>제목</Text>
+          <Text mb={2}>
+            제목<span style={{ color: "red" }}>*</span>
+          </Text>
           <Input
             type="text"
             placeholder="제목을 입력하세요"
@@ -335,7 +336,9 @@ export default function ApprovalEditForm() {
         </Box>
       </Flex>
       <Box>
-        <Text>상세 내용</Text>
+        <Text>
+          상세 내용<span style={{ color: "red" }}>*</span>
+        </Text>
         <Box
           id="editorjs"
           border="1px solid #ccc"

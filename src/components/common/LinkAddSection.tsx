@@ -93,7 +93,7 @@ export default function LinkAddSection({
   // checkURLExists("na22ver.com");
 
   return (
-    <Box mt={6}>
+    <Box>
       <Text>링크 입력</Text>
       {linkList.map((link, index) => (
         <Flex key={index} mb={2}>

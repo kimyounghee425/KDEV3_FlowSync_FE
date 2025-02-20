@@ -87,7 +87,9 @@ export default function ProjectApprovalsNewPage() {
             alignItems={"center"}
             gap={2}
           >
-            <Text>요청 종류</Text>
+            <Text>
+              요청 종류<span style={{ color: "red" }}>*</span>
+            </Text>
             <DropDownInfoTop text="완료 요청은 해당 단계의 마지막 결재 글입니다." />
           </Box>
           <select

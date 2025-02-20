@@ -26,7 +26,10 @@ export default function SelectInput<T extends string | number | undefined>({
 
   return (
     <Box>
-      <Text>{label}</Text>
+      <Text>
+        {label}
+        <span style={{ color: "red" }}>*</span>
+      </Text>
       <select
         onChange={handleChange}
         value={selectedValue}

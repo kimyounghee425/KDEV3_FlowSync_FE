@@ -176,7 +176,7 @@ function NoticesPageContent() {
             {userRole === "ADMIN" ? (
               <>
                 <Table.Column htmlWidth="10%" />
-                <Table.Column htmlWidth="11%" />
+                <Table.Column htmlWidth="10%" />
                 <Table.Column htmlWidth="10%" />
               </>
             ) : (
@@ -195,7 +195,7 @@ function NoticesPageContent() {
             <Table.ColumnHeader>카테고리</Table.ColumnHeader>
             <Table.ColumnHeader>제목</Table.ColumnHeader>
             <Table.ColumnHeader>등록일</Table.ColumnHeader>
-            {userRole === "ADMIN" ? (
+            {userRole === "ADMIN" && (
               <>
                 <Table.ColumnHeader>수정일</Table.ColumnHeader>
                 <Table.ColumnHeader>
@@ -211,8 +211,6 @@ function NoticesPageContent() {
                 </Table.ColumnHeader>
                 <Table.ColumnHeader>관리</Table.ColumnHeader>
               </>
-            ) : (
-              <></>
             )}
           </Table.Row>
         }

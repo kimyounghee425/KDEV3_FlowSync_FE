@@ -56,7 +56,7 @@ export default function DateSection({
           {/* 시작일 선택 */}
           <Box flex="1" minWidth="12rem" width="100%">
             <Text fontSize="1rem" fontWeight="bold" mb="0.5rem">
-              프로젝트 시작일
+              프로젝트 시작일<span style={{ color: "red" }}>*</span>
             </Text>
             <Box width="100%">
               <DatePicker
@@ -88,7 +88,7 @@ export default function DateSection({
           {/* 종료일 선택 */}
           <Box flex="1" minWidth="12rem" width="100%">
             <Text fontSize="1rem" fontWeight="bold" mb="0.5rem">
-              프로젝트 예정 마감일
+              프로젝트 예정 마감일<span style={{ color: "red" }}>*</span>
             </Text>
             <Box width="100%">
               <DatePicker

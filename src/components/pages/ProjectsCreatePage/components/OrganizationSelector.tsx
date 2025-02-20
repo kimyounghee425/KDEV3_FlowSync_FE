@@ -155,6 +155,7 @@ export default function OrganizationSelector({
         <Box flex="1" display="flex" flexDirection="column">
           <Text fontWeight="bold" mb="0.5rem">
             {title}
+            <span style={{ color: "red" }}>*</span>
           </Text>
           <Input
             fontSize="0.9rem"
@@ -174,7 +175,7 @@ export default function OrganizationSelector({
         {/* 입력창 (멤버 목록) */}
         <Box flex="4" display="flex" flexDirection="column">
           <Text fontWeight="bold" mb="0.5rem">
-            담당자 회원 배정
+            담당자 회원 배정<span style={{ color: "red" }}>*</span>
           </Text>
           <Box
             border="1px solid #ccc"
