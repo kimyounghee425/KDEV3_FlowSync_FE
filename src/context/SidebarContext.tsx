@@ -32,7 +32,7 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // 🔹 상태 변경 시 localStorage 업데이트
+  // 상태 변경 시 localStorage 업데이트
   const handleFilterChange = (filter: string) => {
     if (filter === "계약" || filter === "진행중" || filter === "납품완료") {
       setSelectedProjectFilter(filter);

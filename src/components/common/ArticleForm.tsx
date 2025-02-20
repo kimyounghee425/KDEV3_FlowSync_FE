@@ -159,7 +159,6 @@ export default function ArticleForm({
                   setTimeout(() => attachImageDeleteButtons(), 500); // 이미지 업로드 후 삭제 버튼 추가
                   return { success: 1, file: { url: responseData.data.url } };
                 } catch (error: any) {
-                  console.error("파일 업로드 중 오류 발생:", error);
                   // alert("이미지 파일 크기는 10mb 를 초과할 수 없습니다.");
                   const errorMessage =
                     "이미지 크기는 10MB 를 초과할 수 없습니다.";
@@ -284,12 +283,12 @@ export default function ArticleForm({
         }
         await handleSave(requestData as BaseArticleRequestData);
       } catch (error) {
-        console.error("저장 실패:", error);
+        // "저장 실패"
         return;
       } finally {
         setIsSaving(false);
       }
-    }, 1000), // ✅ 1초 동안 연속 클릭 방지
+    }, 1000), // 1초 동안 연속 클릭 방지
     [title, linkList, uploadedFiles, isSignYes, handleSave, progressStepId],
   );
 
@@ -320,7 +319,7 @@ export default function ArticleForm({
         deleteButton.onclick = () => {
           if (!editorRef.current) return;
 
-          // ✅ 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
+          // 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
           const blockIndex = editorRef.current.blocks.getCurrentBlockIndex();
 
           if (blockIndex !== -1) {
@@ -378,7 +377,9 @@ export default function ArticleForm({
       <Flex align={"center"} gap={4}>
         <Box flex={2}>
           <Flex direction={"row"} alignItems={"center"}>
-            <Text pb={2}>제목</Text>
+            <Text pb={2}>
+              제목<span style={{ color: "red" }}>*</span>
+            </Text>
             <Text pb={2} pl={2}>
               {title.length} / 80{" "}
             </Text>
@@ -402,7 +403,9 @@ export default function ArticleForm({
 
       <Box mb={5}>
         <Flex direction={"row"} alignItems={"center"}>
-          <Text>상세 내용</Text>
+          <Text>
+            상세 내용<span style={{ color: "red" }}>*</span>
+          </Text>
           <DropDownInfoBottom
             text={
               '사진 첨부가 가능합니다. \n 사진을 끌어다 놓거나 드래그하여 업로드하세요. \n 또는 "/"를 입력한 후 "IMAGE"를 선택하여 추가할 수도 있습니다.'
@@ -437,7 +440,9 @@ export default function ArticleForm({
       {pathname.includes("/approvals") && (
         <Box>
           <Box display={"flex"} direction={"row"} alignItems={"center"}>
-            <Text pr={2}>서명</Text>
+            <Text pr={2}>
+              서명<span style={{ color: "red" }}>*</span>
+            </Text>
             <DropDownInfoBottom
               text={`결재 글은 서명을 기입해야 작성이 가능합니다. \n "서명 불러오기" 는 기존에 저장된 서명을 불러옵니다. \n 새 서명을 기입하고 "등록" 을 누르면 기존에 저장되어 있던 서명은 삭제됩니다. `}
             />

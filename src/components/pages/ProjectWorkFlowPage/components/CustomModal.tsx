@@ -36,8 +36,8 @@ export default function CustomModal({
     xl: { width: "1100px", height: "650px" },
     "2xl": { width: "1300px", height: "750px" },
     "3xl": { width: "1500px", height: "850px" },
-    full: { width: "95vw", height: "95vh" }, // ✅ 화면 95% 차지
-    cover: { width: "85vw", height: "85vh" }, // ✅ 적당한 크기로 조절
+    full: { width: "95vw", height: "95vh" }, // 화면 95% 차지
+    cover: { width: "85vw", height: "85vh" }, // 적당한 크기로 조절
   };
 
   return (

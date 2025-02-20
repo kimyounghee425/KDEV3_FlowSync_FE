@@ -51,7 +51,7 @@ export function useProjectInfiniteScroll(managementStep: string) {
 
         setCurrentPage((prev) => prev + 1);
       } catch (error) {
-        console.error("Error fetching more projects:", error);
+        // "Error fetching more projects:"
         setHasMore(false); // 오류 발생 시 무한 요청 방지
       } finally {
         setLoading(false);
@@ -98,7 +98,7 @@ export function useProjectInfiniteScroll(managementStep: string) {
     if (observerElement) observer.observe(observerElement);
 
     return () => {
-      if (observerElement) observer.unobserve(observerElement); // ✅ 기존 observer 정리
+      if (observerElement) observer.unobserve(observerElement); // 기존 observer 정리
     };
   }, [fetchMoreProjects, loading, currentPage, hasMore]);
 

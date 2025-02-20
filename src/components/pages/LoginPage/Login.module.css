@@ -107,7 +107,7 @@
   color: var(--text-light);
 }
 
-/* 📌 반응형 디자인 적용 */
+/* 반응형 디자인 적용 */
 /* 태블릿 (768px 이상) */
 @media (max-width: 1024px) {
   .loginCard {

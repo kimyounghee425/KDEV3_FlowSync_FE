@@ -24,7 +24,6 @@ import ErrorAlert from "@/src/components/common/ErrorAlert";
 import CommonTable from "@/src/components/common/CommonTable";
 import StatusTag from "@/src/components/pages/ProjectsPage/components/ManagementStepTag";
 import Pagination from "@/src/components/common/Pagination";
-import { useInputFormatter } from "@/src/hook/useInputFormatter";
 import { useDeleteMember, useUpdateMember } from "@/src/hook/useMutationData";
 import { showToast } from "@/src/utils/showToast";
 
@@ -63,8 +62,7 @@ export default function MemberDetailForm({
   const [formData, setFormData] = useState<MemberProps>(memberData);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errors, setErrors] = useState<{ [key: string]: string | null }>({}); // 유효성 검사 에러 상태
-  const [isFetching, setIsFetching] = useState<boolean>(false); // ✅ 새로 렌더링 여부
-  // ✅ 각 필드별 변경 상태를 관리하는 객체
+  const [isFetching, setIsFetching] = useState<boolean>(false); // 새로 렌더링 여부
   const [isChanged, setIsChanged] = useState<{ [key: string]: boolean }>({});
   const isUpdateDisabled =
     Object.values(isChanged).every((changed) => !changed) ||
@@ -72,33 +70,33 @@ export default function MemberDetailForm({
   const { mutate: updateMember, error: MemberUpdateError } = useUpdateMember();
   const { mutate: deleteMember, error: MemberDeleteError } = useDeleteMember();
 
-  // 🔹 formData가 변경될 때만 실행되도록 설정
+  // formData가 변경될 때만 실행되도록 설정
   useEffect(() => {
     validateInputs();
   }, [formData]);
 
-  // 📌 회원 데이터 다시 불러오기 (업데이트 후)
+  // 회원 데이터 다시 불러오기 (업데이트 후)
   async function refetchMemberData() {
-    if (Object.keys(isChanged).length === 0) return; // 🔥 변경된 값 없으면 요청 안 함
+    if (Object.keys(isChanged).length === 0) return; // 변경된 값 없으면 요청 안 함
 
     setIsFetching(true);
     try {
       const updatedData = await fetchMemberDetails(memberId);
-      // ✅ 데이터가 변경되지 않더라도 리렌더링을 강제하기 위해 새로운 객체로 할당
+      // 데이터가 변경되지 않더라도 리렌더링을 강제하기 위해 새로운 객체로 할당
       setFormData({ ...updatedData });
-      // ✅ 유효성 검사 실행 (버튼 활성화 여부 및 에러 메시지 갱신)
+      // 유효성 검사 실행 (버튼 활성화 여부 및 에러 메시지 갱신)
       validateInputs();
-      setIsChanged({}); // ✅ 모든 필드 변경 상태 초기화
+      setIsChanged({}); // 모든 필드 변경 상태 초기화
     } catch (error) {
-      console.error("회원 데이터 갱신 실패:", error);
+      // "회원 데이터 갱신 실패:"
     } finally {
       setIsFetching(false);
     }
   }
 
-  // 📌 입력 값 유효성 검사
+  // 입력 값 유효성 검사
   function validateInputs() {
-    // 🔹 `Object.entries()`를 사용하여 모든 필드에 대한 유효성 검사 수행
+    // `Object.entries()`를 사용하여 모든 필드에 대한 유효성 검사 수행
     const updatedErrors = Object.entries(
       validationRulesOfUpdatingMember,
     ).reduce(
@@ -115,7 +113,7 @@ export default function MemberDetailForm({
     return Object.keys(updatedErrors).length === 0; // 에러가 없으면 true 반환
   }
 
-  // 📌 입력 값 변경 시 상태(formData)를 업데이트.
+  // 입력 값 변경 시 상태(formData)를 업데이트.
   function handleInputUpdate(inputName: string, value: string) {
     let formattedValue = value;
 
@@ -136,7 +134,7 @@ export default function MemberDetailForm({
         let index = 0;
 
         for (const length of pattern) {
-          if (index >= value.length) break; // 🔥 안전한 길이 체크 추가
+          if (index >= value.length) break; // 안전한 길이 체크 추가
           if (index + length <= value.length) {
             formatted +=
               (index === 0 ? "" : "-") + value.slice(index, index + length);
@@ -154,13 +152,13 @@ export default function MemberDetailForm({
       }
     }
 
-    // 🔹 상태 업데이트 (주소 입력란은 원본 값 유지)
+    // 상태 업데이트 (주소 입력란은 원본 값 유지)
     setFormData((prev) => ({
       ...prev,
       [inputName]: formattedValue,
     }));
 
-    // 🔹 변경된 상태 추적
+    // 변경된 상태 추적
     setIsChanged((prev) => {
       if (!prev[inputName]) {
         return { ...prev, [inputName]: true };
@@ -175,7 +173,7 @@ export default function MemberDetailForm({
       event.preventDefault(); // 기본 제출 방지
     }
   }
-  // 📌 회원 정보 수정
+  // 회원 정보 수정
   async function handleUpdate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
@@ -220,7 +218,7 @@ export default function MemberDetailForm({
     }
   }
 
-  // 📌 회원 삭제 (삭제 컴포넌트(공통)는 InputFormLayout.tsx 에서 관리)
+  // 회원 삭제 (삭제 컴포넌트(공통)는 InputFormLayout.tsx 에서 관리)
   async function handleDelete(deleteReason: string) {
     const response = await deleteMember(memberId, ""); // 탈퇴 사유 입력값 전달
     if (response === null) return;
@@ -366,7 +364,7 @@ export default function MemberDetailForm({
 
       <Stack align="center" width="full" marginTop="2rem">
         <Box
-          maxWidth="1000px" // ✅ InputFormLayout과 동일한 너비 적용
+          maxWidth="1000px" // InputFormLayout과 동일한 너비 적용
           width="100%"
           p="1.5rem"
           borderRadius="lg"

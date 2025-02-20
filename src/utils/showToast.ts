@@ -2,7 +2,6 @@ import { toaster } from "@/src/components/ui/toaster";
 
 const toastMessages = new Set(); // 중복 방지를 위한 Set
 
-// 📌 toastUtils.ts (예시 파일)
 export const showToast = ({
   title = "오류 발생!",
   description = "문제가 발생했습니다.",

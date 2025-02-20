@@ -36,7 +36,7 @@ export function useFetchData<T, P extends any[]>({
       setError(null);
 
     } catch (err: any) {
-      console.error("Error fetching data:", err);
+      // "Error fetching data:"
       const errorMessage = err.response?.data?.message || err.message || "데이터를 불러오는데 실패했습니다.";
       showToast({
         title: "요청 실패",

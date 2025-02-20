@@ -100,7 +100,7 @@ const updatableFields = [
 ] as const;
 
 export const validationRulesOfUpdatingMember: Record<
-  (typeof updatableFields)[number], // ✅ 특정 필드만 타입으로 지정
+  (typeof updatableFields)[number], // 특정 필드만 타입으로 지정
   {
     isValid: (value: string) => boolean;
     errorMessage: string;

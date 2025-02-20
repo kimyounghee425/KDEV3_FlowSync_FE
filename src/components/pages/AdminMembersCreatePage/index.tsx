@@ -17,15 +17,15 @@ import { useValidation } from "@/src/hook/useValidation";
 
 export default function AdminMembersCreatePage() {
   const route = useRouter();
-  // 📌 useForm 훅으로 입력값 및 유효성 검사 관리
+  // useForm 훅으로 입력값 및 유효성 검사 관리
   const { inputValues, inputErrors, handleInputChange, checkAllInputs } =
     useForm(defaultValuesOfMember, validationRulesOfCreatingMember);
-  // 📌 전화번호 및 기타 입력값 포맷팅 (useInputFormatter 활용)
+  // 전화번호 및 기타 입력값 포맷팅 (useInputFormatter 활용)
   const { validateInputs } = useValidation(checkAllInputs);
   const { formatPhoneNumber, trimWhitespace } = useInputFormatter();
 
   // 업체 관련 정보
-  // 📌 조직 검색 및 선택 기능 (useOrganizationSearch 활용)
+  // 조직 검색 및 선택 기능 (useOrganizationSearch 활용)
   const {
     isModalOpen,
     searchTerm,

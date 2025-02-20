@@ -84,7 +84,7 @@ export default function FileAddSection({
   };
 
   return (
-    <Box mt={6}>
+    <Box mt={4}>
       <Text mb={2}>첨부 파일</Text>
 
       <Button

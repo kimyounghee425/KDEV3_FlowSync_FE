@@ -35,39 +35,38 @@ export default function HeaderSection({
       >
         {/* 드롭다운 (프로젝트 관리 단계 선택) */}
 
-          <Box flex="1" minWidth="12rem" width="100%">
-            <Text fontSize="1rem" fontWeight="bold" mb="0.5rem">
-              프로젝트 관리 단계
-            </Text>
-            <select
-              value={managementStep}
-              onChange={(e) => setManagementStep(e.target.value)}
-              style={{
-                width: "100%",
-                height: "3rem",
-                padding: "0.75rem",
-                borderRadius: "0.5rem",
-                border: "0.0625rem solid #ccc",
-                backgroundColor: "white",
-                cursor: "pointer",
-                fontSize: "1rem",
-                lineHeight: "1.5rem",
-              }}
-            >
-              {managementSteps.map((step) => (
-                <option key={step.value} value={step.value}>
-                  {step.label}
-                </option>
-              ))}
-            </select>
-          </Box>
-
+        <Box flex="1" minWidth="12rem" width="100%">
+          <Text fontSize="1rem" fontWeight="bold" mb="0.5rem">
+            프로젝트 관리 단계<span style={{ color: "red" }}>*</span>
+          </Text>
+          <select
+            value={managementStep}
+            onChange={(e) => setManagementStep(e.target.value)}
+            style={{
+              width: "100%",
+              height: "3rem",
+              padding: "0.75rem",
+              borderRadius: "0.5rem",
+              border: "0.0625rem solid #ccc",
+              backgroundColor: "white",
+              cursor: "pointer",
+              fontSize: "1rem",
+              lineHeight: "1.5rem",
+            }}
+          >
+            {managementSteps.map((step) => (
+              <option key={step.value} value={step.value}>
+                {step.label}
+              </option>
+            ))}
+          </select>
+        </Box>
 
         {/* 프로젝트명 입력 */}
         <Box flex="4" minWidth="12rem" width="100%">
           <Flex direction="row" justifyContent="space-between">
             <Text fontSize="1rem" fontWeight="bold" mb="0.5rem">
-              프로젝트명
+              프로젝트명<span style={{ color: "red" }}>*</span>
             </Text>
             <Text textAlign="right" color="gray.500">
               {name.length} / {50}{" "}

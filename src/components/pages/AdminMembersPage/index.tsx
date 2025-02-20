@@ -57,13 +57,6 @@ const ROLE_LABELS: Record<string, string> = {
   MEMBER: "일반회원",
 };
 
-// const renderStatusSwitch = (status: string) => {
-//   if (status === "DELETED") {
-//     return <Switch disabled>Activate Chakra</Switch>; // 삭제된 경우, 비활성화된 Switch
-//   }
-//   return <Switch checked={status === "ACTIVE"} />;
-// };
-
 export default function AdminMembersPage() {
   return (
     <Suspense>
@@ -89,33 +82,31 @@ function AdminMembersPageContent() {
     refetch,
   } = useMemberList(keyword, role, status, currentPage, pageSize);
 
-  // ✅ 상태 변경을 위한 로컬 상태 추가
+  // 상태 변경을 위한 로컬 상태 추가
   const [memberData, setMemberData] = useState<MemberProps[]>([]);
   useEffect(() => {
     if (memberList) {
       setMemberData(memberList);
     }
   }, [memberList]);
-  const [loadingId, setLoadingId] = useState<string | null>(null); // ✅ 특정 회원의 Switch 로딩 상태
-  const { mutate: activateMember, error: memberActiveError } =
-    useActivateMemberStatus();
-  const { mutate: deactivateMember, error: memberDeactiveError } =
-    useDeactivateMemberStatus();
-  const { mutate: deleteMember, error: MemberDeleteError } = useDeleteMember();
+  const [loadingId, setLoadingId] = useState<string | null>(null); // 특정 회원의 Switch 로딩 상태
+  const { mutate: activateMember } = useActivateMemberStatus();
+  const { mutate: deactivateMember } = useDeactivateMemberStatus();
+  const { mutate: deleteMember } = useDeleteMember();
 
-  // ✅ 회원 상태 변경 핸들러 (API 호출 및 UI 반영)
+  // 회원 상태 변경 핸들러 (API 호출 및 UI 반영)
   const handleStatusChange = async (
     memberId: string,
     currentStatus: string,
   ) => {
-    setLoadingId(memberId); // ✅ 변경 중인 ID 설정 (로딩 표시)
+    setLoadingId(memberId); // 변경 중인 ID 설정 (로딩 표시)
     if (currentStatus === "ACTIVE") {
       deactivateMember(memberId); // 비활성화 API 호출
     } else {
       activateMember(memberId); // 활성화 API 호출
     }
 
-    // ✅ API 호출 후 로컬 상태 업데이트 (UI 즉시 반영)
+    // API 호출 후 로컬 상태 업데이트 (UI 즉시 반영)
     setMemberData((prevMembers) =>
       (prevMembers || []).map((member) =>
         member.id === memberId
@@ -276,7 +267,7 @@ function AdminMembersPageContent() {
                       event.stopPropagation();
                       handleStatusChange(member.id, member.status);
                     }}
-                    disabled={loadingId === member.id} // ✅ 상태 변경 시 로딩 적용
+                    disabled={loadingId === member.id} // 상태 변경 시 로딩 적용
                   />
                 )}
               </Table.Cell>

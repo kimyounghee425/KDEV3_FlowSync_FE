@@ -95,7 +95,7 @@ export function useMutationData<T, P extends any[]>({
       }
       return response;
     } catch (err: any) {
-      console.error("API 요청 실패:", err);
+      // "API 요청 실패:"
       const errorMessage =
         err.response?.data?.message ||
         err.message ||

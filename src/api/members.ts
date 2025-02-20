@@ -70,15 +70,15 @@ export async function fetchMembersWithinOrgApi(organizationId: string) {
   return response.data;
 }
 
-// 📌 회원 상세 정보 가져오기
+// 회원 상세 정보 가져오기
 export async function fetchMemberDetails(
   memberId: string,
 ): Promise<MemberProps> {
   const response = await axiosInstance.get(`/admins/members/${memberId}`);
-  return response.data.data; // ✅ `data` 필드만 반환하도록 수정
+  return response.data.data; // `data` 필드만 반환하도록 수정
 }
 
-// 📌 회원 생성 API (파일 업로드 X)
+// 회원 생성 API (파일 업로드 X)
 export async function createMemberApi(
   memberData: CreateMemberInput,
 ): Promise<CommonResponseType<CreateMemberResponse>> {
@@ -86,7 +86,7 @@ export async function createMemberApi(
   return response.data; // 성공 응답 반환
 }
 
-// 📌 회원 생성 API (파일 업로드 O)
+// 회원 생성 API (파일 업로드 O)
 export async function createMemberWithFile(
   data: CreateMemberInput,
   file: any,
@@ -111,7 +111,7 @@ export async function createMemberWithFile(
   return response.data; // 생성된 데이터 반환
 }
 
-// 📌  회원 정보 수정 (PATCH 요청)
+// 회원 정보 수정 (PATCH 요청)
 export async function updateMemberApi(
   memberId: string,
   updateData: Partial<MemberProps>,
@@ -124,16 +124,16 @@ export async function updateMemberApi(
   return response.data;
 }
 
-// 📌 회원 삭제 (탈퇴 사유 포함)
+// 회원 삭제 (탈퇴 사유 포함)
 export async function deleteMemberApi(
   memberId: string,
   reason: string,
 ): Promise<CommonResponseType<DeleteMemberResponse>> {
   const response = await axiosInstance.post(
     `/admins/members/delete/${memberId}`,
-    { reason }, // 🔹 요청 바디에 탈퇴 사유 추가
+    { reason }, // 요청 바디에 탈퇴 사유 추가
   );
-  return response.data; // ✅ 응답 데이터 반환
+  return response.data;
 }
 
 export async function activateMemberApi(

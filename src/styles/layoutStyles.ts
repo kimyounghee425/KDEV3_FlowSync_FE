@@ -1,5 +1,5 @@
 export const layoutStyles = {
-  // 📌 배경을 덮는 Overlay 스타일 (자연스러운 페이드 인/아웃 추가)
+  // 배경을 덮는 Overlay 스타일 (자연스러운 페이드 인/아웃 추가)
   backgroundLayer: (showOverlay: boolean) => ({
     position: "fixed",
     top: "var(--header-height)",
@@ -13,7 +13,7 @@ export const layoutStyles = {
     zIndex: 100, // 사이드바보다 낮고, 콘텐츠 위로
   }),
 
-  // 📌 헤더 스타일
+  // 헤더 스타일
   header: {
     height: "var(--header-height)",
     position: "fixed",
@@ -26,7 +26,7 @@ export const layoutStyles = {
     paddingX: "1.5rem",
   },
 
-  // 📌 메인 콘텐츠 스타일
+  // 메인 콘텐츠 스타일
   mainContent: (isSidebarOpen: boolean, isListPage: boolean) => ({
     flex: 1,
     transition: "all 0.3s ease-in-out",
@@ -42,7 +42,7 @@ export const layoutStyles = {
     zIndex: 99, // 컨텐츠가 배경보다 위에 배치됨
   }),
 
-  // 📌 사이드바 스타일
+  // 사이드바 스타일
   sidebar: (isSidebarOpen: boolean, isSidebarOverlayPage: boolean) => ({
     position: isSidebarOverlayPage ? "absolute" : "relative", // 프로젝트 페이지면 `absolute`, 홈 대시보드는 `relative`
     top: "var(--header-height)", // 헤더 높이만큼 패딩 추가
@@ -51,7 +51,7 @@ export const layoutStyles = {
     minWidth: "0px",
     height: "calc(100vh - var(--header-height))", // 고정된 높이 설정
     transition: "width 0.2s ease-in-out",
-    overflowX: "hidden", // ✅ 내부 요소가 남지 않도록 설정
+    overflowX: "hidden", // 내부 요소가 남지 않도록 설정
     overflowY: "auto", // 독립적인 스크롤 적용
     backgroundColor: "white",
     borderRight: isSidebarOpen ? "1px solid #ddd" : "none",

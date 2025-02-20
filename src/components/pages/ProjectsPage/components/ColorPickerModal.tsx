@@ -7,7 +7,7 @@ import { SketchPicker, ColorResult } from "react-color";
 import ColorPickerButton from "@/src/components/pages/ProjectsPage/components/ColorPickerButton";
 
 const DEFAULT_COLORS: Record<string, string> = {
-  CONTRACT: "rgba(52, 152, 219, 1)", // ✅ RGBA 형식으로 변경
+  CONTRACT: "rgba(52, 152, 219, 1)", // RGBA 형식으로 변경
   IN_PROGRESS: "rgba(241, 196, 15, 1)",
   COMPLETED: "rgba(46, 204, 113, 1)",
   MAINTENANCE: "rgba(230, 126, 34, 1)",

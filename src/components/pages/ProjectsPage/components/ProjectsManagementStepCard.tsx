@@ -108,7 +108,7 @@ export default function ProjectsManagementStepCard({
           <Text fontSize={countFontSize} fontWeight={700}>
             {count}
           </Text>
-          {/* ✅ 줄 바꿈 방지 및 글자 생략 적용 */}
+          {/* 줄 바꿈 방지 및 글자 생략 적용 */}
           <Text
             fontSize={labelFontSize}
             fontWeight={500}

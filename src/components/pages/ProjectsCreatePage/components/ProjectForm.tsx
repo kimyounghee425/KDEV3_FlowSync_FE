@@ -36,7 +36,7 @@ export default function ProjectForm({
   const { mutate: createProject } = useCreateProject();
   const { mutate: updateProject } = useUpdateProject();
   const { mutate: deleteProject } = useDeleteProject();
-  // 📌 프로젝트 상태 관리
+  // 프로젝트 상태 관리
   const [formData, setFormData] = useState<ProjectDetailProps>({
     id: projectData?.id || "",
     name: projectData?.name || "",
@@ -52,12 +52,6 @@ export default function ProjectForm({
     members: projectData?.members || [],
   });
 
-  const [customerOwnerId, setCustomerOwnerId] = useState<string>(
-    formData.customerOwnerId,
-  );
-  const [developerOwnerId, setDeveloperOwnerId] = useState<string>(
-    formData.devOwnerId,
-  );
   const [selectedCustomerOrgName, setSelectedCustomerOrgName] = useState("");
 
   const [selectedDeveloperOrgName, setSelectedDeveloperOrgName] = useState("");
@@ -82,23 +76,19 @@ export default function ProjectForm({
       return;
     }
     try {
-      console.log("업체 id: ", organizationId);
       const response = await fetchMembersWithinOrgApi(organizationId);
       const allMembers = response.data.members;
-      console.log("업체 소속 회원목록: ", allMembers);
       const participants = projectData?.members.map((id: string) => id);
-      console.log("배정된 회원목록: ", participants);
       const commonMembers = allMembers.filter((member: MemberProps) =>
         participants?.includes(member.id),
       );
-      console.log("업체 멤버들: ", commonMembers);
       setMembers(commonMembers);
     } catch (error) {
       // setMembers([]);
     }
   };
 
-  // ✅ 프로젝트 생성 시, 멤버 자동 선택 방지 (수정 시 기존 데이터 유지)
+  // 프로젝트 생성 시, 멤버 자동 선택 방지 (수정 시 기존 데이터 유지)
   useEffect(() => {
     if (projectId) {
       if (formData.customerOrgId) {
@@ -116,19 +106,17 @@ export default function ProjectForm({
     }
   }, []);
 
-  // 🔹 프로젝트 수정 시 기존 데이터 반영 (멤버 & Owner)
+  // 프로젝트 수정 시 기존 데이터 반영 (멤버 & Owner)
   useEffect(() => {
     async function fetchOrgDetails() {
       if (projectData) {
         const customerOrg = await fetchOrganizationDetails(
           projectData.customerOrgId,
         );
-        console.log("customerOrg:", customerOrg);
         setSelectedCustomerOrgName(customerOrg?.name || "");
         const developerOrg = await fetchOrganizationDetails(
           projectData.developerOrgId,
         );
-        console.log("developerOrg:", developerOrg);
         setSelectedDeveloperOrgName(developerOrg?.name || "");
       }
     }
@@ -137,15 +125,13 @@ export default function ProjectForm({
 
   // 프로젝트에 배정된 전체 멤버 업데이트
   useEffect(() => {
-    console.log("선택된 고객사 회원 목록: ", selectedCustomerMembers);
-    console.log("선택된 개발사 회원 목록: ", selectedDeveloperMembers);
     setSelectedMembers([
       ...selectedCustomerMembers.map((member) => Number(member.id)),
       ...selectedDeveloperMembers.map((member) => Number(member.id)),
     ]);
   }, [selectedCustomerMembers, selectedDeveloperMembers]);
 
-  // 📌 **프로젝트 생성/수정 API 호출**
+  // **프로젝트 생성/수정 API 호출**
   const handleSubmit = async (event: React.FormEvent) => {
     event?.preventDefault();
 
@@ -174,7 +160,7 @@ export default function ProjectForm({
     }
   };
 
-  // 📌 **프로젝트 삭제 API 호출**
+  // **프로젝트 삭제 API 호출**
   const handleDelete = async () => {
     if (projectId) {
       const response = await deleteProject(projectId);
@@ -222,7 +208,7 @@ export default function ProjectForm({
           <Box flex="1">
             <DateSection
               startAt={formData.startAt}
-              deadlineAt={formData.deadlineAt} // ✅ 기존 closeAt → deadlineAt 사용
+              deadlineAt={formData.deadlineAt} // 기존 closeAt → deadlineAt 사용
               setStartAt={(date) =>
                 setFormData((prev) => ({ ...prev, startAt: date }))
               }

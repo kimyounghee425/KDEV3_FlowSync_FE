@@ -39,7 +39,7 @@ export default function Profile() {
           });
         }
       } catch (error) {
-        console.error("사용자 데이터를 가져오지 못했습니다.", error);
+        // 사용자 데이터를 가져오지 못했습니다.
       } finally {
         setLoading(false);
       }
@@ -103,7 +103,7 @@ export default function Profile() {
           cursor="pointer" // 프로필 전체를 클릭 가능하도록 설정
           position="relative" // 부모 박스를 기준으로 위치 설정
           zIndex="101"
-          transition="background-color 0.3s ease-in-out" // ✅ 천천히 hover 효과 적용
+          transition="background-color 0.3s ease-in-out"
           _hover={{ bg: "gray.200" }}
         >
           {/* Avatar와 사용자 정보 */}

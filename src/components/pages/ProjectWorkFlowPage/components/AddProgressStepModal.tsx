@@ -67,7 +67,7 @@ export default function AddProgressStepModal({
           handleClose();
         }
       } catch (error) {
-        console.error("진행 단계 추가 실패:", error);
+        // "진행 단계 추가 실패:"
         return;
       } finally {
         setIsAdding(false);

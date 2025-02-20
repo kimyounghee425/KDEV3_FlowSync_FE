@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { Table } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import CommonTable from "@/src/components/common/CommonTable";
 import { useProjectCompletionRequestsData } from "@/src/hook/useFetchBoardList";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import StatusTag from "@/src/components/pages/ProjectsPage/components/ManagementStepTag";
 import Pagination from "@/src/components/common/Pagination";
-import { useRouter } from "next/navigation";
 
 interface ProjectLogTableProps {
   projectId: string;
@@ -100,7 +100,7 @@ export default function ProjectLogTable({
                       color: "#007bff",
                       textDecoration: "underline",
                       cursor: "pointer",
-                    }} // ✅ 클릭 가능한 스타일 적용
+                    }} // 클릭 가능한 스타일 적용
                   >
                     {log.approvalId}
                   </Link>

@@ -2,13 +2,7 @@
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
-import {
-  Box,
-  Flex,
-  Separator,
-  Table,
-  createListCollection,
-} from "@chakra-ui/react";
+import { Box, Flex, Table, createListCollection, Text } from "@chakra-ui/react";
 
 import { useEffect, useState } from "react";
 import CommonTable from "@/src/components/common/CommonTable";
@@ -20,7 +14,10 @@ import CreateButton from "@/src/components/common/CreateButton";
 import ProgressStepSection from "@/src/components/common/ProgressStepSection";
 import ErrorAlert from "@/src/components/common/ErrorAlert";
 import { getMeApi } from "@/src/api/getMembersApi";
-import { useProjectApprovalProgressStepData } from "@/src/hook/useFetchData";
+import {
+  useProjectApprovalProgressStepData,
+  useUserInfo,
+} from "@/src/hook/useFetchData";
 import { useProjectApprovalList } from "@/src/hook/useFetchBoardList";
 import { showToast } from "@/src/utils/showToast";
 import ProgressStepTag from "@/src/components/common/ProgressStepTag";
@@ -62,6 +59,9 @@ export default function ProjectApprovalsPage() {
   const status = searchParams?.get("status") || "";
   const currentPage = parseInt(searchParams?.get("currentPage") || "1", 10);
   const pageSize = parseInt(searchParams?.get("pageSize") || "5", 10);
+
+  const { data: userInfoData } = useUserInfo();
+  const userRole = userInfoData?.role;
 
   // QuestionProgressStep 데이터 패칭
   const {
@@ -117,9 +117,7 @@ export default function ProjectApprovalsPage() {
       try {
         const responseData = await getMeApi();
         setMyOrgType(responseData.data.organizationType);
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     };
     getMyOrgType();
   }, []);
@@ -173,6 +171,13 @@ export default function ProjectApprovalsPage() {
               <Table.Column htmlWidth="10%" />
               <Table.Column htmlWidth="10%" />
               <Table.Column htmlWidth="10%" />
+              {userRole === "ADMIN" ? (
+                <>
+                  <Table.Column htmlWidth="10%" />
+                </>
+              ) : (
+                <></>
+              )}
             </>
           }
           headerTitle={
@@ -190,6 +195,11 @@ export default function ProjectApprovalsPage() {
               <Table.ColumnHeader>결재자</Table.ColumnHeader>
               <Table.ColumnHeader>결재일</Table.ColumnHeader>
               <Table.ColumnHeader>등록일</Table.ColumnHeader>
+              {userRole === "ADMIN" && (
+                <>
+                  <Table.ColumnHeader>삭제여부</Table.ColumnHeader>
+                </>
+              )}
             </Table.Row>
           }
           data={projectApprovalList}
@@ -225,6 +235,17 @@ export default function ProjectApprovalsPage() {
                 {(approval.approvedAt ?? "-").split(" ")[0] || "-"}
               </Table.Cell>
               <Table.Cell>{(approval.regAt ?? "-").split(" ")[0]}</Table.Cell>
+              {userRole === "ADMIN" && (
+                <>
+                  <Table.Cell>
+                    {approval.deleted === true ? (
+                      <Text color="red">삭제됨</Text>
+                    ) : (
+                      "-"
+                    )}
+                  </Table.Cell>
+                </>
+              )}
             </Table.Row>
           )}
         />

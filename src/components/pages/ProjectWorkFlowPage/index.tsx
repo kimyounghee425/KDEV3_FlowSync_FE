@@ -25,17 +25,17 @@ export default function ProjectWorkFlowPage() {
     ? projectId[0]
     : (projectId ?? "");
 
-  // ✅ 모달 상태 추가
+  // 모달 상태 추가
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
   const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
 
-  // ✅ "보기" 버튼 클릭 시 실행될 함수
+  // "보기" 버튼 클릭 시 실행될 함수
   const handleOpenLogModal = (stepId: string) => {
     setSelectedStepId(stepId);
     setIsLogModalOpen(true);
   };
 
-  // ✅ 모달 닫기
+  // 모달 닫기
   const handleCloseLogModal = () => {
     setIsLogModalOpen(false);
     setSelectedStepId(null);
@@ -110,19 +110,19 @@ export default function ProjectWorkFlowPage() {
         [progressStepId]: { ...stepDates },
       }));
     } catch (error) {
-      console.error("날짜 업데이트 실패:", error);
+      // "날짜 업데이트 실패:"
     }
   };
 
-  // ✅ `debounce` 적용한 handleSaveDates
+  // `debounce` 적용한 handleSaveDates
   const debouncedSaveDates = useCallback(
     debounce(async (progressStepId: string) => {
-      setIsSaving((prev) => ({ ...prev, [progressStepId]: true })); // ✅ 로딩 시작
+      setIsSaving((prev) => ({ ...prev, [progressStepId]: true })); // 로딩 시작
 
       try {
         await handleSaveDates(progressStepId);
       } finally {
-        setIsSaving((prev) => ({ ...prev, [progressStepId]: false })); // ✅ 로딩 종료
+        setIsSaving((prev) => ({ ...prev, [progressStepId]: false })); // 로딩 종료
       }
     }, 1000),
     [handleSaveDates],
@@ -267,7 +267,7 @@ export default function ProjectWorkFlowPage() {
                           color: "#007bff",
                           textDecoration: "underline",
                           cursor: "pointer",
-                        }} // ✅ 클릭 가능한 스타일 적용
+                        }} // 클릭 가능한 스타일 적용
                       >
                         {progressStep.relatedApprovalId}
                       </Link>
@@ -291,7 +291,7 @@ export default function ProjectWorkFlowPage() {
           />
         </Flex>
       </ProjectLayout>
-      {/* ✅ 이력 모달 추가 */}
+      {/* ㄴ이력 모달 추가 */}
       {selectedStepId && (
         <CustomModal
           title={`[${

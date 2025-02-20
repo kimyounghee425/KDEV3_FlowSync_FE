@@ -73,7 +73,7 @@ export default function NoticeEditPage() {
       // 수정 성공 후 이동 여부를 묻는 모달 열기
       setIsConfirmDialogOpen(true);
     } catch (error) {
-      console.error("수정 실패:", error);
+      // "수정 실패:"
     }
   };
 
@@ -131,7 +131,7 @@ export default function NoticeEditPage() {
         </ArticleForm>
       )}
 
-      {/* ✅ 수정 성공 후 이동 여부 확인 모달 */}
+      {/* 수정 성공 후 이동 여부 확인 모달 */}
       <ConfirmDialog
         isOpen={isConfirmDialogOpen}
         onClose={() => setIsConfirmDialogOpen(false)}

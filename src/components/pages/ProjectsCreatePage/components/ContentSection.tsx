@@ -21,7 +21,7 @@ export default function ContentSection({
       <Box flex="1">
         <Flex direction="row" justifyContent="space-between">
           <Text fontWeight="bold" mb={2}>
-            프로젝트 개요
+            프로젝트 개요<span style={{ color: "red" }}>*</span>
           </Text>
           <Text textAlign="right" color="gray.500">
             {description.length} / {255}

@@ -197,7 +197,7 @@ export default function QuestionEditForm() {
           });
         }, 500);
       } catch (error) {
-        console.error("에러발생 : ", error);
+        // "에러발생 : "
       }
     };
 
@@ -306,7 +306,7 @@ export default function QuestionEditForm() {
 
         deleteButton.onclick = () => {
           if (!editorRef.current) return;
-          // ✅ 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
+          // 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
           const blockIndex = editorRef.current.blocks.getCurrentBlockIndex();
           if (blockIndex !== -1) {
             editorRef.current.blocks.delete(blockIndex);
@@ -326,7 +326,9 @@ export default function QuestionEditForm() {
       <Flex gap={4} align={"center"}>
         {/* 제목 입력 */}
         <Box flex={2}>
-          <Text mb={2}>제목</Text>
+          <Text mb={2}>
+            제목<span style={{ color: "red" }}>*</span>
+          </Text>
           <Input
             type="text"
             placeholder="제목을 입력하세요"
@@ -337,7 +339,9 @@ export default function QuestionEditForm() {
         </Box>
       </Flex>
       <Box>
-        <Text>상세 내용</Text>
+        <Text>
+          상세 내용<span style={{ color: "red" }}>*</span>
+        </Text>
         <Box
           id="editorjs"
           border="1px solid #ccc"

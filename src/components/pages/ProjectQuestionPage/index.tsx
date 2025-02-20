@@ -95,7 +95,7 @@ export default function ProjectQuestionPage() {
         error.message ||
         "질문 글 삭제 중 중 오류가 발생했습니다.";
 
-      // ✅ 토스트로 사용자에게 알림
+      // 토스트로 사용자에게 알림
       showToast({
         title: "요청 실패",
         description: errorMessage,
