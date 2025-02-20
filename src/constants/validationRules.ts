@@ -131,3 +131,57 @@ export const validationRulesOfUpdatingMember: Record<
     errorMessage: "특이사항은 최대 200자까지 입력 가능합니다.",
   },
 };
+
+// 프로젝트 생성, 수정 시 입력 유효성 검증 로직
+export const validationRulesOfProject = [
+  {
+    field: "name",
+    condition: (value: string) => value.length < 2,
+    message: "프로젝트명을 2글자 이상 입력해주세요.",
+  },
+  {
+    field: "description",
+    condition: (value: string) => value.length < 2,
+    message: "프로젝트 개요를 2글자 이상 입력해주세요.",
+  },
+  {
+    field: "startAt",
+    condition: (value: string) => !value,
+    message: "프로젝트 시작일을 선택해주세요.",
+  },
+  {
+    field: "deadlineAt",
+    condition: (value: string) => !value,
+    message: "프로젝트 예정 마감일을 선택해주세요.",
+  },
+  {
+    field: "customerOrgId",
+    condition: (value: string) => !value,
+    message: "고객사를 지정해주세요.",
+  },
+  {
+    field: "developerOrgId",
+    condition: (value: string) => !value,
+    message: "개발사를 지정해주세요.",
+  },
+  // {
+  //   field: "members",
+  //   condition: (value: number[]) => value.length === 0,
+  //   message: "업체 담당자 회원을 배정해주세요.",
+  // },
+  // {
+  //   field: "selectedDeveloperMembers",
+  //   condition: (value: number[]) => value.length === 0,
+  //   message: "개발사 담당자 회원을 배정해주세요.",
+  // },
+  {
+    field: "customerOwnerId",
+    condition: (value: string) => !value,
+    message: "고객사 Owner을 지정해주세요.",
+  },
+  {
+    field: "devOwnerId",
+    condition: (value: string) => !value,
+    message: "개발사 Owner을 지정해주세요.",
+  },
+];

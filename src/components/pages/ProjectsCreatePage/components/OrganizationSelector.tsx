@@ -40,7 +40,7 @@ export default function OrganizationSelector({
   const [members, setMembers] = useState<MemberProps[]>([]);
 
   // ✅ 특정 조직의 멤버를 가져오는 함수
-  const fetchOrganizationMembers = async (organizationId: string) => {
+  const fetchOrganizationMembers: any = async (organizationId: string) => {
     if (!organizationId) {
       setMembers([]);
       return;
@@ -71,9 +71,22 @@ export default function OrganizationSelector({
     }
   }, [isModalOpen, organizationType]);
 
-  // ✅ 프로젝트 수정 시 기존 `selectedMembers` 유지 (멤버 목록이 변경될 때만 업데이트)
+  const isFirstRender = useRef(true);
+  // 프로젝트 수정 시 기존 `selectedMembers` 유지 (멤버 목록이 변경될 때만 업데이트)
   useEffect(() => {
+    if (isFirstRender.current) {
+      // 첫 번째 렌더링에서는 실행하지 않음
+      isFirstRender.current = false;
+      return;
+    }
+
     if (selectedOrganizationId) {
+      console.log("selectedOrganzationId: ", selectedOrganizationId);
+      console.log("ownerId: ", ownerId);
+
+      setSelectedMembers([]);
+      setOwnerId("");
+
       fetchOrganizationMembers(selectedOrganizationId);
     }
   }, [selectedOrganizationId]);
@@ -82,10 +95,8 @@ export default function OrganizationSelector({
   const handleSelectOrganization = async (orgId: string) => {
     setSelectedOrganizationId(orgId);
     const selectedOrg = organizations.find((org) => org.id === orgId);
+    console.log("selectedOrg: ", selectedOrg);
     setSelectedOrganizationName(selectedOrg ? selectedOrg.name : ""); // 선택된 조직명 업데이트
-
-    // ✅ 멤버 목록을 가져오지만, 자동으로 `setSelectedMembers`를 업데이트하지 않음
-    await fetchOrganizationMembers(orgId);
   };
 
   // 멤버 선택/해제 로직
@@ -225,7 +236,8 @@ export default function OrganizationSelector({
                       maxWidth="5rem"
                       truncate
                     >
-                      {member.name} {isOwner && "👑 "}
+                      {isOwner && "👑 "}
+                      {member.name}
                     </Text>
                     <Text fontSize="0.6rem" maxWidth="5rem" truncate>
                       {member.role}
@@ -250,12 +262,12 @@ export default function OrganizationSelector({
         <Box
           ref={modalRef}
           position="fixed" // 화면 전체 기준 중앙 정렬
-          top="50%"
-          left="50%"
+          top="30"
+          right="0"
           transform="translate(-50%, -50%)"
-          width="60rem" // 크기 고정
-          minHeight="30rem" // ✅ 최소 높이 고정 (멤버 없을 때도 레이아웃 유지)
-          height="40rem"
+          // width="60rem" // 크기 고정
+          // minHeight="30rem" // ✅ 최소 높이 고정 (멤버 없을 때도 레이아웃 유지)
+          // height="40rem"
           bg="white"
           borderRadius="0.5rem"
           boxShadow="lg"
