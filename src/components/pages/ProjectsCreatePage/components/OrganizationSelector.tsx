@@ -83,9 +83,6 @@ export default function OrganizationSelector({
     }
 
     if (selectedOrganizationId) {
-      console.log("selectedOrganzationId: ", selectedOrganizationId);
-      console.log("ownerId: ", ownerId);
-
       setSelectedMembers([]);
       setOwnerId("");
 
@@ -97,7 +94,6 @@ export default function OrganizationSelector({
   const handleSelectOrganization = async (orgId: string) => {
     setSelectedOrganizationId(orgId);
     const selectedOrg = organizations.find((org) => org.id === orgId);
-    console.log("selectedOrg: ", selectedOrg);
     setSelectedOrganizationName(selectedOrg ? selectedOrg.name : ""); // 선택된 조직명 업데이트
   };
 

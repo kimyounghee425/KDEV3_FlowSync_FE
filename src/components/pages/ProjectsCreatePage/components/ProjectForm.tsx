@@ -82,16 +82,12 @@ export default function ProjectForm({
       return;
     }
     try {
-      console.log("업체 id: ", organizationId);
       const response = await fetchMembersWithinOrgApi(organizationId);
       const allMembers = response.data.members;
-      console.log("업체 소속 회원목록: ", allMembers);
       const participants = projectData?.members.map((id: string) => id);
-      console.log("배정된 회원목록: ", participants);
       const commonMembers = allMembers.filter((member: MemberProps) =>
         participants?.includes(member.id),
       );
-      console.log("업체 멤버들: ", commonMembers);
       setMembers(commonMembers);
     } catch (error) {
       // setMembers([]);
@@ -123,12 +119,10 @@ export default function ProjectForm({
         const customerOrg = await fetchOrganizationDetails(
           projectData.customerOrgId,
         );
-        console.log("customerOrg:", customerOrg);
         setSelectedCustomerOrgName(customerOrg?.name || "");
         const developerOrg = await fetchOrganizationDetails(
           projectData.developerOrgId,
         );
-        console.log("developerOrg:", developerOrg);
         setSelectedDeveloperOrgName(developerOrg?.name || "");
       }
     }
@@ -137,8 +131,6 @@ export default function ProjectForm({
 
   // 프로젝트에 배정된 전체 멤버 업데이트
   useEffect(() => {
-    console.log("선택된 고객사 회원 목록: ", selectedCustomerMembers);
-    console.log("선택된 개발사 회원 목록: ", selectedDeveloperMembers);
     setSelectedMembers([
       ...selectedCustomerMembers.map((member) => Number(member.id)),
       ...selectedDeveloperMembers.map((member) => Number(member.id)),
