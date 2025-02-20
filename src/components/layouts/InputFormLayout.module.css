@@ -36,14 +36,14 @@
 /* 수정하기 버튼 비활성화 상태 */
 .submitButton:disabled {
   background-color: #00a8ff;
-  opacity: 0.6; /* ✅ 흐린 효과 추가 */
+  opacity: 0.6; 
   cursor: not-allowed;
-  pointer-events: none; /* 🔥 클릭 방지 */
+  pointer-events: none; 
 }
 
-/* ✅ 비활성화 상태에서 hover 시 색상이 변하지 않도록 설정 */
+/* 비활성화 상태에서 hover 시 색상이 변하지 않도록 설정 */
 .submitButton:disabled:hover {
-  background-color: #00a8ff; /* ✅ hover 시 색상 유지 */
+  background-color: #00a8ff; /* hover 시 색상 유지 */
   opacity: 0.6;
 }
 

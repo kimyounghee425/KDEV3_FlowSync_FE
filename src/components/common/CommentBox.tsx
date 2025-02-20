@@ -56,7 +56,7 @@ export default function CommentBox({
       const requestData = { content: commentText };
 
       if (!apiPath) {
-        console.error("댓글 API 경로가 올바르지 않습니다.");
+        // "댓글 API 경로가 올바르지 않습니다."
         return;
       }
 
@@ -71,7 +71,7 @@ export default function CommentBox({
         if (setIsReplying) setIsReplying(false);
       }
     } catch (error) {
-      console.error("댓글 등록 실패 : ", error);
+      // "댓글 등록 실패 : "
     }
   };
 

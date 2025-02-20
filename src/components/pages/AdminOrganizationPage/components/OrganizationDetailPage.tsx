@@ -13,6 +13,7 @@ import {
   Text,
   useTabs,
 } from "@chakra-ui/react";
+import { LuFolder, LuUser } from "react-icons/lu";
 import { Switch } from "@/src/components/ui/switch";
 import { Radio, RadioGroup } from "@/src/components/ui/radio";
 import InputForm from "@/src/components/common/InputForm";
@@ -32,7 +33,6 @@ import CommonTable from "@/src/components/common/CommonTable";
 import StatusTag from "@/src/components/pages/ProjectsPage/components/ManagementStepTag";
 import Pagination from "@/src/components/common/Pagination";
 import DropDownMenu from "@/src/components/common/DropDownMenu";
-import { LuFolder, LuUser } from "react-icons/lu";
 import {
   useActivateMemberStatus,
   useDeactivateMemberStatus,
@@ -106,25 +106,18 @@ export default function OrganizationDetailPage({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string | null }>({}); // 유효성 검사 에러 상태
-  const [isFetching, setIsFetching] = useState<boolean>(false); // ✅ 새로 렌더링 여부
-  // ✅ 각 필드별 변경 상태를 관리하는 객체
+  const [isFetching, setIsFetching] = useState<boolean>(false); // 새로 렌더링 여부
+  // 각 필드별 변경 상태를 관리하는 객체
   const [isChanged, setIsChanged] = useState<{ [key: string]: boolean }>({});
   const isUpdateDisabled =
     Object.keys(isChanged).length === 0 || Object.keys(errors).length > 0;
-  const fileData =
-    typeof formData.brCertificateUrl === "string" &&
-    formData.brCertificateUrl.includes("|")
-      ? formData.brCertificateUrl.split("|")
-      : [null, null];
   const tabs = useTabs({
     defaultValue: "members",
   });
-  const { mutate: updateOrganization, error: OrganizationUpdateError } =
-    useUpdateOrganization();
-  const { mutate: deleteOrganization, error: OrganizationDeleteError } =
-    useDeleteOrganization();
+  const { mutate: updateOrganization } = useUpdateOrganization();
+  const { mutate: deleteOrganization } = useDeleteOrganization();
 
-  // 🔹 formData가 변경될 때만 실행되도록 설정
+  // formData가 변경될 때만 실행되도록 설정
   useEffect(() => {
     validateInputs();
   }, [formData]);
@@ -144,28 +137,28 @@ export default function OrganizationDetailPage({
     };
   }, [formData.brCertificateUrl]);
 
-  // 📌 업체 데이터 다시 불러오기 (업데이트 후)
+  // 업체 데이터 다시 불러오기 (업데이트 후)
   async function refetchOrganizationData() {
-    if (Object.keys(isChanged).length === 0) return; // 🔥 변경된 값 없으면 요청 안 함
+    if (Object.keys(isChanged).length === 0) return; // 변경된 값 없으면 요청 안 함
 
     setIsFetching(true);
     try {
       const updatedData = await fetchOrganizationDetails(organizationId);
-      // ✅ 데이터가 변경되지 않더라도 리렌더링을 강제하기 위해 새로운 객체로 할당
+      // 데이터가 변경되지 않더라도 리렌더링을 강제하기 위해 새로운 객체로 할당
       setFormData({ ...updatedData });
-      // ✅ 유효성 검사 실행 (버튼 활성화 여부 및 에러 메시지 갱신)
+      // 유효성 검사 실행 (버튼 활성화 여부 및 에러 메시지 갱신)
       validateInputs();
-      setIsChanged({}); // ✅ 모든 필드 변경 상태 초기화
+      setIsChanged({}); // 모든 필드 변경 상태 초기화
     } catch (error) {
-      console.error("업체 데이터 갱신 실패:", error);
+      // "업체 데이터 갱신 실패:"
     } finally {
       setIsFetching(false);
     }
   }
 
-  // 📌 입력 값 유효성 검사
+  // 입력 값 유효성 검사
   function validateInputs() {
-    // 🔹 `Object.entries()`를 사용하여 모든 필드에 대한 유효성 검사 수행
+    // `Object.entries()`를 사용하여 모든 필드에 대한 유효성 검사 수행
     const updatedErrors = Object.entries(validationRulesOfOrganization).reduce(
       (errors, [inputName, validationRule]) => {
         if (
@@ -185,7 +178,7 @@ export default function OrganizationDetailPage({
     return Object.keys(updatedErrors).length === 0; // 에러가 없으면 true 반환
   }
 
-  // 📌 입력 값 변경 시 상태(formData)를 업데이트.
+  // 입력 값 변경 시 상태(formData)를 업데이트.
   function handleInputUpdate(inputName: string, value: string) {
     // 숫자만 남기기
     let formattedValue = value;
@@ -200,7 +193,7 @@ export default function OrganizationDetailPage({
         let index = 0;
 
         for (const length of pattern) {
-          if (index >= value.length) break; // 🔥 안전한 길이 체크 추가
+          if (index >= value.length) break; // 안전한 길이 체크 추가
           if (index + length <= value.length) {
             formatted +=
               (index === 0 ? "" : "-") + value.slice(index, index + length);
@@ -220,20 +213,20 @@ export default function OrganizationDetailPage({
       }
     }
 
-    // 🔹 상태 업데이트 (주소 입력란은 원본 값 유지)
+    // 상태 업데이트 (주소 입력란은 원본 값 유지)
     setFormData((prev) => ({
       ...prev,
       [inputName]: formattedValue,
     }));
 
-    // 🔹 변경된 상태 추적
+    // 변경된 상태 추적
     setIsChanged((prev) => ({
       ...prev,
       [inputName]: true,
     }));
   }
 
-  // 📌 updateOrganization()을 호출하여 업체 정보를 수정
+  // updateOrganization()을 호출하여 업체 정보를 수정
   async function handleUpdate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
@@ -267,9 +260,9 @@ export default function OrganizationDetailPage({
     setIsSubmitting(false);
   }
 
-  // 📌 업체 삭제 - 탈퇴 사유 입력 ver.
+  // 업체 삭제 - 탈퇴 사유 입력 ver.
   async function handleDelete(deleteReason: string) {
-    const response = await deleteOrganization(organizationId, deleteReason); // 탈퇴 사유 입력값 전달
+    await deleteOrganization(organizationId, deleteReason); // 탈퇴 사유 입력값 전달
     route.push("/admin/organizations"); // 삭제 후 목록 페이지(회원 관리)로 이동
   }
 
@@ -360,7 +353,7 @@ export default function OrganizationDetailPage({
               </label>
               <>
                 <div className={styles.fileUploadContainer}>
-                  {/* ✅ 파일 첨부 버튼 */}
+                  {/* 파일 첨부 버튼 */}
                   <input
                     type="file"
                     id="businessLicense"
@@ -468,7 +461,7 @@ export default function OrganizationDetailPage({
 
       <Stack align="center" width="full" marginTop="2rem">
         <Box
-          maxWidth="1000px" // ✅ InputFormLayout과 동일한 너비 적용
+          maxWidth="1000px" // InputFormLayout과 동일한 너비 적용
           width="100%"
           p="1.5rem"
           borderRadius="lg"
@@ -483,9 +476,9 @@ export default function OrganizationDetailPage({
                 value="members"
                 onClick={() => {
                   const params = new URLSearchParams();
-                  params.set("tab", "members"); // ✅ 탭 값만 유지, 나머지 초기화
+                  params.set("tab", "members"); // 탭 값만 유지, 나머지 초기화
                   const newUrl = `?${params.toString()}`;
-                  window.history.replaceState(null, "", newUrl); // ✅ 히스토리에 추가
+                  window.history.replaceState(null, "", newUrl); // 히스토리에 추가
                   route.push(newUrl);
                 }}
                 _selected={{ color: "#00a8ff" }}
@@ -497,9 +490,9 @@ export default function OrganizationDetailPage({
                 value="projects"
                 onClick={() => {
                   const params = new URLSearchParams();
-                  params.set("tab", "projects"); // ✅ 탭 값만 유지, 나머지 초기화
+                  params.set("tab", "projects"); // 탭 값만 유지, 나머지 초기화
                   const newUrl = `?${params.toString()}`;
-                  window.history.replaceState(null, "", newUrl); // ✅ 히스토리에 추가
+                  window.history.replaceState(null, "", newUrl); // 히스토리에 추가
                   route.push(newUrl);
                 }}
                 _selected={{ color: "#00a8ff" }}
@@ -558,7 +551,7 @@ function OrganizationMemberList({
     memberPageSize,
   );
 
-  // ✅ 상태 변경을 위한 로컬 상태 추가
+  // 상태 변경을 위한 로컬 상태 추가
   const [memberData, setMemberData] = useState<MemberProps[]>([]);
   const { mutate: activateMember, error: memberActiveError } =
     useActivateMemberStatus();
@@ -572,17 +565,17 @@ function OrganizationMemberList({
     }
   }, [memberList]);
 
-  const [loadingId, setLoadingId] = useState<string | null>(null); // ✅ 특정 회원의 Switch 로딩 상태
+  const [loadingId, setLoadingId] = useState<string | null>(null); // 특정 회원의 Switch 로딩 상태
 
-  // ✅ 회원 상태 변경 핸들러 (API 호출 및 UI 반영)
+  // 회원 상태 변경 핸들러 (API 호출 및 UI 반영)
   const handleStatusChange = async (
     memberId: string,
     currentStatus: string,
   ) => {
-    setLoadingId(memberId); // ✅ 변경 중인 ID 설정 (로딩 표시)
+    setLoadingId(memberId); // 변경 중인 ID 설정 (로딩 표시)
     const newStatus = currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE";
 
-    // ✅ UI를 먼저 업데이트하여 즉각적인 피드백 제공
+    // UI를 먼저 업데이트하여 즉각적인 피드백 제공
     setMemberData((prevMembers) =>
       prevMembers.map((member) =>
         member.id === memberId ? { ...member, status: newStatus } : member,
@@ -728,7 +721,7 @@ function OrganizationMemberList({
                         event.stopPropagation();
                         handleStatusChange(member.id, member.status);
                       }}
-                      disabled={loadingId === member.id} // ✅ 상태 변경 시 로딩 적용
+                      disabled={loadingId === member.id} // 상태 변경 시 로딩 적용
                     />
                   )}
                 </Table.Cell>

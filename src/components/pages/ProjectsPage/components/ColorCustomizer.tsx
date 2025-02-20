@@ -1,5 +1,8 @@
 "use client";
 
+import { Button } from "@chakra-ui/react";
+import { Palette } from "lucide-react";
+import ColorPickerModal from "@/src/components/pages/ProjectsPage/components/ColorPickerModal";
 import {
   DialogRoot,
   DialogTrigger,
@@ -9,9 +12,6 @@ import {
   DialogCloseTrigger,
   DialogBody,
 } from "@/src/components/ui/dialog";
-import { Button } from "@chakra-ui/react";
-import ColorPickerModal from "@/src/components/pages/ProjectsPage/components/ColorPickerModal"; // ✅ 분리한 모달 불러오기
-import { Palette } from "lucide-react";
 
 export default function ColorCustomizer() {
   return (

@@ -2,8 +2,7 @@ import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Flex, Text, Box, Input, Button } from "@chakra-ui/react";
-import { formatDate, formatDateWithoutTime } from "@/src/utils/formatDateUtil"; // ✅ 날짜 변환 유틸 함수
-
+import { formatDateWithoutTime } from "@/src/utils/formatDateUtil";
 interface DateSectionProps {
   startAt?: string;
   deadlineAt?: string;
@@ -17,10 +16,10 @@ export default function DateSection({
   setStartAt,
   setDeadlineAt,
 }: DateSectionProps) {
-  // ✅ 날짜 선택 핸들러 (string 변환 후 저장)
+  // 날짜 선택 핸들러 (string 변환 후 저장)
   const handleStartDateChange = (date: Date | null) => {
     if (date && setStartAt) {
-      setStartAt(`${formatDateWithoutTime(date)}`); // ✅ 문자열 변환 후 저장
+      setStartAt(`${formatDateWithoutTime(date)}`); // 문자열 변환 후 저장
       if (deadlineAt && new Date(deadlineAt) < date) {
         setStartAt?.("");
       }
@@ -29,10 +28,10 @@ export default function DateSection({
 
   const handleDeadlineDateChange = (date: Date | null) => {
     if (date && setDeadlineAt) {
-      setDeadlineAt(`${formatDateWithoutTime(date)}`); // ✅ 문자열 변환 후 저장
+      setDeadlineAt(`${formatDateWithoutTime(date)}`); // 문자열 변환 후 저장
       if (startAt && new Date(startAt) > date) {
         setDeadlineAt?.("");
-      } // ✅ 종료일이 등록일보다 빠를 수 없음
+      } // 종료일이 등록일보다 빠를 수 없음
     }
   };
 
@@ -49,7 +48,7 @@ export default function DateSection({
           direction={{ base: "column", md: "row" }} // 모바일에서는 column, PC에서는 row 유지
           wrap="wrap"
           justifyContent="space-between"
-          maxWidth="100%" // ✅ 프로젝트 상세 내용과 너비 동일하게 설정
+          maxWidth="100%" // 프로젝트 상세 내용과 너비 동일하게 설정
           width="100%"
           gap="1rem"
           alignItems="center"
@@ -67,8 +66,8 @@ export default function DateSection({
                 popperPlacement="bottom-start"
                 openToDate={deadlineAt ? new Date(deadlineAt) : new Date()}
                 maxDate={deadlineAt ? new Date(deadlineAt) : undefined}
-                calendarClassName="datepicker-calendar" // ✅ 캘린더 스타일 추가 가능
-                wrapperClassName="datepicker-wrapper" // ✅ Wrapper 스타일 적용
+                calendarClassName="datepicker-calendar" // 캘린더 스타일 추가 가능
+                wrapperClassName="datepicker-wrapper" // Wrapper 스타일 적용
                 customInput={
                   <Input
                     placeholder="날짜를 선택하세요"
@@ -99,8 +98,8 @@ export default function DateSection({
                 minDate={startAt ? new Date(startAt) : undefined}
                 popperPlacement="bottom-start"
                 openToDate={startAt ? new Date(startAt) : new Date()}
-                calendarClassName="datepicker-calendar" // ✅ 캘린더 스타일 추가 가능
-                wrapperClassName="datepicker-wrapper" // ✅ Wrapper 스타일 적용
+                calendarClassName="datepicker-calendar" // 캘린더 스타일 추가 가능
+                wrapperClassName="datepicker-wrapper" // Wrapper 스타일 적용
                 customInput={
                   <Input
                     placeholder="날짜를 선택하세요"

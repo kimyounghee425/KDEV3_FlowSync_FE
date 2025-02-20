@@ -1,4 +1,3 @@
-
 // 외부 라이브러리
 import {
   Box,
@@ -97,7 +96,10 @@ export default function ArticleContent<
       if (block.type === "paragraph" && typeof block.data === "string") {
         return (
           <Text key={index} mb={4} whiteSpace="pre-line">
-            {block.data.replace(/<br\s*\/?>/g, "\n").replace(/&nbsp;/g, "").trimEnd()}
+            {block.data
+              .replace(/<br\s*\/?>/g, "\n")
+              .replace(/&nbsp;/g, "")
+              .trimEnd()}
           </Text>
         );
       }
@@ -180,7 +182,7 @@ export default function ArticleContent<
         article.status = "RESOLVED";
       }
     } catch (error) {
-      console.error("답변 완료 요청 실패 : ", error);
+      // "답변 완료 요청 실패 : "
     }
   };
 
@@ -213,9 +215,7 @@ export default function ArticleContent<
           <Text pb={2} fontWeight={"bold"}>
             {`작성자 : ${article.register.name} (${article.register.jobTitle}) / ${article.register.jobRole}`}
           </Text>
-          <Text color={"gray.400"}>
-            등록일: {article.regAt}
-          </Text>
+          <Text color={"gray.400"}>등록일: {article.regAt}</Text>
         </Box>
         {pathname.includes("/questions") && myId === registerId ? (
           <Button

@@ -2,24 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  Box,
-  Flex,
-  Heading,
-  IconButton,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverRoot,
-  PopoverTrigger,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, useBreakpointValue } from "@chakra-ui/react";
 import {
   Folder,
   OctagonPause,
   OctagonX,
   PackageCheck,
-  Palette,
   Signature,
   Swords,
   Wrench,
@@ -61,12 +49,12 @@ export default function ProjectsManagementStepCards({
   );
 
   useEffect(() => {
-    // ✅ URL의 managementStep이 바뀌면 selectedStep을 업데이트
+    // URL의 managementStep이 바뀌면 selectedStep을 업데이트
     const newStep =
       (searchParams.get("managementStep") as ProjectManagementSteps) ||
       ProjectManagementSteps.ALL;
     setSelectedStep(newStep);
-  }, [searchParams]); // ✅ searchParams 변경 시 실행
+  }, [searchParams]); // searchParams 변경 시 실행
 
   const {
     data: managementStepsCountData,

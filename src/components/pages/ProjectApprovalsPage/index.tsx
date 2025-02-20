@@ -117,9 +117,7 @@ export default function ProjectApprovalsPage() {
       try {
         const responseData = await getMeApi();
         setMyOrgType(responseData.data.organizationType);
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     };
     getMyOrgType();
   }, []);

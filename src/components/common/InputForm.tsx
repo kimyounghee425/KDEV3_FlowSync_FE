@@ -30,7 +30,7 @@ export default function InputForm({
   // 비번 입력할 땐 스페이스 입력 방지
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (type === "password" && e.key === " ") {
-      e.preventDefault(); // ✅ 스페이스 입력 차단
+      e.preventDefault(); // 스페이스 입력 차단
     }
   };
 

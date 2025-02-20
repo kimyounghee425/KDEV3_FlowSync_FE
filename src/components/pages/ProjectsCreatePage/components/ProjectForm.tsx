@@ -36,7 +36,7 @@ export default function ProjectForm({
   const { mutate: createProject } = useCreateProject();
   const { mutate: updateProject } = useUpdateProject();
   const { mutate: deleteProject } = useDeleteProject();
-  // 📌 프로젝트 상태 관리
+  // 프로젝트 상태 관리
   const [formData, setFormData] = useState<ProjectDetailProps>({
     id: projectData?.id || "",
     name: projectData?.name || "",
@@ -89,7 +89,7 @@ export default function ProjectForm({
     }
   };
 
-  // ✅ 프로젝트 생성 시, 멤버 자동 선택 방지 (수정 시 기존 데이터 유지)
+  // 프로젝트 생성 시, 멤버 자동 선택 방지 (수정 시 기존 데이터 유지)
   useEffect(() => {
     if (projectId) {
       if (formData.customerOrgId) {
@@ -107,7 +107,7 @@ export default function ProjectForm({
     }
   }, [formData.customerOrgId, formData.developerOrgId, projectId]);
 
-  // 🔹 프로젝트 수정 시 기존 데이터 반영 (멤버 & Owner)
+  // 프로젝트 수정 시 기존 데이터 반영 (멤버 & Owner)
   useEffect(() => {
     async function fetchOrgDetails() {
       if (projectData) {
@@ -132,7 +132,7 @@ export default function ProjectForm({
     ]);
   }, [selectedCustomerMembers, selectedDeveloperMembers]);
 
-  // 📌 **프로젝트 생성/수정 API 호출**
+  // **프로젝트 생성/수정 API 호출**
   const handleSubmit = async (event: React.FormEvent) => {
     event?.preventDefault();
 
@@ -242,7 +242,7 @@ export default function ProjectForm({
     }
   };
 
-  // 📌 **프로젝트 삭제 API 호출**
+  // **프로젝트 삭제 API 호출**
   const handleDelete = async () => {
     if (projectId) {
       const response = await deleteProject(projectId);
@@ -290,7 +290,7 @@ export default function ProjectForm({
           <Box flex="1">
             <DateSection
               startAt={formData.startAt}
-              deadlineAt={formData.deadlineAt} // ✅ 기존 closeAt → deadlineAt 사용
+              deadlineAt={formData.deadlineAt} // 기존 closeAt → deadlineAt 사용
               setStartAt={(date) =>
                 setFormData((prev) => ({ ...prev, startAt: date }))
               }

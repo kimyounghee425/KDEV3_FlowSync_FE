@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { OrganizationProps } from "@/src/types";
 import { fetchOrganizationDetails } from "@/src/api/organizations";
 import OrganizationDetailPage from "@/src/components/pages/AdminOrganizationPage/components/OrganizationDetailPage";
+import { Loading } from "@/src/components/common/Loading";
 
 export default function AdminOrganizationPage() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function AdminOrganizationPage() {
     }
   }, [organizationId, router]);
 
-  // 🔹 업체 상세 데이터 가져오기
+  // 업체 상세 데이터 가져오기
   useEffect(() => {
     const getOrganization = async () => {
       if (!organizationId) return; // organizationId가 없는 경우 API 호출 방지
@@ -33,7 +34,7 @@ export default function AdminOrganizationPage() {
       try {
         const response = await fetchOrganizationDetails(organizationId);
 
-        // 🚀 업체 데이터가 없는 경우 404 이동
+        // 업체 데이터가 없는 경우 404 이동
         if (!response) {
           router.replace("/404");
           return;
@@ -41,7 +42,7 @@ export default function AdminOrganizationPage() {
 
         setOrganizationData(response);
       } catch (error) {
-        console.error("업체 데이터 조회 실패:", error);
+        // "업체 데이터 조회 실패:"
         // router.replace("/404");
       }
     };
@@ -49,7 +50,7 @@ export default function AdminOrganizationPage() {
   }, [organizationId]);
 
   if (!organizationData) {
-    return <p>Loading...</p>;
+    return <Loading />;
   }
 
   return (

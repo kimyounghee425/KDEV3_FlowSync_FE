@@ -63,14 +63,14 @@ export function useFetchBoardList<T, P extends any[], K extends keyof T>({
       setError(null);
 
     } catch (err: any) {
-      console.error("Error fetching data:", err);
-      // ✅ 서버 응답에서 message 필드가 있는 경우 해당 메시지 사용
+      // "Error fetching data:"
+      // 서버 응답에서 message 필드가 있는 경우 해당 메시지 사용
       const errorMessage =
         err.response?.data?.message ||
         err.message ||
         "데이터를 불러오는 중 오류가 발생했습니다.";
 
-      // ✅ 토스트로 사용자에게 알림
+      // 토스트로 사용자에게 알림
       showToast({
         title: "요청 실패",
         description: errorMessage,

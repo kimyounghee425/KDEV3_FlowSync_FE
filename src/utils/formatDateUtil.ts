@@ -13,7 +13,7 @@ export const formatDate = (date: Date | null): string => {
 export const formatDateWithoutTime = (date: Date | null): string => {
   if (!date) return "";
 
-  // ✅ 로컬 타임존에서 날짜 계산
+  // 로컬 타임존에서 날짜 계산
   const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
 
   const year = localDate.getFullYear();

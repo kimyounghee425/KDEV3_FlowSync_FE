@@ -159,7 +159,6 @@ export default function ArticleForm({
                   setTimeout(() => attachImageDeleteButtons(), 500); // 이미지 업로드 후 삭제 버튼 추가
                   return { success: 1, file: { url: responseData.data.url } };
                 } catch (error: any) {
-                  console.error("파일 업로드 중 오류 발생:", error);
                   // alert("이미지 파일 크기는 10mb 를 초과할 수 없습니다.");
                   const errorMessage =
                     "이미지 크기는 10MB 를 초과할 수 없습니다.";
@@ -284,12 +283,12 @@ export default function ArticleForm({
         }
         await handleSave(requestData as BaseArticleRequestData);
       } catch (error) {
-        console.error("저장 실패:", error);
+        // "저장 실패"
         return;
       } finally {
         setIsSaving(false);
       }
-    }, 1000), // ✅ 1초 동안 연속 클릭 방지
+    }, 1000), // 1초 동안 연속 클릭 방지
     [title, linkList, uploadedFiles, isSignYes, handleSave, progressStepId],
   );
 
@@ -320,7 +319,7 @@ export default function ArticleForm({
         deleteButton.onclick = () => {
           if (!editorRef.current) return;
 
-          // ✅ 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
+          // 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
           const blockIndex = editorRef.current.blocks.getCurrentBlockIndex();
 
           if (blockIndex !== -1) {

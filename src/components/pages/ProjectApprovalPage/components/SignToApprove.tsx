@@ -76,8 +76,8 @@ export default function SignToApprove({
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext("2d");
       if (ctx) {
-        ctx.fillStyle = color; // ✅ 배경색 설정
-        ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height); // ✅ 캔버스 전체를 색으로 채움
+        ctx.fillStyle = color; // 배경색 설정
+        ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height); // 캔버스 전체를 색으로 채움
       }
     }
   };
@@ -120,7 +120,7 @@ export default function SignToApprove({
       setIsignatureComplete(true);
       confirmApproval();
     } catch (error) {
-      console.error("서명 등록 실패", error);
+      // "서명 등록 실패"
     }
   };
 
@@ -153,7 +153,7 @@ export default function SignToApprove({
 
       confirmApproval();
     } catch (error) {
-      console.error("서명 불러오는데 오류 발생", error);
+      // "서명 불러오는데 오류 발생"
     }
   };
 
@@ -172,9 +172,7 @@ export default function SignToApprove({
         setIsignatureComplete(true);
         setYourSignatureUrl("./public/reject.jpg");
       }
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   // 승인
@@ -188,9 +186,7 @@ export default function SignToApprove({
         setIsignatureComplete(true);
       }
       // return response.data.result;g
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   // 자기 업체 글이면 결재자 서명 비활

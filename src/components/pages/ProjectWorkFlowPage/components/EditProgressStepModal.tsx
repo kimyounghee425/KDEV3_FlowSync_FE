@@ -83,7 +83,7 @@ export default function EditProgressStepModal({
         onStepUpdated(); // 데이터 갱신
         handleClose();
       } catch (error) {
-        console.error("진행 단계 수정 실패:", error);
+        // "진행 단계 수정 실패:"
         return; // 실패하면 다음 코드 실행 안 하고 중단
       } finally {
         setIsSaving(false);

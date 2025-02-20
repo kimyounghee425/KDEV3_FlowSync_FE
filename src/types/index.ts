@@ -69,21 +69,21 @@ export interface MemberListResponse {
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
-// 🔹 회원 삭제 응답 타입 정의
+// 회원 삭제 응답 타입 정의
 export interface DeleteMemberResponse {
   code: number; // HTTP 상태 코드
   result: "SUCCESS" | "FAIL"; // 결과 상태
   message: string; // 응답 메시지
 }
 
-// 🔹 회원 상태 활성화로 변경 응답 타입 정의
+// 회원 상태 활성화로 변경 응답 타입 정의
 export interface ActivateMemberResponse {
   code: number; // HTTP 상태 코드
   result: "SUCCESS" | "FAIL"; // 결과 상태
   message: string; // 응답 메시지
 }
 
-// 🔹 회원 상태 비활성화로 변경 응답 타입 정의
+// 회원 상태 비활성화로 변경 응답 타입 정의
 export interface DeactivateMemberResponse {
   code: number; // HTTP 상태 코드
   result: "SUCCESS" | "FAIL"; // 결과 상태
@@ -132,7 +132,7 @@ export interface OrganizationListResponse {
   meta: PaginationProps; // 페이지네이션 메타 정보
 }
 
-// 🔹 업체 삭제 응답 타입 정의 (탈퇴 사유 포함 ver.)
+// 업체 삭제 응답 타입 정의 (탈퇴 사유 포함 ver.)
 export interface DeleteOrganizationResponse {
   code: number; // HTTP 상태 코드
   result: "SUCCESS" | "FAIL"; // 결과 상태

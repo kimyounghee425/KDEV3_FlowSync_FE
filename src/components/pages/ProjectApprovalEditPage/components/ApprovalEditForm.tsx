@@ -17,15 +17,6 @@ import { useUpdateApproval } from "@/src/hook/useMutationData";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const progressData = [
-  { id: 1, title: "요구사항정의" },
-  { id: 2, title: "화면설계" },
-  { id: 3, title: "디자인" },
-  { id: 4, title: "퍼블리싱" },
-  { id: 5, title: "개발" },
-  { id: 6, title: "검수" },
-];
-
 interface UploadedFilesProps {
   originalName: string;
   saveName: string;
@@ -51,8 +42,7 @@ export default function ApprovalEditForm() {
   const [uploadedFileSize, setUploadedFileSize] = useState<number[]>([]);
   const [signatureUrl, setSignatureUrl] = useState<string>("");
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const { mutate: updateApproval, error: approvalUpdateError } =
-    useUpdateApproval();
+  const { mutate: updateApproval } = useUpdateApproval();
 
   useEffect(() => {
     const handleShiftEnterAsEnter = (event: KeyboardEvent) => {
@@ -183,7 +173,6 @@ export default function ApprovalEditForm() {
             placeholder: "내용을 작성하세요",
 
             onReady: async () => {
-              console.log("📝 EditorJS 초기화 완료!");
               await editorRef.current?.isReady;
               attachImageDeleteButtons();
             },
@@ -212,7 +201,7 @@ export default function ApprovalEditForm() {
           });
         }, 500);
       } catch (error) {
-        console.error("에러발생 : ", error);
+        // "에러발생 : "
       }
     };
 
@@ -265,7 +254,7 @@ export default function ApprovalEditForm() {
         deleteButton.onclick = () => {
           if (!editorRef.current) return;
 
-          // ✅ 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
+          // 현재 클릭한 블록을 기준으로 EditorJS의 블록 인덱스 찾기
           const blockIndex = editorRef.current.blocks.getCurrentBlockIndex();
 
           if (blockIndex !== -1) {

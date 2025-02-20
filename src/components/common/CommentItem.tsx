@@ -95,7 +95,7 @@ export default function CommentItem({
         return filteredComment?.content;
       }
     } catch (error) {
-      console.error("댓글 불러오기 실패:", error);
+      // "댓글 불러오기 실패:"
       return null;
     }
   };
@@ -142,7 +142,7 @@ export default function CommentItem({
       setIsEditing(false);
       setCommentIsWritten((prev) => !prev); // 상태 변경을 트리거해서 새로고침 효과
     } catch (error) {
-      console.error("댓글 수정 실패:", error);
+      // 댓글 수정 실패
       alert("댓글 수정 중 오류가 발생했습니다.");
     }
   };
@@ -163,9 +163,7 @@ export default function CommentItem({
         );
       }
       setCommentIsWritten((prev) => !prev);
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   const handleCancel = () => {

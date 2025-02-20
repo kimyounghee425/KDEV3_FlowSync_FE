@@ -26,7 +26,7 @@ export default function ColorPickerButton({
         cursor="pointer"
         display="inline-block"
         onClick={onClick}
-        border={isSelected ? "2px solid black" : "1px solid #ccc"} // ✅ 선택 시 테두리 강조
+        border={isSelected ? "2px solid black" : "1px solid #ccc"} // 선택 시 테두리 강조
       />
     </Box>
   );

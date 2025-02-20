@@ -39,7 +39,7 @@ export default function OrganizationSelector({
   const [organizations, setOrganizations] = useState<OrganizationProps[]>([]);
   const [members, setMembers] = useState<MemberProps[]>([]);
 
-  // ✅ 특정 조직의 멤버를 가져오는 함수
+  // 특정 조직의 멤버를 가져오는 함수
   const fetchOrganizationMembers = async (organizationId: string) => {
     if (!organizationId) {
       setMembers([]);
@@ -49,42 +49,42 @@ export default function OrganizationSelector({
       const response = await fetchMembersWithinOrgApi(organizationId);
       setMembers(response.data.members || []);
     } catch (error) {
-      console.error("멤버 데이터를 가져오는 중 오류 발생:", error);
+      // "멤버 데이터를 가져오는 중 오류 발생:"
       setMembers([]);
     }
   };
 
-  // ✅ 조직 목록을 가져오는 함수
+  // 조직 목록을 가져오는 함수
   const fetchOrganizations = async () => {
     try {
       const orgData = await getOrganizationsApi(organizationType, "ACTIVE");
       setOrganizations(orgData.data.dtoList);
     } catch (error) {
-      console.error("업체 데이터를 가져오는 중 오류 발생:", error);
+      // "업체 데이터를 가져오는 중 오류 발생:"
     }
   };
 
-  // ✅ 모달이 열릴 때 조직 목록을 가져옴
+  // 모달이 열릴 때 조직 목록을 가져옴
   useEffect(() => {
     if (isModalOpen && organizations.length === 0) {
       fetchOrganizations();
     }
   }, [isModalOpen, organizationType]);
 
-  // ✅ 프로젝트 수정 시 기존 `selectedMembers` 유지 (멤버 목록이 변경될 때만 업데이트)
+  // 프로젝트 수정 시 기존 `selectedMembers` 유지 (멤버 목록이 변경될 때만 업데이트)
   useEffect(() => {
     if (selectedOrganizationId) {
       fetchOrganizationMembers(selectedOrganizationId);
     }
   }, [selectedOrganizationId]);
 
-  // ✅ 조직 선택 시 ID와 Name을 함께 설정
+  // 조직 선택 시 ID와 Name을 함께 설정
   const handleSelectOrganization = async (orgId: string) => {
     setSelectedOrganizationId(orgId);
     const selectedOrg = organizations.find((org) => org.id === orgId);
     setSelectedOrganizationName(selectedOrg ? selectedOrg.name : ""); // 선택된 조직명 업데이트
 
-    // ✅ 멤버 목록을 가져오지만, 자동으로 `setSelectedMembers`를 업데이트하지 않음
+    // 멤버 목록을 가져오지만, 자동으로 `setSelectedMembers`를 업데이트하지 않음
     await fetchOrganizationMembers(orgId);
   };
 
@@ -152,7 +152,7 @@ export default function OrganizationSelector({
             placeholder="회사를 검색하세요"
             onClick={() => setIsModalOpen(true)}
             readOnly
-            value={selectedOrganizationName} // ✅ 조직명 표시
+            value={selectedOrganizationName} // 조직명 표시
             cursor="pointer"
             border="1px solid #ccc"
             borderRadius="0.5rem"
@@ -205,7 +205,7 @@ export default function OrganizationSelector({
                         : "black"
                     }
                     cursor="pointer"
-                    mr="0.25rem" // ✅ 간격 줄임
+                    mr="0.25rem" // 간격 줄임
                     _hover={{ bg: "blue.200", color: "white" }}
                     onClick={() => {
                       if (isOwner) {
@@ -225,7 +225,7 @@ export default function OrganizationSelector({
                       maxWidth="5rem"
                       truncate
                     >
-                      {member.name} {isOwner && "👑 "}
+                      {isOwner && "👑 "} {member.name}
                     </Text>
                     <Text fontSize="0.6rem" maxWidth="5rem" truncate>
                       {member.role}
@@ -254,7 +254,7 @@ export default function OrganizationSelector({
           left="50%"
           transform="translate(-50%, -50%)"
           width="60rem" // 크기 고정
-          minHeight="30rem" // ✅ 최소 높이 고정 (멤버 없을 때도 레이아웃 유지)
+          minHeight="30rem" // 최소 높이 고정 (멤버 없을 때도 레이아웃 유지)
           height="40rem"
           bg="white"
           borderRadius="0.5rem"
@@ -263,9 +263,9 @@ export default function OrganizationSelector({
           zIndex="999"
           display="flex"
           flexDirection="column"
-          // justifyContent="center" // ✅ 내용을 중앙 정렬
+          // justifyContent="center" // 내용을 중앙 정렬
           // alignItems="center"
-          overflowY="auto" // ✅ 내부 콘텐츠가 많아지면 스크롤 활성화
+          overflowY="auto" // 내부 콘텐츠가 많아지면 스크롤 활성화
         >
           <Box>
             <Flex direction={{ base: "column", md: "row" }} gap="1rem">

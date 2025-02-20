@@ -27,7 +27,7 @@ export default function DateSection({
       ? dateTime.toDateString() === minDate.toDateString()
       : false;
 
-  // ✅ 같은 날짜이면 `startAt` 이후의 시간만 선택 가능
+  // 같은 날짜이면 `startAt` 이후의 시간만 선택 가능
   const minTime = isSameDay
     ? (minDate ?? undefined)
     : new Date(0, 0, 0, 0, 0, 0);
@@ -58,7 +58,7 @@ export default function DateSection({
               timeFormat="HH:mm" // 4시간제 포맷
               timeIntervals={60} // 10분 단위 선택
               minDate={adjustedMinDate} // startAt보다 과거 선택 불가
-              {...(isSameDay && { minTime, maxTime })} // ✅ 같은 날짜면 시간도 제한
+              {...(isSameDay && { minTime, maxTime })} // 같은 날짜면 시간도 제한
               popperPlacement="bottom-start"
               customInput={
                 <Input

@@ -243,7 +243,7 @@ function AdminOrganizationsPageContent() {
                       event.stopPropagation();
                       handleStatusChange(organization.id);
                     }}
-                    disabled={loadingId === organization.id} // ✅ 상태 변경 시 로딩 적용
+                    disabled={loadingId === organization.id} // 상태 변경 시 로딩 적용
                   />
                 )}
               </Table.Cell>

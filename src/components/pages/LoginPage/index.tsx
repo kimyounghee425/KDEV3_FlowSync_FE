@@ -52,7 +52,7 @@ export default function LoginPage() {
       const response = await login(inputValues.email, inputValues.password);
       route.push("/");
     } catch (error) {
-      console.error("로그인 실패:", error);
+      // "로그인 실패:"
     } finally {
       setIsSubmitting(false);
     }

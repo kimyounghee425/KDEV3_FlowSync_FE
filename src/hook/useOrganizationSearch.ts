@@ -14,7 +14,7 @@ export function useOrganizationSearch() {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  // 🔹 조직 목록을 가져오는 함수
+  // 조직 목록을 가져오는 함수
   const fetchOrganizations = async (searchQuery: string = "") => {
     try {
       const response = await getOrganizationsApi();
@@ -25,7 +25,7 @@ export function useOrganizationSearch() {
         return;
       }
 
-      // 🔹 검색어가 있는 경우 필터링된 목록 반환
+      // 검색어가 있는 경우 필터링된 목록 반환
       const filteredOrganizations = response.data.dtoList.filter(
         (org: OrganizationProps) =>
           org.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -33,18 +33,18 @@ export function useOrganizationSearch() {
 
       setOrganizations(filteredOrganizations);
     } catch (error) {
-      console.error("업체 데이터를 가져오는 중 오류 발생:", error);
+      // "업체 데이터를 가져오는 중 오류 발생:"
     }
   };
 
-  // 🔹 모달이 열릴 때 조직 목록을 불러옴
+  // 모달이 열릴 때 조직 목록을 불러옴
   useEffect(() => {
     if (isModalOpen && organizations.length === 0) {
       fetchOrganizations();
     }
   }, [isModalOpen]);
 
-  // 🔹 외부 클릭 시 모달 닫기
+  // 외부 클릭 시 모달 닫기
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -61,13 +61,13 @@ export function useOrganizationSearch() {
     };
   }, []);
 
-  // 🔹 검색어 변경 시 자동 검색 실행
+  // 검색어 변경 시 자동 검색 실행
   useEffect(() => {
     fetchOrganizations(searchTerm);
     setHighlightedIndex(-1);
   }, [searchTerm]);
 
-  // 🔹 키보드 네비게이션 처리
+  // 키보드 네비게이션 처리
   function handleSearchKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -89,7 +89,7 @@ export function useOrganizationSearch() {
     }
   }
 
-  // 🔹 조직 선택 시 조직 이름을 저장하고 모달 닫기
+  // 조직 선택 시 조직 이름을 저장하고 모달 닫기
   function handleSelectOrganization(orgId: string) {
     const selectedOrg = organizations.find((org) => org.id === orgId);
     setSelectedOrganizationId(selectedOrg ? selectedOrg.id : "");

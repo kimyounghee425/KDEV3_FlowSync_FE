@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { useSidebar } from "@/src/context/SidebarContext";
 import { useProjectInfiniteScroll } from "@/src/hook/useProjectInfiniteScroll";
-import { Loading } from "@/src/components/common/Loading"; // 기존 컴포넌트 사용
+import { Loading } from "@/src/components/common/Loading";
 import { layoutStyles } from "@/src/styles/layoutStyles";
 
 interface SidebarProps {
@@ -82,7 +82,7 @@ export default function Sidebar({
 
   const projectId = pathname.match(/\/projects\/(\d+)/)?.[1];
 
-  // ✅ 페이지가 변경될 때 showAllProjects 초기화
+  // 페이지가 변경될 때 showAllProjects 초기화
   useEffect(() => {
     setShowAllProjects(false); // 페이지 이동 시 프로젝트 목록을 5개만 보이도록 리셋
   }, [pathname]); // pathname이 변경될 때마다 실행
@@ -144,7 +144,7 @@ export default function Sidebar({
                   fontWeight={isActive ? "bold" : "normal"} // 현재 페이지면 볼드 처리
                   borderLeft={
                     isActive ? "4px solid #007bff" : "4px solid transparent"
-                  } // ✅ 현재 페이지면 왼쪽 포인트
+                  } // 현재 페이지면 왼쪽 포인트
                   _hover={{ bg: "gray.100" }}
                 >
                   <Box flexShrink={0}>{Icon && <Icon size={20} />}</Box>
@@ -175,13 +175,13 @@ export default function Sidebar({
                 marginTop="0.8rem"
                 padding="0.8rem 1rem 0.8rem 1rem"
                 _hover={{ bg: "gray.100" }}
-                transition="background-color 0.3s ease-in-out" // ✅ 천천히 hover 효과 적용
+                transition="background-color 0.3s ease-in-out"
                 borderRadius="0.6rem"
                 width="95%"
                 fontSize="0.8rem"
-                display="flex" // ✅ 플렉스 박스 적용
-                alignItems="center" // ✅ 세로 중앙 정렬
-                justifyContent="space-between" // ✅ 텍스트와 아이콘 사이 간격 조정
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
               >
                 <Text>진행 중 프로젝트 &gt;</Text>
               </Box>
@@ -212,7 +212,7 @@ export default function Sidebar({
                         isActiveProject
                           ? "4px solid #007bff"
                           : "4px solid transparent"
-                      } // ✅ 현재 페이지면 왼쪽 포인트
+                      }
                       _hover={{ bg: "gray.100" }}
                     >
                       <Box flexShrink={0}>{<Folder size={20} />}</Box>

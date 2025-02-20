@@ -59,7 +59,7 @@ export function useForm(
     checkInput(inputName, inputValue);
   }
 
-  // 📌 외부에서 `inputValues`를 한 번에 설정하는 함수
+  // 외부에서 `inputValues`를 한 번에 설정하는 함수
   function setFormValues(newValues: InputValues) {
     setInputValues(newValues);
   }

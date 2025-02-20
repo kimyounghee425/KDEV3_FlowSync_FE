@@ -25,7 +25,6 @@ export default function InputFormLayout({
   onDelete, // 삭제 핸들러 추가
   deleteEntityType, // 삭제할 대상 (회원, 업체, 프로젝트 등)
   isDisabled, // 수정 버튼 비활성화 여부
-  onKeyDown,
 }: {
   title: string; // 페이지 제목
   children: ReactNode; // 폼 내부 요소
@@ -48,7 +47,7 @@ export default function InputFormLayout({
     !isCreatePage; // create가 아닌 경우만 상세 페이지로 처리
   const entityType = deleteEntityType || "항목"; // deleteEntityType이 undefined일 경우 삭제 버튼이 생성되지 않아서 기본값을 설정
 
-  // ✅ Form에서 Enter 키 방지 (모달 제외)
+  // Form에서 Enter 키 방지 (모달 제외)
   function handleFormKeyDown(event: React.KeyboardEvent<HTMLFormElement>) {
     if (event.key === "Enter") {
       event.preventDefault(); // 🔥 기본 제출 방지
@@ -66,7 +65,7 @@ export default function InputFormLayout({
     >
       <Box width="100%" p="1.5rem" borderRadius="lg" bg="white" boxShadow="md">
         <form onSubmit={onSubmit}>
-          {/* 📌 페이지 타이틀 */}
+          {/* 페이지 타이틀 */}
           <Flex justifyContent="space-between" alignItems="center" mb="1.5rem">
             <Text fontSize="xl" fontWeight="bold">
               {title}
@@ -145,8 +144,8 @@ export default function InputFormLayout({
               )}
             </Box>
           </Flex>
-          {/* 📌 페이지 버튼 - 등록/수정/삭제 */}
-          {/* 📌 페이지 입력폼 */}
+          {/* 페이지 버튼 - 등록/수정/삭제 */}
+          {/* 페이지 입력폼 */}
           {children}
         </form>
       </Box>

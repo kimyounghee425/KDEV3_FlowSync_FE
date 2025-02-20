@@ -20,7 +20,7 @@ export default function NoticePage() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentPage = searchParams?.get("currentPage") || "1"; // 🔹 현재 페이지 값 읽기
+  const currentPage = searchParams?.get("currentPage") || "1"; // 현재 페이지 값 읽기
 
   const { data: userInfoData } = useUserInfo();
   const userRole = userInfoData?.role;
@@ -36,7 +36,7 @@ export default function NoticePage() {
   const isNoticeDeleted = noticeArticle?.isDeleted === "Y";
 
   if (noticeLoading) {
-    return <Loading />; // ✅ 공통 로딩 컴포넌트 사용
+    return <Loading />;
   }
 
   const handleEdit = () => {

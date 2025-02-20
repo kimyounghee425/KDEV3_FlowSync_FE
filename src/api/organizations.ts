@@ -8,7 +8,7 @@ import {
   DeleteOrganizationResponse,
 } from "@/src/types";
 
-// 📌 업체 목록 Fetch API
+// 업체 목록 Fetch API
 export async function fetchOrganizationListApi(
   keyword: string = "", // 검색어
   type: string = "", // 업체타입
@@ -23,7 +23,7 @@ export async function fetchOrganizationListApi(
   return response.data;
 }
 
-// 📌 업체 상세 정보 가져오기
+// 업체 상세 정보 가져오기
 export async function fetchOrganizationDetails(
   organizationId: string,
 ): Promise<OrganizationProps> {
@@ -31,10 +31,10 @@ export async function fetchOrganizationDetails(
     `/admins/organizations/${organizationId}`,
   );
 
-  return response.data.data; // ✅ `data` 필드만 반환하도록 수정
+  return response.data.data;
 }
 
-// 📌 업체 생성 API (파일 업로드 API 완성 시 추가 구현 예정)
+// 업체 생성 API (파일 업로드 API 완성 시 추가 구현 예정)
 export async function createOrganizationApi(
   data: CreateOrganizationInput,
   file?: any,
@@ -59,7 +59,7 @@ export async function createOrganizationApi(
   return response.data; // 생성된 데이터 반환
 }
 
-// 📌  업체 정보 수정 (PATCH 요청)
+// 업체 정보 수정 (PATCH 요청)
 // #TODO 파일 업로드 하여 데이터 multiForm 으로 전송
 export async function updateOrganizationApi(
   organizationId: string,
@@ -92,7 +92,7 @@ export async function updateOrganizationApi(
   return response.data;
 }
 
-// 📌 업체 삭제 (탈퇴 사유 포함 ver.)
+// 업체 삭제 (탈퇴 사유 포함 ver.)
 export async function deleteOriginationApi(
   organizationId: string,
   reason: string,
@@ -100,11 +100,11 @@ export async function deleteOriginationApi(
   try {
     const response = await axiosInstance.post(
       `/admins/organizations/${organizationId}/remove`,
-      { reason }, // 🔹 요청 바디에 탈퇴 사유 추가
+      { reason }, // 요청 바디에 탈퇴 사유 추가
     );
-    return response.data; // ✅ 응답 데이터 반환
+    return response.data;
   } catch (error) {
-    throw error; // 🚨 에러 발생 시 throw
+    throw error;
   }
 }
 

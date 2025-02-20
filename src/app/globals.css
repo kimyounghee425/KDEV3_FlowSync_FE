@@ -1,4 +1,4 @@
-/* 📌 글로벌 스타일 - 라이트 모드 전용 */
+/* 글로벌 스타일 - 라이트 모드 전용 */
 :root {
   --header-height: 4rem;
   --sidebar-width-mobile: 0px;
@@ -8,7 +8,7 @@
   --font-size-sm: 0.875rem;
   --font-size-lg: 1.125rem;
 
-  /* ✅ 색상 통일 */
+  /* 색상 통일 */
   --primary-color: #00a8ff; /* 주요 버튼 색상 */
   --primary-hover-color: #1f98d4;
   --primary-active-color: #003c80;
@@ -43,7 +43,7 @@ a:hover {
   color: var(--primary-hover-color);
 }
 
-/* 📌 버튼 스타일 */
+/* 버튼 스타일 */
 button {
   font-family: inherit;
   cursor: pointer;
@@ -54,7 +54,7 @@ button {
   transition: background-color 0.3s ease-in-out;
 }
 
-/* 📌 입력 필드 */
+/* 입력 필드 */
 .input {
   width: 100%;
   padding: 10px;
@@ -79,13 +79,13 @@ button {
   cursor: not-allowed;
 }
 
-/* 📌 수정된 필드 강조 (연한 파란색) */
+/* 수정된 필드 강조 (연한 파란색) */
 .input.changed {
   background-color: #e3f2fd !important;
   border: 1px solid var(--primary-color) !important;
 }
 
-/* 📌 헤더 */
+/* 헤더 */
 header {
   position: sticky;
   top: 0;
@@ -111,7 +111,7 @@ header {
   transition: all 0.3s ease-in-out;
 }
 
-/* 📌 메인 콘텐츠 */
+/* 메인 콘텐츠 */
 .content {
   flex: 1;
   min-width: 0;

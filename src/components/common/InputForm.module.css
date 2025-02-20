@@ -6,7 +6,7 @@
   width: 100%;
 }
 
-/* ✅ 파일 첨부 버튼과 선택된 파일명을 한 줄로 배치 */
+/* 파일 첨부 버튼과 선택된 파일명을 한 줄로 배치 */
 .fileUploadContainer {
   display: flex;
   align-items: center;
@@ -16,9 +16,9 @@
   border-radius: 5px;
 }
 
-/* 🔹 입력 필드 스타일 */
+/* 입력 필드 스타일 */
 .input {
-  flex: 1; /* 🔹 너비 자동 조절 */
+  flex: 1; /* 너비 자동 조절 */
   width: 100%;
   height: 3.5rem;
   padding: 0.8rem;
@@ -30,28 +30,28 @@
     border 0.3s ease-in-out;
 }
 
-/* 🔹 입력 필드 포커스 시 */
+/* 입력 필드 포커스 시 */
 .input:focus {
-  border-color: #00a8ff !important; /* ⚡강제 적용 */
+  border-color: #00a8ff !important; 
   outline: none;
   box-shadow: 0 0 0 1px #00a8ff;
 }
 
-/* 🔹 입력 필드 에러 상태 */
+/* 입력 필드 에러 상태 */
 .input.error {
-  border: 1px solid red; /* ⚡강제 적용 */
+  border: 1px solid red; 
   /* background-color: #f8d7da; */
 }
 
-/* 🔹 비활성화된 입력 필드 */
+/* 비활성화된 입력 필드 */
 .input.disabled {
   background-color: #f0f0f0;
   color: #666;
   cursor: not-allowed;
-  border: 1px solid #ccc !important; /* ⚡강제 적용 */
+  border: 1px solid #ccc !important; 
 }
 
-/* 🔹 변경된 입력 필드 */
+/* 변경된 입력 필드 */
 .input.changed {
   background-color: #e8f5e9 !important;
   border: 1px solid #00a8ff !important;
@@ -74,12 +74,12 @@
   height: 16px;
 }
 
-/* ✅ 숨겨진 파일 선택 input */
+/* 숨겨진 파일 선택 input */
 .fileInputHidden {
   display: none;
 }
 
-/* ✅ 파일 업로드 버튼 */
+/* 파일 업로드 버튼 */
 .fileUploadButton {
   background-color: #00a8ff;
   color: white;
@@ -88,14 +88,14 @@
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.3s;
-  white-space: nowrap; /* 🔹 줄 바꿈 방지 */
+  white-space: nowrap;
 }
 
 .fileUploadButton:hover {
   background-color: #1f98d4;
 }
 
-/* ✅ 선택된 파일명 스타일 */
+/* 선택된 파일명 스타일 */
 .selectedFileName {
   font-size: 14px;
   color: #555;
