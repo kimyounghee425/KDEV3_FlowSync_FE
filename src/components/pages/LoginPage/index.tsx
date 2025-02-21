@@ -15,10 +15,12 @@ export const GUIDE_MESSAGE = `
   본 애플리케이션은 B2B 기업 회원 전용 서비스로 기획되었습니다. 테스트를 위한 계정 정보를 안내 드립니다.
 
   - 일반 사용자
-  (개발사) ID: techdom@flowsync.com / PW: 1111
-  (고객사) ID: devlens@flowsync.com / PW: 1111
+  (개발사) ID: dahye.jung@smartdesign.com / PW: test123!
+
+  (고객사) ID: minsu.kim@digitalbridge.com  / PW: test123!
+  
   - 시스템 관리자
-  (관리사) )ID: admin@flowsync.com / PW: 1111`;
+  (관리사) )ID: admin@flowsync.com / PW: 1111;
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);

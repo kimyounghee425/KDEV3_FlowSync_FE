@@ -34,7 +34,7 @@ export default function ArticleContent<T extends NoticeArticle>({
       if (block.type === "paragraph" && typeof block.data === "string") {
         return (
           <Text key={index} mb={4} whiteSpace="pre-line">
-            {block.data}
+            {block.data.replace(/<br\s*\/?>/g, "\n").replace(/&nbsp;/g, "").trimEnd()}
           </Text>
         );
       }
