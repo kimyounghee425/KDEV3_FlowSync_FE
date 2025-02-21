@@ -57,10 +57,11 @@ https://github.com/user-attachments/assets/1ed828d2-b63b-46cf-a0e7-8599b7cdaf38
 
 | 카테고리       | 기술 스택 |
 |--------------|----------------------------------------------------------------|
-| **Frontend**  | React 18, Next 15, Typescript |
+| **Frontend**  | <p align="center"><a href="https://go-skill-icons.vercel.app/"><img src="https://go-skill-icons.vercel.app/api/icons?i=react,nextjs,typescript"/></a></p> |
 | **Backend**   | <p align="center"><a href="https://go-skill-icons.vercel.app/"><img src="https://go-skill-icons.vercel.app/api/icons?i=spring,java,idea" /></a></p> |
 | **Database**  | <p align="center"><a href="https://go-skill-icons.vercel.app/"><img src="https://go-skill-icons.vercel.app/api/icons?i=mysql,redis" /></a></p> |
 | **Infra**     | <p align="center"><a href="https://go-skill-icons.vercel.app/"><img src="https://go-skill-icons.vercel.app/api/icons?i=docker,aws,jenkins" /></a></p> |
+| **API & Docs** | <p align="center"><a href="https://go-skill-icons.vercel.app/"><img src="https://go-skill-icons.vercel.app/api/icons?i=swagger,postman" /></a></p> |
 | **Communication** | <p align="center"><a href="https://go-skill-icons.vercel.app/"><img src="https://go-skill-icons.vercel.app/api/icons?i=discord,notion,figma" /></a></p> |
 
 <br/>
@@ -74,16 +75,15 @@ https://github.com/user-attachments/assets/1ed828d2-b63b-46cf-a0e7-8599b7cdaf38
 
 # 🗂️ 기술 문서
 
-👉 API 명세서 : 바로가기
+👉 API 명세서 : **[바로가기](http://api.flowssync.com:8080/swagger-ui/index.html#/)**
 
-👉 기능 명세서 : 바로가기
+👉 와이어 프레임 : **[바로가기](https://www.figma.com/design/IpnN9PkKXCj3zEBxqHRSQK/flowSync---%EC%99%80%EC%9D%B4%EC%96%B4-%ED%94%84%EB%A0%88%EC%9E%84?node-id=0-1&t=1ZXTAXcXpAV6sku9-1)**
 
-👉 와이어 프레임 : 바로가기
-
-👉 ERD : 바로가기
-
+👉 ERD : **[바로가기](https://drive.google.com/file/d/1SYKvX493GPJ2JG9TTfmIi7c-Gz7jPixH/view?usp=sharing)**
 
 # 👥 팀 소개
+
+👉팀 노션 바로가기 : **[바로가기](https://www.notion.so/Flow-Sync-BN-SYSTEM-2_-6e2ab94e4c86491882fa689aa5983eb1?pvs=4)**
 
 <div align="center">
 <table>
@@ -140,5 +140,3 @@ https://github.com/user-attachments/assets/1ed828d2-b63b-46cf-a0e7-8599b7cdaf38
   </tr>
 </table>
 </div>
-팀 노션 바로가기
-
