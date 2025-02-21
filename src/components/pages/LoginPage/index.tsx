@@ -20,7 +20,7 @@ export const GUIDE_MESSAGE = `
   (고객사) ID: minsu.kim@digitalbridge.com  / PW: test123!
   
   - 시스템 관리자
-  (관리사) )ID: admin@flowsync.com / PW: 1111;
+  (관리사) )ID: admin@flowsync.com / PW: 1111`;
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
