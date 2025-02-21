@@ -51,7 +51,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await login(inputValues.email, inputValues.password);
+      await login(inputValues.email, inputValues.password);
       route.push("/");
     } catch (error) {
       // "로그인 실패:"
@@ -81,7 +81,7 @@ export default function LoginPage() {
           </Text>
         </Box>
         {/* 가이드 메시지 */}
-        <Box className={styles.guideMessage}>
+        <Box className={styles.guideMessage} height="13rem">
           <Text color="var(--text-light)" whiteSpace="pre-line">
             {GUIDE_MESSAGE}
           </Text>
