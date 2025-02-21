@@ -67,7 +67,9 @@ https://github.com/user-attachments/assets/1ed828d2-b63b-46cf-a0e7-8599b7cdaf38
 
 # 🛠️ 프로젝트 아키텍쳐
 ![image](https://github.com/user-attachments/assets/a4fc2317-5e6d-480d-8f53-185336b9af4e)
-
+<br/>
+<br/>
+<br/>
 
 # 🗂️ 기술 문서
 
@@ -76,6 +78,9 @@ https://github.com/user-attachments/assets/1ed828d2-b63b-46cf-a0e7-8599b7cdaf38
 👉 와이어 프레임 : **[바로가기](https://www.figma.com/design/IpnN9PkKXCj3zEBxqHRSQK/flowSync---%EC%99%80%EC%9D%B4%EC%96%B4-%ED%94%84%EB%A0%88%EC%9E%84?node-id=0-1&t=1ZXTAXcXpAV6sku9-1)**
 
 👉 ERD : **[바로가기](https://drive.google.com/file/d/1SYKvX493GPJ2JG9TTfmIi7c-Gz7jPixH/view?usp=sharing)**
+<br/>
+<br/>
+<br/>
 
 # 👥 팀 소개
 
