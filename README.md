@@ -49,15 +49,40 @@ https://github.com/user-attachments/assets/1ed828d2-b63b-46cf-a0e7-8599b7cdaf38
 <br/>
 <br/>
 
-<p align="center">
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=git,kubernetes,docker,c,vim" />
-  </a>
-</p>
+# 🔧 기술 스택
+## Frontend
+
+
+## Backend
+
+| 카테고리       | 기술 스택 |
+|--------------|----------------------------------------------------------------|
+| **Frontend**  | React 18, Next 15, Typescript |
+| **Backend**   | <p align="center"><a href="https://go-skill-icons.vercel.app/"><img src="https://go-skill-icons.vercel.app/api/icons?i=spring,java,idea" /></a></p> |
+| **Database**  | <p align="center"><a href="https://go-skill-icons.vercel.app/"><img src="https://go-skill-icons.vercel.app/api/icons?i=mysql,redis" /></a></p> |
+| **Infra**     | <p align="center"><a href="https://go-skill-icons.vercel.app/"><img src="https://go-skill-icons.vercel.app/api/icons?i=docker,aws,jenkins" /></a></p> |
+| **Communication** | <p align="center"><a href="https://go-skill-icons.vercel.app/"><img src="https://go-skill-icons.vercel.app/api/icons?i=discord,notion,figma" /></a></p> |
 
 <br/>
 <br/>
 <br/>
+
+
+# 🛠️ 프로젝트 아키텍쳐
+![image](https://github.com/user-attachments/assets/a4fc2317-5e6d-480d-8f53-185336b9af4e)
+
+
+# 🗂️ 기술 문서
+
+👉 API 명세서 : 바로가기
+
+👉 기능 명세서 : 바로가기
+
+👉 와이어 프레임 : 바로가기
+
+👉 ERD : 바로가기
+
+
 # 👥 팀 소개
 
 <div align="center">
@@ -115,5 +140,5 @@ https://github.com/user-attachments/assets/1ed828d2-b63b-46cf-a0e7-8599b7cdaf38
   </tr>
 </table>
 </div>
-
+팀 노션 바로가기
 
