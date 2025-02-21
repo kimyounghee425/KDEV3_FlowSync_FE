@@ -193,39 +193,46 @@ export default function Sidebar({
               .map((project) => {
                 // "/" (홈)일 때는 `pathname === value`로만 비교 ("/admin/members" 같은 곳에서 홈이 활성화되는 문제 방지)
                 const isActiveProject = projectId === project.id.toString();
+                const isClickable = Number(project.clickable) !== 0;
 
-                return (
+                const ProjectItem = (
+                  <Flex
+                    direction="row"
+                    alignItems="center"
+                    padding={3}
+                    gap="1rem"
+                    overflow="hidden"
+                    bg={isActiveProject ? "blue.100" : "transparent"}
+                    fontWeight={isActiveProject ? "bold" : "normal"}
+                    borderLeft={
+                      isActiveProject
+                        ? "4px solid #007bff"
+                        : "4px solid transparent"
+                    }
+                    _hover={isClickable ? { bg: "gray.100" } : {}}
+                    cursor={isClickable ? "pointer" : "not-allowed"}
+                  >
+                    <Box flexShrink={0}>{<Folder size={20} />}</Box>
+                    <Box
+                      whiteSpace="nowrap"
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                    >
+                      {project.name}
+                    </Box>
+                  </Flex>
+                );
+
+                return isClickable ? (
                   <Link
                     key={project.id}
                     href={`/projects/${project.id}/approvals`}
                     passHref
                   >
-                    <Flex
-                      direction="row"
-                      alignItems="center"
-                      padding={3}
-                      gap="1rem"
-                      overflow="hidden"
-                      bg={isActiveProject ? "blue.100" : "transparent"} // 현재 페이지면 배경색 적용
-                      fontWeight={isActiveProject ? "bold" : "normal"} // 현재 페이지면 볼드 처리
-                      borderLeft={
-                        isActiveProject
-                          ? "4px solid #007bff"
-                          : "4px solid transparent"
-                      }
-                      _hover={{ bg: "gray.100" }}
-                    >
-                      <Box flexShrink={0}>{<Folder size={20} />}</Box>
-                      <Box
-                        _hover={{ bg: "gray.100" }}
-                        whiteSpace="nowrap" //  텍스트 한 줄 유지
-                        overflow="hidden" //  넘치는 텍스트 숨김
-                        textOverflow="ellipsis" //  말줄임 처리
-                      >
-                        {project.name}
-                      </Box>
-                    </Flex>
+                    {ProjectItem}
                   </Link>
+                ) : (
+                  <div key={project.id}>{ProjectItem}</div>
                 );
               })}
 
