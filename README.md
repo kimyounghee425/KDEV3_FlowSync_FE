@@ -1,192 +1,119 @@
-# FlowSync
+<div align="center">
+  
+![image](https://github.com/user-attachments/assets/145cfcd5-ed42-4999-a033-f9d81e5f8a3c)
 
-### 세계 최강의 PMS 서비스
+### 플로우씽크는 웹에이전시 내에서 계약 단계부터 납품 및 하자 보수까지의 과정을<br/> 클라이언트와 효율적으로 공유 및 관리할 수 있는 업무시스템입니다.
+</div>
 
-```
-KDEV3_flowSync_FE
-├─ app
-│  ├─ (home)
-│  │  ├─ layout.tsx
-│  │  ├─ page.tsx
-│  │  └─ projects
-│  │     └─ [projectId]
-│  │        ├─ tasks
-│  │        │  ├─ new
-│  │        │  │  ├─ edit.css
-│  │        │  │  └─ page.tsx
-│  │        │  ├─ page.tsx
-│  │        │  └─ [taskId]
-│  │        │     ├─ edit
-│  │        │     │  ├─ edit.css
-│  │        │     │  └─ page.tsx
-│  │        │     └─ page.tsx
-│  │        └─ workflow
-│  │           └─ page.tsx
-│  ├─ admin
-│  │  ├─ layout.tsx
-│  │  ├─ members
-│  │  │  ├─ create
-│  │  │  │  └─ page.tsx
-│  │  │  └─ page.tsx
-│  │  ├─ organizations
-│  │  │  └─ page.tsx
-│  │  └─ page.tsx
-│  ├─ favicon.ico
-│  ├─ layout.tsx
-│  └─ login
-│     ├─ find-password
-│     │  └─ page.tsx
-│     ├─ layout.tsx
-│     └─ page.tsx
-├─ eslint.config.mjs
-├─ next.config.ts
-├─ package-lock.json
-├─ package.json
-├─ public
-│  ├─ complete.png
-│  ├─ contract.png
-│  ├─ file.svg
-│  ├─ FlowSyncLogo.jpg
-│  ├─ globe.svg
-│  ├─ mockServiceWorker.js
-│  ├─ next.svg
-│  ├─ running.png
-│  ├─ support.png
-│  ├─ vercel.svg
-│  └─ window.svg
-├─ README.md
-├─ src
-│  ├─ api
-│  │  ├─ auth.ts
-│  │  ├─ axiosInstance.ts
-│  │  ├─ members.ts
-│  │  └─ projects.ts
-│  ├─ components
-│  │  ├─ common
-│  │  │  ├─ backButton.tsx
-│  │  │  ├─ BoardCategorySelectBox.tsx
-│  │  │  ├─ BoardSearchSection.tsx
-│  │  │  ├─ BoardStatusSelectBox.tsx
-│  │  │  ├─ CommentBox.tsx
-│  │  │  ├─ CommentItem.tsx
-│  │  │  ├─ Comments.tsx
-│  │  │  ├─ CommonTable.tsx
-│  │  │  ├─ CustomBox.tsx
-│  │  │  ├─ Loading.tsx
-│  │  │  ├─ LoginInputForm.tsx
-│  │  │  ├─ MembersSearchSection.tsx
-│  │  │  ├─ MemberTable.tsx
-│  │  │  ├─ MSWComponent.tsx
-│  │  │  ├─ Pagination.tsx
-│  │  │  ├─ Profile.tsx
-│  │  │  ├─ ProgressStepButton.tsx
-│  │  │  ├─ ProgressStepSection.tsx
-│  │  │  ├─ ProjectInfo.tsx
-│  │  │  ├─ ProjectsSearchSection.tsx
-│  │  │  ├─ ProjectsStatusCard.tsx
-│  │  │  ├─ ProjectsStatusCards.tsx
-│  │  │  ├─ ProjectStatusSelectBox.tsx
-│  │  │  ├─ ReplyItem.tsx
-│  │  │  ├─ SidebarTab.tsx
-│  │  │  ├─ TaskComments.tsx
-│  │  │  ├─ TaskContent.tsx
-│  │  │  └─ TaskForm.tsx
-│  │  ├─ layouts
-│  │  │  ├─ Drawer.tsx
-│  │  │  ├─ Header.tsx
-│  │  │  └─ Sidebar.tsx
-│  │  ├─ pages
-│  │  │  ├─ AdminCreateMemberPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ AdminDashboardPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ AdminMembersPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ AdminOrgsPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ FindPasswordPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ LoginPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ LogoutPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ ProjectApprovalPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ ProjectApprovalsPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ ProjectPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ ProjectsPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ ProjectTaskPage
-│  │  │  │  └─ index.tsx
-│  │  │  ├─ ProjectTasksPage
-│  │  │  │  └─ index.tsx
-│  │  │  └─ WorkFlowPage
-│  │  │     └─ index.tsx
-│  │  └─ ui
-│  │     ├─ avatar.tsx
-│  │     ├─ button.tsx
-│  │     ├─ checkbox.tsx
-│  │     ├─ close-button.tsx
-│  │     ├─ color-mode.tsx
-│  │     ├─ dialog.tsx
-│  │     ├─ drawer.tsx
-│  │     ├─ field.tsx
-│  │     ├─ input-group.tsx
-│  │     ├─ link-button.tsx
-│  │     ├─ menu.tsx
-│  │     ├─ native-select.tsx
-│  │     ├─ pagination.tsx
-│  │     ├─ popover.tsx
-│  │     ├─ provider.tsx
-│  │     ├─ radio.tsx
-│  │     ├─ segmented-control.tsx
-│  │     ├─ select.tsx
-│  │     ├─ skeleton.tsx
-│  │     ├─ slider.tsx
-│  │     └─ tooltip.tsx
-│  ├─ context
-│  │  ├─ PermissionsContext.tsx
-│  │  ├─ RedirectContext.tsx
-│  │  └─ SidebarContext.tsx
-│  ├─ data
-│  │  ├─ 100.json
-│  │  ├─ 101.json
-│  │  ├─ boardList_mock_data.json
-│  │  ├─ comment_mock_data.json
-│  │  ├─ members_mock_data.json
-│  │  ├─ mock_tasks.json
-│  │  ├─ new_task_data.ts
-│  │  ├─ organizations_mock_data.json
-│  │  ├─ projects_mock_data.json
-│  │  ├─ task_comments_data.ts
-│  │  ├─ task_data.ts
-│  │  └─ users_mock_data.json
-│  ├─ hook
-│  │  ├─ useMemberList.tsx
-│  │  ├─ useProgressData.tsx
-│  │  ├─ useProjectBoard.tsx
-│  │  ├─ useProjectInfo.tsx
-│  │  ├─ useProjectList.tsx
-│  │  └─ useRedirectIfLoggedIn.ts
-│  ├─ mocks
-│  │  ├─ browser.ts
-│  │  ├─ handlers.ts
-│  │  ├─ index.ts
-│  │  └─ server.ts
-│  ├─ types
-│  │  ├─ api.ts
-│  │  ├─ index.ts
-│  │  ├─ loginForm.ts
-│  │  ├─ member.ts
-│  │  ├─ organization.ts
-│  │  ├─ pagination.ts
-│  │  ├─ profile.ts
-│  │  ├─ project.ts
-│  │  └─ taskTypes.ts
-│  └─ utils
-│     └─ isAdminCheck.tsx
-└─ tsconfig.json
+<br />
 
-```
+# :runner: 프로젝트 기간 (60 days)
+> **전체 개발 기간: 2024.12.24 ~ 2025.02.21 (9 Weeks)**
+> > 설계 작업 기간: 2024.12.24 ~ 2025.01.02 (10 days) <br>
+> > 기능 구현 기간: 2025.01.03 ~ 2025.02.21 (50 days) <br>
+
+<br />
+
+# 🚀 주요 기능
+
+## 1. 관리자
+### 업체 및 회원을 등록하고 프로젝트를 생성해요.
+https://github.com/user-attachments/assets/a066175e-1420-407c-ba30-80b859f4396c
+
+<br/>
+
+## 2. 개발사
+### 프로젝트 진행 과정을 단계별로 관리하고, 결재 요청부터 파일 공유까지 한곳에서 효율적으로 처리하세요.
+https://github.com/user-attachments/assets/0e9a0a70-2518-4ff1-9afe-c313b98f883f
+
+<br/>
+
+## 3. 고객사
+### 간단한 절차를 통해 결재를 승인하고 이력을 확인할 수 있어요.
+https://github.com/user-attachments/assets/1ed828d2-b63b-46cf-a0e7-8599b7cdaf38
+
+<br />
+
+# 🧪 테스트 계정 안내
+
+테스트에 필요한 계정 정보를 아래에서 확인하세요.
+
+| **역할**            | **이메일**                   | **비밀번호** | **비고**                                                                                   |
+| ------------------- | ---------------------------- | ------------ | ------------------------------------------------------------------------------------------ |
+| **고객사**          | minsu.kim@digitalbridge.com           | test123!    | 고객사 로그인 및 관련 기능 테스트용 계정                                                   |
+| **개발사**        | dahye.jung@smartdesign.com | test123!    | 개발사 로그인 및 관련 기능 테스트용 계정                                                 |
+| **관리자**   | admin@flowsync.com        | 1111    | 관리자 로그인 및 관련 기능 테스트용 계정                                           |
+
+🔗 [플로우씽크 바로가기](https://www.flowssync.co.kr/)
+<br/>
+<br/>
+<br/>
+
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=git,kubernetes,docker,c,vim" />
+  </a>
+</p>
+
+<br/>
+<br/>
+<br/>
+# 👥 팀 소개
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/102046445?v=4" width="80" height="80" alt="문정준"/><br />
+      <b>문정준</b><br />
+      Frontend Developer
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/67211899?s=88&v=4" width="80" height="80" alt="전상호"/><br />
+      <b>전상호</b><br />
+      Frontend Developer
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/90017851?s=88&v=4" width="80" height="80" alt="김용희"/><br />
+      <b>김용희</b><br />
+      Frontend Developer
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/69493693?s=88&v=4" width="80" height="80" alt="박준홍"/><br />
+      <b>박준홍</b><br />
+      Backend Developer
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/66203950?v=4" width="80" height="80" alt="강희구"/><br />
+      <b>강희구</b><br />
+      Backend Developer
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/109050392?s=88&v=4" width="80" height="80" alt="김자성"/><br />
+      <b>김자성</b><br />
+      Backend Developer
+    </td>
+  </tr>
+  <tr>
+      <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/55443621?s=88&v=4" width="80" height="80" alt="윤지수"/><br />
+      <b>윤지수</b><br />
+      Backend Developer
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/156774388?s=88&v=4" width="80" height="80" alt="박성민"/><br />
+      <b>박성민</b><br />
+      Backend Developer
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/92359877?s=88&v=4" width="80" height="80" alt="김진우"/><br />
+      <b>김진우</b><br />
+      Backend Developer
+    </td>
+  </tr>
+</table>
+</div>
+
+
